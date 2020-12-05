@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainLayout from './Master/MainLayout';
 import './Asset/scss/App.scss'
-import LoginLayout from './Master/LoginLayout';
+import AuthLayout from './Master/AuthLayout';
 
 ReactDOM.render(
   <React.StrictMode>
-    <LoginLayout />
+    <AuthLayout />
   </React.StrictMode>,
   document.getElementById('root')
 );
