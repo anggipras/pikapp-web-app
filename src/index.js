@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import App from './App';
+import MainLayout from './Master/MainLayout';
+import './Asset/scss/App.scss'
+import LoginLayout from './Master/LoginLayout';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <LoginLayout />
   </React.StrictMode>,
   document.getElementById('root')
 );
