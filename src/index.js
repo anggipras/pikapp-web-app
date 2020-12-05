@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import App from './App';
+import MainLayout from './Master/MainLayout';
+import './Asset/scss/App.scss'
+import AuthLayout from './Master/AuthLayout';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AuthLayout />
   </React.StrictMode>,
   document.getElementById('root')
 );

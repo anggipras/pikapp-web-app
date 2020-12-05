@@ -1,0 +1,59 @@
+@import "./Variable/PikaColor.scss";
+
+header {
+    background-color: $secondary-color;
+}
+
+body {
+    background-color: $secondary-color;
+}
+
+.container {
+    background-color: white;
+    border-radius: 36px;
+    z-index: 1;
+    padding: 40px 60px;
+}
+
+.navbar-center {
+    position: absolute;
+    margin-left: 45%;
+}
+
+.navbar-center>img {
+    width: 50%;
+    height: 50%;
+}
+
+.icon {
+    width: 50%;
+    height: 50%;
+}
+
+.jumbotron {
+    background-color: transparent;
+    display: inline-flex;
+    flex-direction: row;
+    margin-bottom: -15%;
+}
+
+.jumbotron>h1 {
+    font-weight: bolder;
+    margin-top: 30%;
+}
+
+.jumbotron>img {
+    height: 80%;
+    width: 80%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    width: 100%;
+}
+
+.row {
+    margin-bottom: 10px;
+}
