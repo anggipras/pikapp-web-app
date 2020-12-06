@@ -3,9 +3,10 @@ import { Alert, Col, Form, Row } from "react-bootstrap"
 import { PikaButton } from "../Component/Button/PikaButton";
 import { PikaTextField } from "../Component/TextField/PikaTextField";
 import axios from 'axios';
-import {developmentAddress} from "../Asset/Constant/APIConstant"
-import {v4 as uuidV4} from 'uuid'
-import sha256 from 'crypto-js/hmac-sha256'
+import {developmentAddress} from "../Asset/Constant/APIConstant";
+import {v4 as uuidV4} from 'uuid';
+import sha256 from 'crypto-js/hmac-sha256';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export class FormView extends React.Component {
     state = {
@@ -126,7 +127,6 @@ export class FormView extends React.Component {
         }
 
         this.setState({isValid: true})
-
         const data = {
             full_name: this.name,
             password: this.password,
@@ -150,6 +150,10 @@ export class FormView extends React.Component {
 
         })
     }
+
+    onChange(value) {
+        console.log(value)
+    }   
 
     render() {
         const isLogIn = this.props.isLogIn;
@@ -197,6 +201,7 @@ export class FormView extends React.Component {
                 <PikaTextField label= 'Confirm Password' type= 'password' placeholder= '*******' handleChange = {this.handleConfirmPassword}/>
             </Row>
             <Row>
+                <ReCAPTCHA sitekey= 'asd' onChange={this.onChange}/>
                 <Col xs={4}>
                     {this.state.isValid || (
                         <Alert variant = "danger">{this.state.errorMsg}</Alert>
