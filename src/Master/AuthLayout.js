@@ -8,9 +8,9 @@ export default class LoginLayout extends React.Component {
         return (
                 <body>
                     <div class='wrapper'>
-                    <JumbotronView title="Login" titleColor = 'white' isLogIn = {true}/>
+                    <JumbotronView title="Register" titleColor = 'white' isLogIn = {false}/>
                         <Container>
-                                <FormView isLogIn={true}/>
+                                <FormView isLogIn={false}/>
                         </Container>
                     </div>
                 </body>
