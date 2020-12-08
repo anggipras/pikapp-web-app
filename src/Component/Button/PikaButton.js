@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 export class PikaButton extends React.Component {
     render() {
         return (
-            <Button variant = {this.props.style}> {this.props.title} </Button>
+            <Button variant = {this.props.style} onClick={this.props.handleClick}> {this.props.title} </Button>
         );
     }
 }
