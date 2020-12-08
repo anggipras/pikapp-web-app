@@ -7,6 +7,7 @@ import {address} from "../Asset/Constant/APIConstant";
 import {v4 as uuidV4} from 'uuid';
 import sha256 from 'crypto-js/hmac-sha256';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { Link } from "react-router-dom";
 
 export class FormView extends React.Component {
     state = {
@@ -219,8 +220,8 @@ export class FormView extends React.Component {
                 <Col/>
                 <Col xs={4}>
                     <p>
-                        Belum punya akun?  
-                        <a href='/register'> register sekarang</a>
+                        Belum punya akun? 
+                        <Link to='/register'>register sekarang</Link> 
                     </p>
                 </Col>
                 <Col/>
@@ -294,7 +295,7 @@ export class FormView extends React.Component {
                 <Col xs={4}>
                     <p>
                         Sudah punya akun?  
-                        <a href='/login'> login sekarang</a>
+                        <Link to='/login'>login sekarang</Link> 
                     </p>
                 </Col>
                 <Col/>
