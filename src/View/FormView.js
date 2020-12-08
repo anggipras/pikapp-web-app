@@ -3,7 +3,7 @@ import { Alert, Col, Form, Row } from "react-bootstrap"
 import { PikaButton } from "../Component/Button/PikaButton";
 import { PikaTextField } from "../Component/TextField/PikaTextField";
 import axios from 'axios';
-import {developmentAddress} from "../Asset/Constant/APIConstant";
+import {address} from "../Asset/Constant/APIConstant";
 import {v4 as uuidV4} from 'uuid';
 import sha256 from 'crypto-js/hmac-sha256';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -16,6 +16,7 @@ export class FormView extends React.Component {
         password: "",
         confirmPassword: "",
         isValid: true,
+        isCaptcha: false,
         errorMsg: ""
     };
 
@@ -101,7 +102,27 @@ export class FormView extends React.Component {
         }
 
         this.setState({isValid: true})
-        axios.post(developmentAddress + '/auth/login')
+        const data = {
+            username: this.name,
+            password: this.password,
+            fcm_token: "FCM Token"
+        }
+
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll('-',"")
+        const date = new Date().toISOString()
+        axios(address + '/auth/login', {
+            headers: {
+                'Content-Type': "application/json",
+                'x-request-id': uuid,
+                'x-request-timestamp': date,
+                'x-client-id': "abf0e2a9-e9ee-440f-8563-94481c64b797"
+            },
+            method: 'POST',
+            data: data
+        }).then((res) => {
+            console.log(res)
+        })    
     }
 
     handleRegister = (e) => {
@@ -131,23 +152,26 @@ export class FormView extends React.Component {
             full_name: this.name,
             password: this.password,
             phone_number: this.phone,
-            email: this.email
+            email: this.email,
+            gender: "Male",
+            birth_day: "01011970",
+            token: "FCM Token"
         }
 
         let uuid = uuidV4();
         uuid = uuid.replaceAll('-',"")
         const date = new Date().toISOString()
-        axios(developmentAddress, {
+        axios(address + '/auth/register', {
             headers: {
                 'Content-Type': "application/json",
                 'x-request-id': uuid,
                 'x-request-timestamp': date,
-                'x-client-id': ""
+                'x-client-id': "abf0e2a9-e9ee-440f-8563-94481c64b797"
             },
             method: 'POST',
             data: data
         }).then((res) => {
-
+            console.log(res)
         })
     }
 
@@ -162,17 +186,27 @@ export class FormView extends React.Component {
             form = 
         <Form>
             <Row>
-                <PikaTextField label= 'Email Anda' type= 'email' placeholder= 'abc@email.com' handleChange = {this.handleEmail} />
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Email Anda' type= 'email' placeholder= 'abc@email.com' handleChange = {this.handleEmail} />
+                </Col>
+                <Col/>
             </Row>
             <Row>
-                <PikaTextField label= 'Password Anda' type= 'password' placeholder= '*******' handleChange = {this.handlePassword}/>
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Password Anda' type= 'password' placeholder= '*******' handleChange = {this.handlePassword}/>
+                </Col>
+                <Col/>
             </Row>
             <Row>
+                <Col/>
                 <Col xs={4}>
                     {this.state.isValid || (
                         <Alert variant = "danger">{this.state.errorMsg}</Alert>
                     )}
                 </Col>
+                <Col/>
             </Row>
             <Row>
                 <Col/>
@@ -181,37 +215,87 @@ export class FormView extends React.Component {
                 </Col>
                 <Col/>
             </Row>
+            <Row>
+                <Col/>
+                <Col xs={4}>
+                    <p>
+                        Belum punya akun?  
+                        <a href='/register'> register sekarang</a>
+                    </p>
+                </Col>
+                <Col/>
+            </Row>
         </Form>
         } else {
             form = 
         <Form>
             <Row>
-                <PikaTextField label= 'Daftarkan Email' type= 'email' placeholder= 'abc@email.com' handleChange = {this.handleEmail}/>
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Daftarkan Email' type= 'email' placeholder= 'abc@email.com' handleChange = {this.handleEmail}/>
+                </Col>
+                <Col/>
             </Row>
             <Row>
-                <PikaTextField label= 'Nama Lengkap' type= 'text' placeholder= 'Masukkan Namamu..' handleChange = {this.handleName}/>
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Nama Lengkap' type= 'text' placeholder= 'Masukkan Namamu..' handleChange = {this.handleName}/>
+                </Col>
+                <Col/>
             </Row>
             <Row>
-                <PikaTextField label= 'Nomor HP' type= 'tel' placeholder= '08000000' handleChange = {this.handlePhone}/>
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Nomor HP' type= 'tel' placeholder= '08000000' handleChange = {this.handlePhone}/>
+                </Col>
+                <Col/>
             </Row>
             <Row>
-                <PikaTextField label= 'Password' type= 'password' placeholder= '*******' handleChange = {this.handlePassword}/>
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Password' type= 'password' placeholder= '*******' handleChange = {this.handlePassword}/>
+                </Col>
+                <Col/>
             </Row>
             <Row>
-                <PikaTextField label= 'Confirm Password' type= 'password' placeholder= '*******' handleChange = {this.handleConfirmPassword}/>
+                <Col/>
+                <Col xs={4}>
+                    <PikaTextField label= 'Confirm Password' type= 'password' placeholder= '*******' handleChange = {this.handleConfirmPassword}/>
+                </Col>
+                <Col/>
             </Row>
             <Row>
-                <ReCAPTCHA sitekey= 'asd' onChange={this.onChange}/>
+                <Col/>
+                <Col xs={4}>
+                    {!this.state.isCaptcha || (
+                        <ReCAPTCHA sitekey= 'asd' onChange={this.onChange}/>
+                    )}
+                </Col>
+                <Col/>
+            </Row>
+            <Row>
+                <Col/>
                 <Col xs={4}>
                     {this.state.isValid || (
                         <Alert variant = "danger">{this.state.errorMsg}</Alert>
                     )}
                 </Col>
+                <Col/>
             </Row>
             <Row>
                 <Col/>
                 <Col xs={4}>
                     <PikaButton title='Daftar' style='primaryPika' handleClick = {this.handleRegister}/>
+                </Col>
+                <Col/>
+            </Row>
+            <Row>
+                <Col/>
+                <Col xs={4}>
+                    <p>
+                        Sudah punya akun?  
+                        <a href='/login'> login sekarang</a>
+                    </p>
                 </Col>
                 <Col/>
             </Row>
