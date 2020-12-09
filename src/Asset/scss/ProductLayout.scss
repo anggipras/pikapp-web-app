@@ -1,0 +1,31 @@
+.storeImage {
+    width: 100%;
+    max-width: 140px;
+    max-height: 140px;
+    height: 100%;
+}
+
+.storeColumn {
+    align-items: center;
+    text-align: center;
+}
+
+.foodHeader {
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.foodImage {
+    margin-left: 1%;
+    object-fit: cover;
+}
+.foodTitle {
+    font-weight: bold;
+    font-size: 16px;
+}
+.foodPrice {
+    font-weight: bold;
+    font-size: 14px;
+}
+.foodDesc {
+    font-size: 12px;
+}

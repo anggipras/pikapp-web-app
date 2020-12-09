@@ -11,13 +11,16 @@
 .btn-secondaryPika {
     background-color: $secondary-color;
     font-weight: bold;
-    border-radius: 36;
+    border-radius: 36px;
     text-decoration: none;
+    height: 50px;
+    padding: 0px 50%;
+    color: white;
 }
-.btn-lightPika {
-    background-color: $gray-color;
+.btn-cartPika {
+    background-color: $primary-color;
     font-weight: bold;
-    border-radius: 36;
+    border-radius: 36px;
     text-decoration: none;
 }
 

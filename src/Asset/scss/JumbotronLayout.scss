@@ -1,0 +1,16 @@
+.jumbotron {
+    background-color: transparent;
+    display: inline-flex;
+    flex-direction: row;
+    margin-bottom: -15%;
+}
+
+.jumbotron>h1 {
+    font-weight: bolder;
+    margin-top: 30%;
+}
+
+.jumbotron>img {
+    height: 80%;
+    width: 80%;
+}

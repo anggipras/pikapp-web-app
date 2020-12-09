@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MainLayout from './Master/MainLayout';
 import './Asset/scss/App.scss'
 import AuthLayout from './Master/AuthLayout';
+import ProductLayout from './Master/ProductLayout';
 import { createBrowserHistory } from 'history'
 import { Router, Route, Switch } from 'react-router-dom'
 
@@ -14,6 +14,7 @@ ReactDOM.render(
     <Switch>
       <Route path = '/login' component = {() => <AuthLayout isLogin = {true}/>} />
       <Route path = '/register' component = {() => <AuthLayout isLogin = {false}/>} />
+      <Route path = '/' component = {() => <ProductLayout/>} />
     </Switch>
   </Router>,
   document.getElementById('root')

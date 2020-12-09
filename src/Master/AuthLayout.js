@@ -1,7 +1,8 @@
 import React from "react"
-import { JumbotronView } from "../View/JumbotronView"
-import { FormView } from '../View/FormView'
+import { JumbotronView } from "../View/Main/JumbotronView"
+import { FormView } from '../View/Auth/FormView'
 import { Container } from "react-bootstrap";
+import { primary_color, secondary_color} from '../Asset/Constant/ColorConstant'
 
 export default class LoginLayout extends React.Component {
     state = {
@@ -13,15 +14,15 @@ export default class LoginLayout extends React.Component {
     componentDidMount() {
         const isLogin = this.props.isLogin
         if (isLogin) {
-            document.body.style.backgroundColor = "#FEC814";
+            document.body.style.backgroundColor = primary_color;
             this.setState({title: "Login"})
             this.setState({titleColor: "black"})
-            this.setState({buttonColor: "#4056C6"})
+            this.setState({buttonColor: secondary_color})
         } else {
-            document.body.style.backgroundColor = "#4056C6";
+            document.body.style.backgroundColor = secondary_color;
             this.setState({title: "Register"})
             this.setState({titleColor: "white"})
-            this.setState({buttonColor: "#FEC814"})
+            this.setState({buttonColor: primary_color})
         }
     }
 
