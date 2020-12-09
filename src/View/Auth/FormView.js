@@ -1,9 +1,9 @@
 import React from "react"
 import { Alert, Col, Form, Row } from "react-bootstrap"
-import { PikaButton } from "../Component/Button/PikaButton";
-import { PikaTextField } from "../Component/TextField/PikaTextField";
+import { PikaButton } from "../../Component/Button/PikaButton";
+import { PikaTextField } from "../../Component/TextField/PikaTextField";
 import axios from 'axios';
-import {address} from "../Asset/Constant/APIConstant";
+import {address} from "../../Asset/Constant/APIConstant";
 import {v4 as uuidV4} from 'uuid';
 import sha256 from 'crypto-js/hmac-sha256';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -93,6 +93,7 @@ export class FormView extends React.Component {
     }
 
     handleLogin = (e) => {
+        console.log("Login")
         if(this.checkEmail() === false) {
             this.setState({isValid: false})
             return;
@@ -212,7 +213,7 @@ export class FormView extends React.Component {
             <Row>
                 <Col/>
                 <Col xs={4}>
-                    <PikaButton title='Login' style='primaryPika' handleClick = {this.handleLogin}/>
+                    <PikaButton title='Login' style='secondaryPika' handleClick = {this.handleLogin}/>
                 </Col>
                 <Col/>
             </Row>

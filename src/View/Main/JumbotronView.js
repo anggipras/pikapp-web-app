@@ -1,7 +1,7 @@
 import React from "react"
 import Jumbotron from "react-bootstrap/Jumbotron"
-import login_illustration from '../Asset/Illustration/illustration_login.png'
-import register_illustration from '../Asset/Illustration/illustration_register.png'
+import login_illustration from '../../Asset/Illustration/illustration_login.png'
+import register_illustration from '../../Asset/Illustration/illustration_register.png'
 
 export class JumbotronView extends React.Component {
     render() {

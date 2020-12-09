@@ -1,5 +1,7 @@
 @import "./Variable/PikaColor.scss";
-
+@import "./ProductLayout.scss";
+@import "./NavigationLayout.scss";
+@import "./JumbotronLayout.scss";
 body {
     background-color: inherit;
 }
@@ -15,38 +17,6 @@ body .bodyPrimary {
     border-radius: 36px;
     z-index: 1;
     padding: 40px 0;
-}
-
-.navbar-center {
-    position: absolute;
-    margin-left: 45%;
-}
-
-.navbar-center>img {
-    width: 50%;
-    height: 50%;
-}
-
-.icon {
-    width: 50%;
-    height: 50%;
-}
-
-.jumbotron {
-    background-color: transparent;
-    display: inline-flex;
-    flex-direction: row;
-    margin-bottom: -15%;
-}
-
-.jumbotron>h1 {
-    font-weight: bolder;
-    margin-top: 30%;
-}
-
-.jumbotron>img {
-    height: 80%;
-    width: 80%;
 }
 
 .wrapper {
