@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Asset/scss/App.scss'
 import AuthLayout from './Master/AuthLayout';
 import ProductLayout from './Master/ProductLayout';
+import CartLayout from './Master/CartLayout';
 import { createBrowserHistory } from 'history'
 import { Router, Route, Switch } from 'react-router-dom'
 
@@ -14,6 +15,7 @@ ReactDOM.render(
     <Switch>
       <Route path = '/login' component = {() => <AuthLayout isLogin = {true}/>} />
       <Route path = '/register' component = {() => <AuthLayout isLogin = {false}/>} />
+      <Route path = '/cart' component = {() => <CartLayout/>} />
       <Route path = '/' component = {() => <ProductLayout/>} />
     </Switch>
   </Router>,

@@ -2,6 +2,7 @@
 @import "./ProductLayout.scss";
 @import "./NavigationLayout.scss";
 @import "./JumbotronLayout.scss";
+@import "./CartLayout.scss";
 body {
     background-color: inherit;
 }
@@ -12,13 +13,28 @@ body .bodyPrimary {
     background-color: $primary-color;
 }
 
-.container {
-    background-color: white;
-    border-radius: 36px;
-    z-index: 1;
-    padding: 40px 0;
+@media (min-width: 768px) {
+    .container {
+        background-color: white;
+        border-radius: 36px;
+        z-index: 1;
+        padding: 40px 0;
+    }
 }
 
+@media (max-width: 768px) {
+    .container {
+        background-color: white;
+        border-radius: 36px;
+        z-index: 1;
+        width: 100%;
+        font-size: 12px;
+        padding-top: 16px;
+    }
+    h2 {
+        font-size: 22px;
+    }
+}
 .wrapper {
     display: flex;
     flex-direction:column;

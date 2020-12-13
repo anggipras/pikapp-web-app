@@ -1,11 +1,10 @@
 import React from "react"
-import MainNavigation from './MainNavigation'
-import { ProductView } from '../View/Product/ProductView'
+import CartNavigation from './CartNavigation'
+import { CartView } from '../View/Cart/CartView'
 import { primary_color, secondary_color } from '../Asset/Constant/ColorConstant';
 import { Container } from "react-bootstrap";
 
-export default class MainLayout extends React.Component {
-
+export default class CartLayout extends React.Component {
     componentDidMount() {
         document.body.style.backgroundColor = secondary_color
     }
@@ -14,11 +13,11 @@ export default class MainLayout extends React.Component {
         return (
             <html>
                 <header>
-                    <MainNavigation/>
+                    <CartNavigation/>
                 </header>
                 <body>
                     <Container>
-                        <ProductView />
+                        <CartView />
                     </Container>
                 </body>
             </html>
