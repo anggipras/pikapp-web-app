@@ -1,0 +1,154 @@
+@media(min-width: 768px) {
+    .cartTitle {
+        font-weight: bold;
+    }
+    .cartContent {
+        margin-left: 8px;
+    }
+    .cartIcon {
+        width: 24px;
+        height: 24px;
+        margin-left: 16px;
+    }
+    .cartNote {
+        font-size: 12px;
+    }
+    .cartContentFood {
+        font-size: 16px;
+    }
+    .cartContentPrice {
+        font-size: 14px;
+    }
+    .iconButton {
+        background-color: transparent;
+        border: none;
+    }
+    .foodImage {
+        margin-left: 0;
+        margin-top: 0;
+        border-radius: 18px;
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+    }
+    .cartPayment {
+        border-radius: 36px;
+        margin: 0 1.5%;
+        background-color: $primary-color;
+    }
+    .cartFinalPrice {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .cartFinalButton {
+        font-size: 16px;
+        font-weight: bold;
+        color: $secondary-color;
+    }
+
+    .cartModalField {
+        text-align: center;
+        max-width: 40px;
+        max-height: 30px;
+        width: 100px;
+    }
+    .cartModalField:disabled {
+        background-color: white;
+    }
+    .btn-cartModalMiniButton {
+        border-radius: 24px;
+        background-color: #4BB7AC;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 0px;
+        color: white;
+        max-width: 40px;
+        max-height: 30px;
+        padding: 0 8;
+    }
+    .btn-cartModalMiniButton:hover {
+        background-color: #5BC7BC;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 0px;
+        color: white;
+    }
+}
+
+
+@media(max-width: 768px) {
+    .cartTitle {
+        font-weight: bold;
+    }
+    
+    .cartContent {
+        margin-left: 8px;
+    }
+    .cartIcon {
+        width: 18px;
+        height: 18px;
+    }  
+    .cartNote {
+        margin-left: 8;
+        font-size: 8px;
+    }
+    .cartContentFood {
+        font-size: 16px;
+    }
+    .cartContentPrice {
+        font-size: 14px;
+    }
+    .iconButton {
+        background-color: transparent;
+        border: none;
+    }
+    .foodImage {
+        margin-top: 0;
+        border-radius: 18px;
+        width: 60px;
+        height: 30x;
+        object-fit: cover;
+    }
+    .cartPayment {
+        border-radius: 36px;
+        margin: 0 .15%;
+        background-color: $primary-color;
+    }
+    .cartFinalPrice {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .cartFinalButton {
+        font-size: 16px;
+        font-weight: bold;
+        color: $secondary-color;
+    }
+
+    .cartModalField {
+        text-align: center;
+        max-width: 40px;
+        width: 100px;
+        max-height: 30px;
+    }
+    .cartModalField:disabled {
+        background-color: white;
+    }
+    .btn-cartModalMiniButton {
+        border-radius: 24px;
+        background-color: #4BB7AC;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 0px;
+        color: white;
+        max-width: 40px;
+        max-height: 30px;
+        padding: 0 8;
+    }
+    .btn-cartModalMiniButton:hover {
+        background-color: #5BC7BC;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 0px;
+        color: white;
+    }
+}

@@ -93,7 +93,6 @@ export class FormView extends React.Component {
     }
 
     handleLogin = (e) => {
-        console.log("Login")
         if(this.checkEmail() === false) {
             this.setState({isValid: false})
             return;
@@ -188,22 +187,22 @@ export class FormView extends React.Component {
             form = 
         <Form>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Email Anda' type= 'email' placeholder= 'abc@email.com' handleChange = {this.handleEmail} />
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Password Anda' type= 'password' placeholder= '*******' handleChange = {this.handlePassword}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     {this.state.isValid || (
                         <Alert variant = "danger">{this.state.errorMsg}</Alert>
                     )}
@@ -211,15 +210,15 @@ export class FormView extends React.Component {
                 <Col/>
             </Row>
             <Row>
-                <Col/>
+                <Col xs={3} md={4}/>
                 <Col xs={4}>
-                    <PikaButton title='Login' style='secondaryPika' handleClick = {this.handleLogin}/>
+                    <PikaButton title='Login' buttonStyle='secondaryPika' handleClick = {this.handleLogin}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <p>
                         Belum punya akun? 
                         <Link to='/register'>register sekarang</Link> 
@@ -232,43 +231,43 @@ export class FormView extends React.Component {
             form = 
         <Form>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Daftarkan Email' type= 'email' placeholder= 'abc@email.com' handleChange = {this.handleEmail}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Nama Lengkap' type= 'text' placeholder= 'Masukkan Namamu..' handleChange = {this.handleName}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Nomor HP' type= 'tel' placeholder= '08000000' handleChange = {this.handlePhone}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Password' type= 'password' placeholder= '*******' handleChange = {this.handlePassword}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <PikaTextField label= 'Confirm Password' type= 'password' placeholder= '*******' handleChange = {this.handleConfirmPassword}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     {!this.state.isCaptcha || (
                         <ReCAPTCHA sitekey= 'asd' onChange={this.onChange}/>
                     )}
@@ -276,8 +275,8 @@ export class FormView extends React.Component {
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     {this.state.isValid || (
                         <Alert variant = "danger">{this.state.errorMsg}</Alert>
                     )}
@@ -285,15 +284,15 @@ export class FormView extends React.Component {
                 <Col/>
             </Row>
             <Row>
-                <Col/>
+                <Col xs={3} md={4}/>
                 <Col xs={4}>
-                    <PikaButton title='Daftar' style='primaryPika' handleClick = {this.handleRegister}/>
+                    <PikaButton title='Daftar' buttonStyle='primaryPika' handleClick = {this.handleRegister}/>
                 </Col>
                 <Col/>
             </Row>
             <Row>
-                <Col/>
-                <Col xs={4}>
+                <Col xs={3} md={4}/>
+                <Col xs={6}>
                     <p>
                         Sudah punya akun?  
                         <Link to='/login'>login sekarang</Link> 

@@ -2,6 +2,8 @@ import React from "react"
 import { Col, Row, Image, Card, Tabs, Tab, Modal } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaModal } from "../../Component/Modal/PikaModal";
+import queryString from 'query-string'
+import { withRouter } from 'react-router-dom';
 
 export class ProductView extends React.Component {
     state = {
@@ -21,6 +23,7 @@ export class ProductView extends React.Component {
     }
 
     componentDidMount() {
+        const value = queryString.parse(window.location.search);
         var data = {...this.state.data}
         data.title = "Store Name"
         data.image = ""
@@ -69,23 +72,76 @@ export class ProductView extends React.Component {
                 foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
             }
         )
+        data.data.push(
+            {
+                category: "Category4",
+                foodName: "Food Name B",
+                foodDesc: "Food Desc B",
+                foodPrice: "7000",
+                foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            }
+        )
+        data.data.push(
+            {
+                category: "Category4",
+                foodName: "Food Name C",
+                foodDesc: "Food Desc C",
+                foodPrice: "5000",
+                foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            }
+        )
+        data.data.push(
+            {
+                category: "Category3",
+                foodName: "Food Name D",
+                foodDesc: "Food Desc D",
+                foodPrice: "5000",
+                foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            }
+        )
+
+        data.data.push(
+            {
+                category: "Category7",
+                foodName: "Food Name B",
+                foodDesc: "Food Desc B",
+                foodPrice: "7000",
+                foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            }
+        )
+        data.data.push(
+            {
+                category: "Category6",
+                foodName: "Food Name C",
+                foodDesc: "Food Desc C",
+                foodPrice: "5000",
+                foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            }
+        )
+        data.data.push(
+            {
+                category: "Category9",
+                foodName: "Food Name D",
+                foodDesc: "Food Desc D",
+                foodPrice: "5000",
+                foodImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            }
+        )
         this.setState({data: data})
     }
 
     handleDetail(data) {
         this.setState({showModal: true})
-        console.log(data)
     }
 
     setModal(isShow) {
-        console.log(isShow)
         this.setState({showModal: isShow})
     }
 
     render() {
         let modal;
         if(this.state.showModal === true) {
-            modal = <PikaModal title = {"ASD"} isShow = {() => this.setModal(true)} onHide = {() => this.setModal(false)}/>
+            modal = <PikaModal isShow = {() => this.setModal(true)} onHide = {() => this.setModal(false)}/>
         } else {
             modal = <></> 
         }
@@ -114,25 +170,19 @@ export class ProductView extends React.Component {
                                     <Col xs = {4} md = {3}>
                                         <Image src = {cardData.foodImage} rounded fluid className = "foodImage"/>
                                     </Col>
-                                    <Col xs = {8} md = {7}>
+                                    <Col xs = {8} md = {6}>
                                         <Row>
-                                            <Col>
+                                            <Col xs ={7} md ={9}>
                                                 <h5 className="foodTitle">{cardData.foodName}</h5>
-                                            </Col>
-                                            <Col xs = {5} md = {2}>
-                                                <h6 className="foodPrice">{cardData.foodPrice}</h6>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
                                                 <p className ="foodDesc">
                                                     {cardData.foodDesc}
                                                 </p>
+                                                <div className = "foodButton">
+                                                    <PikaButton title="Detail" buttonStyle ="cartPika" handleClick = {() => this.handleDetail(cardData)}/>
+                                                </div>
                                             </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
-                                            <PikaButton title="Detail" style="cartPika" handleClick = {() => this.handleDetail(cardData)}/>
+                                            <Col xs = {5} md = {3}>
+                                                <h6 className="foodPrice">Rp{cardData.foodPrice}</h6>
                                             </Col>
                                         </Row>
                                     </Col>
@@ -145,7 +195,7 @@ export class ProductView extends React.Component {
                     <Tab eventKey = {data.category} title= {data.category}>
                         <Row>
                             <Col>
-                                <h3 className = "foodHeader">{data.category}</h3>
+                                <h5 className = "foodHeader">{data.category}</h5>
                             </Col>
                         </Row>
                         {allCards}
@@ -160,25 +210,17 @@ export class ProductView extends React.Component {
                                     <Col xs = {4} md = {3}>
                                         <Image src = {cardData.foodImage} rounded fluid className = "foodImage"/>
                                     </Col>
-                                    <Col xs = {8} md = {7}>
+                                    <Col xs = {8} md = {6}>
                                         <Row>
                                             <Col>
                                                 <h5 className="foodTitle">{cardData.foodName}</h5>
-                                            </Col>
-                                            <Col xs = {5} md = {2}>
-                                                <h6 className="foodPrice">{cardData.foodPrice}</h6>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
                                                 <p className ="foodDesc">
                                                     {cardData.foodDesc}
                                                 </p>
+                                                <PikaButton title="Detail" buttonStyle ="cartPika" handleClick = {() => this.handleDetail(cardData)}/>
                                             </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
-                                            <PikaButton title="Detail" style="cartPika" handleClick = {() => this.handleDetail(cardData)}/>
+                                            <Col xs = {5} md = {3}>
+                                                <h6 className="foodPrice">Rp{cardData.foodPrice}</h6>
                                             </Col>
                                         </Row>
                                     </Col>
@@ -193,7 +235,7 @@ export class ProductView extends React.Component {
                     <Tab eventKey = {data.category} title= {data.category}>
                         <Row>
                             <Col>
-                                <h3 className = "foodHeader">{data.category}</h3>
+                                <h5 className = "foodHeader">{data.category}</h5>
                             </Col>
                         </Row>
                         {cards}
@@ -201,21 +243,23 @@ export class ProductView extends React.Component {
                 )
             }
         })
+
         return (
             <div>
                 <Row>
-                    <Col />
-                    <Col xs= {6} md= {4} className = "storeColumn">
+                    <Col xs={4} md={2}>
                         <Image src="https://2.img-dpreview.com/files/p/E~TS590x0~articles/5081755051/0652566517.jpeg" roundedCircle className = "storeImage"/>
-                        <h2>{this.state.data.title}</h2>
-                        <p>{this.state.data.desc}</p>
+                    </Col>
+                    <Col xs= {8} md= {4} className = "storeColumn">
+                        <h2 className = "storeLabel" style = {{textAlign: "left"}}>{this.state.data.title}</h2>
+                        <p className = "storeLabel" style = {{textAlign: "left"}}>{this.state.data.desc}</p>
                     </Col>
                     <Col />
                 </Row>
                 <Row/>
                 <Row>
-                    <Col>
-                        <Tabs defaultActiveKey = "All Category">
+                    <Col md={12}>
+                        <Tabs defaultActiveKey = "All Category" >
                             {contentView}
                         </Tabs>
                     </Col>
