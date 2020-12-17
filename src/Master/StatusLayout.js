@@ -1,28 +1,28 @@
 import React from "react";
 import DetailNavigation from "./DetailNavigation";
-import { CartView } from "../View/Cart/CartView";
+import { StatusView } from "../View/Status/StatusView";
 import {
   primary_color,
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
 import { Container } from "react-bootstrap";
-import cartLogo from "../Asset/Illustration/cart_illustration2x.png";
-import backIcon from "../Asset/Icon/back_icon2x.png";
+import statusLogo from "../Asset/Illustration/status_illustration2x.png";
+import backIcon from "../Asset/Icon/back_icon_alt2x.png";
 
-export default class CartLayout extends React.Component {
+export default class StatusLayout extends React.Component {
   componentDidMount() {
-    document.body.style.backgroundColor = secondary_color;
+    document.body.style.backgroundColor = primary_color;
   }
 
   render() {
     return (
       <html>
         <header>
-          <DetailNavigation centerImage={cartLogo} backIcon={backIcon} />
+          <DetailNavigation centerImage={statusLogo} backIcon={backIcon} />
         </header>
         <body>
           <Container>
-            <CartView />
+            <StatusView />
           </Container>
         </body>
       </html>

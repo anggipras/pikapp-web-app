@@ -1,27 +1,26 @@
 .icon {
-    vertical-align: middle;
-    width: 80%;
-    height: 80%;
-    max-width: 160px;
-    max-height: 80px;
+  vertical-align: middle;
+  width: 80%;
+  height: 80%;
+  max-width: 160px;
+  max-height: 80px;
 }
 
 @media (min-width: 768px) {
-    .navbar-brand {
-        position: absolute;
-        left: 52%;
-        transform: translateX(-52%)
-    }
+  .navbar-brand {
+    position: absolute;
+    left: 52%;
+    transform: translateX(-52%);
+  }
 }
 
 @media (max-width: 768px) {
-    .navbar-brand {
-        margin-left: 15%;
-    }
+  .navbar-brand {
+    margin-left: 15%;
+  }
 }
 
-
-.navbar-brand>img {
-    width: 50%;
-    height: 50%;
+.navbar-brand > img {
+  width: 50%;
+  height: 50%;
 }
