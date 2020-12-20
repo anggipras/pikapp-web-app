@@ -18,13 +18,15 @@ export class PikaModal extends React.Component {
     var list = [{ ...this.state.detailCategory }];
     var datas = this.props.datas;
     list.pop();
-    datas.foodExt.map((data) => {
-      return list.push({
-        name: data.name,
-        amount: data.amount,
+    if(datas.foodExt !== undefined) {
+      datas.foodExt.map((data) => {
+        return list.push({
+          name: data.name,
+          amount: data.amount,
+        });
       });
-    });
-    this.setState({ detailCategory: list });
+      this.setState({ detailCategory: list });
+    }
   }
 
   handleDecrease(e) {

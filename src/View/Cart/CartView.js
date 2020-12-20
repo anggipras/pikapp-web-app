@@ -7,8 +7,12 @@ import checklistIcon from "../../Asset/Icon/checklist_icon.png";
 import frontIcon from "../../Asset/Icon/front_icon.png";
 import imageSample from "../../Asset/Illustration/sample_food.jpg";
 import { CartModal } from "../../Component/Modal/CartModal";
-import { cart, isLoggedIn } from "../../index.js";
+import { cart, auth } from "../../index.js";
 import { Link } from "react-router-dom";
+import { address } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import sha256 from "crypto-js/hmac-sha256";
+import Axios from "axios";
 
 export class CartView extends React.Component {
   state = {
@@ -80,12 +84,14 @@ export class CartView extends React.Component {
 
   handlePayment = () => {
     console.log("Handle");
+
   };
 
   render() {
+    console.log(cart)
     let modal;
     let paymentButton;
-    if (isLoggedIn === false) {
+    if (auth.isLoggedIn === false) {
       paymentButton = (
         <Link to={"/login"} className={"iconButton"}>
           <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
@@ -135,7 +141,7 @@ export class CartView extends React.Component {
                 <Col xs={0} md={3} />
                 <Col xs={3} md={1}>
                   <img
-                    src={imageSample}
+                    src={food.foodImage}
                     alt={"food"}
                     className={"cartFoodImage"}
                   />
@@ -215,7 +221,7 @@ export class CartView extends React.Component {
                   <p className={"cartNote"}>Store Location</p>
                   <p className={"cartTitle"}>{store.storeDesc}</p>
                   <p className={"cartNote"}>
-                    <b>0.78km </b>(9 min)
+                    <b>{store.storeDistance}</b>
                   </p>
                 </Col>
               </Row>

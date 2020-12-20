@@ -16,7 +16,7 @@ export default class MainNavigation extends React.Component {
             </Link>
           </Navbar>
           <Navbar.Brand class="navbar-center">
-            <img src={logo} alt={"logo"}></img>
+            <Link to={"/"}> <img src={logo} alt={"logo"} class="icon"></img> </Link>
           </Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Link to={"/profile"}>

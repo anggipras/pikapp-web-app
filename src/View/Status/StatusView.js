@@ -9,6 +9,11 @@ import sendActiveIcon from "../../Asset/Icon/send_active_status.png";
 import reviewIcon from "../../Asset/Icon/review_status.png";
 import reviewActiveIcon from "../../Asset/Icon/review_active_status.png";
 import { PikaButton } from "../../Component/Button/PikaButton";
+import Axios from "axios";
+import { v4 as uuidV4 } from "uuid";
+import sha256 from "crypto-js/hmac-sha256";
+import { address } from "../../Asset/Constant/APIConstant";
+import { auth } from "../..";
 
 export class StatusView extends React.Component {
   state = {
@@ -20,27 +25,28 @@ export class StatusView extends React.Component {
         distance: "",
         quantity: "",
         status: "",
+        biz_type: "",
+        payment: "",
+        transactionId: "",
+        transactionTime: "",
       },
     ],
     currentModal: {
+      transactionId: "",
+      transactionTime:"",
       storeName: "Store",
       storeLocation: "Location",
       storeDistance: "Distance",
       status: "Status",
       payment: "Cash",
+      biz_type: "",
       food: [
         {
-          name: "Food1",
-          price: 1000,
+          productId: "",
+          name: "",
+          price: 0,
           image: "",
-          note: "Note1",
-          quantity: 1,
-        },
-        {
-          name: "Food2",
-          price: 2000,
-          image: "",
-          note: "Note2",
+          note: "",
           quantity: 1,
         },
       ],
@@ -50,39 +56,122 @@ export class StatusView extends React.Component {
   setModal(isShow) {
     this.setState({ showModal: isShow });
   }
+  handleDetail(transId) {
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    let signature = sha256("abf0e2a9-e9ee-440f-8563-94481c64b797:" + auth.email + ":" + "21f6fc80-cfdb-11ea-87d0-0242ac130003:" + date,"21f6fc80-cfdb-11ea-87d0-0242ac130003")
+    Axios(address + "txn/v1/" + transId + "/txn-detail/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "GET",
+    })
+      .then((res) => {
+        var results = res.results;
+        var resultModal = {...this.currentModal}
+        resultModal.transactionId = results[0].transaction_id
+        resultModal.transactionTime = results[0].transaction_time
+        resultModal.storeName = results[0].merchant_name
+        resultModal.storeDistance = ""
+        resultModal.storeLocation = ""
+        resultModal.status = results[0].status
+        resultModal.biz_type = results[0].biz_type
+        resultModal.payment = results[0].payment_with
+        results[0].products.forEach((product) => {
+          resultModal.food.push({
+            name: product.product_name,
+            price: product.price,
+            quantity: product.qty,
+            image: product.image,
+            note: product.notes
+          })
+        })
+        this.setState({
+          currentModal: resultModal
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+    this.setModal(true);
+  }
 
   handleSelect(tabIndex) {
     this.setState({ activeTab: tabIndex });
   }
 
   componentDidMount() {
-    var state = { ...this.state };
-    state.data.pop();
-    state.data.push({
-      title: "Food1",
-      distance: "dist1",
-      quantity: "qty1",
-      status: "unpaid",
-    });
-    state.data.push({
-      title: "Food4",
-      distance: "dist1",
-      quantity: "qty1",
-      status: "unpaid",
-    });
-    state.data.push({
-      title: "Food2",
-      distance: "dist1",
-      quantity: "qty1",
-      status: "pick",
-    });
-    state.data.push({
-      title: "Food3",
-      distance: "dist1",
-      quantity: "qty1",
-      status: "send",
-    });
-    this.setState({ data: state.data });
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    let signature = sha256("abf0e2a9-e9ee-440f-8563-94481c64b797:" + auth.email + ":" + "21f6fc80-cfdb-11ea-87d0-0242ac130003:" + date,"21f6fc80-cfdb-11ea-87d0-0242ac130003")
+    Axios(address + "txn/v1/txn-history/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "GET",
+    })
+      .then((res) => {
+        var results = res.results;
+        var stateData = {...this.state}
+        stateData.data.pop()
+        results.forEach((result) => {
+          stateData.data.push({
+            title: result.merchant_name,
+            distance: "",
+            quantity: result.total_product,
+            status: result.status,
+            biz_type: result.biz_type,
+            payment: result.payment_with,
+            transactionId: result.transaction_id,
+            transactionTime: result.transaction_time,
+          })
+          this.setState({data: stateData});
+        })
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // var state = { ...this.state };
+    // state.data.pop();
+    // state.data.push({
+    //   title: "Food1",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "unpaid",
+    // });
+    // state.data.push({
+    //   title: "Food4",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "unpaid",
+    // });
+    // state.data.push({
+    //   title: "Food2",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "pick",
+    // });
+    // state.data.push({
+    //   title: "Food3",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "send",
+    // });
+    // this.setState({ data: state.data });
   }
 
   render() {
@@ -133,7 +222,7 @@ export class StatusView extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>
               <p class="statusNoteLabel">No Pesanan.</p>
-              <p class="statusNoteHeader">CURB27022020-1</p>
+              <p class="statusNoteHeader">{this.state.currentModal.transactionId}</p>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -200,7 +289,7 @@ export class StatusView extends React.Component {
       notPaidImage = unpaidActiveIcon;
       let data = this.state.data;
       contentView = data.map((value) => {
-        if (value.status === "unpaid") {
+        if (value.status === "OPEN") {
           return (
             <Row className={"statusCard"}>
               <Col xs={1} md={1} />
@@ -221,18 +310,18 @@ export class StatusView extends React.Component {
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
-                        handleClick={() => this.setModal(true)}
+                        handleClick={() => this.handleDetail(value.transactionId)}
                       />
                     </Col>
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">Pickup</span>
+                      <span class="statusLeftText">{value.biz_type}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusRightText">Pickup</span>
+                      <span class="statusRightText">{value.payment}</span>
                     </Col>
                   </Row>
                 </Card>
@@ -251,7 +340,7 @@ export class StatusView extends React.Component {
       packImage = packActiveIcon;
       let data = this.state.data;
       contentView = data.map((value) => {
-        if (value.status === "pack") {
+        if (value.status === "PAID" || value.status === "MERCHANT_CONFIRM" || value.status === "CUSTOMER_ACCEPTED") {
           return (
             <Row className={"statusCard"}>
               <Col xs={1} md={1} />
@@ -272,18 +361,18 @@ export class StatusView extends React.Component {
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
-                        handleClick={() => this.setModal(true)}
+                        handleClick={() => this.handleDetail(value.transactionId)}
                       />
                     </Col>
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">Pickup</span>
+                      <span class="statusLeftText">{value.biz_type}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusRightText">Pickup</span>
+                      <span class="statusRightText">{value.payment}</span>
                     </Col>
                   </Row>
                 </Card>
@@ -302,7 +391,7 @@ export class StatusView extends React.Component {
       sendImage = sendActiveIcon;
       let data = this.state.data;
       contentView = data.map((value) => {
-        if (value.status === "send") {
+        if (value.status === "DELIVER" || value.status === "ON_PROCESS") {
           return (
             <Row className={"statusCard"}>
               <Col xs={1} md={1} />
@@ -323,18 +412,18 @@ export class StatusView extends React.Component {
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
-                        handleClick={() => this.setModal(true)}
+                        handleClick={() => this.handleDetail(value.transactionId)}
                       />
                     </Col>
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">Pickup</span>
+                      <span class="statusLeftText">{value.biz_type}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusRightText">Pickup</span>
+                      <span class="statusRightText">{value.payment}</span>
                     </Col>
                   </Row>
                 </Card>
@@ -353,7 +442,7 @@ export class StatusView extends React.Component {
       reviewImage = reviewActiveIcon;
       let data = this.state.data;
       contentView = data.map((value) => {
-        if (value.status === "review") {
+        if (value.status === "CLOSE" || value.status === "FINALIZE") {
           return (
             <Row className={"statusCard"}>
               <Col xs={1} md={1} />
@@ -374,18 +463,18 @@ export class StatusView extends React.Component {
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
-                        handleClick={() => this.setModal(true)}
+                        handleClick={() => this.handleDetail(value.transactionId)}
                       />
                     </Col>
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">Pickup</span>
+                      <span class="statusLeftText">{value.biz_type}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
                       <img src={unpaidIcon}></img>
-                      <span class="statusRightText">Pickup</span>
+                      <span class="statusRightText">{value.payment}</span>
                     </Col>
                   </Row>
                 </Card>

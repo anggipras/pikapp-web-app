@@ -5,9 +5,9 @@ import { PikaTextField } from "../../Component/TextField/PikaTextField";
 import axios from "axios";
 import { address } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
+import { auth } from "../../index.js";
 
 export class FormView extends React.Component {
   state = {
@@ -18,6 +18,7 @@ export class FormView extends React.Component {
     confirmPassword: "",
     isValid: true,
     isCaptcha: false,
+    captchaCounter: 0,
     errorMsg: "",
   };
 
@@ -112,13 +113,13 @@ export class FormView extends React.Component {
     const data = {
       username: this.name,
       password: this.password,
-      fcm_token: "FCM Token",
+      fcm_token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
     };
 
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
-    axios(address + "/auth/login", {
+    axios(address + "auth/login", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -127,9 +128,17 @@ export class FormView extends React.Component {
       },
       method: "POST",
       data: data,
-    }).then((res) => {
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        auth.token = res.data.token;
+        auth.new_event = res.data.new_event;
+        auth.recommendation_status = res.data.recommendation_status;
+        auth.email = this.state.email;
+        window.location.href = "/cart";
+      })
+      .catch((err) => {
+        this.setState({ captchaCounter: this.state.captchaCounter + 1 });
+      });
   };
 
   handleRegister = (e) => {
@@ -156,19 +165,19 @@ export class FormView extends React.Component {
 
     this.setState({ isValid: true });
     const data = {
-      full_name: this.name,
-      password: this.password,
-      phone_number: this.phone,
-      email: this.email,
-      gender: "Male",
+      full_name: this.state.name,
+      password: this.state.password,
+      phone_number: this.state.phone,
+      email: this.state.email,
+      gender: "MALE",
       birth_day: "01011970",
-      token: "FCM Token",
+      token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
     };
 
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
-    axios(address + "/auth/register", {
+    axios(address + "auth/register", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -177,9 +186,13 @@ export class FormView extends React.Component {
       },
       method: "POST",
       data: data,
-    }).then((res) => {
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        window.location.href = "/login";
+      })
+      .catch((err) => {
+        this.setState({ captchaCounter: this.state.captchaCounter + 1 });
+      });
   };
 
   onChange(value) {

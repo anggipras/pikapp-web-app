@@ -1,4 +1,1 @@
-export const address = "https://localhost:"
-
-export const developmentAddress = address + "8762"
-export const productionAddress = address + "8763"
+export const address = "https://dev-api.pikapp.id/";

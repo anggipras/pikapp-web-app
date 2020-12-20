@@ -3,6 +3,10 @@ import { Col, Row, Image, Card, Tabs, Tab, Modal } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
+import { address } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import Axios from "axios";
+import { auth, currentMerchant } from "../..";
 
 export class StoreView extends React.Component {
   state = {
@@ -12,6 +16,10 @@ export class StoreView extends React.Component {
       desc: "",
       data: [
         {
+          address: "",
+          rating: "",
+          logo: "",
+          distance: "",
           storeId: "",
           storeName: "",
           storeDesc: "",
@@ -23,87 +31,92 @@ export class StoreView extends React.Component {
 
   componentDidMount() {
     const value = queryString.parse(window.location.search);
-    var data = { ...this.state.data };
-    data.title = "Location";
-    data.image = "";
-    data.desc = "This is a store desc";
-    data.data.pop();
-    data.data.push({
-      storeId: "storeId1",
-      storeName: "Store Name A",
-      storeDesc: "Store Desc A",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId2",
-      storeName: "Store Name B",
-      storeDesc: "Store Desc B",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId1",
-      storeName: "Store Name C",
-      storeDesc: "Store Desc C",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId1",
-      storeName: "Store Name D",
-      storeDesc: "Store Desc D",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId4",
-      storeName: "Store Name B",
-      storeDesc: "Store Desc B",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId4",
-      storeName: "Store Name C",
-      storeDesc: "Store Desc C",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId3",
-      storeName: "Store Name D",
-      storeDesc: "Store Desc D",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
+    const longitude = value.longitude;
+    const latitude = value.latitude;
+    const merchant = value.merchant;
 
-    data.data.push({
-      storeId: "storeId7",
-      storeName: "Store Name B",
-      storeDesc: "Store Desc B",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId6",
-      storeName: "Store Name C",
-      storeDesc: "Store Desc C",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    data.data.push({
-      storeId: "storeId9",
-      storeName: "Store Name D",
-      storeDesc: "Store Desc D",
-      storeImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    });
-    this.setState({ data: data });
+    let addressRoute;
+    if (merchant === null) {
+      addressRoute =
+        address + "home/v1/merchant/" + longitude + "/" + latitude;
+    } else {
+      addressRoute =
+        address +
+        "home/v1/merchant/" +
+        longitude +
+        "/" +
+        latitude +
+        "/" +
+        merchant;
+    }
+    addressRoute = "https://dev-api.pikapp.id/home/v1/merchant/106.634157/-6.234916/ALL/"
+    var stateData;
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "token": "PUBLIC",
+        "category": "1",
+      },
+      method: "GET",
+    })
+      .then((res) => {
+          stateData = { ...this.state.data };
+          let responseDatas = res.data;
+          stateData.data.pop();
+          responseDatas.results.forEach((data) => {
+            stateData.data.push({
+                address: data.merchant_address,
+                rating: data.merchant_rating,
+                logo: data.merchant_logo,
+                distance: data.merchant_distance,
+                storeId: data.mid,
+                storeName: data.merchant_name,
+                storeDesc: "",
+                storeImage: data.merchant_pict,
+            })
+          })
+          this.setState({ data: stateData });
+      })
+      .catch((err) => {
+      });
+
+    // var data = { ...this.state.data };
+    // data.title = "Location";
+    // data.image = "";
+    // data.desc = "This is a store desc";
+    // data.data.pop();
+    // data.data.push({
+    //   address: "address",
+    //   rating: "1",
+    //   logo: "logo",
+    //   distance: "1",
+    //   storeId: "1",
+    //   storeName: "name",
+    //   storeDesc: "",
+    //   storeImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+    // });
+    // this.setState({ data: data });
+
   }
 
+  storeClick = (e) => {
+    currentMerchant.mid = e.storeId;
+    currentMerchant.storeName = e.storeName;
+    currentMerchant.storeDesc = "Desc";
+    currentMerchant.distance = e.distance;
+    currentMerchant.storeImage = e.storeImage;
+    console.log(e.distance)
+
+    localStorage.setItem("currentMerchant", currentMerchant)
+  }
   handleDetail(data) {
-    return <Link to={"/status"}>asd</Link>;
+    return <Link to={"/status"}></Link>;
   }
 
   render() {
@@ -129,12 +142,13 @@ export class StoreView extends React.Component {
                 <div className="foodButton">
                   <Link
                     className={"btn-cartPika"}
-                    to={"/store"}
+                    to={"/store?mid=" + cardData.storeId}
                     style={{
                       padding: 8,
                       textDecoration: "none",
                       color: "black",
                     }}
+                    onClick={()=> this.storeClick(cardData)}
                   >
                     Go to store
                   </Link>

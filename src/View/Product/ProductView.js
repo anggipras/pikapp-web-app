@@ -3,9 +3,12 @@ import { Col, Row, Image, Card, Tabs, Tab } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaModal } from "../../Component/Modal/PikaModal";
 import queryString from "query-string";
-import { cart } from "../../index.js";
+import { auth, cart, currentMerchant } from "../../index.js";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
+import { address } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import Axios from "axios";
 
 export var currentExt = {
   detailCategory: [
@@ -21,11 +24,13 @@ export class ProductView extends React.Component {
   state = {
     showModal: false,
     data: {
+      mid: "",
       title: "",
       image: "",
       desc: "",
       data: [
         {
+          productId: "",
           category: "",
           foodName: "",
           foodDesc: "",
@@ -40,6 +45,7 @@ export class ProductView extends React.Component {
         },
       ],
       currentData: {
+        productId: "",
         category: "",
         foodName: "",
         foodDesc: "",
@@ -57,182 +63,75 @@ export class ProductView extends React.Component {
 
   componentDidMount() {
     const value = queryString.parse(window.location.search);
-    var data = { ...this.state.data };
-    data.title = "Store Name";
-    data.image = "";
-    data.desc = "This is a store desc";
-    data.data.pop();
-    data.data.push({
-      category: "All Category",
-      foodName: "",
-      foodDesc: "",
-      foodPrice: 0,
-      foodImage: "",
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name A",
-      foodDesc: "Food Desc A",
-      foodPrice: 5000,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name B",
-      foodDesc: "Food Desc B",
-      foodPrice: 3000,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name C",
-      foodDesc: "Food Desc C",
-      foodPrice: 5500,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name D",
-      foodDesc: "Food Desc D",
-      foodPrice: 500,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name E",
-      foodDesc: "Food Desc E",
-      foodPrice: 8000,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name F",
-      foodDesc: "Food Desc F",
-      foodPrice: 50,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name G",
-      foodDesc: "Food Desc G",
-      foodPrice: 5100,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name H",
-      foodDesc: "Food Desc H",
-      foodPrice: 100000,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
-    });
-    data.data.push({
-      category: "Category1",
-      foodName: "Food Name I",
-      foodDesc: "Food Desc I",
-      foodPrice: 52000,
-      foodImage:
-        "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-      foodExt: [
-        {
-          name: "Food ext A",
-          amount: 0,
-        },
-        {
-          name: "Food ext B",
-          amount: 0,
-        },
-      ],
+    const mid = value.mid;
+    let addressRoute = address + "home/v1/list/product/";
+    var stateData;
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "token": "PUBLIC",
+        "mid": "M00000005",
+      },
+      method: "GET",
+    })
+    .then((res) => {
+        stateData = { ...this.state.data };
+        let responseDatas = res.data.results;
+        stateData.data.pop();
+        stateData.mid = mid;
+        stateData.title = currentMerchant.storeName;
+        stateData.image = currentMerchant.storeImage;
+        stateData.desc = currentMerchant.storeDistance;
+        stateData.data.push({
+          category: "All Category",
+          productId: "",
+          foodName: "",
+          foodDesc: "",
+          foodPrice: "",
+          foodImage: "",
+        })
+        responseDatas.forEach((data) => {
+          stateData.data.push({
+              productId: data.product_id,
+              foodName: data.product_name,
+              foodDesc: "",
+              foodPrice: data.product_price,
+              foodImage: data.product_picture[0],
+          })
+        })
+      this.setState({ data: stateData });
+    })
+    .catch((err) => {
     });
 
-    this.setState({ data: data });
+    // var data = { ...this.state.data };
+    // data.title = "Store Name";
+    // data.image = "";
+    // data.desc = "This is a store desc";
+    // data.data.pop();
+    // data.data.push({
+    //   category: "All Category",
+    //   productId: "data.product_id",
+    //   foodName: "data.product_name",
+    //   foodDesc: "",
+    //   foodPrice: 1,
+    //   foodImage: "data.product_picture",
+    // });
+    // data.data.push({
+    //   category: "",
+    //   productId: "data.product_id",
+    //   foodName: "data.product_name",
+    //   foodDesc: "",
+    //   foodPrice: 1,
+    //   foodImage: "data.product_picture",
+    // });
+    // this.setState({data: data})
   }
 
   handleDetail(data) {
@@ -249,30 +148,38 @@ export class ProductView extends React.Component {
   };
 
   handleAddCart = () => {
+    const value = queryString.parse(window.location.search);
+    const mid = value.mid;
     this.setModal(false);
     var isStorePresent = false;
     cart.forEach((data) => {
-      if (data.storeName === this.state.data.title) {
+      console.log(data.mid)
+      console.log(this.state.data.mid)
+      if (data.mid === this.state.data.mid) {
         isStorePresent = true;
       }
     });
 
     var isDuplicate = false;
     cart.forEach((data) => {
-      if (data.storeName === this.state.data.title) {
+      if (data.mid === this.state.data.mid) {
         data.food.forEach((food) => {
-          if (food.foodName === this.state.currentData.foodName) {
+          if (food.productId === this.state.currentData.productId) {
             isDuplicate = true;
           }
         });
       }
     });
+
+    console.log(isStorePresent)
+    console.log(isDuplicate)
     if (isStorePresent === true) {
       if (isDuplicate === true) {
         cart.forEach((data) => {
-          if (data.storeName === this.state.data.title) {
+          if (data.mid === this.state.data.mid) {
             data.food.forEach((food) => {
-              if (food.foodName === this.state.currentData.foodName) {
+
+              if (food.productId === this.state.currentData.productId) {
                 food.foodAmount += 1;
               }
             });
@@ -280,29 +187,37 @@ export class ProductView extends React.Component {
         });
       } else {
         cart.forEach((data) => {
-          if (data.storeName === this.state.data.title) {
+          if (data.mid === this.state.data.mid) {
             data.food.push({
+              productId: this.state.currentData.productId,
               foodName: this.state.currentData.foodName,
               foodPrice: this.state.currentData.foodPrice,
+              foodImage: this.state.currentData.foodImage,
               foodAmount: 1,
+              foodNote: currentExt.note,
             });
           }
         });
       }
     } else {
       cart.push({
-        storeName: this.state.data.title,
-        storeDesc: this.state.data.desc,
+        mid: mid,
+        storeName: currentMerchant.storeName,
+        storeDesc: currentMerchant.storeDesc,
+        storeDistance: currentMerchant.distance,
         food: [
           {
+            productId: this.state.currentData.productId,
             foodName: this.state.currentData.foodName,
             foodPrice: this.state.currentData.foodPrice,
+            foodImage: this.state.currentData.foodImage,
             foodAmount: 1,
+            foodNote: currentExt.note,
           },
         ],
       });
     }
-
+    console.log(cart)
     localStorage.setItem("cart", JSON.stringify(cart));
   };
 
@@ -457,7 +372,7 @@ export class ProductView extends React.Component {
         <Row>
           <Col xs={4} md={2}>
             <Image
-              src="https://2.img-dpreview.com/files/p/E~TS590x0~articles/5081755051/0652566517.jpeg"
+              src={this.state.data.image}
               roundedCircle
               className="storeImage"
             />
