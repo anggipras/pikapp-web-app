@@ -14,6 +14,8 @@ export class CartModal extends React.Component {
     this.setState({ radio: num });
   };
   render() {
+    let data = this.state;
+    let handleData = this.props.handleData(data);
     let optionList = [];
     optionList = this.props.detailOptions;
     let optionListView = optionList.map((data) => {

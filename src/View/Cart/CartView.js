@@ -18,6 +18,8 @@ export class CartView extends React.Component {
   state = {
     showModal: false,
     currentModalTitle: "",
+    paymentOption: "WALLET",
+    biz_type: "DINE_IN",
     currentModal: [
       {
         image: "",
@@ -81,10 +83,66 @@ export class CartView extends React.Component {
     });
     this.forceUpdate();
   }
-
+  handleOption = (data) => {
+    if(this.state.currentModalTitle === "Cara makan anda?") {
+      if(data.radio === 0) {
+        this.setState({biz_type: "DINE_IN"})
+      } else {
+        this.setState({biz_type: "TAKE_AWAY"})
+      }
+    }
+  }
   handlePayment = () => {
     console.log("Handle");
+    let totalAmount = 0;
+    let data = cart;
+    data.forEach((store) => {
+      store.food.forEach((food) => {
+        totalAmount = totalAmount + food.foodPrice * food.foodAmount;
+      });
+    });
 
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    let signature = sha256("abf0e2a9-e9ee-440f-8563-94481c64b797:" + auth.email + ":" + "21f6fc80-cfdb-11ea-87d0-0242ac130003:" + date,"21f6fc80-cfdb-11ea-87d0-0242ac130003")
+    const date = new Date().toISOString();
+
+    var requestData = {
+      products: {
+        product_id :"",
+        notes: "",
+        qty: 0
+      },
+      payment_with: this.state.paymentOption,
+      mid: cart[0].mid,
+      prices: totalAmount,
+      biz_type: this.state.biz_type,
+      table_no: "1"
+    }
+    requestData.products.pop()
+    cart.food.forEach((data) => {
+      requestData.products.push({
+        product_id: data.productId,
+        notes: data.foodNote,
+        qty: data.foodAmount,
+      })
+    })
+    Axios(address + "/txn/v1/cart-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: requestData,
+    })
+    .then((res) => {
+    })
+    .catch((err) => {
+    });
   };
 
   render() {
@@ -113,6 +171,7 @@ export class CartView extends React.Component {
           onHide={() => this.setModal(false)}
           title={this.state.currentModalTitle}
           detailOptions={this.state.currentModal}
+          handleData = {this.handleOption}
         />
       );
     } else {

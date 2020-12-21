@@ -8,6 +8,7 @@ import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
 import { address } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
+import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 
 export var currentExt = {
@@ -217,8 +218,33 @@ export class ProductView extends React.Component {
         ],
       });
     }
-    console.log(cart)
     localStorage.setItem("cart", JSON.stringify(cart));
+
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    let signature = sha256("abf0e2a9-e9ee-440f-8563-94481c64b797:" + auth.email + ":" + "21f6fc80-cfdb-11ea-87d0-0242ac130003:" + date,"21f6fc80-cfdb-11ea-87d0-0242ac130003")
+    const date = new Date().toISOString();
+    Axios(address + "/txn/v1/cart-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: {
+        mid: this.state.data.mid,
+        pid: this.state.currentData.productId,
+        qty: this.state.currentData.foodAmount,
+        notes: currentExt.note,
+      }
+    })
+    .then((res) => {
+    })
+    .catch((err) => {
+    });
   };
 
   render() {
