@@ -6,10 +6,12 @@ import { Link } from "react-router-dom";
 import { address } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
-import { auth, currentMerchant } from "../..";
+import Cookies from "js-cookie"
+import Geocode from "react-geocode"
 
 export class StoreView extends React.Component {
   state = {
+    location: "",
     data: {
       title: "",
       image: "",
@@ -30,15 +32,43 @@ export class StoreView extends React.Component {
   };
 
   componentDidMount() {
+    Cookies.set("homePage", window.location.search)
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if(auth.isLogged === false) {
+      var lastLink = { value: window.location.href}
+      Cookies.set("lastLink", lastLink,{ expires: 1})
+      window.location.href = "/login"
+    }
     const value = queryString.parse(window.location.search);
-    const longitude = value.longitude;
-    const latitude = value.latitude;
-    const merchant = value.merchant;
+    var longitude = "";
+    longitude = value.longitude;
+    var latitude = "";
+    latitude = value.latitude
+    var merchant = "";
+    merchant = value.merchant;
+    Geocode.fromLatLng(latitude,longitude)
+    .then((res) => {
+      console.log(res)
+      this.setState({location: res.results[0].formatted_address})
+    })
+    .catch((err) => {
+      console.log(err)
+      this.setState({location: "Tidak tersedia"})
+    })
 
     let addressRoute;
-    if (merchant === null) {
+    if (merchant === undefined) {
       addressRoute =
-        address + "home/v1/merchant/" + longitude + "/" + latitude;
+        address + "home/v1/merchant/" + longitude + "/" + latitude + "/ALL/";
     } else {
       addressRoute =
         address +
@@ -47,9 +77,9 @@ export class StoreView extends React.Component {
         "/" +
         latitude +
         "/" +
-        merchant;
+        merchant
+        + "/"
     }
-    addressRoute = "https://dev-api.pikapp.id/home/v1/merchant/106.634157/-6.234916/ALL/"
     var stateData;
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
@@ -106,6 +136,13 @@ export class StoreView extends React.Component {
   }
 
   storeClick = (e) => {
+    var currentMerchant = {
+      mid: "",
+      storeName: "",
+      storeDesc: "",
+      distance: "",
+      storeImage: "",
+    };
     currentMerchant.mid = e.storeId;
     currentMerchant.storeName = e.storeName;
     currentMerchant.storeDesc = "Desc";
@@ -113,7 +150,7 @@ export class StoreView extends React.Component {
     currentMerchant.storeImage = e.storeImage;
     console.log(e.distance)
 
-    localStorage.setItem("currentMerchant", currentMerchant)
+    Cookies.set("currentMerchant", currentMerchant, {expires: 1})
   }
   handleDetail(data) {
     return <Link to={"/status"}></Link>;
@@ -126,7 +163,7 @@ export class StoreView extends React.Component {
     var allCards = storeDatas.map((cardData) => {
       return (
         <Row>
-          <Col xs={4} md={3}>
+          <Col xs={3} md={3}>
             <Image
               src={cardData.storeImage}
               rounded
@@ -134,7 +171,7 @@ export class StoreView extends React.Component {
               className="storeImage"
             />
           </Col>
-          <Col xs={8} md={6}>
+          <Col xs={9} md={6}>
             <Row>
               <Col xs={7} md={9}>
                 <h5 className="foodTitle">{cardData.storeName}</h5>
@@ -163,19 +200,13 @@ export class StoreView extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={4} md={2}>
-            <Image
-              src="https://2.img-dpreview.com/files/p/E~TS590x0~articles/5081755051/0652566517.jpeg"
-              roundedCircle
-              className="storeImage"
-            />
-          </Col>
-          <Col xs={8} md={4} className="storeColumn">
-            <h2 className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.data.title}
-            </h2>
+          <Col xs={4} md={1}/>
+          <Col xs={0} md={4} className="storeColumn">
+            <h6 className="" style={{ textAlign: "left" }}>
+              Lokasi:
+            </h6>
             <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.data.desc}
+              {this.state.location}
             </p>
           </Col>
           <Col />

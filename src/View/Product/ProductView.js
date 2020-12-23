@@ -3,15 +3,16 @@ import { Col, Row, Image, Card, Tabs, Tab } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaModal } from "../../Component/Modal/PikaModal";
 import queryString from "query-string";
-import { auth, cart, currentMerchant } from "../../index.js";
+import { cart } from "../../index.js";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
 import { address } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
+import Cookies from "js-cookie"
 
-export var currentExt = {
+var currentExt = {
   detailCategory: [
     {
       name: "",
@@ -63,6 +64,24 @@ export class ProductView extends React.Component {
   };
 
   componentDidMount() {
+    console.log(cart)
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if(auth.isLogged === false) {
+      var lastLink = { value: window.location.href}
+      Cookies.set("lastLink", lastLink,{ expires: 1})
+      window.location.href = "/login"
+    }
+    var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    console.log(auth)
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     let addressRoute = address + "home/v1/list/product/";
@@ -77,7 +96,7 @@ export class ProductView extends React.Component {
         "x-request-timestamp": date,
         "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
         "token": "PUBLIC",
-        "mid": "M00000005",
+        "mid": mid,
       },
       method: "GET",
     })
@@ -149,6 +168,7 @@ export class ProductView extends React.Component {
   };
 
   handleAddCart = () => {
+    var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     this.setModal(false);
@@ -172,8 +192,7 @@ export class ProductView extends React.Component {
       }
     });
 
-    console.log(isStorePresent)
-    console.log(isDuplicate)
+
     if (isStorePresent === true) {
       if (isDuplicate === true) {
         cart.forEach((data) => {
@@ -181,7 +200,7 @@ export class ProductView extends React.Component {
             data.food.forEach((food) => {
 
               if (food.productId === this.state.currentData.productId) {
-                food.foodAmount += 1;
+                food.foodAmount += currentExt.detailCategory[0].amount;
               }
             });
           }
@@ -194,7 +213,7 @@ export class ProductView extends React.Component {
               foodName: this.state.currentData.foodName,
               foodPrice: this.state.currentData.foodPrice,
               foodImage: this.state.currentData.foodImage,
-              foodAmount: 1,
+              foodAmount: currentExt.detailCategory[0].amount,
               foodNote: currentExt.note,
             });
           }
@@ -212,18 +231,46 @@ export class ProductView extends React.Component {
             foodName: this.state.currentData.foodName,
             foodPrice: this.state.currentData.foodPrice,
             foodImage: this.state.currentData.foodImage,
-            foodAmount: 1,
+            foodAmount: currentExt.detailCategory[0].amount,
             foodNote: currentExt.note,
           },
         ],
       });
     }
+    let addedMerchants = []
+    if(Cookies.get("addedMerchants") === undefined) {
+      if(!addedMerchants.includes(mid)) {
+        addedMerchants.push(mid)
+        Cookies.set("addedMerchants", addedMerchants)
+      }
+    } else {
+      addedMerchants = JSON.parse(Cookies.get("addedMerchants"))
+      if(!addedMerchants.includes(mid)) {
+        addedMerchants.push(mid)
+        Cookies.set("addedMerchants", addedMerchants)
+      }
+    }
     localStorage.setItem("cart", JSON.stringify(cart));
 
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if(auth.isLogged === false) {
+      var lastLink = { value: window.location.href}
+      Cookies.set("lastLink", lastLink,{ expires: 1})
+      window.location.href = "/login"
+    }
     let uuid = uuidV4();
+    const date = new Date().toISOString();
     uuid = uuid.replaceAll("-", "");
     let signature = sha256("abf0e2a9-e9ee-440f-8563-94481c64b797:" + auth.email + ":" + "21f6fc80-cfdb-11ea-87d0-0242ac130003:" + date,"21f6fc80-cfdb-11ea-87d0-0242ac130003")
-    const date = new Date().toISOString();
     Axios(address + "/txn/v1/cart-post/", {
       headers: {
         "Content-Type": "application/json",
@@ -237,7 +284,7 @@ export class ProductView extends React.Component {
       data: {
         mid: this.state.data.mid,
         pid: this.state.currentData.productId,
-        qty: this.state.currentData.foodAmount,
+        qty: currentExt.detailCategory[0].amount,
         notes: currentExt.note,
       }
     })
@@ -301,7 +348,7 @@ export class ProductView extends React.Component {
                     className="foodImage"
                   />
                 </Col>
-                <Col xs={8} md={6}>
+                <Col xs={8} md={9}>
                   <Row>
                     <Col xs={7} md={9}>
                       <h5 className="foodTitle">{cardData.foodName}</h5>

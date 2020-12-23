@@ -53,6 +53,12 @@
     text-align: center;
     font-weight: bold;
   }
+  .statusLeftImg>img {
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 30px;
+    max-height: 30px;
+  }
   .statusLeftText {
     margin-left: 8px;
     -moz-hyphens: auto;
@@ -65,6 +71,12 @@
     align-items: center;
     text-align: center;
     font-weight: bold;
+  }
+  .statusRightImg>img {
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 30px;
+    max-height: 30px;
   }
   .statusRightText {
     margin-left: 8px;
@@ -79,10 +91,20 @@
   }
   .statusNoteLabel {
     font-size: 12px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
   }
   .statusNoteHeader {
-    font-size: 24px;
+    font-size: 14px;
     font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
   }
 
   .statusStoreIcon {
@@ -92,7 +114,7 @@
   }
   .statusStoreName {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     -webkit-hyphens: auto;
@@ -118,11 +140,11 @@
     word-wrap: break-word;
   }
   .statusStoreStatusIcon {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 24px;
   }
   .statusStoreStatus {
-    font-size: 16px;
+    font-size: 12px;
     vertical-align: middle;
     font-weight: bold;
     margin-right: 16px;
@@ -143,7 +165,7 @@
   }
   .statusStorePaymentLabel {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 8px;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -152,8 +174,8 @@
     word-wrap: break-word;
   }
   .statusStorePayment {
-    margin-left: 8px;
-    font-size: 16px;
+    margin-left: 30px;
+    font-size: 14px;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     -webkit-hyphens: auto;
@@ -174,7 +196,7 @@
     margin-top: 16px;
   }
   .statusFoodname {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -192,7 +214,7 @@
     word-wrap: break-word;
   }
   .statusFoodQuantity {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -267,6 +289,12 @@
     text-align: center;
     font-weight: bold;
   }
+  .statusLeftImg>img {
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
+  }
   .statusLeftText {
     margin-left: 8px;
     -moz-hyphens: auto;
@@ -279,6 +307,12 @@
     align-items: center;
     text-align: center;
     font-weight: bold;
+  }
+  .statusRightImg>img {
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
   }
   .statusRightText {
     margin-left: 8px;
@@ -293,10 +327,20 @@
   }
   .statusNoteLabel {
     font-size: 10px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
   }
   .statusNoteHeader {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
   }
   .statusStoreIcon {
     width: 36px;
@@ -305,7 +349,7 @@
   }
   .statusStoreName {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     -webkit-hyphens: auto;
@@ -332,10 +376,10 @@
   }
   .statusStoreStatusIcon {
     width: 30px;
-    height: 30px;
+    height: 18px;
   }
   .statusStoreStatus {
-    font-size: 16px;
+    font-size: 12px;
     vertical-align: middle;
     font-weight: bold;
     margin-right: 16px;
@@ -356,7 +400,7 @@
   }
   .statusStorePaymentLabel {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 8px;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -365,8 +409,8 @@
     word-wrap: break-word;
   }
   .statusStorePayment {
-    margin-left: 8px;
-    font-size: 16px;
+    margin-left: 16px;
+    font-size: 12px;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     -webkit-hyphens: auto;
@@ -387,7 +431,7 @@
     margin-top: 16px;
   }
   .statusFoodname {
-    font-size: 18px;
+    font-size: 12px;
     font-weight: bold;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -396,7 +440,7 @@
     word-wrap: break-word;
   }
   .statusFoodPrice {
-    font-size: 14px;
+    font-size: 12px;
     line-height: 0;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -405,7 +449,7 @@
     word-wrap: break-word;
   }
   .statusFoodQuantity {
-    font-size: 18px;
+    font-size: 12x;
     font-weight: bold;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
@@ -414,7 +458,7 @@
     word-wrap: break-word;
   }
   .statusFoodNote {
-    font-size: 14px;
+    font-size: 12px;
     line-height: 0;
     margin-left: 10%;
     font-weight: lighter;

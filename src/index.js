@@ -12,15 +12,6 @@ import { Router, Route, Switch } from "react-router-dom";
 
 var hist = createBrowserHistory();
 
-export var auth = {
-  isLogged: false,
-  validTime: "",
-  token: "",
-  email: "",
-  new_event: true,
-  recommendation_status: false,
-};
-
 export var cart = [
   { 
     mid: "",
@@ -39,24 +30,9 @@ export var cart = [
     ],
   },
 ];
-
-export var currentMerchant = {
-  mid: "",
-  storeName: "",
-  storeImage: "",
-  storeDesc: "",
-  storeDistance: "",
-};
-
-// if (localStorage.getItem("auth")) {
-//   auth = localStorage.getItem("auth");
-// }
-// if (localStorage.getItem("cart")) {
-//   cart = JSON.parse(localStorage.getItem("cart"));
-// }
-// if (localStorage.getItem("currentMerchant")) {
-//   currentMerchant = JSON.parse(localStorage.getItem("currentMerchant"));
-// }
+if (localStorage.getItem("cart")) {
+  cart = JSON.parse(localStorage.getItem("cart"));
+}
 
 ReactDOM.render(
   <Router history={hist}>

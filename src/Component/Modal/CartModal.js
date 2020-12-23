@@ -12,10 +12,11 @@ export class CartModal extends React.Component {
 
   onClick = (num) => () => {
     this.setState({ radio: num });
+    localStorage.setItem("option", num)
+    this.props.handleData(num);
   };
   render() {
     let data = this.state;
-    let handleData = this.props.handleData(data);
     let optionList = [];
     optionList = this.props.detailOptions;
     let optionListView = optionList.map((data) => {
@@ -39,7 +40,7 @@ export class CartModal extends React.Component {
                 <Form.Check
                   name="option"
                   type={"radio"}
-                  id={"option"}
+                  id={data.option}
                   onClick={this.onClick(optionList.indexOf(data))}
                   checked={
                     this.state.radio === optionList.indexOf(data) ? true : false

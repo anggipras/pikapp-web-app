@@ -8,7 +8,7 @@ export class PikaModal extends React.Component {
     detailCategory: [
       {
         name: "",
-        amount: 0,
+        amount: 1,
       },
     ],
     note: "",
@@ -33,7 +33,7 @@ export class PikaModal extends React.Component {
     let foodList = [];
     foodList = this.state.detailCategory;
     let updatedFoodlist = foodList.map((food) => {
-      if (food === e && food.amount > 0) {
+      if (food === e && food.amount > 1) {
         food.amount = food.amount - 1;
       }
       return food;
@@ -63,37 +63,72 @@ export class PikaModal extends React.Component {
     let data = this.state;
     let handleData = this.props.handleData(data);
     let foodListView = foodList.map((food) => {
-      return (
-        <>
-          <Row>
-            <Col xs={4} md={5}>
-              <h6 className={"modalFoodName"}>{food.name}</h6>
-            </Col>
-            <Col xs={1} md={3} />
-            <Col xs={6} md={4}>
-              <ButtonGroup className={"modalButtonGroup"}>
-                <Button
-                  onClick={() => this.handleDecrease(food)}
-                  variant="modalMiniButton"
-                >
-                  -
-                </Button>
-                <Form.Control
-                  value={food.amount}
-                  className="modalField"
-                  disabled
-                ></Form.Control>
-                <Button
-                  onClick={() => this.handleIncrease(food)}
-                  variant="modalMiniButton"
-                >
-                  +
-                </Button>
-              </ButtonGroup>
-            </Col>
-          </Row>
-        </>
-      );
+      if(food.name === "") {
+        return (
+          <>
+            <Row>
+              <Col xs={4} md={5}>
+                <h6 className={"modalFoodName"}>Jumlah</h6>
+              </Col>
+              <Col xs={1} md={3} />
+              <Col xs={6} md={4}>
+                <ButtonGroup className={"modalButtonGroup"}>
+                  <Button
+                    onClick={() => this.handleDecrease(food)}
+                    variant="modalMiniButton"
+                  >
+                    -
+                  </Button>
+                  <Form.Control
+                    value={food.amount}
+                    className="modalField"
+                    disabled
+                  ></Form.Control>
+                  <Button
+                    onClick={() => this.handleIncrease(food)}
+                    variant="modalMiniButton"
+                  >
+                    +
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Row>
+              <Col xs={4} md={5}>
+                <h6 className={"modalFoodName"}>{food.name}</h6>
+              </Col>
+              <Col xs={1} md={3} />
+              <Col xs={6} md={4}>
+                <ButtonGroup className={"modalButtonGroup"}>
+                  <Button
+                    onClick={() => this.handleDecrease(food)}
+                    variant="modalMiniButton"
+                  >
+                    -
+                  </Button>
+                  <Form.Control
+                    value={food.amount}
+                    className="modalField"
+                    disabled
+                  ></Form.Control>
+                  <Button
+                    onClick={() => this.handleIncrease(food)}
+                    variant="modalMiniButton"
+                  >
+                    +
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
+          </>
+        );
+      }
+
     });
 
     return (

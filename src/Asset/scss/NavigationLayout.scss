@@ -9,14 +9,27 @@
 @media (min-width: 768px) {
   .navbar-brand {
     position: absolute;
-    left: 52%;
-    transform: translateX(-52%);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .navbar-center {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
 @media (max-width: 768px) {
   .navbar-brand {
-    margin-left: 15%;
+    position: absolute;
+    left: 55%;
+    transform: translateX(-55%);
+  }
+  .navbar-center {
+    position: absolute;
+    width: 300px;
+    height: 40px;
+    padding-left: 100px;
   }
 }
 

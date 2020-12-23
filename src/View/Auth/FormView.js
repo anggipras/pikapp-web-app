@@ -7,7 +7,7 @@ import { address } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
-import { auth } from "../../index.js";
+import Cookies from "js-cookie";
 
 export class FormView extends React.Component {
   state = {
@@ -104,18 +104,24 @@ export class FormView extends React.Component {
       this.setState({ isValid: false });
       return;
     }
-    if (this.checkPassword() === false) {
-      this.setState({ isValid: false });
-      return;
-    }
+    // if (this.checkPassword() === false) {
+    //   this.setState({ isValid: false });
+    //   return;
+    // }
 
     this.setState({ isValid: true });
     const data = {
-      username: this.name,
-      password: this.password,
+      username: this.state.email,
+      password: this.state.password,
       fcm_token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
     };
-
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -130,15 +136,24 @@ export class FormView extends React.Component {
       data: data,
     })
       .then((res) => {
+        auth.isLogged = true;
         auth.token = res.data.token;
         auth.new_event = res.data.new_event;
         auth.recommendation_status = res.data.recommendation_status;
         auth.email = this.state.email;
-        window.location.href = "/cart";
+        Cookies.set("auth", auth, { expires: 1});
+        if(Cookies.get("lastLink") !== undefined) {
+          window.location.href = JSON.parse(Cookies.get("lastLink")).value
+        }
+        alert("Login berhasil.")
       })
       .catch((err) => {
+        alert("Login gagal.")
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
+        console.log(err)
       });
+
+
   };
 
   handleRegister = (e) => {
@@ -188,9 +203,11 @@ export class FormView extends React.Component {
       data: data,
     })
       .then((res) => {
+        alert("Register berhasil.")
         window.location.href = "/login";
       })
       .catch((err) => {
+        alert("Register gagal.")
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });
   };

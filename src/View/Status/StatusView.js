@@ -8,12 +8,18 @@ import sendIcon from "../../Asset/Icon/send_status.png";
 import sendActiveIcon from "../../Asset/Icon/send_active_status.png";
 import reviewIcon from "../../Asset/Icon/review_status.png";
 import reviewActiveIcon from "../../Asset/Icon/review_active_status.png";
+import placeholderIcon from "../../Asset/Icon/placeholder_icon.png";
+import dineinIcon from "../../Asset/Icon/dinein_icon.png";
+import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
+import categoryFoodIcon from "../../Asset/Icon/category_food_icon.png";
+import pickupStatusIcon from "../../Asset/Icon/pickup_status_icon.png";
+import ovoIcon from "../../Asset/Icon/ovo_icon.png";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import { address } from "../../Asset/Constant/APIConstant";
-import { auth } from "../..";
+import Cookies from "js-cookie"
 
 export class StatusView extends React.Component {
   state = {
@@ -57,6 +63,21 @@ export class StatusView extends React.Component {
     this.setState({ showModal: isShow });
   }
   handleDetail(transId) {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if(auth.isLogged === false) {
+      var lastLink = { value: window.location.href}
+      Cookies.set("lastLink", lastLink,{ expires: 1})
+      window.location.href = "/login"
+    }
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -73,17 +94,20 @@ export class StatusView extends React.Component {
       method: "GET",
     })
       .then((res) => {
-        var results = res.results;
+        var results = res.data.results;
+        console.log(results)
         var resultModal = {...this.currentModal}
-        resultModal.transactionId = results[0].transaction_id
-        resultModal.transactionTime = results[0].transaction_time
-        resultModal.storeName = results[0].merchant_name
+        resultModal.transactionId = results.transaction_id
+        resultModal.transactionTime = results.transaction_time
+        resultModal.storeName = results.merchant_name
         resultModal.storeDistance = ""
         resultModal.storeLocation = ""
-        resultModal.status = results[0].status
-        resultModal.biz_type = results[0].biz_type
-        resultModal.payment = results[0].payment_with
-        results[0].products.forEach((product) => {
+        resultModal.status = results.status
+        resultModal.biz_type = results.biz_type
+        resultModal.payment = results.payment_with
+        resultModal.food = []
+        results.detail_products.forEach((product) => {
+          console.log(resultModal)
           resultModal.food.push({
             name: product.product_name,
             price: product.price,
@@ -108,6 +132,21 @@ export class StatusView extends React.Component {
   }
 
   componentDidMount() {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if(auth.isLogged === false) {
+      var lastLink = { value: window.location.href}
+      Cookies.set("lastLink", lastLink,{ expires: 1})
+      window.location.href = "/login"
+    }
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -124,9 +163,10 @@ export class StatusView extends React.Component {
       method: "GET",
     })
       .then((res) => {
-        var results = res.results;
+        var results = res.data.results;
         var stateData = {...this.state}
         stateData.data.pop()
+        console.log(results)
         results.forEach((result) => {
           stateData.data.push({
             title: result.merchant_name,
@@ -138,9 +178,8 @@ export class StatusView extends React.Component {
             transactionId: result.transaction_id,
             transactionTime: result.transaction_time,
           })
-          this.setState({data: stateData});
         })
-
+        this.setState({data: stateData.data});
       })
       .catch((err) => {
         console.log(err);
@@ -184,7 +223,7 @@ export class StatusView extends React.Component {
           <Col>
             <Row>
               <Col xs={2} md={1}>
-                <img src={reviewIcon} class="statusFoodIcon" />
+                <img src={placeholderIcon} class="statusFoodIcon" />
               </Col>
               <Col>
                 <p class="statusFoodname">{data.name}</p>
@@ -211,6 +250,24 @@ export class StatusView extends React.Component {
       currentTotal = currentTotal + data.price * data.quantity;
     });
     if (this.state.showModal === true) {
+      let payImage;
+      let payLabel;
+      if(this.state.currentModal.payment === "PAY_BY_CASHIER") {
+        payImage = placeholderIcon;
+        payLabel = "Cashier"
+      } else if(this.state.currentModal.payment === "WALLET") {
+        payImage = placeholderIcon;
+        payLabel = "Cash"
+      } else if(this.state.currentModal.payment === "VA") {
+        payImage = placeholderIcon;
+        payLabel = "Virtual"
+      } else if(this.state.currentModal.payment === "WALLET_OVO") {
+        payImage = ovoIcon;
+        payLabel = "OVO"
+      } else if(this.state.currentModal.payment === "WALLET_DANA") {
+        payImage = placeholderIcon;
+        payLabel = "DANA"
+      } 
       modal = (
         <Modal
           size="lg"
@@ -223,12 +280,13 @@ export class StatusView extends React.Component {
             <Modal.Title>
               <p class="statusNoteLabel">No Pesanan.</p>
               <p class="statusNoteHeader">{this.state.currentModal.transactionId}</p>
+              <p class="statusNoteLabel">{this.state.currentModal.transactionTime}</p>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Row>
               <Col xs={2} md={1}>
-                <img src={reviewIcon} class="statusStoreIcon" />
+                <img src={categoryFoodIcon} class="statusStoreIcon" />
               </Col>
               <Col>
                 <p class="statusStoreName">
@@ -242,9 +300,10 @@ export class StatusView extends React.Component {
             </Row>
             <Row>
               <Col xs={2} md={1}>
-                <img src={reviewIcon} class="statusStoreStatusIcon" />
+                <img src={pickupStatusIcon} class="statusStoreStatusIcon" />
               </Col>
               <Col>
+                <span class="statusStoreLabel">status: </span>
                 <span class="statusStoreStatus">
                   {this.state.currentModal.status}
                 </span>
@@ -256,9 +315,10 @@ export class StatusView extends React.Component {
             <Row>
               <Col>
                 <p class="statusStorePaymentLabel">Metode Pembayaran</p>
-                <p class="statusStorePayment">
-                  {this.state.currentModal.payment}
-                </p>
+                <img src={payImage} class="statusFoodIcon"></img>
+                <span class="statusStorePayment">
+                      {payLabel}
+                    </span>
               </Col>
             </Row>
             {modalListView}
@@ -271,7 +331,6 @@ export class StatusView extends React.Component {
                   style: "currency",
                   currency: "IDR",
                 }).format(currentTotal)}
-                }
               </Col>
             </Row>
           </Modal.Body>
@@ -287,8 +346,35 @@ export class StatusView extends React.Component {
     let currentState = this.state.activeTab;
     if (currentState === 1) {
       notPaidImage = unpaidActiveIcon;
-      let data = this.state.data;
-      contentView = data.map((value) => {
+      console.log(this.state.data)
+      contentView = this.state.data.map((value) => {
+        let bizImage;
+        let bizLabel;
+        let payImage;
+        let payLabel;
+        if(value.payment === "PAY_BY_CASHIER") {
+          payImage = placeholderIcon;
+          payLabel = "Cashier"
+        } else if(value.payment === "WALLET") {
+          payImage = placeholderIcon;
+          payLabel = "Cash"
+        } else if(value.payment === "VA") {
+          payImage = placeholderIcon;
+          payLabel = "Virtual"
+        } else if(value.payment === "WALLET_OVO") {
+          payImage = ovoIcon;
+          payLabel = "OVO"
+        } else if(value.payment === "WALLET_DANA") {
+          payImage = placeholderIcon;
+          payLabel = "DANA"
+        } 
+        if(value.biz_type === "DINE_IN") {
+          bizImage = dineinIcon
+          bizLabel = "Dine in"
+        } else if(value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayIcon;
+          bizLabel = "Take away"
+        }
         if (value.status === "OPEN") {
           return (
             <Row className={"statusCard"}>
@@ -298,7 +384,7 @@ export class StatusView extends React.Component {
                   <Row className={"statusCard"}>
                     <Col xs={1} md={1}>
                       <img
-                        src={unpaidIcon}
+                        src={categoryFoodIcon}
                         class="statusIcon"
                         alt={"statusIcon"}
                       ></img>
@@ -306,7 +392,7 @@ export class StatusView extends React.Component {
                     <Col>
                       <p class="statusTitle">{value.title}</p>
                       <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity}</p>
+                      <p class="statusQty">{value.quantity} produk</p>
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
@@ -316,12 +402,12 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">{value.biz_type}</span>
+                      <img src={bizImage}></img>
+                      <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusRightText">{value.payment}</span>
+                      <img src={payImage}></img>
+                      <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
                 </Card>
@@ -340,6 +426,40 @@ export class StatusView extends React.Component {
       packImage = packActiveIcon;
       let data = this.state.data;
       contentView = data.map((value) => {
+        let bizImage;
+        let bizLabel;
+        let payImage;
+        let payLabel;
+        if(value.payment === "PAY_BY_CASHIER") {
+          payImage = placeholderIcon;
+          payLabel = "Cashier"
+        } else if(value.payment === "WALLET") {
+          payImage = placeholderIcon;
+          payLabel = "Cash"
+        } else if(value.payment === "VA") {
+          payImage = placeholderIcon;
+          payLabel = "Virtual"
+        } else if(value.payment === "WALLET_OVO") {
+          payImage = ovoIcon;
+          payLabel = "OVO"
+        } else if(value.payment === "WALLET_DANA") {
+          payImage = placeholderIcon;
+          payLabel = "DANA"
+        } 
+        if(value.biz_type === "DINE_IN") {
+          bizImage = dineinIcon
+          bizLabel = "Dine in"
+        } else if(value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayIcon;
+          bizLabel = "Take away"
+        }
+        if(value.biz_type === "DINE_IN") {
+          bizImage = dineinIcon
+          bizLabel = "Dine in"
+        } else if(value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayIcon;
+          bizLabel = "Take away"
+        }
         if (value.status === "PAID" || value.status === "MERCHANT_CONFIRM" || value.status === "CUSTOMER_ACCEPTED") {
           return (
             <Row className={"statusCard"}>
@@ -349,7 +469,7 @@ export class StatusView extends React.Component {
                   <Row className={"statusCard"}>
                     <Col xs={1} md={1}>
                       <img
-                        src={unpaidIcon}
+                        src={categoryFoodIcon}
                         class="statusIcon"
                         alt={"statusIcon"}
                       ></img>
@@ -357,7 +477,7 @@ export class StatusView extends React.Component {
                     <Col>
                       <p class="statusTitle">{value.title}</p>
                       <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity}</p>
+                      <p class="statusQty">{value.quantity} produk</p>
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
@@ -367,12 +487,12 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">{value.biz_type}</span>
+                      <img src={bizImage}></img>
+                      <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusRightText">{value.payment}</span>
+                      <img src={payImage}></img>
+                      <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
                 </Card>
@@ -391,6 +511,40 @@ export class StatusView extends React.Component {
       sendImage = sendActiveIcon;
       let data = this.state.data;
       contentView = data.map((value) => {
+        let bizImage;
+        let bizLabel;
+        let payImage;
+        let payLabel;
+        if(value.payment === "PAY_BY_CASHIER") {
+          payImage = placeholderIcon;
+          payLabel = "Cashier"
+        } else if(value.payment === "WALLET") {
+          payImage = placeholderIcon;
+          payLabel = "Cash"
+        } else if(value.payment === "VA") {
+          payImage = placeholderIcon;
+          payLabel = "Virtual"
+        } else if(value.payment === "WALLET_OVO") {
+          payImage = ovoIcon;
+          payLabel = "OVO"
+        } else if(value.payment === "WALLET_DANA") {
+          payImage = placeholderIcon;
+          payLabel = "DANA"
+        } 
+        if(value.biz_type === "DINE_IN") {
+          bizImage = dineinIcon
+          bizLabel = "Dine in"
+        } else if(value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayIcon;
+          bizLabel = "Take away"
+        }
+        if(value.biz_type === "DINE_IN") {
+          bizImage = dineinIcon
+          bizLabel = "Dine in"
+        } else if(value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayIcon;
+          bizLabel = "Take away"
+        }
         if (value.status === "DELIVER" || value.status === "ON_PROCESS") {
           return (
             <Row className={"statusCard"}>
@@ -400,7 +554,7 @@ export class StatusView extends React.Component {
                   <Row className={"statusCard"}>
                     <Col xs={1} md={1}>
                       <img
-                        src={unpaidIcon}
+                        src={categoryFoodIcon}
                         class="statusIcon"
                         alt={"statusIcon"}
                       ></img>
@@ -408,7 +562,7 @@ export class StatusView extends React.Component {
                     <Col>
                       <p class="statusTitle">{value.title}</p>
                       <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity}</p>
+                      <p class="statusQty">{value.quantity} produk</p>
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
@@ -418,12 +572,12 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">{value.biz_type}</span>
+                      <img src={bizImage}></img>
+                      <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusRightText">{value.payment}</span>
+                      <img src={payImage}></img>
+                      <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
                 </Card>
@@ -443,6 +597,40 @@ export class StatusView extends React.Component {
       let data = this.state.data;
       contentView = data.map((value) => {
         if (value.status === "CLOSE" || value.status === "FINALIZE") {
+          let bizImage;
+          let bizLabel;
+          let payImage;
+          let payLabel;
+          if(value.payment === "PAY_BY_CASHIER") {
+            payImage = placeholderIcon;
+            payLabel = "Cashier"
+          } else if(value.payment === "WALLET") {
+            payImage = placeholderIcon;
+            payLabel = "Cash"
+          } else if(value.payment === "VA") {
+            payImage = placeholderIcon;
+            payLabel = "Virtual"
+          } else if(value.payment === "WALLET_OVO") {
+            payImage = ovoIcon;
+            payLabel = "OVO"
+          } else if(value.payment === "WALLET_DANA") {
+            payImage = placeholderIcon;
+            payLabel = "DANA"
+          } 
+          if(value.biz_type === "DINE_IN") {
+            bizImage = dineinIcon
+            bizLabel = "Dine in"
+          } else if(value.biz_type === "TAKE_AWAY") {
+            bizImage = takeawayIcon;
+            bizLabel = "Take away"
+          }
+          if(value.biz_type === "DINE_IN") {
+            bizImage = dineinIcon
+            bizLabel = "Dine in"
+          } else if(value.biz_type === "TAKE_AWAY") {
+            bizImage = takeawayIcon;
+            bizLabel = "Take away"
+          }
           return (
             <Row className={"statusCard"}>
               <Col xs={1} md={1} />
@@ -451,7 +639,7 @@ export class StatusView extends React.Component {
                   <Row className={"statusCard"}>
                     <Col xs={1} md={1}>
                       <img
-                        src={unpaidIcon}
+                        src={categoryFoodIcon}
                         class="statusIcon"
                         alt={"statusIcon"}
                       ></img>
@@ -459,7 +647,7 @@ export class StatusView extends React.Component {
                     <Col>
                       <p class="statusTitle">{value.title}</p>
                       <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity}</p>
+                      <p class="statusQty">{value.quantity} produk</p>
                       <PikaButton
                         title={"Detail"}
                         buttonStyle={"statusPika"}
@@ -469,12 +657,12 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusLeftText">{value.biz_type}</span>
+                      <img src={bizImage}></img>
+                      <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={unpaidIcon}></img>
-                      <span class="statusRightText">{value.payment}</span>
+                      <img src={payImage}></img>
+                      <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
                 </Card>
