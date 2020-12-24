@@ -90,7 +90,6 @@ export class CartView extends React.Component {
         let addedMerchants = []
         filteredCart.forEach((cart) => {
           addedMerchants.push(cart.mid)
-          console.log(addedMerchants)
           Cookies.set("addedMerchants", addedMerchants)
         })
         window.location.reload()
@@ -123,7 +122,6 @@ export class CartView extends React.Component {
       Cookies.set("lastLink", lastLink,{ expires: 1})
       window.location.href = "/login"
     }
-    console.log("Handle");
     let totalAmount = 0;
     let data = cart;
     data.forEach((store) => {
@@ -136,7 +134,6 @@ export class CartView extends React.Component {
     merchantIds = merchantIds.filter((merchant) => {
       return merchant !== ""
     })
-    console.log(merchantIds)
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();

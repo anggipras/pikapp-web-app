@@ -34,6 +34,7 @@ if (localStorage.getItem("cart")) {
   cart = JSON.parse(localStorage.getItem("cart"));
 }
 
+
 ReactDOM.render(
   <Router history={hist}>
     <Switch>

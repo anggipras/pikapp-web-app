@@ -23,15 +23,18 @@
     font-weight: bold;
     border-radius: 36px;
     text-decoration: none;
+    width: 140px;
+    height: 50px;
   }
 }
 @media (max-width: 768px) {
   .btn-cartPika {
     background-color: $primary-color;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 10px;
     border-radius: 36px;
     text-decoration: none;
+    height: 40px;
   }
 }
 

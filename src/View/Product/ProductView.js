@@ -64,7 +64,6 @@ export class ProductView extends React.Component {
   };
 
   componentDidMount() {
-    console.log(cart)
     var auth = {
       isLogged: false,
       token: "",
@@ -81,7 +80,6 @@ export class ProductView extends React.Component {
       window.location.href = "/login"
     }
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    console.log(auth)
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     let addressRoute = address + "home/v1/list/product/";
@@ -340,7 +338,7 @@ export class ProductView extends React.Component {
           } else {
             return (
               <Row>
-                <Col xs={4} md={3}>
+                <Col xs={4} md={4} lg={3}>
                   <Image
                     src={cardData.foodImage}
                     rounded
@@ -348,20 +346,20 @@ export class ProductView extends React.Component {
                     className="foodImage"
                   />
                 </Col>
-                <Col xs={8} md={9}>
+                <Col xs={8} md={8} lg={9}>
                   <Row>
-                    <Col xs={7} md={9}>
+                    <Col xs={7} md={6} lg={9}>
                       <h5 className="foodTitle">{cardData.foodName}</h5>
                       <p className="foodDesc">{cardData.foodDesc}</p>
                       <div className="foodButton">
                         <PikaButton
-                          title="Add to cart"
+                          title="ADD TO CART"
                           buttonStyle="cartPika"
                           handleClick={() => this.handleDetail(cardData)}
                         />
                       </div>
                     </Col>
-                    <Col xs={5} md={3}>
+                    <Col xs={5} md={3} lg={3}>
                       <h6 className="foodPrice">
                         {Intl.NumberFormat("id-ID", {
                           style: "currency",
@@ -399,27 +397,29 @@ export class ProductView extends React.Component {
                       className="foodImage"
                     />
                   </Col>
-                  <Col xs={8} md={6}>
-                    <Row>
-                      <Col>
-                        <h5 className="foodTitle">{cardData.foodName}</h5>
-                        <p className="foodDesc">{cardData.foodDesc}</p>
+                  <Col xs={8} md={9}>
+                  <Row>
+                    <Col xs={7} md={9}>
+                      <h5 className="foodTitle">{cardData.foodName}</h5>
+                      <p className="foodDesc">{cardData.foodDesc}</p>
+                      <div className="foodButton">
                         <PikaButton
-                          title="Add to cart"
+                          title="ADD TO CART"
                           buttonStyle="cartPika"
                           handleClick={() => this.handleDetail(cardData)}
                         />
-                      </Col>
-                      <Col xs={5} md={3}>
-                        <h6 className="foodPrice">
-                          {Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                          }).format(cardData.foodPrice)}
-                        </h6>
-                      </Col>
-                    </Row>
-                  </Col>
+                      </div>
+                    </Col>
+                    <Col xs={5} md={3}>
+                      <h6 className="foodPrice">
+                        {Intl.NumberFormat("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        }).format(cardData.foodPrice)}
+                      </h6>
+                    </Col>
+                  </Row>
+                </Col>
                 </Row>
               </Card>
             );

@@ -13,6 +13,7 @@ import dineinIcon from "../../Asset/Icon/dinein_icon.png";
 import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 import categoryFoodIcon from "../../Asset/Icon/category_food_icon.png";
 import pickupStatusIcon from "../../Asset/Icon/pickup_status_icon.png";
+import cashierStatusIcon from "../../Asset/Icon/cashier_icon.png"
 import ovoIcon from "../../Asset/Icon/ovo_icon.png";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import Axios from "axios";
@@ -253,7 +254,7 @@ export class StatusView extends React.Component {
       let payImage;
       let payLabel;
       if(this.state.currentModal.payment === "PAY_BY_CASHIER") {
-        payImage = placeholderIcon;
+        payImage = cashierStatusIcon;
         payLabel = "Cashier"
       } else if(this.state.currentModal.payment === "WALLET") {
         payImage = placeholderIcon;
@@ -353,7 +354,7 @@ export class StatusView extends React.Component {
         let payImage;
         let payLabel;
         if(value.payment === "PAY_BY_CASHIER") {
-          payImage = placeholderIcon;
+          payImage = cashierStatusIcon;
           payLabel = "Cashier"
         } else if(value.payment === "WALLET") {
           payImage = placeholderIcon;
