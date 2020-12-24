@@ -9,7 +9,7 @@ import imageSample from "../../Asset/Illustration/sample_food.jpg";
 import { CartModal } from "../../Component/Modal/CartModal";
 import { cart } from "../../index.js";
 import { Link } from "react-router-dom";
-import { address } from "../../Asset/Constant/APIConstant";
+import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
@@ -140,7 +140,7 @@ export class CartView extends React.Component {
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
-    let signature = sha256("abf0e2a9-e9ee-440f-8563-94481c64b797:" + auth.email + ":" + "21f6fc80-cfdb-11ea-87d0-0242ac130003:" + date,"21f6fc80-cfdb-11ea-87d0-0242ac130003")
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
     var requestData = {
       products: [{
@@ -174,7 +174,7 @@ export class CartView extends React.Component {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
-        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-client-id": clientId,
         "x-signature": signature,
         "token": auth.token,
       },

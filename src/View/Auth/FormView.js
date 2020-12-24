@@ -3,7 +3,7 @@ import { Alert, Col, Form, Row } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaTextField } from "../../Component/TextField/PikaTextField";
 import axios from "axios";
-import { address } from "../../Asset/Constant/APIConstant";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
@@ -130,7 +130,7 @@ export class FormView extends React.Component {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
-        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-client-id": clientId,
       },
       method: "POST",
       data: data,
@@ -197,7 +197,7 @@ export class FormView extends React.Component {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
-        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-client-id": clientId,
       },
       method: "POST",
       data: data,

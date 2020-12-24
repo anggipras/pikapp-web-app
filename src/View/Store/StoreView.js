@@ -3,7 +3,7 @@ import { Col, Row, Image, Card, Tabs, Tab, Modal } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
-import { address } from "../../Asset/Constant/APIConstant";
+import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import Cookies from "js-cookie"
@@ -55,6 +55,7 @@ export class StoreView extends React.Component {
     latitude = value.latitude
     var merchant = "";
     merchant = value.merchant;
+    Geocode.setApiKey(googleKey)
     Geocode.fromLatLng(latitude,longitude)
     .then((res) => {
       console.log(res)
@@ -89,7 +90,7 @@ export class StoreView extends React.Component {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
-        "x-client-id": "abf0e2a9-e9ee-440f-8563-94481c64b797",
+        "x-client-id": clientId,
         "token": "PUBLIC",
         "category": "1",
       },
