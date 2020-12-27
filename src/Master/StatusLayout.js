@@ -18,7 +18,7 @@ export default class StatusLayout extends React.Component {
     return (
       <html>
         <header>
-          <DetailNavigation centerImage={statusLogo} backIcon={backIcon} />
+          <DetailNavigation centerImage={statusLogo} backIcon={backIcon} centerStyle={"statusCenter"} />
         </header>
         <body>
           <Container>

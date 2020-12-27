@@ -1,15 +1,13 @@
 import React from "react";
-import DetailNavigation from "./DetailNavigation";
-import { CartView } from "../View/Cart/CartView";
+import MainNavigation from "./MainNavigation";
+import { ProfileView } from "../View/Profile/ProfileView";
 import {
   primary_color,
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
 import { Container } from "react-bootstrap";
-import cartLogo from "../Asset/Illustration/cart_illustration2x.png";
-import backIcon from "../Asset/Icon/back_icon2x.png";
 
-export default class CartLayout extends React.Component {
+export default class ProfileLayout extends React.Component {
   componentDidMount() {
     document.body.style.backgroundColor = secondary_color;
   }
@@ -18,11 +16,11 @@ export default class CartLayout extends React.Component {
     return (
       <html>
         <header>
-          <DetailNavigation centerImage={cartLogo} backIcon={backIcon} centerStyle={"cartCenter"}/>
+          <MainNavigation />
         </header>
         <body>
           <Container>
-            <CartView />
+            <ProfileView />
           </Container>
         </body>
       </html>

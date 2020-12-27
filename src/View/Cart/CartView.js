@@ -21,6 +21,7 @@ export class CartView extends React.Component {
     currentModalTitle: "",
     paymentOption: "WALLET",
     biz_type: "DINE_IN",
+    eat_type: "Makan di tempat",
     currentModal: [
       {
         image: "",
@@ -92,7 +93,11 @@ export class CartView extends React.Component {
           addedMerchants.push(cart.mid)
           Cookies.set("addedMerchants", addedMerchants)
         })
-        window.location.reload()
+        if(addedMerchants.length < 2) {
+          window.location.href = Cookies.get("lastProduct")
+        } else {
+          window.location.reload()
+        }
       }
     });
     this.forceUpdate();
@@ -101,8 +106,10 @@ export class CartView extends React.Component {
     if(this.state.currentModalTitle === "Cara makan anda?") {
       if(data === 0) {
         this.setState({biz_type: "DINE_IN"})
+        this.setState({eat_type: "Makan di tempat"})
       } else {
         this.setState({biz_type: "TAKE_AWAY"})
+        this.setState({eat_type: "Bungkus / Takeaway"})
       }
     }
   }
@@ -184,7 +191,7 @@ export class CartView extends React.Component {
       window.location.href = "/status"
     })
     .catch((err) => {
-      alert("Terdapat kesalahan dalam pembelian.")
+      alert(err.response.data.err_message)
     });
   };
 
@@ -266,6 +273,8 @@ export class CartView extends React.Component {
                 <Row>
                   <Col>
                     <p className={"cartContentFood"}>{food.foodName}</p>
+                    <p className={"cartContentPrice"}>Catatan:</p>
+                    <p className={"cartContentPrice"}>{food.foodNote}</p>
                     <p className={"cartContentPrice"}>
                       {Intl.NumberFormat("id-ID", {
                         style: "currency",
@@ -359,7 +368,12 @@ export class CartView extends React.Component {
         <Row>
           <Col xs={0} md={3} />
           <Col>
-            <p className={"cartTitle"}>Pilih cara makan anda</p>
+          <Row>
+            <Col><p className={"cartTitle"}>Pilih cara makan anda</p></Col>
+          </Row>
+          <Row>
+            <Col>{this.state.eat_type}</Col>
+          </Row>
           </Col>
           <Col xs={2} md={3}>
             <button className={"iconButton"}>

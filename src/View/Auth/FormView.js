@@ -148,12 +148,10 @@ export class FormView extends React.Component {
         alert("Login berhasil.")
       })
       .catch((err) => {
-        alert("Login gagal.")
+        alert(err.response.data.err_message)
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
         console.log(err)
       });
-
-
   };
 
   handleRegister = (e) => {
@@ -207,7 +205,7 @@ export class FormView extends React.Component {
         window.location.href = "/login";
       })
       .catch((err) => {
-        alert("Register gagal.")
+        alert(err.response.data.err_message)
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });
   };

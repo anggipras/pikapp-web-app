@@ -64,6 +64,7 @@ export class ProductView extends React.Component {
   };
 
   componentDidMount() {
+    Cookies.set("lastProduct", window.location.href, {expires: 1})
     var auth = {
       isLogged: false,
       token: "",

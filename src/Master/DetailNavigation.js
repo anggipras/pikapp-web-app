@@ -19,7 +19,7 @@ export default class DetailNavigation extends React.Component {
             </Link>
           </Navbar>
           <Navbar.Brand className={"navbar-center"}>
-            <img src={this.props.centerImage} alt={"title"}></img>
+            <img src={this.props.centerImage} alt={"title"} class ={this.props.centerStyle}></img>
           </Navbar.Brand>
         </Navbar>
       </div>
