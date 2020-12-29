@@ -46,7 +46,7 @@ export class ProfileView extends React.Component {
         "x-request-timestamp": date,
         "x-client-id": clientId,
         "x-signature": signature,
-        "token": auth.token,
+        "x-session-id": auth.token,
       },
       method: "GET",
     })
