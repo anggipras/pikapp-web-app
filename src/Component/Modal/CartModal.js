@@ -1,9 +1,9 @@
 import React from "react";
 import { Row, Col, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import { PikaButton } from "../Button/PikaButton";
 import dineinIcon from "../../Asset/Icon/dinein_icon.png";
 import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
+import cashierIcon from "../../Asset/Icon/cashier_icon.png";
 
 export class CartModal extends React.Component {
   state = {
@@ -16,7 +16,6 @@ export class CartModal extends React.Component {
     this.props.handleData(num);
   };
   render() {
-    let data = this.state;
     let optionList = [];
     optionList = this.props.detailOptions;
     let optionListView = optionList.map((data) => {
@@ -25,6 +24,8 @@ export class CartModal extends React.Component {
         image = dineinIcon;
       } else if (data.image === "takeaway") {
         image = takeawayIcon;
+      } else if (data.image === "cashier") {
+        image = cashierIcon;
       }
       return (
         <>

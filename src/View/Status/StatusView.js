@@ -224,7 +224,7 @@ export class StatusView extends React.Component {
           <Col>
             <Row>
               <Col xs={2} md={1}>
-                <img src={placeholderIcon} class="statusFoodIcon" />
+                <img src={placeholderIcon} class="statusFoodIcon" alt="food icon"/>
               </Col>
               <Col>
                 <p class="statusFoodname">{data.name}</p>
@@ -287,7 +287,7 @@ export class StatusView extends React.Component {
           <Modal.Body>
             <Row>
               <Col xs={2} md={1}>
-                <img src={categoryFoodIcon} class="statusStoreIcon" />
+                <img src={categoryFoodIcon} class="statusStoreIcon" alt="category icon"/>
               </Col>
               <Col>
                 <p class="statusStoreName">
@@ -301,7 +301,7 @@ export class StatusView extends React.Component {
             </Row>
             <Row>
               <Col xs={2} md={1}>
-                <img src={pickupStatusIcon} class="statusStoreStatusIcon" />
+                <img src={pickupStatusIcon} class="statusStoreStatusIcon"  alt="pickup status"/>
               </Col>
               <Col>
                 <span class="statusStoreLabel">status: </span>
@@ -316,7 +316,7 @@ export class StatusView extends React.Component {
             <Row>
               <Col>
                 <p class="statusStorePaymentLabel">Metode Pembayaran</p>
-                <img src={payImage} class="statusFoodIcon"></img>
+                <img src={payImage} class="statusFoodIcon" alt="status icon"></img>
                 <span class="statusStorePayment">
                       {payLabel}
                     </span>
@@ -403,11 +403,11 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={bizImage}></img>
+                      <img src={bizImage} alt="biz icon"></img>
                       <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={payImage}></img>
+                      <img src={payImage} alt="pay icon"></img>
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
@@ -488,11 +488,11 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={bizImage}></img>
+                      <img src={bizImage} alt="biz icon"></img>
                       <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={payImage}></img>
+                      <img src={payImage} alt="pay icon"></img>
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
@@ -573,11 +573,11 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={bizImage}></img>
+                      <img src={bizImage} alt="biz icon"></img>
                       <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={payImage}></img>
+                      <img src={payImage} alt ="pay icon"></img>
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
@@ -658,11 +658,11 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={bizImage}></img>
+                      <img src={bizImage} alt ="biz icon"></img>
                       <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={payImage}></img>
+                      <img src={payImage} alt = "pay icon"></img>
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>

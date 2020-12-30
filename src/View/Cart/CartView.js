@@ -5,7 +5,9 @@ import removeIcon from "../../Asset/Icon/remove_icon.png";
 import storeIcon from "../../Asset/Icon/store_icon.png";
 import checklistIcon from "../../Asset/Icon/checklist_icon.png";
 import frontIcon from "../../Asset/Icon/front_icon.png";
-import imageSample from "../../Asset/Illustration/sample_food.jpg";
+import cashierIcon from "../../Asset/Icon/cashier_icon.png";
+import dineinIcon from "../../Asset/Icon/dinein_icon.png";
+import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 import { CartModal } from "../../Component/Modal/CartModal";
 import { cart } from "../../index.js";
 import { Link } from "react-router-dom";
@@ -19,7 +21,8 @@ export class CartView extends React.Component {
   state = {
     showModal: false,
     currentModalTitle: "",
-    paymentOption: "WALLET",
+    paymentOption: "Pembayaran di kasir",
+    paymentType: "PAY_BY_CASHIER",
     biz_type: "DINE_IN",
     eat_type: "Makan di tempat",
     currentModal: [
@@ -52,8 +55,8 @@ export class CartView extends React.Component {
       this.setState({
         currentModal: [
           {
-            image: "cash",
-            option: "Cash",
+            image: "cashier",
+            option: "Pembayaran di kasir",
           },
         ],
       });
@@ -111,6 +114,11 @@ export class CartView extends React.Component {
         this.setState({biz_type: "TAKE_AWAY"})
         this.setState({eat_type: "Bungkus / Takeaway"})
       }
+    } else if (this.state.currentModalTitle === "Bayar pakai apa?") {
+      if(data === 0) {
+        this.setState({paymentType: "PAY_BY_CASHIER"})
+        this.setState({paymentOption: "Pembayaran di kasir"})
+      }
     }
   }
   handlePayment = () => {
@@ -152,7 +160,7 @@ export class CartView extends React.Component {
         notes: "",
         qty: 0
       }],
-      payment_with: this.state.paymentOption,
+      payment_with: this.state.paymentType,
       mid: JSON.stringify(merchantIds),
       prices: totalAmount,
       biz_type: this.state.biz_type,
@@ -363,6 +371,16 @@ export class CartView extends React.Component {
       );
     });
 
+    let paymentImage;
+    let eatImage;
+    if(this.state.biz_type === "DINE_IN") {
+      eatImage = dineinIcon;
+    } else if (this.state.biz_type === "TAKE_AWAY") {
+      eatImage = takeawayIcon;
+    }
+    if(this.state.paymentType === "PAY_BY_CASHIER") {
+      paymentImage = cashierIcon
+    }
     return (
       <>
         <Row>
@@ -372,6 +390,9 @@ export class CartView extends React.Component {
             <Col><p className={"cartTitle"}>Pilih cara makan anda</p></Col>
           </Row>
           <Row>
+            <Col xs ={1} md={1}>
+              <img src={eatImage} class="cartModalImage" alt="icon" />
+            </Col>
             <Col>{this.state.eat_type}</Col>
           </Row>
           </Col>
@@ -394,8 +415,11 @@ export class CartView extends React.Component {
               </Col>
             </Row>
             <Row>
+              <Col xs ={1} md={1}>
+                <img src={paymentImage} class="cartModalImage" alt="icon" />
+              </Col>
               <Col>
-                <p className={"cartContent"}>Cash</p>
+                {this.state.paymentOption}
               </Col>
             </Row>
           </Col>

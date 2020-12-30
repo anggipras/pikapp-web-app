@@ -2,7 +2,6 @@ import React from "react";
 import MainNavigation from "./MainNavigation";
 import { ProductView } from "../View/Product/ProductView";
 import {
-  primary_color,
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
 import { Container } from "react-bootstrap";

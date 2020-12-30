@@ -35,6 +35,7 @@ if (localStorage.getItem("cart")) {
   cart = JSON.parse(localStorage.getItem("cart"));
 }
 
+document.title = "Pikapp"
 
 ReactDOM.render(
   <Router history={hist}>

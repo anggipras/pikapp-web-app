@@ -1,6 +1,5 @@
 import React from "react";
-import { Col, Row, Image, Card, Tabs, Tab, Modal } from "react-bootstrap";
-import { PikaButton } from "../../Component/Button/PikaButton";
+import { Col, Row, Image } from "react-bootstrap";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
 import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";

@@ -9,3 +9,5 @@ var clientIdProd = "d4aummjdkbzdsd46vygjvcy235ywmhkm"
 export const clientId = clientIdDev;
 var googleKeyProd = "AIzaSyBMG_JpxmoPEBH6fpveaowU2vkWYrZEw1Y"
 export const googleKey = googleKeyProd;
+
+export const jwtSecret = "Er3lzchUa489bdlg35PCaGMKk2YzflBHCMue2jIAy9nFENvokE0JUbwytMFSvrajK8gYDttMdvzWw0OBRydt7pXfAAd1DTxWvE0Hc"

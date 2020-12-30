@@ -3,7 +3,6 @@ import DetailNavigation from "./DetailNavigation";
 import { StatusView } from "../View/Status/StatusView";
 import {
   primary_color,
-  secondary_color,
 } from "../Asset/Constant/ColorConstant";
 import { Container } from "react-bootstrap";
 import statusLogo from "../Asset/Illustration/status_illustration2x.png";

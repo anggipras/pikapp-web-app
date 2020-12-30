@@ -8,9 +8,9 @@ export class JumbotronView extends React.Component {
     const isLogIn = this.props.isLogIn;
     let image;
     if (isLogIn) {
-      image = <img src={login_illustration}></img>;
+      image = <img src={login_illustration} alt="login illustration"></img>;
     } else {
-      image = <img src={register_illustration}></img>;
+      image = <img src={register_illustration} alt="register illustration"></img>;
     }
     return (
       <div>
