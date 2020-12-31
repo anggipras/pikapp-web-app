@@ -53,7 +53,6 @@ export class ProfileView extends React.Component {
         this.setState({name: data.full_name})
         this.setState({phone: data.phone_no})
         this.setState({email: data.email})
-        console.log(res.data.results)
       })
       .catch((err) => {
         alert(err.response.data.err_message)
@@ -77,7 +76,7 @@ export class ProfileView extends React.Component {
         window.location.href = "/login"
       }
       console.log(auth.token)
-
+      console.log(jwtSecret)
       try {
         var decodedJWT = jwt.verify(auth.token, jwtSecret)
         var sub = JSON.parse(decodedJWT.sub)

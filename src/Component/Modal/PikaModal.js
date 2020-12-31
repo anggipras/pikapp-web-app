@@ -60,6 +60,8 @@ export class PikaModal extends React.Component {
   render() {
     let foodList = [];
     foodList = this.state.detailCategory;
+    let data = this.state;
+    this.props.handleData(data);
     let foodListView = foodList.map((food) => {
       if(food.name === "") {
         return (

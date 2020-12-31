@@ -57,11 +57,9 @@ export class StoreView extends React.Component {
     Geocode.setApiKey(googleKey)
     Geocode.fromLatLng(latitude,longitude)
     .then((res) => {
-      console.log(res)
       this.setState({location: res.results[0].formatted_address})
     })
     .catch((err) => {
-      console.log(err)
       this.setState({location: "Tidak tersedia"})
     })
 
@@ -148,7 +146,6 @@ export class StoreView extends React.Component {
     currentMerchant.storeDesc = "Desc";
     currentMerchant.distance = e.distance;
     currentMerchant.storeImage = e.storeImage;
-    console.log(e.distance)
 
     Cookies.set("currentMerchant", currentMerchant, {expires: 1})
   }

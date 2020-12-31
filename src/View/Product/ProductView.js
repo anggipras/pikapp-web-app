@@ -173,8 +173,6 @@ export class ProductView extends React.Component {
     this.setModal(false);
     var isStorePresent = false;
     cart.forEach((data) => {
-      console.log(data.mid)
-      console.log(this.state.data.mid)
       if (data.mid === this.state.data.mid) {
         isStorePresent = true;
       }
@@ -250,7 +248,6 @@ export class ProductView extends React.Component {
       }
     }
     localStorage.setItem("cart", JSON.stringify(cart));
-
     var auth = {
       isLogged: false,
       token: "",

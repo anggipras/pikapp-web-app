@@ -96,7 +96,6 @@ export class StatusView extends React.Component {
     })
       .then((res) => {
         var results = res.data.results;
-        console.log(results)
         var resultModal = {...this.currentModal}
         resultModal.transactionId = results.transaction_id
         resultModal.transactionTime = results.transaction_time
@@ -108,7 +107,6 @@ export class StatusView extends React.Component {
         resultModal.payment = results.payment_with
         resultModal.food = []
         results.detail_products.forEach((product) => {
-          console.log(resultModal)
           resultModal.food.push({
             name: product.product_name,
             price: product.price,
@@ -122,7 +120,6 @@ export class StatusView extends React.Component {
         })
       })
       .catch((err) => {
-        console.log(err);
       });
       
     this.setModal(true);
@@ -167,7 +164,6 @@ export class StatusView extends React.Component {
         var results = res.data.results;
         var stateData = {...this.state}
         stateData.data.pop()
-        console.log(results)
         results.forEach((result) => {
           stateData.data.push({
             title: result.merchant_name,
@@ -183,7 +179,6 @@ export class StatusView extends React.Component {
         this.setState({data: stateData.data});
       })
       .catch((err) => {
-        console.log(err);
       });
     // var state = { ...this.state };
     // state.data.pop();
@@ -347,7 +342,6 @@ export class StatusView extends React.Component {
     let currentState = this.state.activeTab;
     if (currentState === 1) {
       notPaidImage = unpaidActiveIcon;
-      console.log(this.state.data)
       contentView = this.state.data.map((value) => {
         let bizImage;
         let bizLabel;

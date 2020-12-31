@@ -150,7 +150,6 @@ export class FormView extends React.Component {
       .catch((err) => {
         alert(err.response.data.err_message)
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
-        console.log(err)
       });
   };
 
@@ -202,7 +201,7 @@ export class FormView extends React.Component {
     })
       .then((res) => {
         alert("Register berhasil.")
-        window.location.href = "/login";
+        this.handleLogin()
       })
       .catch((err) => {
         alert(err.response.data.err_message)
