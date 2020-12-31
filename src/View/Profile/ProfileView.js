@@ -96,6 +96,7 @@ export class ProfileView extends React.Component {
         })
         .then((res) => {
             alert("Logout berhasil.")
+            localStorage.removeItem("cart")
             Cookies.remove("auth")
             auth = null;
             window.location.href = "/login"
