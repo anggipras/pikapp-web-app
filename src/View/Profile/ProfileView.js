@@ -75,10 +75,8 @@ export class ProfileView extends React.Component {
         Cookies.set("lastLink", lastLink,{ expires: 1})
         window.location.href = "/login"
       }
-      console.log(auth.token)
-      console.log(jwtSecret)
       try {
-        var decodedJWT = jwt.verify(auth.token, jwtSecret)
+        var decodedJWT = jwt.decode(auth.token)
         var sub = JSON.parse(decodedJWT.sub)
 
         let uuid = uuidV4();
