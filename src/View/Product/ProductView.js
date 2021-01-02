@@ -189,19 +189,45 @@ export class ProductView extends React.Component {
       }
     });
 
-
+    var isFound = false
     if (isStorePresent === true) {
       if (isDuplicate === true) {
         cart.forEach((data) => {
-          if (data.mid === this.state.data.mid) {
-            data.food.forEach((food) => {
-
-              if (food.productId === this.state.currentData.productId) {
-                food.foodAmount += currentExt.detailCategory[0].amount;
-              }
-            });
+          if(isFound === false) {
+            if (data.mid === this.state.data.mid) {
+              data.food.forEach((food) => {
+                if(isFound === false) {
+                  if(food.foodNote === currentExt.note) {
+                    if (food.productId === this.state.currentData.productId) {
+                      isFound = true
+                      food.foodAmount += currentExt.detailCategory[0].amount;
+                    }
+                  }
+                } 
+              });
+            }
           }
-        });
+        })
+        if(isFound === false) {
+          var isAdded = false
+          cart.forEach((data) => {
+              if (data.mid === this.state.data.mid) {
+                data.food.forEach((food) => {
+                  if(isAdded === false) {
+                    isAdded = true
+                    data.food.push({
+                      productId: this.state.currentData.productId,
+                      foodName: this.state.currentData.foodName,
+                      foodPrice: this.state.currentData.foodPrice,
+                      foodImage: this.state.currentData.foodImage,
+                      foodAmount: currentExt.detailCategory[0].amount,
+                      foodNote: currentExt.note,
+                    });
+                  }
+              });
+            }
+          })
+        };
       } else {
         cart.forEach((data) => {
           if (data.mid === this.state.data.mid) {

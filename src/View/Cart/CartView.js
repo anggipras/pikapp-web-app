@@ -83,7 +83,13 @@ export class CartView extends React.Component {
     let filteredCart;
     cart.forEach((store) => {
       let filteredStore = store.food.filter((data) => {
-        return data.foodName !== e.foodName;
+        if(data.productId === e.productId) {
+          if(data.foodNote !== e.foodNote) {
+            return data
+          }
+        } else {
+          return data
+        }
       });
       store.food = filteredStore;
       if(store.food.length === 0) {
