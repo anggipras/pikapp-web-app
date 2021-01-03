@@ -160,53 +160,56 @@ export class CartView extends React.Component {
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
-    var requestData = {
-      products: [{
-        product_id :"",
-        notes: "",
-        qty: 0
-      }],
-      payment_with: this.state.paymentType,
-      mid: JSON.stringify(merchantIds),
-      prices: totalAmount,
-      biz_type: this.state.biz_type,
-      table_no: "1"
-    }
-    requestData.products.pop()
-    cart.forEach((merchant) => {
-      let addedMerchants = Cookies.get("addedMerchants")
-      if(addedMerchants.includes(merchant.mid)) {
-        merchant.food.forEach((data) => {
-          if(data.productId !== "") {
-            requestData.products.push({
-              product_id: data.productId,
-              notes: data.foodNote,
-              qty: data.foodAmount,
-            })
-          }
-        })
+    merchantIds.forEach((merchant) => {
+      var requestData = {
+        products: [{
+          product_id :"",
+          notes: "",
+          qty: 0
+        }],
+        payment_with: this.state.paymentType,
+        mid: merchant,
+        prices: totalAmount,
+        biz_type: this.state.biz_type,
+        table_no: "1"
       }
+      requestData.products.pop()
+      cart.forEach((merchant) => {
+        let addedMerchants = Cookies.get("addedMerchants")
+        if(addedMerchants.includes(merchant.mid)) {
+          merchant.food.forEach((data) => {
+            if(data.productId !== "") {
+              requestData.products.push({
+                product_id: data.productId,
+                notes: data.foodNote,
+                qty: data.foodAmount,
+              })
+            }
+          })
+        }
+      })
+      
+      Axios(address + "/txn/v1/txn-post/", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "x-signature": signature,
+          "token": auth.token,
+        },
+        method: "POST",
+        data: requestData,
+      })
+      .then((res) => {
+        localStorage.removeItem("cart")
+        alert("Pembelian telah berhasil.")
+        window.location.href = "/status"
+      })
+      .catch((err) => {
+        alert(err.response.data.err_message)
+      });
     })
-    Axios(address + "/txn/v1/cart-post/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
-      },
-      method: "POST",
-      data: requestData,
-    })
-    .then((res) => {
-      localStorage.removeItem("cart")
-      alert("Pembelian telah berhasil.")
-      window.location.href = "/status"
-    })
-    .catch((err) => {
-      alert(err.response.data.err_message)
-    });
   };
 
   render() {
