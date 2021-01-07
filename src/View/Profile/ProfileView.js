@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Modal, Button } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import axios from "axios";
 import { address, clientId, jwtSecret } from "../../Asset/Constant/APIConstant";
@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken"
 
 export class ProfileView extends React.Component {
   state = {
+      showModal: false,
       name: "Name",
       phone: "080808",
       email: ""
@@ -33,6 +34,7 @@ export class ProfileView extends React.Component {
       Cookies.set("lastLink", lastLink,{ expires: 1})
       window.location.href = "/login"
     }
+    console.log(auth)
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -55,8 +57,11 @@ export class ProfileView extends React.Component {
         this.setState({email: data.email})
       })
       .catch((err) => {
-        alert(err.response.data.err_message)
       });
+  }
+
+  setModal(isShow) {
+    this.setState({ showModal: isShow });
   }
 
   handleLogout() {
@@ -102,7 +107,9 @@ export class ProfileView extends React.Component {
             window.location.href = "/login"
         })
         .catch((err) => {
+          if(err.response.data !== undefined) {
             alert(err.response.data.err_message)
+          }
         });
       } catch(err) {
         alert(err.message)
@@ -110,6 +117,27 @@ export class ProfileView extends React.Component {
   }
 
   render() {
+    var modal;
+    if(this.state.showModal === true) {
+      modal =             
+      <Modal
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      show= {() => this.setModal(true)}
+      onHide={() => this.setModal(false)}
+      >
+    <Modal.Header closeButton>
+      <Modal.Title>Anda yakin ingin keluar?</Modal.Title>
+    </Modal.Header>
+    <Modal.Footer> 
+      <Button variant = "pikaAlt" onClick={() => this.setModal(false)}>Tidak</Button>
+      <Button variant = "pika" onClick={() => this.handleLogout()}>Iya</Button>
+    </Modal.Footer>
+    </Modal>
+    } else {
+      modal = <></>
+    }
     return (
         <>
             <Row>
@@ -148,11 +176,12 @@ export class ProfileView extends React.Component {
                     <PikaButton
                         title="Logout"
                         buttonStyle="primaryPika"
-                        handleClick={() => this.handleLogout()}
+                        handleClick={() => this.setModal(true)}
                     />
                 </Col>
                 <Col xs={3} md={4}/>
             </Row>
+            {modal}
         </>
     )
   }

@@ -8,6 +8,21 @@
   height: 50px;
   padding: 0px 50%;
 }
+.btn-pika {
+  background-color: $primary-color;
+  font-size: 20px;
+  font-weight: bold;
+}
+.btn-pikaAlt {
+  background-color: $secondary-color;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.btn-pikaAlt:hover {
+  color: white;
+}
 .btn-secondaryPika {
   background-color: $secondary-color;
   font-weight: bold;

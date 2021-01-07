@@ -207,7 +207,9 @@ export class CartView extends React.Component {
         window.location.href = "/status"
       })
       .catch((err) => {
-        alert(err.response.data.err_message)
+        if(err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+        }
       });
     })
   };

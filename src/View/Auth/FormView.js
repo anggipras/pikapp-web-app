@@ -148,7 +148,9 @@ export class FormView extends React.Component {
         alert("Login berhasil.")
       })
       .catch((err) => {
-        alert(err.response.data.err_message)
+        if(err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+        }
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });
   };
@@ -204,7 +206,9 @@ export class FormView extends React.Component {
         this.handleLogin()
       })
       .catch((err) => {
-        alert(err.response.data.err_message)
+        if(err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+        }
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });
   };
