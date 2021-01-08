@@ -81,7 +81,8 @@ export class ProfileView extends React.Component {
         window.location.href = "/login"
       }
       try {
-        var decodedJWT = jwt.decode(auth.token)
+        var decodedJWT = jwt.verify(auth.token, Buffer.from(jwtSecret,'base64')
+        )
         var sub = JSON.parse(decodedJWT.sub)
 
         let uuid = uuidV4();
