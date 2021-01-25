@@ -2,10 +2,10 @@
 
 ## Table of Content
 
-- [Introduction](#Introduction)
-- [Features](#Features)
-- [Code Hierarchy](#Code-Hierarchy)
-- [Dependencies](#Dependencies)
+- Introduction
+- Features
+- Code Hierarchy
+- Dependencies
 
 ### Introduction
 Hello, this is a documentation for pikapp-web. This website is created using React framework for its development created by facebook.
