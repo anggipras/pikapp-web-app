@@ -42,21 +42,35 @@ export class StoreView extends React.Component {
     if(Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
+    let longlat = JSON.parse(localStorage.getItem("longlat"))
+    const value = queryString.parse(window.location.search);
+    console.log(value);
+    var longitude = "";
+    var latitude = "";
+    var merchant = "";
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
       window.location.href = "/login"
+    } 
+    else {
+      longitude = value.longitude || longlat.lon;
+      latitude = value.latitude || longlat.lat;
+      if(window.location.href.includes('?latitude')) {
+        
+      } else {
+        // var lastLinked = { value: window.location.href + `?latitude=${latitude}&longitude=${longitude}`}
+        // Cookies.set("lastLink", lastLinked,{ expires: 1})
+        window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
+      }
     }
-    const value = queryString.parse(window.location.search);
-    var longitude = "";
-    longitude = value.longitude;
-    var latitude = "";
-    latitude = value.latitude
-    var merchant = "";
+    longitude = value.longitude || longlat.lon;
+    latitude = value.latitude || longlat.lat;
     merchant = value.merchant;
     Geocode.setApiKey(googleKey)
     Geocode.fromLatLng(latitude,longitude)
     .then((res) => {
+      console.log(res.results[0].formatted_address);
       this.setState({location: res.results[0].formatted_address})
     })
     .catch((err) => {
