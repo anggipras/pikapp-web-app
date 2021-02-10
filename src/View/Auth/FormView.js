@@ -20,7 +20,13 @@ export class FormView extends React.Component {
     isCaptcha: false,
     captchaCounter: 0,
     errorMsg: "",
+    lat: "",
+    lon: "",
   };
+
+  componentDidMount() {
+    this.geoLocation()
+  }
 
   handleEmail = (e) => {
     this.setState({ email: e.target.value });
@@ -99,6 +105,25 @@ export class FormView extends React.Component {
     }
   };
 
+  //show current location start
+  showPosition = (position) => {
+    let latitude = position.coords.latitude
+    let longitude = position.coords.longitude
+    let longlat = {lat: latitude, lon: longitude}
+    console.log(latitude, longitude);
+    this.setState({lat: latitude, lon: longitude})
+    localStorage.setItem("longlat", JSON.stringify(longlat))
+  }
+
+  geoLocation = () => {
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.showPosition)
+    } else {
+      alert('Geolocation is not supported by this browser.')
+    }
+  }
+  //show current location end
+
   handleLogin = (e) => {
     if (this.checkEmail() === false) {
       this.setState({ isValid: false });
@@ -143,7 +168,12 @@ export class FormView extends React.Component {
         auth.email = this.state.email;
         Cookies.set("auth", auth, { expires: 1});
         if(Cookies.get("lastLink") !== undefined) {
-          window.location.href = JSON.parse(Cookies.get("lastLink")).value
+          var lastlink = JSON.parse(Cookies.get("lastLink")).value
+          if(lastlink.includes("?latitude")) {
+            window.location.href = JSON.parse(Cookies.get("lastLink")).value
+          } else {
+            window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${this.state.lat}&longitude=${this.state.lon}`
+          }
         }
         alert("Login berhasil.")
       })
