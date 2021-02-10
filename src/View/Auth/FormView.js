@@ -3,7 +3,7 @@ import { Alert, Col, Form, Row } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaTextField } from "../../Component/TextField/PikaTextField";
 import axios from "axios";
-import { address, clientId } from "../../Asset/Constant/APIConstant";
+import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
@@ -24,8 +24,22 @@ export class FormView extends React.Component {
     lon: "",
   };
 
+  getUserLocation = () => {
+    axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`)
+    .then((res)=> {
+      let latitude = res.data.location.lat
+      let longitude = res.data.location.lng
+      let longlat = {lat: latitude, lon: longitude}
+      console.log(latitude, longitude);
+      this.setState({lat: latitude, lon: longitude})
+      localStorage.setItem("longlat", JSON.stringify(longlat))
+    })
+    .catch((err)=> console.log(err))
+  }
+
   componentDidMount() {
-    this.geoLocation()
+    // this.geoLocation()
+    this.getUserLocation()
   }
 
   handleEmail = (e) => {
