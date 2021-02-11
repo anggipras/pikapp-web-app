@@ -183,7 +183,7 @@ export class FormView extends React.Component {
         Cookies.set("auth", auth, { expires: 1});
         if(Cookies.get("lastLink") !== undefined) {
           var lastlink = JSON.parse(Cookies.get("lastLink")).value
-          if(lastlink.includes("?latitude")) {
+          if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value
           } else {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${this.state.lat}&longitude=${this.state.lon}`

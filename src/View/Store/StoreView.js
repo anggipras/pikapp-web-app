@@ -56,11 +56,9 @@ export class StoreView extends React.Component {
     else {
       longitude = value.longitude || longlat.lon;
       latitude = value.latitude || longlat.lat;
-      if(window.location.href.includes('?latitude')) {
+      if(window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
         
       } else {
-        // var lastLinked = { value: window.location.href + `?latitude=${latitude}&longitude=${longitude}`}
-        // Cookies.set("lastLink", lastLinked,{ expires: 1})
         window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
       }
     }
