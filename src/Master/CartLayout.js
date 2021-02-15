@@ -7,13 +7,16 @@ import {
 import { Container } from "react-bootstrap";
 import cartLogo from "../Asset/Illustration/cart_illustration2x.png";
 import backIcon from "../Asset/Icon/back_icon2x.png";
+import queryString from "query-string"
 
 export default class CartLayout extends React.Component {
   componentDidMount() {
     document.body.style.backgroundColor = secondary_color;
-  }
-
-  render() {
+    }
+    
+    render() {
+    const value = queryString.parse(window.location.search);
+    console.log(value.table);
     return (
       <html>
         <header>
@@ -21,7 +24,7 @@ export default class CartLayout extends React.Component {
         </header>
         <body>
           <Container>
-            <CartView />
+            <CartView noTable={value}/>
           </Container>
         </body>
       </html>
