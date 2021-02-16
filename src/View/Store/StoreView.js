@@ -42,28 +42,40 @@ export class StoreView extends React.Component {
     if(Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
-    let longlat = JSON.parse(localStorage.getItem("longlat"))
     const value = queryString.parse(window.location.search);
     console.log(value);
     var longitude = "";
     var latitude = "";
     var merchant = "";
+    // let longlat = JSON.parse(localStorage.getItem("longlat"))
+    // let googlonglat = JSON.parse(localStorage.getItem("googlonglat"))
+
+    if(localStorage.getItem("longlat")) {
+      var getLocation = JSON.parse(localStorage.getItem("longlat"))
+      latitude = getLocation.lat
+      longitude = getLocation.lon
+    } else {
+      var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
+      latitude = googLocation.lat
+      longitude = googLocation.lon
+    }
+
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
       window.location.href = "/login"
     } 
     else {
-      longitude = value.longitude || longlat.lon;
-      latitude = value.latitude || longlat.lat;
+      longitude = value.longitude || longitude
+      latitude = value.latitude || latitude
       if(window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
         
       } else {
         window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
       }
     }
-    longitude = value.longitude || longlat.lon;
-    latitude = value.latitude || longlat.lat;
+    longitude = value.longitude || longitude
+    latitude = value.latitude || latitude
     merchant = value.merchant;
     Geocode.setApiKey(googleKey)
     Geocode.fromLatLng(latitude,longitude)
