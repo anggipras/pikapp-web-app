@@ -28,23 +28,22 @@ class FormView extends React.Component {
     lon: "",
   };
 
-  // getUserLocation = () => {
-  //   axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`)
-  //   .then((res)=> {
-  //     let latitude = res.data.location.lat
-  //     let longitude = res.data.location.lng
-  //     let longlat = {lat: latitude, lon: longitude}
-  //     console.log(latitude, longitude);
-  //     this.setState({lat: latitude, lon: longitude})
-  //     localStorage.setItem("longlat", JSON.stringify(longlat))
-  //   })
-  //   .catch((err)=> console.log(err))
-  // }
+  getUserLocation = () => {
+    axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`)
+    .then((res)=> {
+      let latitude = res.data.location.lat
+      let longitude = res.data.location.lng
+      let longlat = {lat: latitude, lon: longitude}
+      console.log(latitude, longitude);
+      this.setState({lat: latitude, lon: longitude})
+      localStorage.setItem("googlonglat", JSON.stringify(longlat))
+    })
+    .catch((err)=> console.log(err))
+  }
 
   componentDidMount() {
     // this.geoLocation()
-    // this.getUserLocation()
-
+    
     if(this.props.coords) {
       let latitude = this.props.coords.latitude
       let longitude = this.props.coords.longitude
@@ -52,7 +51,7 @@ class FormView extends React.Component {
       console.log(latitude, longitude);
       localStorage.setItem("longlat", JSON.stringify(longlat))
     } else {
-      this.setState({lat: 48, lon: -123})
+      this.getUserLocation()
     }
   }
 
@@ -63,7 +62,6 @@ class FormView extends React.Component {
       let longlat = {lat: latitude, lon: longitude}
       console.log(latitude, longitude);
       localStorage.setItem("longlat", JSON.stringify(longlat))
-      // alert(`latitude: ${latitude}, longitude: ${longitude}`)
     }
   }
 
@@ -208,11 +206,22 @@ class FormView extends React.Component {
         Cookies.set("auth", auth, { expires: 1});
         if(Cookies.get("lastLink") !== undefined) {
           var lastlink = JSON.parse(Cookies.get("lastLink")).value
-          var getLocation = JSON.parse(localStorage.getItem("longlat"))
+
+          var latitude = ""
+          var longitude = ""
+          if(localStorage.getItem("longlat")) {
+            var getLocation = JSON.parse(localStorage.getItem("longlat"))
+            latitude = getLocation.lat
+            longitude = getLocation.lon
+          } else {
+            var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
+            latitude = googLocation.lat
+            longitude = googLocation.lon
+          }
           if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value
           } else {
-            window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${getLocation.lat}&longitude=${getLocation.lon}`
+            window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
         }
         alert("Login berhasil.")
@@ -468,3 +477,5 @@ export default geolocated({
   },
   userDecisionTimeout: 5000
 })(FormView)
+
+// export default FormView
