@@ -54,10 +54,12 @@ export class StoreView extends React.Component {
       var getLocation = JSON.parse(localStorage.getItem("longlat"))
       latitude = getLocation.lat
       longitude = getLocation.lon
-    } else {
+    } else if(localStorage.getItem("googlonglat")) {
       var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
       latitude = googLocation.lat
       longitude = googLocation.lon
+    } else {
+      window.location.href = "/login"
     }
 
     if(auth.isLogged === false) {
