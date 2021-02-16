@@ -124,9 +124,9 @@ export class CartView extends React.Component {
         changeTable += 0
         window.location.href = changeTable 
       } else {
-        let {value} = JSON.parse(Cookies.get("lastLink"))
+        let value = Cookies.get("lastProduct")
         console.log(value);
-        let getPrevTable = value.slice(-1)
+        let getPrevTable = value.charAt(value.length - 1)
         let newUrl = window.location.search
         let changeTable = newUrl.slice(0, -1)
         changeTable += getPrevTable
