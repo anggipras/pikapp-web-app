@@ -110,12 +110,16 @@ const MerchantResto = (props) => {
             storeDesc: "",
             distance: "",
             storeImage: "",
+            storeAdress: "",
+            storeRating: "",
           };
           currentMerchant.mid = matchmid[0].storeId;
           currentMerchant.storeName = matchmid[0].storeName;
           currentMerchant.storeDesc = "Desc";
           currentMerchant.distance = matchmid[0].distance;
           currentMerchant.storeImage = matchmid[0].storeImage;
+          currentMerchant.storeAdress = matchmid[0].address;
+          currentMerchant.storeRating = matchmid[0].rating;
           Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
           history.push(
             "/store?mid=" +

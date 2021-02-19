@@ -10,9 +10,6 @@ import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import {geolocated} from 'react-geolocated'
 
-const DEFAULT_LNG = -123
-const DEFAULT_LAT = 48
-
 class FormView extends React.Component {
   state = {
     name: "",
@@ -26,6 +23,7 @@ class FormView extends React.Component {
     errorMsg: "",
     lat: "",
     lon: "",
+    noreload: false,
   };
 
   getUserLocation = () => {
@@ -35,7 +33,7 @@ class FormView extends React.Component {
       let longitude = res.data.location.lng
       let longlat = {lat: latitude, lon: longitude}
       console.log(latitude, longitude);
-      this.setState({lat: latitude, lon: longitude})
+      this.setState({lat: latitude, lon: longitude, noreload: true})
       localStorage.setItem("googlonglat", JSON.stringify(longlat))
     })
     .catch((err)=> console.log(err))
@@ -43,7 +41,6 @@ class FormView extends React.Component {
 
   componentDidMount() {
     // this.geoLocation()
-    
     if(this.props.coords) {
       let latitude = this.props.coords.latitude
       let longitude = this.props.coords.longitude
@@ -56,21 +53,23 @@ class FormView extends React.Component {
   }
 
   componentDidUpdate() {
-    if(this.props.coords) {
-      let latitude = this.props.coords.latitude
-      let longitude = this.props.coords.longitude
-      let longlat = {lat: latitude, lon: longitude}
-      console.log(latitude, longitude);
-      localStorage.setItem("longlat", JSON.stringify(longlat))
+    if(this.state.noreload) {
+      if(this.props.coords) {
+        let latitude = this.props.coords.latitude
+        let longitude = this.props.coords.longitude
+        let longlat = {lat: latitude, lon: longitude}
+        console.log(latitude, longitude);
+        localStorage.setItem("longlat", JSON.stringify(longlat))
+      }
     }
   }
 
   handleEmail = (e) => {
-    this.setState({ email: e.target.value });
+    this.setState({ email: e.target.value, noreload: false});
   };
 
   handlePassword = (e) => {
-    this.setState({ password: e.target.value });
+    this.setState({ password: e.target.value, noreload: false});
   };
 
   handleName = (e) => {
@@ -297,10 +296,6 @@ class FormView extends React.Component {
   }
 
   render() {
-    // const longitude = this.props.coords? this.props.coords.longitude : DEFAULT_LNG
-    // const latitude = this.props.coords? this.props.coords.latitude : DEFAULT_LAT
-    // console.log(longitude);
-    // console.log(latitude);
     const isLogIn = this.props.isLogIn;
     let form;
     if (isLogIn) {
