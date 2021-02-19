@@ -2,8 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/css/bootstrap.css';
-// Put any other imports below so that CSS from your
-// components takes precedence over default styles.
 import "./Asset/scss/App.scss";
 import AuthLayout from "./Master/AuthLayout";
 // import ProductLayout from "./Master/ProductLayout";
