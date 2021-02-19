@@ -79,13 +79,29 @@ export class StoreView extends React.Component {
     longitude = value.longitude || longitude
     latitude = value.latitude || latitude
     merchant = value.merchant;
-    Geocode.setApiKey(googleKey)
-    Geocode.fromLatLng(latitude,longitude)
-    .then((res) => {
-      console.log(res.results[0].formatted_address);
-      this.setState({location: res.results[0].formatted_address})
-    })
-    .catch((err) => {
+
+    //GOOGLE GEOCODE
+    // Geocode.setApiKey(googleKey)
+    // Geocode.fromLatLng(latitude,longitude)
+    // .then((res) => {
+    //   console.log(res.results[0].formatted_address);
+    //   this.setState({location: res.results[0].formatted_address})
+    // })
+    // .catch((err) => {
+    //   this.setState({location: "Tidak tersedia"})
+    // })
+
+    //OPENCAGE API
+    let opencagelonglat = latitude + "," + longitude
+    Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+        params:{
+            key: 'cdeab36e4fec4073b0de60ff6b595c70',
+            q: opencagelonglat
+        }
+    }).then((res)=> {
+      console.log(res.data.results[0].formatted);
+      this.setState({location: res.data.results[0].formatted})
+    }).catch((err) => {
       this.setState({location: "Tidak tersedia"})
     })
 
@@ -166,12 +182,16 @@ export class StoreView extends React.Component {
       storeDesc: "",
       distance: "",
       storeImage: "",
+      storeAdress: "",
+      storeRating: "",
     };
     currentMerchant.mid = e.storeId;
     currentMerchant.storeName = e.storeName;
     currentMerchant.storeDesc = "Desc";
     currentMerchant.distance = e.distance;
     currentMerchant.storeImage = e.storeImage;
+    currentMerchant.storeAdress = e.address;
+    currentMerchant.storeRating = e.rating;
 
     Cookies.set("currentMerchant", currentMerchant, {expires: 1})
   }

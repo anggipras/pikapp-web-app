@@ -8,6 +8,8 @@
 
 body {
   background-color: inherit;
+  // overflow-x: hidden;
+  // overflow-y: hidden;
 }
 body .bodySecondary {
   background-color: $secondary-color;
