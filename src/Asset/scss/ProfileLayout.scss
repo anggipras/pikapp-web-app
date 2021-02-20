@@ -1,0 +1,21 @@
+@media(min-width: 768px) {
+    .profileLabel {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .profileContent {
+        font-size: 20px;
+    }
+}
+
+@media(max-width: 768px) {
+    .profileLabel {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .profileContent {
+        font-size: 16px;
+    }
+}
