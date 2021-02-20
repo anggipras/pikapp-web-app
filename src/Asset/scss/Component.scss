@@ -1,0 +1,75 @@
+@import "./Variable/PikaColor.scss";
+
+.btn-primaryPika {
+  background-color: $primary-color;
+  font-weight: bold;
+  border-radius: 36px;
+  text-decoration: none;
+  height: 50px;
+  padding: 0px 50%;
+}
+.btn-pika {
+  background-color: $primary-color;
+  font-size: 20px;
+  font-weight: bold;
+}
+.btn-pikaAlt {
+  background-color: $secondary-color;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.btn-pikaAlt:hover {
+  color: white;
+}
+.btn-secondaryPika {
+  background-color: $secondary-color;
+  font-weight: bold;
+  border-radius: 36px;
+  text-decoration: none;
+  height: 50px;
+  padding: 0px 50%;
+  color: white;
+}
+@media (min-width: 768px) {
+  .btn-cartPika {
+    background-color: $primary-color;
+    font-weight: bold;
+    border-radius: 36px;
+    text-decoration: none;
+    width: 140px;
+    height: 50px;
+  }
+}
+@media (max-width: 768px) {
+  .btn-cartPika {
+    background-color: $primary-color;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 36px;
+    text-decoration: none;
+    line-height: 14px;
+    height: 40px;
+  }
+}
+
+.btn-statusPika {
+  background-color: $secondary-color;
+  font-weight: bold;
+  border-radius: 36px;
+  text-decoration: none;
+  color: white;
+}
+
+.form-control {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+.form-label {
+  font-weight: bold;
+  font-size: 24px;
+}

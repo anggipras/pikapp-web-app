@@ -1,0 +1,471 @@
+@media (min-width: 768px) {
+  .statusTabIcon {
+    width: 32px;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .statusTabTitle {
+    padding: 0 16px;
+    font-size: 14px;
+    color: $secondary-color;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+
+  .statusIcon {
+    margin-left: 50%;
+    width: 36px;
+    height: 36px;
+  }
+  .statusTitle {
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusDistance {
+    line-height: 0;
+    margin-top: 0;
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusQty {
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusLeftImg {
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+  }
+  .statusLeftImg>img {
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 30px;
+    max-height: 30px;
+  }
+  .statusLeftText {
+    margin-left: 8px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusRightImg {
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+  }
+  .statusRightImg>img {
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 30px;
+    max-height: 30px;
+  }
+  .statusRightText {
+    margin-left: 8px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusCard {
+    margin-top: 16px;
+  }
+  .statusNoteLabel {
+    font-size: 12px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusNoteHeader {
+    font-size: 14px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+
+  .statusStoreIcon {
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+  .statusStoreName {
+    font-weight: bold;
+    font-size: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreLabel {
+    font-size: 12px;
+    line-height: 0;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreLocation {
+    font-size: 16px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreStatusIcon {
+    width: 36px;
+    height: 24px;
+  }
+  .statusStoreStatus {
+    font-size: 12px;
+    vertical-align: middle;
+    font-weight: bold;
+    margin-right: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreDistance {
+    font-size: 12px;
+    vertical-align: middle;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStorePaymentLabel {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 8px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStorePayment {
+    margin-left: 30px;
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreTotal {
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodIcon {
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+  .statusFoodname {
+    font-size: 16px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodPrice {
+    font-size: 14px;
+    line-height: 0;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodQuantity {
+    font-size: 16px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodNote {
+    font-size: 14px;
+    line-height: 0;
+    margin-left: 10%;
+    font-weight: lighter;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+}
+@media (max-width: 768px) {
+  .statusTabIcon {
+    width: 32px;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .statusTabTitle {
+    padding: 0 16px;
+    font-size: 14px;
+    color: $secondary-color;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+
+  .statusIcon {
+    margin-left: 50%;
+    width: 24px;
+    height: 24px;
+  }
+  .statusTitle {
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusDistance {
+    line-height: 0;
+    margin-top: 0;
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusQty {
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusLeftImg {
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+  }
+  .statusLeftImg>img {
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
+  }
+  .statusLeftText {
+    margin-left: 8px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusRightImg {
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+  }
+  .statusRightImg>img {
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
+  }
+  .statusRightText {
+    margin-left: 8px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusCard {
+    margin-top: 16px;
+  }
+  .statusNoteLabel {
+    font-size: 10px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusNoteHeader {
+    font-size: 12px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreIcon {
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+  .statusStoreName {
+    font-weight: bold;
+    font-size: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreLabel {
+    font-size: 12px;
+    line-height: 0;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreLocation {
+    font-size: 16px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreStatusIcon {
+    width: 30px;
+    height: 18px;
+  }
+  .statusStoreStatus {
+    font-size: 12px;
+    vertical-align: middle;
+    font-weight: bold;
+    margin-right: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreDistance {
+    font-size: 12px;
+    vertical-align: middle;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStorePaymentLabel {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 8px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStorePayment {
+    margin-left: 16px;
+    font-size: 12px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusStoreTotal {
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodIcon {
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+  .statusFoodname {
+    font-size: 12px;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodPrice {
+    font-size: 12px;
+    line-height: 0;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodQuantity {
+    font-size: 12x;
+    font-weight: bold;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .statusFoodNote {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 10%;
+    font-weight: lighter;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+}

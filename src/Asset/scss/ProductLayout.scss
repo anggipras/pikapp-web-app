@@ -1,0 +1,345 @@
+@media (min-width: 768px) {
+  .storeImage {
+    margin-left: 16px;
+    width: 100%;
+    height: 100%;
+    max-width: 150px;
+    min-width: 150px;
+    max-height: 150px;
+    min-height: 150px;
+    object-fit: fill;
+  }
+  .foodTitle {
+    margin-top: 16px;
+    font-weight: bold;
+    font-size: 18px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .foodPrice {
+    margin-top: 50%;
+    font-weight: bold;
+    font-size: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .foodDesc {
+    font-size: 12px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .storeLabel {
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+    margin-top: 16px;
+  }
+  .storeColumn {
+    align-items: center;
+    text-align: center;
+  }
+  .foodHeader {
+    margin-top: 1%;
+    margin-left: 1%;
+  }
+  .foodImage {
+    margin-top: 16px;
+    margin-left: 16px;
+    object-fit: fill;
+    max-height: 200px;
+    min-height: 200px;
+    max-width: 200px;
+    min-width: 200px;
+  }
+  .nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+  }
+  .nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-tabs > li {
+    float: none;
+  }
+
+  .modalField {
+    text-align: center;
+    max-width: 70px;
+  }
+  .modalField:disabled {
+    background-color: white;
+  }
+  .btn-modalMiniButton {
+    border-radius: 36px;
+    background-color: #4bb7ac;
+    font-weight: bolder;
+    font-size: 24px;
+    line-height: 0px;
+    color: white;
+    max-width: 50px;
+  }
+  .btn-modalMiniButton:hover {
+    background-color: #5bc7bc;
+    font-weight: bolder;
+    font-size: 24px;
+    line-height: 0px;
+    color: white;
+  }
+  .modalNoteLabel {
+    font-size: 24px;
+    font-weight: normal;
+    margin-left: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .modalFoodName {
+    margin-left: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .btn-modalPika {
+    background-color: #4bb7ac;
+    font-weight: bold;
+    border-radius: 36px;
+    text-decoration: none;
+    width: 100%;
+    color: white;
+    height: 50px;
+  }
+  .btn-modalPika:hover {
+    background-color: #5bc7bc;
+    font-weight: bold;
+    border-radius: 36px;
+    text-decoration: none;
+    width: 100%;
+    color: white;
+    height: 50px;
+  }
+  .modalNote {
+    border-radius: 36px;
+  }
+
+  .btn-productCart {
+    border-radius: 180px;
+    background-color: $primary-color;
+    border-color: transparent;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 100px;
+    height: 100px;
+  }
+  .btn-productCart > img {
+    width: 36px;
+    margin-left: 30%;
+    margin-top: 30%;
+  }
+  .btn-productCart:active {
+    border-radius: 180px;
+    background-color: $secondary-color;
+    border-color: transparent;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .storeImage {
+    margin-top: 8px;
+    width: 70px;
+    height: 70px;
+    object-fit: fill;
+  }
+  .foodTitle {
+    margin-top: 16px;
+    font-weight: bold;
+    font-size: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .foodPrice {
+    margin-top: 50%;
+    font-weight: bold;
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .foodDesc {
+    font-size: 14px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .storeLabel {
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+  .storeColumn {
+    align-items: center;
+    text-align: center;
+  }
+  .foodHeader {
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+  .foodImage {
+    margin-top: 32px;
+    margin-left: 8px;
+    height: 80px;
+    max-width: 80px;
+    min-width: 80px;
+    max-height: 80px;
+    min-height: 80px;
+    object-fit: fill;
+  }
+  .card {
+    border: none;
+    border-bottom-width: 1px;
+    border-bottom-color: lightgray;
+    border-bottom-style: solid;
+    border-radius: 0px;
+  }
+  .nav-tabs {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+  }
+  .nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-tabs > li {
+    float: none;
+  }
+
+  .modalField {
+    text-align: center;
+    max-width: 40px;
+  }
+  .modalField:disabled {
+    background-color: white;
+  }
+  .btn-modalMiniButton {
+    border-radius: 36px;
+    background-color: #4bb7ac;
+    font-weight: bolder;
+    font-size: 24px;
+    line-height: 0px;
+    color: white;
+    max-width: 40px;
+  }
+  .btn-modalMiniButton:hover {
+    background-color: #5bc7bc;
+    font-weight: bolder;
+    font-size: 24px;
+    line-height: 0px;
+    color: white;
+  }
+  .modalNoteLabel {
+    font-size: 24px;
+    font-weight: normal;
+    margin-left: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .modalFoodName {
+    margin-left: 16px;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    word-wrap: break-word;
+  }
+  .btn-modalPika {
+    background-color: #4bb7ac;
+    font-weight: bold;
+    border-radius: 36px;
+    text-decoration: none;
+    width: 100%;
+    color: white;
+    height: 50px;
+  }
+  .btn-modalPika:hover {
+    background-color: #5bc7bc;
+    font-weight: bold;
+    border-radius: 36px;
+    text-decoration: none;
+    width: 100%;
+    color: white;
+    height: 50px;
+  }
+  .modalNote {
+    border-radius: 36px;
+  }
+  .btn-productCart {
+    border-radius: 180px;
+    background-color: $primary-color;
+    border-color: $secondary-color;
+    border-width: 2px;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+  }
+  .btn-productCart > img {
+    width: 24px;
+    margin-left: 30%;
+    margin-top: 30%;
+  }
+  .btn-productCart:active {
+    border-radius: 180px;
+    background-color: $primary-color;
+    border-color: $secondary-color;
+    border-width: 2px;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+  }
+}
