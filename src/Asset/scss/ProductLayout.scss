@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'SF-Compact-Rounded', sans-serif;
+  font-family: "SF-Compact-Rounded", sans-serif;
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
@@ -20,7 +20,6 @@
   .iconBanner {
     display: flex;
     position: absolute;
-    gap: 30px;
     top: 20px;
     right: 54px;
   }
@@ -40,22 +39,25 @@
     height: 66px;
     background-color: white;
     border-radius: 17px;
+    margin-right: 30px;
   }
 
   .notifIcon-sec {
     width: 66px;
     height: 66px;
-    background-color: #DC6A84;
+    background-color: #dc6a84;
     border-radius: 17px;
   }
 
-  .profileIcon, .notifIcon {
+  .profileIcon,
+  .notifIcon {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  .reactProfIcons, .reactNotifIcons {
+  .reactProfIcons,
+  .reactNotifIcons {
     font-size: 37px;
   }
   //Banner End
@@ -63,13 +65,26 @@
   //Merchant Start
   .merchant-section {
     position: relative;
-    width: 100%;
-    height: 422px;
+    width: 100vw;
+    min-height: 422px;
+    height: auto;
+  }
+
+  .inside-merchantSection {
+    position: relative;
+    padding-top: 42px;
+    padding-bottom: 25px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 422px;
+    height: auto;
   }
 
   .merchant-info {
-    position: absolute;
-    margin-top: 42px;
+    margin: 0;
+    padding: 0;
   }
 
   .top-merchantInfo {
@@ -84,14 +99,16 @@
     justify-content: space-between;
   }
 
-  .merchant-title, .merchant-categName, .merchant-starInfo {
+  .merchant-title,
+  .merchant-categName,
+  .merchant-starInfo {
     display: flex;
   }
 
   .merchant-logo {
     width: 104px;
     height: 104px;
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     border-radius: 40px;
     border: 1px solid gray;
     overflow: hidden;
@@ -102,7 +119,7 @@
   }
 
   .merchant-mainName {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 40px;
@@ -111,7 +128,7 @@
   }
 
   .merchant-allcateg {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 30px;
     font-weight: normal;
     font-style: normal;
@@ -122,13 +139,14 @@
   .merchant-starInfo .star-img {
     position: relative;
     top: -5px;
-    margin-inline: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     width: 25px;
     height: 25px;
   }
 
   .merchant-starInfo .merchant-star {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 25px;
     font-weight: 500;
     line-height: 20px;
@@ -137,7 +155,7 @@
   }
 
   .merchant-starInfo .star-votes {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 25px;
     font-weight: 500;
     line-height: 20px;
@@ -148,7 +166,7 @@
   .merchant-call-sec {
     width: 66px;
     height: 66px;
-    background-color: #4BB7AC;
+    background-color: #4bb7ac;
     border-radius: 25px;
     position: relative;
     top: 10px;
@@ -188,7 +206,7 @@
     width: 50px;
     height: 50px;
     border-radius: 20px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,7 +232,7 @@
   }
 
   .top-detail-info {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 25px;
     font-weight: bold;
     line-height: 25px;
@@ -224,7 +242,7 @@
   }
 
   .bottom-detail-info {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 20px;
     font-weight: normal;
     line-height: 25px;
@@ -232,19 +250,19 @@
     color: #767676;
     text-transform: capitalize;
     letter-spacing: 0.05em;
-    max-width: 350px;
+    max-width: 400px;
   }
 
   .merchant-category {
-    position: absolute;
-    top: 330px;
+    position: relative;
+    margin-top: 110px;
     padding-left: 56px;
     padding-right: 93px;
     width: 100vw;
   }
 
   .listCategory {
-    background-color: #F5F6F7;
+    background-color: #f5f6f7;
     height: 67px;
     width: 100%;
     border-radius: 20px;
@@ -254,7 +272,7 @@
   }
 
   .categoryName {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 30px;
     font-weight: 500;
     font-style: normal;
@@ -270,7 +288,7 @@
     width: 67px;
     height: 67px;
     border-radius: 20px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
@@ -309,7 +327,7 @@
     left: 0;
     top: 0;
     width: 182px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 40px;
@@ -317,7 +335,7 @@
     color: #111111;
   }
 
-  .list-product{
+  .list-product {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     padding-left: 8px;
@@ -329,8 +347,8 @@
     width: 386px;
     height: 173px;
     border-radius: 50px;
-    background-color: #FFFFFF;
-    border: 0.5px solid #AAAAAA;
+    background-color: #ffffff;
+    border: 0.5px solid #aaaaaa;
     display: flex;
     justify-content: space-between;
     margin-bottom: 28px;
@@ -355,7 +373,7 @@
   .product-star {
     width: 45.5px;
     height: 23.5px;
-    background-color: #F5F6F7;
+    background-color: #f5f6f7;
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -370,7 +388,7 @@
   }
 
   .product-star-rating {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 12px;
     font-weight: 500;
     font-style: normal;
@@ -381,7 +399,7 @@
 
   .product-name {
     width: 181px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
@@ -392,7 +410,7 @@
 
   .product-desc {
     width: 181px;
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -404,7 +422,7 @@
 
   .product-price {
     width: 177px;
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 22px;
@@ -427,7 +445,7 @@
   }
 
   .pikappInfo {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -614,7 +632,8 @@
   }
 }
 
-@media (max-width: 768px) {/////////////////////////////////////////////////////////////////////////////////////////
+@media (max-width: 768px) {
+  /////////////////////////////////////////////////////////////////////////////////////////
   .mainLayout {
     // background-color: white;
     width: 100vw;
@@ -631,7 +650,7 @@
   .iconBanner {
     display: flex;
     position: absolute;
-    gap: 15px;
+    // gap: 15px;
     top: 17px;
     right: 16.5px;
   }
@@ -653,22 +672,25 @@
     height: 33px;
     background-color: white;
     border-radius: 10px;
+    margin-right: 13px;
   }
 
   .notifIcon-sec {
     width: 33px;
     height: 33px;
-    background-color: #DC6A84;
+    background-color: #dc6a84;
     border-radius: 10px;
   }
 
-  .profileIcon, .notifIcon {
+  .profileIcon,
+  .notifIcon {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  .reactProfIcons, .reactNotifIcons {
+  .reactProfIcons,
+  .reactNotifIcons {
     font-size: 15px;
   }
   //Banner End
@@ -676,20 +698,32 @@
   //Merchant Start
   .merchant-section {
     position: relative;
-    width: 100%;
-    height: 220px;
+    width: 100vw;
+    min-height: 220px;
+    height: auto;
+  }
+
+  .inside-merchantSection {
+    position: relative;
+    padding-top: 44px;
+    padding-bottom: 15px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    height: auto;
   }
 
   .merchant-info {
-    position: absolute;
-    margin-top: 44px;
+    margin: 0;
+    padding: 0;
   }
 
   .top-merchantInfo {
     padding-left: 16px;
     padding-right: 18px;
-    width: 100vw;
-    margin-bottom: 25px;
+    margin-bottom: 16px;
   }
 
   .inside-topMerchantInfo {
@@ -697,7 +731,9 @@
     justify-content: space-between;
   }
 
-  .merchant-title, .merchant-categName, .merchant-starInfo {
+  .merchant-title,
+  .merchant-categName,
+  .merchant-starInfo {
     display: flex;
   }
 
@@ -710,16 +746,17 @@
   }
 
   .merchant-mainName {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
+    line-height: 20px;
     text-transform: capitalize;
     color: #111111;
   }
 
   .merchant-allcateg {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
@@ -730,13 +767,14 @@
   .merchant-starInfo .star-img {
     position: relative;
     top: 3px;
-    margin-inline: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
     width: 12px;
     height: 12px;
   }
 
   .merchant-starInfo .merchant-star {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -745,7 +783,7 @@
   }
 
   .merchant-starInfo .star-votes {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -756,7 +794,7 @@
   .merchant-call-sec {
     width: 33.1px;
     height: 33.1px;
-    background-color: #4BB7AC;
+    background-color: #4bb7ac;
     border-radius: 10px;
     position: relative;
     top: 5px;
@@ -797,7 +835,7 @@
     width: 18px;
     height: 18px;
     border-radius: 20px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -823,7 +861,7 @@
   }
 
   .top-detail-info {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 10px;
     font-weight: 500;
     line-height: 20px;
@@ -833,7 +871,7 @@
   }
 
   .bottom-detail-info {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 8px;
     font-weight: normal;
     line-height: 10px;
@@ -841,19 +879,19 @@
     color: #767676;
     text-transform: capitalize;
     letter-spacing: 0.05em;
-    max-width: 136px;
+    max-width: 126px;
   }
 
   .merchant-category {
-    position: absolute;
-    top: 179px;
+    position: relative;
+    margin-top: 31px;
     padding-left: 17px;
     padding-right: 19px;
     width: 100vw;
   }
 
   .listCategory {
-    background-color: #F5F6F7;
+    background-color: #f5f6f7;
     height: 26px;
     width: 100%;
     border-radius: 8px;
@@ -863,7 +901,7 @@
   }
 
   .categoryName {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 12px;
     font-weight: 500;
     font-style: normal;
@@ -880,7 +918,7 @@
     width: 26px;
     height: 26px;
     border-radius: 8px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
@@ -898,17 +936,27 @@
   //Product Start
   .product-layout {
     position: relative;
-    width: 100%;
+    width: 100vw;
+    min-height: 220px;
     height: auto;
-    display: flex;
-    justify-content: center;
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 0px 0px 40px 40px;
+    margin-bottom: 24px;
   }
 
   .mainproduct-sec {
-    position: absolute;
-    margin-top: 25px;
-    margin-left: 18px;
-    margin-right: 18px;
+    position: relative;
+    padding-top: 25px;
+    padding-bottom: 23px;
+    padding-left: 18px;
+    padding-right: 18px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 220px;
+    height: auto;
   }
 
   .product-section {
@@ -917,11 +965,9 @@
   }
 
   .product-categ {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 383px;
-    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    width: 100%;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 25px;
@@ -930,29 +976,23 @@
     color: #111111;
   }
 
-  .list-product{
+  .list-product {
     display: grid;
     grid-template-columns: 1fr;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-top: 48px;
+    margin-top: 23px;
   }
 
   .product-merchant {
-    width: 382px;
+    max-width: 382px;
+    width: 100%;
     height: 113px;
     border-radius: 30px;
-    background-color: #FFFFFF;
-    border: 0.5px solid #AAAAAA;
+    background-color: #ffffff;
+    border: 0.5px solid #aaaaaa;
     display: flex;
     justify-content: space-between;
     margin-bottom: 17px;
   }
-
-  // .product-merchant:nth-child(3n + 2) {
-  //   margin-left: 14px;
-  //   margin-right: 14px;
-  // }
 
   .product-img {
     width: 113px;
@@ -962,17 +1002,20 @@
   }
 
   .product-detail {
-    margin-left: 23px;
+    max-width: 179px;
+    width: auto;
   }
 
   .product-detail-mob {
     display: flex;
+    justify-content: space-between;
+    margin-left: 23px;
   }
 
   .product-star {
     width: 38.7px;
     height: 20px;
-    background-color: #F5F6F7;
+    background-color: #f5f6f7;
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -987,7 +1030,7 @@
   }
 
   .product-star-rating {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 10px;
     font-weight: 500;
     font-style: normal;
@@ -998,7 +1041,7 @@
 
   .product-name {
     width: 179px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 13px;
@@ -1009,7 +1052,7 @@
 
   .product-desc {
     width: 179px;
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1025,7 +1068,7 @@
 
   .product-price-mob {
     width: 59px;
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -1040,12 +1083,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 29px;
     margin-top: 26px;
   }
 
   .pikappInfo {
-    font-family: 'SF-Compact-Rounded', sans-serif;
+    font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -1062,13 +1104,6 @@
     height: 27.5px;
   }
   //Product End
-
-
-
-
-
-
-
 
   .storeImage {
     margin-top: 8px;
@@ -1243,4 +1278,34 @@
     width: 64px;
     height: 64px;
   }
+}
+
+@media (max-width: 380px) {
+  .merchant-name {
+    width: 250px;
+  }
+
+  //Product Start
+  .product-price-mob {
+    margin-left: 50px;
+  }
+
+  .product-name {
+    max-width: 140px;
+    width: auto;
+  }
+
+  .product-desc {
+    max-width: 140px;
+    width: auto;
+  }
+  //Product End
+}
+
+@media (max-width: 320px) {
+  //Product Start
+  .product-price-mob {
+    margin-left: 10px;
+  }
+  //Product End
 }
