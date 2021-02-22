@@ -83,6 +83,7 @@ export class ProductView extends React.Component {
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
+    const notab = value.table || ""
     let addressRoute = address + "home/v1/list/product/";
     var stateData;
     let uuid = uuidV4();
@@ -107,6 +108,7 @@ export class ProductView extends React.Component {
         stateData.title = currentMerchant.storeName;
         stateData.image = currentMerchant.storeImage;
         stateData.desc = currentMerchant.storeDistance;
+        stateData.notable = notab
         stateData.data.push({
           category: "All Category",
           productId: "",
@@ -347,7 +349,7 @@ export class ProductView extends React.Component {
     let cartButton;
     if (cart.length > 1) {
       cartButton = (
-        <Link to={"/cart"} className={"btn-productCart"}>
+        <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
           <img src={cartIcon} alt={"cart"} />
         </Link>
       );

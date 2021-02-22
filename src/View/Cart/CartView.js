@@ -19,12 +19,13 @@ import Cookies from "js-cookie"
 
 export class CartView extends React.Component {
   state = {
+    notable: "",
     showModal: false,
     currentModalTitle: "",
     paymentOption: "Pembayaran di kasir",
     paymentType: "PAY_BY_CASHIER",
-    biz_type: "DINE_IN",
-    eat_type: "Makan di tempat",
+    biz_type: this.props.noTable.table !== ""? this.props.noTable.table > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
+    eat_type: this.props.noTable.table !== ""? this.props.noTable.table > 0 ? "Makan di tempat" : "Bungkus / Takeaway" : "Makan di tempat",
     currentModal: [
       {
         image: "",
@@ -32,6 +33,10 @@ export class CartView extends React.Component {
       },
     ],
   };
+
+  componentDidMount() {
+  //  console.log(); 
+  }
 
   handleDetail(data) {
     if (data === "eat-method") {
@@ -112,8 +117,24 @@ export class CartView extends React.Component {
     this.forceUpdate();
   }
   handleOption = (data) => {
+    if(this.props.noTable.table !== "") {
+      if(data == 1) {
+        let newUrl = window.location.search
+        let changeTable = newUrl.slice(0, -1)
+        changeTable += 0
+        window.location.href = changeTable 
+      } else {
+        let value = Cookies.get("lastProduct")
+        console.log(value);
+        let getPrevTable = value.charAt(value.length - 1)
+        let newUrl = window.location.search
+        let changeTable = newUrl.slice(0, -1)
+        changeTable += getPrevTable
+        window.location.href = changeTable 
+      }
+    }
     if(this.state.currentModalTitle === "Cara makan anda?") {
-      if(data === 0) {
+      if(data === 0 || this.props.noTable.table > 0) {
         this.setState({biz_type: "DINE_IN"})
         this.setState({eat_type: "Makan di tempat"})
       } else {
@@ -255,6 +276,7 @@ export class CartView extends React.Component {
           title={this.state.currentModalTitle}
           detailOptions={this.state.currentModal}
           handleData = {this.handleOption}
+          notable = {this.props.noTable}
         />
       );
     } else {

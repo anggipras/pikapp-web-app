@@ -3,13 +3,14 @@ import { Alert, Col, Form, Row } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaTextField } from "../../Component/TextField/PikaTextField";
 import axios from "axios";
-import { address, clientId } from "../../Asset/Constant/APIConstant";
+import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import {geolocated} from 'react-geolocated'
 
-export class FormView extends React.Component {
+class FormView extends React.Component {
   state = {
     name: "",
     email: "",
@@ -20,14 +21,55 @@ export class FormView extends React.Component {
     isCaptcha: false,
     captchaCounter: 0,
     errorMsg: "",
+    lat: "",
+    lon: "",
+    noreload: false,
   };
 
+  getUserLocation = () => {
+    axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`)
+    .then((res)=> {
+      let latitude = res.data.location.lat
+      let longitude = res.data.location.lng
+      let longlat = {lat: latitude, lon: longitude}
+      console.log(latitude, longitude);
+      this.setState({lat: latitude, lon: longitude, noreload: true})
+      localStorage.setItem("googlonglat", JSON.stringify(longlat))
+    })
+    .catch((err)=> console.log(err))
+  }
+
+  componentDidMount() {
+    // this.geoLocation()
+    if(this.props.coords) {
+      let latitude = this.props.coords.latitude
+      let longitude = this.props.coords.longitude
+      let longlat = {lat: latitude, lon: longitude}
+      console.log(latitude, longitude);
+      localStorage.setItem("longlat", JSON.stringify(longlat))
+    } else {
+      this.getUserLocation()
+    }
+  }
+
+  componentDidUpdate() {
+    if(this.state.noreload) {
+      if(this.props.coords) {
+        let latitude = this.props.coords.latitude
+        let longitude = this.props.coords.longitude
+        let longlat = {lat: latitude, lon: longitude}
+        console.log(latitude, longitude);
+        localStorage.setItem("longlat", JSON.stringify(longlat))
+      }
+    }
+  }
+
   handleEmail = (e) => {
-    this.setState({ email: e.target.value });
+    this.setState({ email: e.target.value, noreload: false});
   };
 
   handlePassword = (e) => {
-    this.setState({ password: e.target.value });
+    this.setState({ password: e.target.value, noreload: false});
   };
 
   handleName = (e) => {
@@ -99,6 +141,25 @@ export class FormView extends React.Component {
     }
   };
 
+  //show current location start
+  // showPosition = (position) => {
+  //   let latitude = position.coords.latitude
+  //   let longitude = position.coords.longitude
+  //   let longlat = {lat: latitude, lon: longitude}
+  //   console.log(latitude, longitude);
+  //   this.setState({lat: latitude, lon: longitude})
+  //   localStorage.setItem("longlat", JSON.stringify(longlat))
+  // }
+
+  // geoLocation = () => {
+  //   if(navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(this.showPosition)
+  //   } else {
+  //     alert('Geolocation is not supported by this browser.')
+  //   }
+  // }
+  //show current location end
+
   handleLogin = (e) => {
     if (this.checkEmail() === false) {
       this.setState({ isValid: false });
@@ -143,7 +204,24 @@ export class FormView extends React.Component {
         auth.email = this.state.email;
         Cookies.set("auth", auth, { expires: 1});
         if(Cookies.get("lastLink") !== undefined) {
-          window.location.href = JSON.parse(Cookies.get("lastLink")).value
+          var lastlink = JSON.parse(Cookies.get("lastLink")).value
+
+          var latitude = ""
+          var longitude = ""
+          if(localStorage.getItem("longlat")) {
+            var getLocation = JSON.parse(localStorage.getItem("longlat"))
+            latitude = getLocation.lat
+            longitude = getLocation.lon
+          } else {
+            var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
+            latitude = googLocation.lat
+            longitude = googLocation.lon
+          }
+          if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
+            window.location.href = JSON.parse(Cookies.get("lastLink")).value
+          } else {
+            window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
+          }
         }
         alert("Login berhasil.")
       })
@@ -387,3 +465,12 @@ export class FormView extends React.Component {
     return <div>{form}</div>;
   }
 }
+
+export default geolocated({
+  positionOptions:{
+    enableHighAccuracy: false
+  },
+  userDecisionTimeout: 5000
+})(FormView)
+
+// export default FormView

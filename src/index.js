@@ -1,13 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.css';
 import "./Asset/scss/App.scss";
 import AuthLayout from "./Master/AuthLayout";
-import ProductLayout from "./Master/ProductLayout";
+// import ProductLayout from "./Master/ProductLayout";
+import ProductLayout from "./Master/ProductLayoutDev";
 import CartLayout from "./Master/CartLayout";
 import StatusLayout from "./Master/StatusLayout";
 import StoreLayout from "./Master/StoreLayout";
 import ProfileLayout from "./Master/ProfileLayout";
+import MerchantResto from "./Master/MerchantQR";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch } from "react-router-dom";
 
@@ -48,6 +51,7 @@ ReactDOM.render(
       <Route path="/cart" component={() => <CartLayout />} />
       <Route path="/status" component={() => <StatusLayout />} />
       <Route path="/store" component={() => <ProductLayout />} />
+      <Route path="/merchant/:mid/:notab" component={MerchantResto} />
       <Route path="/profile" component={() => <ProfileLayout />} />
       <Route path="/" component={() => <StoreLayout />} />
     </Switch>
