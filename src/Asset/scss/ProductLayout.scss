@@ -5,7 +5,6 @@
 
 @media (min-width: 768px) {
   .mainLayout {
-    // background-color: white;
     width: 100vw;
   }
 
@@ -306,15 +305,24 @@
   //Product Start
   .product-layout {
     position: relative;
-    width: 100%;
+    width: 100vw;
+    min-height: 422px;
     height: auto;
   }
 
   .mainproduct-sec {
-    position: absolute;
-    margin-top: 53px;
-    margin-left: 48px;
-    margin-right: 48px;
+    position: relative;
+    padding-top: 53px;
+    padding-bottom: 30px;
+    padding-left: 48px;
+    padding-right: 48px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 422px;
+    height: auto;
   }
 
   .product-section {
@@ -323,10 +331,8 @@
   }
 
   .product-categ {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 182px;
+    position: relative;
+    width: 100%;
     font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
@@ -340,11 +346,12 @@
     grid-template-columns: 1fr 1fr 1fr;
     padding-left: 8px;
     padding-right: 8px;
-    padding-top: 94px;
+    padding-top: 54px;
   }
 
   .product-merchant {
-    width: 386px;
+    max-width: 386px;
+    width: auto;
     height: 173px;
     border-radius: 50px;
     background-color: #ffffff;
@@ -440,7 +447,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
     margin-top: 64px;
   }
 
@@ -635,7 +641,6 @@
 @media (max-width: 768px) {
   /////////////////////////////////////////////////////////////////////////////////////////
   .mainLayout {
-    // background-color: white;
     width: 100vw;
   }
 
@@ -1067,7 +1072,7 @@
   }
 
   .product-price-mob {
-    width: 59px;
+    width: auto;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: bold;
