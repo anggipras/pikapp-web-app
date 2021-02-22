@@ -1,4 +1,474 @@
+@font-face {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
 @media (min-width: 768px) {
+  .mainLayout {
+    width: 100vw;
+  }
+
+  //Banner Start
+  .storeBanner {
+    width: 100%;
+    height: 433px;
+    display: block;
+    position: relative;
+  }
+
+  .iconBanner {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 54px;
+  }
+
+  .profileicon-img {
+    width: 37px;
+    height: 37px;
+  }
+
+  .notificon-img {
+    width: 30.5px;
+    height: 30.5px;
+  }
+
+  .profileIcon-sec {
+    width: 66px;
+    height: 66px;
+    background-color: white;
+    border-radius: 17px;
+    margin-right: 30px;
+  }
+
+  .notifIcon-sec {
+    width: 66px;
+    height: 66px;
+    background-color: #dc6a84;
+    border-radius: 17px;
+  }
+
+  .profileIcon,
+  .notifIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .reactProfIcons,
+  .reactNotifIcons {
+    font-size: 37px;
+  }
+  //Banner End
+
+  //Merchant Start
+  .merchant-section {
+    position: relative;
+    width: 100vw;
+    min-height: 422px;
+    height: auto;
+  }
+
+  .inside-merchantSection {
+    position: relative;
+    padding-top: 42px;
+    padding-bottom: 25px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 422px;
+    height: auto;
+  }
+
+  .merchant-info {
+    margin: 0;
+    padding: 0;
+  }
+
+  .top-merchantInfo {
+    padding-left: 125px;
+    padding-right: 125px;
+    width: 100vw;
+    margin-bottom: 50px;
+  }
+
+  .inside-topMerchantInfo {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .merchant-title,
+  .merchant-categName,
+  .merchant-starInfo {
+    display: flex;
+  }
+
+  .merchant-logo {
+    width: 104px;
+    height: 104px;
+    background-color: #eeeeee;
+    border-radius: 40px;
+    border: 1px solid gray;
+    overflow: hidden;
+  }
+
+  .merchant-name {
+    margin-left: 25px;
+  }
+
+  .merchant-mainName {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    text-transform: capitalize;
+    color: #111111;
+  }
+
+  .merchant-allcateg {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 30px;
+    font-weight: normal;
+    font-style: normal;
+    color: #767676;
+    line-height: 20px;
+  }
+
+  .merchant-starInfo .star-img {
+    position: relative;
+    top: -5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+  }
+
+  .merchant-starInfo .merchant-star {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+    color: #111111;
+  }
+
+  .merchant-starInfo .star-votes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+    color: #767676;
+  }
+
+  .merchant-call-sec {
+    width: 66px;
+    height: 66px;
+    background-color: #4bb7ac;
+    border-radius: 25px;
+    position: relative;
+    top: 10px;
+  }
+
+  .merchant-call {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchantCall-icon {
+    font-size: 37px;
+  }
+
+  .merchantCall-img {
+    width: 29px;
+    height: 32px;
+  }
+
+  .bottom-merchantInfo {
+    padding-left: 125px;
+    padding-right: 125px;
+    width: 100vw;
+  }
+
+  .inside-bottomMerchantInfo {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .merchantdetail-section {
+    display: flex;
+  }
+
+  .icon-based {
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .openhouricon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .coinicon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .locationicon {
+    width: 25px;
+    height: 30px;
+  }
+
+  .detail-info {
+    margin-left: 25px;
+  }
+
+  .top-detail-info {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 25px;
+    font-style: normal;
+    color: #111111;
+    text-transform: capitalize;
+  }
+
+  .bottom-detail-info {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 25px;
+    font-style: normal;
+    color: #767676;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    max-width: 400px;
+  }
+
+  .merchant-category {
+    position: relative;
+    margin-top: 110px;
+    padding-left: 56px;
+    padding-right: 93px;
+    width: 100vw;
+  }
+
+  .listCategory {
+    background-color: #f5f6f7;
+    height: 67px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .categoryName {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    font-style: normal;
+    color: #111111;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: 25px;
+  }
+
+  .arrow-based {
+    width: 67px;
+    height: 67px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 53px;
+  }
+
+  .arrowicon {
+    width: 28px;
+    height: 16px;
+  }
+  //Merchant End
+
+  //Product Start
+  .product-layout {
+    position: relative;
+    width: 100vw;
+    min-height: 422px;
+    height: auto;
+  }
+
+  .mainproduct-sec {
+    position: relative;
+    padding-top: 53px;
+    padding-bottom: 30px;
+    padding-left: 48px;
+    padding-right: 48px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 422px;
+    height: auto;
+  }
+
+  .product-section {
+    margin: 0;
+    padding: 0;
+  }
+
+  .product-categ {
+    position: relative;
+    width: 100%;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    text-transform: capitalize;
+    color: #111111;
+  }
+
+  .list-product {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 54px;
+  }
+
+  .product-merchant {
+    max-width: 386px;
+    width: auto;
+    height: 173px;
+    border-radius: 50px;
+    background-color: #ffffff;
+    border: 0.5px solid #aaaaaa;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .product-merchant:nth-child(3n + 2) {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .product-img {
+    width: 173px;
+    height: 173px;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+
+  .product-detail {
+    margin-left: 20px;
+  }
+
+  .product-star {
+    width: 45.5px;
+    height: 23.5px;
+    background-color: #f5f6f7;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    padding-top: 5.8px;
+    margin-top: 15px;
+    margin-bottom: 7px;
+  }
+
+  .product-star-img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .product-star-rating {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: normal;
+    color: #111111;
+    text-transform: capitalize;
+    margin-left: 4px;
+  }
+
+  .product-name {
+    width: 181px;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: capitalize;
+    color: #111111;
+    line-height: 20px;
+  }
+
+  .product-desc {
+    width: 181px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 17px;
+    text-transform: capitalize;
+    color: #767676;
+    margin-bottom: 14px;
+  }
+
+  .product-price {
+    width: 177px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+    margin-bottom: 16px;
+  }
+
+  .product-price-mob {
+    display: none;
+  }
+
+  .pikapp-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 64px;
+  }
+
+  .pikappInfo {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+    position: relative;
+    top: 5px;
+    margin-right: 6px;
+  }
+
+  .Logopikapp {
+    width: 108px;
+    height: 43px;
+  }
+  //Product End
+
   .storeImage {
     margin-left: 16px;
     width: 100%;
@@ -169,6 +639,477 @@
 }
 
 @media (max-width: 768px) {
+  /////////////////////////////////////////////////////////////////////////////////////////
+  .mainLayout {
+    width: 100vw;
+  }
+
+  //Banner Start
+  .storeBanner {
+    width: 100%;
+    height: 184px;
+    display: block;
+    position: relative;
+  }
+
+  .iconBanner {
+    display: flex;
+    position: absolute;
+    // gap: 15px;
+    top: 17px;
+    right: 16.5px;
+  }
+
+  .profileicon-img {
+    width: 18.4px;
+    height: 18.4px;
+    margin-top: 7.3px;
+  }
+
+  .notificon-img {
+    width: 15.3px;
+    height: 15.3px;
+    margin-top: 9px;
+  }
+
+  .profileIcon-sec {
+    width: 33px;
+    height: 33px;
+    background-color: white;
+    border-radius: 10px;
+    margin-right: 13px;
+  }
+
+  .notifIcon-sec {
+    width: 33px;
+    height: 33px;
+    background-color: #dc6a84;
+    border-radius: 10px;
+  }
+
+  .profileIcon,
+  .notifIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .reactProfIcons,
+  .reactNotifIcons {
+    font-size: 15px;
+  }
+  //Banner End
+
+  //Merchant Start
+  .merchant-section {
+    position: relative;
+    width: 100vw;
+    min-height: 220px;
+    height: auto;
+  }
+
+  .inside-merchantSection {
+    position: relative;
+    padding-top: 44px;
+    padding-bottom: 15px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    height: auto;
+  }
+
+  .merchant-info {
+    margin: 0;
+    padding: 0;
+  }
+
+  .top-merchantInfo {
+    padding-left: 16px;
+    padding-right: 18px;
+    margin-bottom: 16px;
+  }
+
+  .inside-topMerchantInfo {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .merchant-title,
+  .merchant-categName,
+  .merchant-starInfo {
+    display: flex;
+  }
+
+  .merchant-logo {
+    display: none;
+  }
+
+  .merchant-name {
+    margin-left: 0px;
+  }
+
+  .merchant-mainName {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+  }
+
+  .merchant-allcateg {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    color: #767676;
+    line-height: 20px;
+  }
+
+  .merchant-starInfo .star-img {
+    position: relative;
+    top: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .merchant-starInfo .merchant-star {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+    color: #111111;
+  }
+
+  .merchant-starInfo .star-votes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+    color: #767676;
+  }
+
+  .merchant-call-sec {
+    width: 33.1px;
+    height: 33.1px;
+    background-color: #4bb7ac;
+    border-radius: 10px;
+    position: relative;
+    top: 5px;
+  }
+
+  .merchant-call {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchantCall-icon {
+    font-size: 15px;
+    padding-top: 3px;
+  }
+
+  .merchantCall-img {
+    width: 15px;
+    height: 15px;
+  }
+
+  .bottom-merchantInfo {
+    padding-left: 16px;
+    padding-right: 18px;
+    width: 100vw;
+  }
+
+  .inside-bottomMerchantInfo {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .merchantdetail-section {
+    display: flex;
+  }
+
+  .icon-based {
+    width: 18px;
+    height: 18px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .openhouricon {
+    width: 10.8px;
+    height: 10.8px;
+  }
+
+  .coinicon {
+    width: 10.8px;
+    height: 10.8px;
+  }
+
+  .locationicon {
+    width: 9.14px;
+    height: 10.8px;
+  }
+
+  .detail-info {
+    margin-left: 7px;
+  }
+
+  .top-detail-info {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+    color: #111111;
+    text-transform: capitalize;
+  }
+
+  .bottom-detail-info {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 8px;
+    font-weight: normal;
+    line-height: 10px;
+    font-style: normal;
+    color: #767676;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    max-width: 126px;
+  }
+
+  .merchant-category {
+    position: relative;
+    margin-top: 31px;
+    padding-left: 17px;
+    padding-right: 19px;
+    width: 100vw;
+  }
+
+  .listCategory {
+    background-color: #f5f6f7;
+    height: 26px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .categoryName {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: normal;
+    color: #111111;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: 10px;
+    line-height: 20px;
+  }
+
+  .arrow-based {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 19px;
+  }
+
+  .arrowicon {
+    width: 13.8px;
+    height: 8px;
+  }
+  //Merchant End
+
+  //Product Start
+  .product-layout {
+    position: relative;
+    width: 100vw;
+    min-height: 220px;
+    height: auto;
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 0px 0px 40px 40px;
+    margin-bottom: 24px;
+  }
+
+  .mainproduct-sec {
+    position: relative;
+    padding-top: 25px;
+    padding-bottom: 23px;
+    padding-left: 18px;
+    padding-right: 18px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 220px;
+    height: auto;
+  }
+
+  .product-section {
+    margin: 0;
+    padding: 0;
+  }
+
+  .product-categ {
+    position: relative;
+    width: 100%;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+  }
+
+  .list-product {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 23px;
+  }
+
+  .product-merchant {
+    max-width: 382px;
+    width: 100%;
+    height: 113px;
+    border-radius: 30px;
+    background-color: #ffffff;
+    border: 0.5px solid #aaaaaa;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 17px;
+  }
+
+  .product-img {
+    width: 113px;
+    height: 113px;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+
+  .product-detail {
+    max-width: 179px;
+    width: auto;
+  }
+
+  .product-detail-mob {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 23px;
+  }
+
+  .product-star {
+    width: 38.7px;
+    height: 20px;
+    background-color: #f5f6f7;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    padding-top: 3px;
+    margin-top: 9px;
+    margin-bottom: 3px;
+  }
+
+  .product-star-img {
+    width: 9.35px;
+    height: 9.35px;
+  }
+
+  .product-star-rating {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    font-style: normal;
+    color: #111111;
+    text-transform: capitalize;
+    margin-left: 3.3px;
+  }
+
+  .product-name {
+    width: 179px;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: capitalize;
+    color: #111111;
+    line-height: 20px;
+  }
+
+  .product-desc {
+    width: 179px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 15px;
+    text-transform: capitalize;
+    color: #767676;
+    margin-bottom: 14px;
+  }
+
+  .product-price {
+    display: none;
+  }
+
+  .product-price-mob {
+    width: auto;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    color: #111111;
+    margin-top: 34px;
+  }
+
+  .pikapp-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 26px;
+  }
+
+  .pikappInfo {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+    position: relative;
+    top: 6px;
+    margin-right: 4px;
+  }
+
+  .Logopikapp {
+    width: 69px;
+    height: 27.5px;
+  }
+  //Product End
+
   .storeImage {
     margin-top: 8px;
     width: 70px;
@@ -342,4 +1283,34 @@
     width: 64px;
     height: 64px;
   }
+}
+
+@media (max-width: 380px) {
+  .merchant-name {
+    width: 250px;
+  }
+
+  //Product Start
+  .product-price-mob {
+    margin-left: 50px;
+  }
+
+  .product-name {
+    max-width: 140px;
+    width: auto;
+  }
+
+  .product-desc {
+    max-width: 140px;
+    width: auto;
+  }
+  //Product End
+}
+
+@media (max-width: 320px) {
+  //Product Start
+  .product-price-mob {
+    margin-left: 10px;
+  }
+  //Product End
 }
