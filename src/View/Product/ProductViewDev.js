@@ -220,8 +220,8 @@ export class ProductView extends React.Component {
       ((0|(1<<8) + b2 + (256 - b2) * percent2 / 100).toString(16)).substr(1);
 
     console.log(brightColor, brightColor2);
-    this.setState({backColor1: brightColor, testColor: false})
-    document.body.style.backgroundColor = brightColor2;
+    this.setState({backColor1: brightColor, backColor2: brightColor2, testColor: false})
+    document.body.style.backgroundColor = '#' + hex;
   }
 
   handlePhone = (phone) => {
@@ -639,6 +639,7 @@ export class ProductView extends React.Component {
             </div>
         </div>
         <div className='merchant-section' style={{backgroundColor: this.state.backColor1}}>
+          <div className='inside-merchantSection'>
             <div className='merchant-info'>
                 <div className='top-merchantInfo'>
                     <div className='inside-topMerchantInfo'>
@@ -717,8 +718,9 @@ export class ProductView extends React.Component {
                     </div>
                 </div>    
             </div>
+          </div>
         </div>
-        <div className='product-layout' style={{backgroundColor: '#ece7dc'}}>
+        <div className='product-layout' style={{backgroundColor: this.state.backColor2}}>
           <div className='mainproduct-sec'>
             <div className='product-section'>
               <h2 className='product-categ'>Rice Box</h2>
