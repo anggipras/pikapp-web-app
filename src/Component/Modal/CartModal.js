@@ -7,7 +7,7 @@ import cashierIcon from "../../Asset/Icon/cashier_icon.png";
 
 export class CartModal extends React.Component {
   state = {
-    radio: 0,
+    radio: this.props.notable.table !== ""? this.props.notable.table > 0 ? 0 : 1 : 0,
   };
 
   onClick = (num) => () => {

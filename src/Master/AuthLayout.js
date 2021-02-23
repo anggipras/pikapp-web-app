@@ -1,6 +1,6 @@
 import React from "react";
 import { JumbotronView } from "../View/Main/JumbotronView";
-import { FormView } from "../View/Auth/FormView";
+import FormView from "../View/Auth/FormView";
 import { Container } from "react-bootstrap";
 import {
   primary_color,

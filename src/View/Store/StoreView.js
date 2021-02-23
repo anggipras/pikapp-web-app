@@ -42,24 +42,66 @@ export class StoreView extends React.Component {
     if(Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
+    const value = queryString.parse(window.location.search);
+    console.log(value);
+    var longitude = "";
+    var latitude = "";
+    var merchant = "";
+    // let longlat = JSON.parse(localStorage.getItem("longlat"))
+    // let googlonglat = JSON.parse(localStorage.getItem("googlonglat"))
+
+    if(localStorage.getItem("longlat")) {
+      var getLocation = JSON.parse(localStorage.getItem("longlat"))
+      latitude = getLocation.lat
+      longitude = getLocation.lon
+    } else if(localStorage.getItem("googlonglat")) {
+      var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
+      latitude = googLocation.lat
+      longitude = googLocation.lon
+    } else {
+      window.location.href = "/login"
+    }
+
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
       window.location.href = "/login"
+    } 
+    else {
+      longitude = value.longitude || longitude
+      latitude = value.latitude || latitude
+      if(window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
+        
+      } else {
+        window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
+      }
     }
-    const value = queryString.parse(window.location.search);
-    var longitude = "";
-    longitude = value.longitude;
-    var latitude = "";
-    latitude = value.latitude
-    var merchant = "";
+    longitude = value.longitude || longitude
+    latitude = value.latitude || latitude
     merchant = value.merchant;
-    Geocode.setApiKey(googleKey)
-    Geocode.fromLatLng(latitude,longitude)
-    .then((res) => {
-      this.setState({location: res.results[0].formatted_address})
-    })
-    .catch((err) => {
+
+    //GOOGLE GEOCODE
+    // Geocode.setApiKey(googleKey)
+    // Geocode.fromLatLng(latitude,longitude)
+    // .then((res) => {
+    //   console.log(res.results[0].formatted_address);
+    //   this.setState({location: res.results[0].formatted_address})
+    // })
+    // .catch((err) => {
+    //   this.setState({location: "Tidak tersedia"})
+    // })
+
+    //OPENCAGE API
+    let opencagelonglat = latitude + "," + longitude
+    Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+        params:{
+            key: 'cdeab36e4fec4073b0de60ff6b595c70',
+            q: opencagelonglat
+        }
+    }).then((res)=> {
+      console.log(res.data.results[0].formatted);
+      this.setState({location: res.data.results[0].formatted})
+    }).catch((err) => {
       this.setState({location: "Tidak tersedia"})
     })
 
@@ -140,12 +182,16 @@ export class StoreView extends React.Component {
       storeDesc: "",
       distance: "",
       storeImage: "",
+      storeAdress: "",
+      storeRating: "",
     };
     currentMerchant.mid = e.storeId;
     currentMerchant.storeName = e.storeName;
     currentMerchant.storeDesc = "Desc";
     currentMerchant.distance = e.distance;
     currentMerchant.storeImage = e.storeImage;
+    currentMerchant.storeAdress = e.address;
+    currentMerchant.storeRating = e.rating;
 
     Cookies.set("currentMerchant", currentMerchant, {expires: 1})
   }
