@@ -82,6 +82,9 @@ export class ProductView extends React.Component {
     },
     backColor1: "",
     backColor2: "",
+    openSelect: false,
+    categName: "All Categories",
+    showcategName: ["Rice Box", "Drinks", "Bento"],
   };
 
   componentDidMount() {
@@ -186,6 +189,8 @@ export class ProductView extends React.Component {
         });
       }
     }
+
+    this.scrolltoMenu()
   }
   //testing changebackground
 
@@ -393,6 +398,22 @@ export class ProductView extends React.Component {
     });
   };
 
+  changeMenu = () => {
+    this.setState({openSelect: !this.state.openSelect})
+  }
+
+  changeHeader = (menu) => {
+      this.setState({categName: menu, openSelect: false})
+  }
+
+  scrolltoMenu = () => {
+    if(this.state.categName !== "All Categories") {
+      if(this.state.openSelect == false) {
+        document.getElementById(this.state.categName).scrollIntoView({behavior: "smooth"})
+      }
+    }
+  }
+
   render() {
     let modal;
     if (this.state.showModal === true) {
@@ -469,53 +490,10 @@ export class ProductView extends React.Component {
                   </div>
                 </div>
               </div>
-              // <Row>
-              //   <Col xs={4} md={4} lg={3}>
-              //     <Image
-              //       src={cardData.foodImage}
-              //       rounded
-              //       fluid
-              //       className="foodImage"
-              //     />
-              //   </Col>
-              //   <Col xs={8} md={8} lg={9}>
-              //     <Row>
-              //       <Col xs={7} md={6} lg={9}>
-              //         <h5 className="foodTitle">{cardData.foodName}</h5>
-              //         <p className="foodDesc">{cardData.foodDesc}</p>
-              //         <div className="foodButton">
-              //           <PikaButton
-              //             title="ADD TO CART"
-              //             buttonStyle="cartPika"
-              //             handleClick={() => this.handleDetail(cardData)}
-              //           />
-              //         </div>
-              //       </Col>
-              //       <Col xs={5} md={3} lg={3}>
-              //         <h6 className="foodPrice">
-              //           {Intl.NumberFormat("id-ID", {
-              //             style: "currency",
-              //             currency: "IDR",
-              //           }).format(cardData.foodPrice)}
-              //         </h6>
-              //       </Col>
-              //     </Row>
-              //   </Col>
-              // </Row>
             );
           }
         });
-        return (
-          // <Tab eventKey={data.category} title={data.category}>
-          //   <Row>
-          //     <Col>
-          //       <h5 className="foodHeader">{data.category}</h5>
-          //     </Col>
-          //   </Row>
-          //   {allCards}
-          // </Tab>
-          allCards
-        );
+        return allCards
       } else {
         // var cards = storeDatas.map((cardData) => {
         //   if (data.category === cardData.category) {
@@ -609,7 +587,7 @@ export class ProductView extends React.Component {
 
     return (
       <>
-        <div className='storeBanner'>
+        <div className='storeBanner' onClick={()=> this.changeBackground()}>
             {//only for testing, would be remove
               this.state.testingchange == false ?
               <img src={Storeimg} style={{objectFit: 'cover'}} width='100%' height='100%' />
@@ -645,7 +623,7 @@ export class ProductView extends React.Component {
                     <div className='inside-topMerchantInfo'>
                         <div className='merchant-title'>
                             <div className='merchant-logo'>
-                              <img src={this.state.data.image? this.state.data.image : Productimg} style={{objectFit: 'cover'}} width='100%' height='100%' />
+                              <img src={this.state.data.image} style={{objectFit: 'cover'}} width='100%' height='100%' />
                             </div>
 
                             <div className='merchant-name'>
@@ -707,15 +685,29 @@ export class ProductView extends React.Component {
                     </div>
                 </div>
             </div>
-            <div className='merchant-category' onClick={()=> this.changeBackground()}>
+            <div className='merchant-category'>
                 <div className='select-category'>
                     <div className='listCategory'>
-                        <h2 className='categoryName'>Rice Box</h2>
+                        <h2 className='categoryName'>{this.state.categName}</h2>
 
-                        <div className='arrow-based' >
+                        <div className='arrow-based' onClick={()=> this.changeMenu()} >
                             <img className='arrowicon' src={ArrowIcon} />
                         </div>
                     </div>
+
+                    {
+                      this.state.openSelect?
+                      <div className='custom-options'>
+                          <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
+                          {
+                            this.state.showcategName.map((menuCategory)=> (
+                              <span className='custom-option' onClick={()=> this.changeHeader(menuCategory)}>{menuCategory}</span>
+                            ))
+                          }
+                      </div>
+                      :
+                      null
+                    }
                 </div>    
             </div>
           </div>
@@ -723,7 +715,23 @@ export class ProductView extends React.Component {
         <div className='product-layout' style={{backgroundColor: this.state.backColor2}}>
           <div className='mainproduct-sec'>
             <div className='product-section'>
-              <h2 className='product-categ'>Rice Box</h2>
+              <h2 id="Rice Box" className='product-categ'>Rice Box</h2>
+
+              <div className='list-product'>
+                {contentView}
+              </div>
+            </div>
+
+            <div className='product-section'>
+              <h2 id="Drinks" className='product-categ'>Drinks</h2>
+
+              <div className='list-product'>
+                {contentView}
+              </div>
+            </div>
+
+            <div className='product-section'>
+              <h2 id="Bento" className='product-categ'>Bento</h2>
 
               <div className='list-product'>
                 {contentView}
