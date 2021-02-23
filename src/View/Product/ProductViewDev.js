@@ -409,6 +409,7 @@ export class ProductView extends React.Component {
   scrolltoMenu = () => {
     if(this.state.categName !== "All Categories") {
       if(this.state.openSelect == false) {
+        //scroll to selected menu
         document.getElementById(this.state.categName).scrollIntoView({behavior: "smooth"})
       }
     }
