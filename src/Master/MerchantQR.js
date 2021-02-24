@@ -19,23 +19,8 @@ const MerchantResto = (props) => {
       storeImage: "",
     },
   ]);
-  const [latitude, setlatitude] = useState("");
-  const [longitude, setlongitude] = useState("");
+  const [longlat, setlonglat] = useState("");
   let history = useHistory();
-
-  const getUserLocation = () => {
-    Axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`)
-    .then((res)=> {
-      let latitude = res.data.location.lat
-      let longitude = res.data.location.lng
-      let longlat = {lat: latitude, lon: longitude}
-      console.log(latitude, longitude);
-      setlatitude(latitude)
-      setlongitude(longitude)
-      localStorage.setItem("googlonglat", JSON.stringify(longlat))
-    })
-    .catch((err)=> console.log(err))
-  }
 
   useEffect(() => {
     if (props.coords) {
@@ -45,7 +30,7 @@ const MerchantResto = (props) => {
       console.log(latitude, longitude);
       localStorage.setItem("longlat", JSON.stringify(longlat));
     } else {
-      getUserLocation()
+      setlonglat("getloc succeed")
     }
   }, []);
 
@@ -56,8 +41,6 @@ const MerchantResto = (props) => {
       let longlat = { lat: latitude, lon: longitude };
       console.log(latitude, longitude);
       localStorage.setItem("longlat", JSON.stringify(longlat));
-      getMerchantData(latitude, longitude)
-    } else {
       getMerchantData(latitude, longitude)
     }
   });
