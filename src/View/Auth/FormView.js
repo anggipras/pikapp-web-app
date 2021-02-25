@@ -26,21 +26,7 @@ class FormView extends React.Component {
     noreload: false,
   };
 
-  getUserLocation = () => {
-    axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`)
-    .then((res)=> {
-      let latitude = res.data.location.lat
-      let longitude = res.data.location.lng
-      let longlat = {lat: latitude, lon: longitude}
-      console.log(latitude, longitude);
-      this.setState({lat: latitude, lon: longitude, noreload: true})
-      localStorage.setItem("googlonglat", JSON.stringify(longlat))
-    })
-    .catch((err)=> console.log(err))
-  }
-
   componentDidMount() {
-    // this.geoLocation()
     if(this.props.coords) {
       let latitude = this.props.coords.latitude
       let longitude = this.props.coords.longitude
@@ -48,7 +34,7 @@ class FormView extends React.Component {
       console.log(latitude, longitude);
       localStorage.setItem("longlat", JSON.stringify(longlat))
     } else {
-      this.getUserLocation()
+      this.setState({noreload: true})
     }
   }
 
@@ -205,18 +191,9 @@ class FormView extends React.Component {
         Cookies.set("auth", auth, { expires: 1});
         if(Cookies.get("lastLink") !== undefined) {
           var lastlink = JSON.parse(Cookies.get("lastLink")).value
-
-          var latitude = ""
-          var longitude = ""
-          if(localStorage.getItem("longlat")) {
-            var getLocation = JSON.parse(localStorage.getItem("longlat"))
-            latitude = getLocation.lat
-            longitude = getLocation.lon
-          } else {
-            var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
-            latitude = googLocation.lat
-            longitude = googLocation.lon
-          }
+          var getLocation = JSON.parse(localStorage.getItem("longlat"))
+          var latitude = getLocation.lat
+          var longitude = getLocation.lon
           if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value
           } else {

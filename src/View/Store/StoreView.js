@@ -47,17 +47,11 @@ export class StoreView extends React.Component {
     var longitude = "";
     var latitude = "";
     var merchant = "";
-    // let longlat = JSON.parse(localStorage.getItem("longlat"))
-    // let googlonglat = JSON.parse(localStorage.getItem("googlonglat"))
 
     if(localStorage.getItem("longlat")) {
       var getLocation = JSON.parse(localStorage.getItem("longlat"))
       latitude = getLocation.lat
       longitude = getLocation.lon
-    } else if(localStorage.getItem("googlonglat")) {
-      var googLocation = JSON.parse(localStorage.getItem("googlonglat"))
-      latitude = googLocation.lat
-      longitude = googLocation.lon
     } else {
       window.location.href = "/login"
     }
@@ -81,29 +75,29 @@ export class StoreView extends React.Component {
     merchant = value.merchant;
 
     //GOOGLE GEOCODE
-    // Geocode.setApiKey(googleKey)
-    // Geocode.fromLatLng(latitude,longitude)
-    // .then((res) => {
-    //   console.log(res.results[0].formatted_address);
-    //   this.setState({location: res.results[0].formatted_address})
-    // })
-    // .catch((err) => {
-    //   this.setState({location: "Tidak tersedia"})
-    // })
-
-    //OPENCAGE API
-    let opencagelonglat = latitude + "," + longitude
-    Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-        params:{
-            key: 'cdeab36e4fec4073b0de60ff6b595c70',
-            q: opencagelonglat
-        }
-    }).then((res)=> {
-      console.log(res.data.results[0].formatted);
-      this.setState({location: res.data.results[0].formatted})
-    }).catch((err) => {
+    Geocode.setApiKey(googleKey)
+    Geocode.fromLatLng(latitude,longitude)
+    .then((res) => {
+      console.log(res.results[0].formatted_address);
+      this.setState({location: res.results[0].formatted_address})
+    })
+    .catch((err) => {
       this.setState({location: "Tidak tersedia"})
     })
+
+    //OPENCAGE API
+    // let opencagelonglat = latitude + "," + longitude
+    // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+    //     params:{
+    //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
+    //         q: opencagelonglat
+    //     }
+    // }).then((res)=> {
+    //   console.log(res.data.results[0].formatted);
+    //   this.setState({location: res.data.results[0].formatted})
+    // }).catch((err) => {
+    //   this.setState({location: "Tidak tersedia"})
+    // })
 
     let addressRoute;
     if (merchant === undefined) {
@@ -124,6 +118,8 @@ export class StoreView extends React.Component {
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
+    console.log(uuid);
+    console.log(date);
     Axios(addressRoute, {
       headers: {
         "Content-Type": "application/json",
