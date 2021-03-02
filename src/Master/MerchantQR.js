@@ -48,7 +48,7 @@ const MerchantResto = (props) => {
   const getMerchantData = (lat, lon) => {
     if (merchant[0].storeId == "") {
       let addressRoute =
-        address + "home/v1/merchant/" + lon + "/" + lat + "/ALL/";
+        address + "home/v2/merchant/" + lon + "/" + lat + "/ALL/";
       var stateData;
       let uuid = uuidV4();
       uuid = uuid.replaceAll("-", "");
@@ -59,10 +59,14 @@ const MerchantResto = (props) => {
           "x-request-id": uuid,
           "x-request-timestamp": date,
           "x-client-id": clientId,
-          token: "PUBLIC",
-          category: "1",
+          "token": "PUBLIC",
+          "category": "1",
         },
         method: "GET",
+        params: {
+          page: 0,
+          size: 10
+        }
       })
         .then((res) => {
           stateData = [{ ...merchant }];

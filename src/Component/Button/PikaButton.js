@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Loader from 'react-loader'
+import {connect} from 'react-redux'
 
 var options = {
   lines: 13,
@@ -20,13 +21,13 @@ var options = {
   hwaccel: false,
 };
 
-export class PikaButton extends React.Component {
+class PikaButton extends React.Component {
   render() {
     return (
-      <Button disabled={!this.props.loadButton} variant={this.props.buttonStyle} onClick={this.props.handleClick}>
+      <Button disabled={!this.props.theLoading.buttonLoad} variant={this.props.buttonStyle} onClick={this.props.handleClick}>
         {
-          !this.props.loadButton?
-          <Loader loaded={this.props.loadButton} options={options} className="spinner"/>
+          !this.props.theLoading.buttonLoad?
+          <Loader loaded={this.props.theLoading.buttonLoad} options={options} className="spinner"/>
           :
           this.props.title
         }
@@ -34,3 +35,11 @@ export class PikaButton extends React.Component {
     );
   }
 }
+
+const Mapstatetoprops = (state) => {
+  return {
+    theLoading: state.AllRedu
+  }
+}
+
+export default connect(Mapstatetoprops)(PikaButton)

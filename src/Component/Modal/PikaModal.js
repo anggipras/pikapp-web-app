@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, ButtonGroup, Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import { PikaButton } from "../Button/PikaButton";
+import PikaButton from "../Button/PikaButton";
 
 export class PikaModal extends React.Component {
   state = {
@@ -12,7 +12,6 @@ export class PikaModal extends React.Component {
       },
     ],
     note: "",
-    loadButton: true,
   };
 
   componentDidMount() {
@@ -165,7 +164,6 @@ export class PikaModal extends React.Component {
                 title="Add to cart"
                 buttonStyle="modalPika"
                 handleClick={this.props.handleClick}
-                loadButton={this.state.loadButton}
               />
             </Col>
             <Col xs={1} md={2} />

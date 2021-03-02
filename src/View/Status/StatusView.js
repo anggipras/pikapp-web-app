@@ -15,7 +15,7 @@ import categoryFoodIcon from "../../Asset/Icon/category_food_icon.png";
 import pickupStatusIcon from "../../Asset/Icon/pickup_status_icon.png";
 import cashierStatusIcon from "../../Asset/Icon/cashier_icon.png"
 import ovoIcon from "../../Asset/Icon/ovo_icon.png";
-import { PikaButton } from "../../Component/Button/PikaButton";
+import PikaButton from "../../Component/Button/PikaButton";
 import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
