@@ -1,13 +1,13 @@
 const INITIAL_STATE = {
-    loadButton: true,
+    buttonLoad: true,
 }
 
 export default (state = INITIAL_STATE, action)=> {
     switch (action.type) {
         case "LOADING":
-            return {...state, loadButton: false}
+            return {...state, buttonLoad: false}
         case "DONELOAD":
-            return {...state, loadButton: true}
+            return {...state, buttonLoad: true}
         default:
             return state
     }

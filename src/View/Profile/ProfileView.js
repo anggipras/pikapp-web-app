@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row, Modal, Button } from "react-bootstrap";
-import { PikaButton } from "../../Component/Button/PikaButton";
+import PikaButton from "../../Component/Button/PikaButton";
 import axios from "axios";
 import { address, clientId, jwtSecret } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
@@ -9,14 +9,15 @@ import {secret} from "../../Asset/Constant/APIConstant"
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import jwt from "jsonwebtoken"
+import {connect} from 'react-redux'
+import {LoadingButton, DoneLoad} from '../../Redux/Actions'
 
-export class ProfileView extends React.Component {
+class ProfileView extends React.Component {
   state = {
       showModal: false,
       name: "Name",
       phone: "080808",
       email: "",
-      loadButton: true
   };
 
   componentDidMount() {
@@ -66,6 +67,7 @@ export class ProfileView extends React.Component {
   }
 
   handleLogout() {
+    this.props.LoadingButton()
     this.setState({loadButton: false})
     var auth = {
         isLogged: false,
@@ -103,10 +105,11 @@ export class ProfileView extends React.Component {
           method: "GET",
         })
         .then((res) => {
-            localStorage.removeItem("cart")
-            Cookies.remove("auth")
-            auth = null;
-            window.location.href = "/login"
+          localStorage.removeItem("cart")
+          Cookies.remove("auth")
+          auth = null;
+          this.props.DoneLoad()
+          window.location.href = "/login"
         })
         .catch((err) => {
           if(err.response.data !== undefined) {
@@ -179,7 +182,6 @@ export class ProfileView extends React.Component {
                         title="Logout"
                         buttonStyle="primaryPika"
                         handleClick={() => this.setModal(true)}
-                        loadButton={this.state.loadButton}
                     />
                 </Col>
                 <Col xs={3} md={4}/>
@@ -189,3 +191,11 @@ export class ProfileView extends React.Component {
     )
   }
 }
+
+const Mapstatetoprops = (state) => {
+  return {
+    theLoading: state.AllRedu
+  }
+}
+
+export default connect(Mapstatetoprops,{LoadingButton, DoneLoad})(ProfileView)

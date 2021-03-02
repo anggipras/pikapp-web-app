@@ -1,6 +1,6 @@
 import React from "react";
 import MainNavigation from "./MainNavigation";
-import { ProfileView } from "../View/Profile/ProfileView";
+import ProfileView from "../View/Profile/ProfileView";
 import {
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
