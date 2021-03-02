@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Col, Form, Row } from "react-bootstrap";
+import { Alert, Col, Fade, Form, Row } from "react-bootstrap";
 import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaTextField } from "../../Component/TextField/PikaTextField";
 import axios from "axios";
@@ -24,6 +24,7 @@ class FormView extends React.Component {
     lat: "",
     lon: "",
     noreload: false,
+    loadButton: true
   };
 
   componentDidMount() {
@@ -155,8 +156,8 @@ class FormView extends React.Component {
     //   this.setState({ isValid: false });
     //   return;
     // }
-
-    this.setState({ isValid: true });
+  
+    this.setState({ isValid: true, loadButton: false });
     const data = {
       username: this.state.email,
       password: this.state.password,
@@ -200,7 +201,6 @@ class FormView extends React.Component {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
         }
-        alert("Login berhasil.")
       })
       .catch((err) => {
         if(err.response.data !== undefined) {
@@ -286,6 +286,7 @@ class FormView extends React.Component {
                 type="email"
                 placeholder="abc@email.com"
                 handleChange={this.handleEmail}
+                loadButton={this.state.loadButton}
               />
             </Col>
             <Col />
@@ -298,6 +299,7 @@ class FormView extends React.Component {
                 type="password"
                 placeholder="*******"
                 handleChange={this.handlePassword}
+                loadButton={this.state.loadButton}
               />
             </Col>
             <Col />
@@ -318,6 +320,7 @@ class FormView extends React.Component {
                 title="Login"
                 buttonStyle="secondaryPika"
                 handleClick={this.handleLogin}
+                loadButton={this.state.loadButton}
               />
             </Col>
             <Col />

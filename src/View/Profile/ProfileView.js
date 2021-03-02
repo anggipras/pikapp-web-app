@@ -15,7 +15,8 @@ export class ProfileView extends React.Component {
       showModal: false,
       name: "Name",
       phone: "080808",
-      email: ""
+      email: "",
+      loadButton: true
   };
 
   componentDidMount() {
@@ -65,6 +66,7 @@ export class ProfileView extends React.Component {
   }
 
   handleLogout() {
+    this.setState({loadButton: false})
     var auth = {
         isLogged: false,
         token: "",
@@ -101,7 +103,6 @@ export class ProfileView extends React.Component {
           method: "GET",
         })
         .then((res) => {
-            alert("Logout berhasil.")
             localStorage.removeItem("cart")
             Cookies.remove("auth")
             auth = null;
@@ -178,6 +179,7 @@ export class ProfileView extends React.Component {
                         title="Logout"
                         buttonStyle="primaryPika"
                         handleClick={() => this.setModal(true)}
+                        loadButton={this.state.loadButton}
                     />
                 </Col>
                 <Col xs={3} md={4}/>

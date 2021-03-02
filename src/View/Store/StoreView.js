@@ -7,9 +7,12 @@ import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Geocode from "react-geocode"
+import Skeleton from 'react-loading-skeleton'
 
 export class StoreView extends React.Component {
   state = {
+    page: 0,
+    size: 10,
     location: "",
     data: {
       title: "",
@@ -28,6 +31,9 @@ export class StoreView extends React.Component {
         },
       ],
     },
+    idCol: 1,
+    testpage: 1,
+    boolpage: false
   };
 
   componentDidMount() {
@@ -75,34 +81,34 @@ export class StoreView extends React.Component {
     merchant = value.merchant;
 
     //GOOGLE GEOCODE
-    Geocode.setApiKey(googleKey)
-    Geocode.fromLatLng(latitude,longitude)
-    .then((res) => {
-      console.log(res.results[0].formatted_address);
-      this.setState({location: res.results[0].formatted_address})
-    })
-    .catch((err) => {
-      this.setState({location: "Tidak tersedia"})
-    })
-
-    //OPENCAGE API
-    // let opencagelonglat = latitude + "," + longitude
-    // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-    //     params:{
-    //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
-    //         q: opencagelonglat
-    //     }
-    // }).then((res)=> {
-    //   console.log(res.data.results[0].formatted);
-    //   this.setState({location: res.data.results[0].formatted})
-    // }).catch((err) => {
+    // Geocode.setApiKey(googleKey)
+    // Geocode.fromLatLng(latitude,longitude)
+    // .then((res) => {
+    //   console.log(res.results[0].formatted_address);
+    //   this.setState({location: res.results[0].formatted_address})
+    // })
+    // .catch((err) => {
     //   this.setState({location: "Tidak tersedia"})
     // })
+
+    //OPENCAGE API
+    let opencagelonglat = latitude + "," + longitude
+    Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+        params:{
+            key: 'cdeab36e4fec4073b0de60ff6b595c70',
+            q: opencagelonglat
+        }
+    }).then((res)=> {
+      console.log(res.data.results[0].formatted);
+      this.setState({location: res.data.results[0].formatted})
+    }).catch((err) => {
+      this.setState({location: "Tidak tersedia"})
+    })
 
     let addressRoute;
     if (merchant === undefined) {
       addressRoute =
-        address + "home/v1/merchant/" + longitude + "/" + latitude + "/ALL/";
+        address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
     } else {
       addressRoute =
         address +
@@ -130,6 +136,10 @@ export class StoreView extends React.Component {
         "category": "1",
       },
       method: "GET",
+      params: {
+        page: this.state.page,
+        size: this.state.size
+      }
     })
       .then((res) => {
           stateData = { ...this.state.data };
@@ -148,27 +158,81 @@ export class StoreView extends React.Component {
             })
           })
           this.setState({ data: stateData });
+          document.addEventListener('scroll', this.loadMoreMerchant)
       })
       .catch((err) => {
       });
+  }
 
-    // var data = { ...this.state.data };
-    // data.title = "Location";
-    // data.image = "";
-    // data.desc = "This is a store desc";
-    // data.data.pop();
-    // data.data.push({
-    //   address: "address",
-    //   rating: "1",
-    //   logo: "logo",
-    //   distance: "1",
-    //   storeId: "1",
-    //   storeName: "name",
-    //   storeDesc: "",
-    //   storeImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    // });
-    // this.setState({ data: data });
+  componentDidUpdate() {
+    if(this.state.idCol > 1) {
+      if(this.state.boolpage == true) {
+        const value = queryString.parse(window.location.search);
+        var longitude = "";
+        var latitude = "";
+        var merchant = "";
+        longitude = value.longitude
+        latitude = value.latitude
+        merchant = value.merchant;
 
+        let addressRoute;
+        if (merchant === undefined) {
+          addressRoute =
+            address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
+        } else {
+          addressRoute =
+            address +
+            "home/v1/merchant/" +
+            longitude +
+            "/" +
+            latitude +
+            "/" +
+            merchant
+            + "/"
+        }
+        var stateData;
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
+        Axios(addressRoute, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token": "PUBLIC",
+            "category": "1",
+          },
+          method: "GET",
+          params: {
+            page: this.state.page,
+            size: this.state.size
+          }
+        })
+          .then((res) => {
+              stateData = { ...this.state.data };
+              let responseDatas = res.data;
+              responseDatas.results.forEach((data) => {
+                stateData.data.push({
+                    address: data.merchant_address,
+                    rating: data.merchant_rating,
+                    logo: data.merchant_logo,
+                    distance: data.merchant_distance,
+                    storeId: data.mid,
+                    storeName: data.merchant_name,
+                    storeDesc: "",
+                    storeImage: data.merchant_pict,
+                })
+              })
+              console.log(this.state.idCol);
+              console.log(this.state.data.data);
+              this.setState({boolpage: false})
+              document.addEventListener('scroll', this.loadMoreMerchant)
+          })
+          .catch((err) => {
+          });
+      }
+    }
   }
 
   storeClick = (e) => {
@@ -194,6 +258,28 @@ export class StoreView extends React.Component {
   handleDetail(data) {
     return <Link to={"/status"}></Link>;
   }
+
+  isBottom = (el) => {
+    return (el.getBoundingClientRect().top + 100) <= window.innerHeight
+  }
+
+  loadMoreMerchant = () => {
+    const wrappedElement = document.getElementById("idCol")
+    if(this.state.idCol <= this.state.testpage) {
+      if(this.isBottom(wrappedElement)) {
+        console.log('testloadmore');
+        this.setState({idCol: this.state.idCol + 1, boolpage: true})
+        document.removeEventListener('scroll', this.loadMoreMerchant)
+      }
+    } else {
+      document.removeEventListener('scroll', this.loadMoreMerchant)
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this.loadMoreMerchant)
+  }
+
 
   render() {
     const storeDatas = this.state.data.data.map((data) => {
@@ -245,14 +331,24 @@ export class StoreView extends React.Component {
               Lokasi:
             </h6>
             <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.location}
+              {this.state.location || <Skeleton />}
             </p>
           </Col>
           <Col />
         </Row>
         <Row />
         <Row>
-          <Col md={12}>{allCards}</Col>
+          <div>
+            <Col md={12}>{allCards || <Skeleton style={{width:100}} />}</Col>
+            {
+              this.state.idCol <= this.state.testpage ?
+              <div id={"idCol"}>
+                <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} />
+              </div>
+              :
+              null
+            }
+          </div>
         </Row>
         <Row></Row>
       </div>

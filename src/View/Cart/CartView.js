@@ -16,6 +16,25 @@ import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
+import Loader from 'react-loader'
+
+var options = {
+  lines: 13,
+  length: 20,
+  width: 10,
+  radius: 30,
+  scale: 0.25,
+  corners: 1,
+  color: '#000',
+  opacity: 0.25,
+  rotate: 0,
+  direction: 1,
+  speed: 1,
+  trail: 60,
+  fps: 20,
+  shadow: false,
+  hwaccel: false,
+};
 
 export class CartView extends React.Component {
   state = {
@@ -32,6 +51,7 @@ export class CartView extends React.Component {
         option: "",
       },
     ],
+    loadButton: true,
   };
 
   componentDidMount() {
@@ -149,6 +169,7 @@ export class CartView extends React.Component {
     }
   }
   handlePayment = () => {
+    this.setState({loadButton: false})
     var auth = {
       isLogged: false,
       token: "",
@@ -261,12 +282,18 @@ export class CartView extends React.Component {
         </Link>
       );
     } else {
-      paymentButton = (
-        <button className={"iconButton"} onClick={() => this.handlePayment()}>
-          <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-          <img src={frontIcon} alt={"checklist"} />
-        </button>
-      );
+      if(this.state.loadButton) {
+        paymentButton = (
+          <button className={"iconButton"} onClick={() => this.handlePayment()}>
+            <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
+            <img src={frontIcon} alt={"checklist"} />
+          </button>
+        );
+      } else {
+        paymentButton = (
+          <Loader loaded={this.state.loadButton} options={options} className="spinner"/>
+        )
+      }
     }
     if (this.state.showModal === true) {
       modal = (
