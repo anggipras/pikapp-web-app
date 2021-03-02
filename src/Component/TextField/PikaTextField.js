@@ -10,6 +10,7 @@ export class PikaTextField extends React.Component {
           type={this.props.type}
           placeholder={this.props.placeholder}
           onChange={this.props.handleChange}
+          disabled={!this.props.loadButton}
         />
       </Form>
     );

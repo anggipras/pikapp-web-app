@@ -25,6 +25,8 @@ import LocationIcon from '../../Asset/Icon/location.png'
 import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
+import Skeleton from 'react-loading-skeleton'
+import LazyLoad from 'react-lazyload'
 
 var currentExt = {
   detailCategory: [
@@ -38,6 +40,9 @@ var currentExt = {
 
 export class ProductView extends React.Component {
   state = {
+    boolpage: false,
+    testpage: 1,
+    idCateg: 1,
     testColor: false,
     testingchange: false, //only for testing, would be remove
     showModal: false,
@@ -160,6 +165,7 @@ export class ProductView extends React.Component {
           var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
           this.brightenColor(merchantColor, 70, productColor, 60)
           this.setState({ data: stateData });
+          document.addEventListener('scroll', this.loadMoreMerchant)
         });
     })
     .catch((err) => {
@@ -191,6 +197,46 @@ export class ProductView extends React.Component {
     }
 
     this.scrolltoMenu()
+
+    if(this.state.idCateg > 1 ) {
+      if(this.state.boolpage == true) {
+        const value = queryString.parse(window.location.search);
+        const mid = value.mid;
+        let addressRoute = address + "home/v1/list/product/";
+        var stateData;
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
+        Axios(addressRoute, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token": "PUBLIC",
+            "mid": mid,
+          },
+          method: "GET",
+        })
+        .then((res) => {
+            stateData = { ...this.state.data };
+            let responseDatas = res.data.results;
+            responseDatas.forEach((data) => {
+              stateData.data.push({
+                  productId: data.product_id,
+                  foodName: data.product_name,
+                  foodDesc: "",
+                  foodPrice: data.product_price,
+                  foodImage: data.product_picture[0],
+              })
+            })
+            this.setState({boolpage: false})
+            document.addEventListener('scroll', this.loadMoreMerchant)
+        })
+        .catch((err) => {
+        });
+      }
+    }
   }
   //testing changebackground
 
@@ -414,6 +460,27 @@ export class ProductView extends React.Component {
       }
     }
   }
+  
+  isBottom = (el) => {
+    return (el.getBoundingClientRect().top + 100) <= window.innerHeight
+  }
+
+  loadMoreMerchant = () => {
+    const wrappedElement = document.getElementById(this.state.showcategName[0])
+    if(this.state.idCateg <= this.state.testpage) {
+      if(this.isBottom(wrappedElement)) {
+        console.log('testloadmore');
+        this.setState({idCateg: this.state.idCateg + 1, boolpage: true})
+        document.removeEventListener('scroll', this.loadMoreMerchant)
+      }
+    } else {
+      document.removeEventListener('scroll', this.loadMoreMerchant)
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this.loadMoreMerchant)
+  }
 
   render() {
     let modal;
@@ -457,7 +524,7 @@ export class ProductView extends React.Component {
     console.log(storeDatas);
     const contentView = categories.map((data) => {
       if (data.category === "All Category") {
-        var allCards = storeDatas.map((cardData) => {
+        var allCards = storeDatas.map((cardData, index) => {
           if (cardData.category === "All Category") {
             return null;
           } else {
@@ -475,7 +542,7 @@ export class ProductView extends React.Component {
                     </div>
 
                     <div className='product-name'>
-                      {cardData.foodName}
+                      {cardData.foodName || <Skeleton style={{paddingTop: 10}} />}
                     </div>
 
                     <div className='product-desc'>
@@ -624,19 +691,19 @@ export class ProductView extends React.Component {
                     <div className='inside-topMerchantInfo'>
                         <div className='merchant-title'>
                             <div className='merchant-logo'>
-                              <img src={this.state.data.image} style={{objectFit: 'cover'}} width='100%' height='100%' />
+                              <img src={this.state.data.image || <Skeleton />} style={{objectFit: 'cover'}} width='100%' height='100%' />
                             </div>
 
                             <div className='merchant-name'>
                                 <div className='merchant-mainName'>
-                                  {this.state.data.title}
+                                  {this.state.data.title || <Skeleton style={{paddingTop: 30, width: 200}} />}
                                 </div>
 
                                 <div className='merchant-categName'>
                                     <div className='merchant-allcateg'>Merchant Category</div>
                                     <div className='merchant-starInfo'>
                                         <img className='star-img' src={StarIcon} />
-                                        <div className='merchant-star'>{this.state.data.rating? this.state.data.rating : "No Rating"}</div>
+                                        <div className='merchant-star'>{this.state.data.rating? this.state.data.rating : "No Rating" || <Skeleton />}</div>
                                         {/* <div className='star-votes'>(50+ Upvotes)</div> */}
                                     </div>
                                 </div>
@@ -680,7 +747,7 @@ export class ProductView extends React.Component {
 
                             <div className='detail-info'>
                                 <div className='top-detail-info'>Store Address</div>
-                                <div className='bottom-detail-info'>{this.state.data.address}</div>
+                                <div className='bottom-detail-info'>{this.state.data.address || <Skeleton style={{paddingTop: 30, width: 100}} />}</div>
                             </div>
                         </div>     
                     </div>
@@ -689,7 +756,7 @@ export class ProductView extends React.Component {
             <div className='merchant-category'>
                 <div className='select-category'>
                     <div className='listCategory'>
-                        <h2 className='categoryName'>{this.state.categName}</h2>
+                        <h2 className='categoryName'>{this.state.categName || <Skeleton />}</h2>
 
                         <div className='arrow-based' onClick={()=> this.changeMenu()} >
                             <img className='arrowicon' src={ArrowIcon} />
@@ -716,28 +783,36 @@ export class ProductView extends React.Component {
         <div className='product-layout' style={{backgroundColor: this.state.backColor2}}>
           <div className='mainproduct-sec'>
             <div className='product-section'>
-              <h2 id="Rice Box" className='product-categ'>Rice Box</h2>
+              <h2 className='product-categ'>Rice Box</h2>
 
               <div className='list-product'>
+                {contentView}
+              </div>
+              {
+                this.state.idCateg <= this.state.testpage?
+                <div id={this.state.showcategName[0]}>
+                  <Skeleton style={{paddingTop:100, marginTop: 10, borderRadius: 30}} />
+                </div>
+                :
+                null
+              }
+            </div>
+
+            {/* <div className='product-section'>
+              <h2 className='product-categ'>Drinks</h2>
+
+              <div id={this.state.showcategName[1]} className='list-product'>
                 {contentView}
               </div>
             </div>
 
             <div className='product-section'>
-              <h2 id="Drinks" className='product-categ'>Drinks</h2>
+              <h2 className='product-categ'>Bento</h2>
 
-              <div className='list-product'>
+              <div id={this.state.showcategName[2]} className='list-product'>
                 {contentView}
               </div>
-            </div>
-
-            <div className='product-section'>
-              <h2 id="Bento" className='product-categ'>Bento</h2>
-
-              <div className='list-product'>
-                {contentView}
-              </div>
-            </div>
+            </div> */}
 
             <div className='pikapp-info'>
               <h3 className='pikappInfo'>Digital Menu By</h3>

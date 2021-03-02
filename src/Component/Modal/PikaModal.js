@@ -12,6 +12,7 @@ export class PikaModal extends React.Component {
       },
     ],
     note: "",
+    loadButton: true,
   };
 
   componentDidMount() {
@@ -164,6 +165,7 @@ export class PikaModal extends React.Component {
                 title="Add to cart"
                 buttonStyle="modalPika"
                 handleClick={this.props.handleClick}
+                loadButton={this.state.loadButton}
               />
             </Col>
             <Col xs={1} md={2} />

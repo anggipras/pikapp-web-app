@@ -13,6 +13,10 @@ import ProfileLayout from "./Master/ProfileLayout";
 import MerchantResto from "./Master/MerchantQR";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch } from "react-router-dom";
+import {Provider} from "react-redux"
+import {createStore, applyMiddleware} from 'redux'
+import Thunk from 'redux-thunk'
+import Reducers from './Redux/Reducers'
 
 var hist = createBrowserHistory();
 
@@ -41,20 +45,22 @@ if (localStorage.getItem("cart")) {
 document.title = "Pikapp"
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/login" component={() => <AuthLayout isLogin={true} />} />
-      <Route
-        path="/register"
-        component={() => <AuthLayout isLogin={false} />}
-      />
-      <Route path="/cart" component={() => <CartLayout />} />
-      <Route path="/status" component={() => <StatusLayout />} />
-      <Route path="/store" component={() => <ProductLayout />} />
-      <Route path="/merchant/:mid/:notab" component={MerchantResto} />
-      <Route path="/profile" component={() => <ProfileLayout />} />
-      <Route path="/" component={() => <StoreLayout />} />
-    </Switch>
-  </Router>,
+  <Provider store={createStore(Reducers,{},applyMiddleware(Thunk))}>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/login" component={() => <AuthLayout isLogin={true} />} />
+        <Route
+          path="/register"
+          component={() => <AuthLayout isLogin={false} />}
+        />
+        <Route path="/cart" component={() => <CartLayout />} />
+        <Route path="/status" component={() => <StatusLayout />} />
+        <Route path="/store" component={() => <ProductLayout />} />
+        <Route path="/merchant/:mid/:notab" component={MerchantResto} />
+        <Route path="/profile" component={() => <ProfileLayout />} />
+        <Route path="/" component={() => <StoreLayout />} />
+      </Switch>
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
