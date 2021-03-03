@@ -33,7 +33,8 @@ export class StoreView extends React.Component {
     },
     idCol: 1,
     testpage: 1,
-    boolpage: false
+    boolpage: false,
+    loadView: true,
   };
 
   componentDidMount() {
@@ -142,6 +143,7 @@ export class StoreView extends React.Component {
       }
     })
       .then((res) => {
+        console.log(res.data.results);
           stateData = { ...this.state.data };
           let responseDatas = res.data;
           stateData.data.pop();
@@ -157,7 +159,7 @@ export class StoreView extends React.Component {
                 storeImage: data.merchant_pict,
             })
           })
-          this.setState({ data: stateData });
+          this.setState({ data: stateData, loadView: false });
           document.addEventListener('scroll', this.loadMoreMerchant)
       })
       .catch((err) => {
@@ -280,6 +282,22 @@ export class StoreView extends React.Component {
     document.removeEventListener('scroll', this.loadMoreMerchant)
   }
 
+  merchantLoading = () => (
+    <Row>
+      <Col xs={3} md={3}>
+        <Skeleton style={{width:70, height: 70, marginLeft: 10}} />
+      </Col>
+      <Col xs={9} md={6}>
+        <Row>
+          <Col xs={7} md={9}>
+            <Skeleton style={{width:100, height: 30, marginLeft: 10}} />
+            {/* <Skeleton style={{width:100, height: 20, marginLeft: 10}} /> */}
+            <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  )
 
   render() {
     const storeDatas = this.state.data.data.map((data) => {
@@ -289,32 +307,47 @@ export class StoreView extends React.Component {
       return (
         <Row>
           <Col xs={3} md={3}>
-            <Image
-              src={cardData.storeImage}
-              rounded
-              fluid
-              className="storeImage"
-            />
+            {
+              this.state.loadView?
+              <Skeleton width={70} height={70}/>
+              :
+              <Image
+                src={cardData.storeImage}
+                rounded
+                fluid
+                className="storeImage"
+              />
+            }
           </Col>
           <Col xs={9} md={6}>
             <Row>
               <Col xs={7} md={9}>
-                <h5 className="foodTitle">{cardData.storeName}</h5>
+                {
+                  this.state.loadView?
+                  <Skeleton style={{width:100, height: 30, marginLeft: 20}} />
+                  :
+                  <h5 className="foodTitle">{cardData.storeName}</h5>
+                }
                 <p className="storeDesc">{cardData.storeDesc}</p>
-                <div className="foodButton">
-                  <Link
-                    className={"btn-cartPika"}
-                    to={"/store?mid=" + cardData.storeId}
-                    style={{
-                      padding: 8,
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                    onClick={()=> this.storeClick(cardData)}
-                  >
-                    Go to store
-                  </Link>
-                </div>
+                {
+                  this.state.loadView?
+                  <Skeleton style={{width:100, height: 20, marginLeft: 20}} />
+                  :
+                  <div className="foodButton">
+                    <Link
+                      className={"btn-cartPika"}
+                      to={"/store?mid=" + cardData.storeId}
+                      style={{
+                        padding: 8,
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      onClick={()=> this.storeClick(cardData)}
+                    >
+                      Go to store
+                    </Link>
+                  </div>
+                }
               </Col>
             </Row>
           </Col>
@@ -331,7 +364,7 @@ export class StoreView extends React.Component {
               Lokasi:
             </h6>
             <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.location || <Skeleton />}
+              {this.state.location || <Skeleton height={20} />}
             </p>
           </Col>
           <Col />
@@ -339,12 +372,16 @@ export class StoreView extends React.Component {
         <Row />
         <Row>
           <div>
-            <Col md={12}>{allCards || <Skeleton style={{width:100}} />}</Col>
+            <Col md={12}>{allCards}</Col>
             {
-              this.state.idCol <= this.state.testpage ?
-              <div id={"idCol"}>
-                <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} />
-              </div>
+              !this.state.loadView?
+                this.state.idCol <= this.state.testpage ?
+                <div id={"idCol"}>
+                  {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
+                  {this.merchantLoading()}
+                </div>
+                :
+                null
               :
               null
             }

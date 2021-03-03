@@ -1,8 +1,6 @@
 import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
-import { Col, Row, Image, Card, Tabs, Tab, Container } from "react-bootstrap";
-import { PikaButton } from "../../Component/Button/PikaButton";
 import { PikaModal } from "../../Component/Modal/PikaModal";
 import queryString from "query-string";
 import { cart } from "../../index.js";
@@ -26,7 +24,6 @@ import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import Skeleton from 'react-loading-skeleton'
-import LazyLoad from 'react-lazyload'
 
 var currentExt = {
   detailCategory: [
@@ -40,9 +37,12 @@ var currentExt = {
 
 export class ProductView extends React.Component {
   state = {
+    // mountTest: true,
+    page: 0,
+    size: 10,
     boolpage: false,
     testpage: 1,
-    idCateg: 1,
+    idCateg: [],
     testColor: false,
     testingchange: false, //only for testing, would be remove
     showModal: false,
@@ -85,11 +85,12 @@ export class ProductView extends React.Component {
         ],
       },
     },
-    backColor1: "",
-    backColor2: "",
+    backColor1: "", //merchant info background color
+    backColor2: "", //products info background color
     openSelect: false,
-    categName: "All Categories",
-    showcategName: ["Rice Box", "Drinks", "Bento"],
+    categName: "All Categories", //initial for dropdown select
+    showcategName: [{category_id: "", category_name: "", order: null}], //tobe shown in products area
+    choosenIndCateg: null //index of category selected when load more products in selected category
   };
 
   componentDidMount() {
@@ -111,10 +112,13 @@ export class ProductView extends React.Component {
       window.location.href = "/login"
     }
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    var getLocation = JSON.parse(localStorage.getItem("longlat"))
+    var latitude = getLocation.lat
+    var longitude = getLocation.lon
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     const notab = value.table || ""
-    let addressRoute = address + "home/v1/list/product/";
+    let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/${currentMerchant.storeName}/` 
     var stateData;
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
@@ -126,9 +130,13 @@ export class ProductView extends React.Component {
         "x-request-timestamp": date,
         "x-client-id": clientId,
         "token": "PUBLIC",
-        "mid": mid,
+        "category": "1",
       },
       method: "GET",
+      params: {
+        page: this.state.page,
+        size: this.state.size
+      }
     })
     .then((res) => {
         stateData = { ...this.state.data };
@@ -150,21 +158,35 @@ export class ProductView extends React.Component {
           foodPrice: "",
           foodImage: "",
         })
+        var productCateg = []
+        var idCateg = []
         responseDatas.forEach((data) => {
-          stateData.data.push({
-              productId: data.product_id,
-              foodName: data.product_name,
-              foodDesc: "",
-              foodPrice: data.product_price,
-              foodImage: data.product_picture[0],
-          })
+          if(data.mid === mid) {
+            productCateg = data.categories.map((categ, index)=> {
+              idCateg.push(1)
+              return categ
+            })
+
+            data.products.forEach((list)=> {
+              stateData.data.push({
+                  productId: list.product_id,
+                  foodName: list.product_name,
+                  foodDesc: "",
+                  foodPrice: list.product_price,
+                  foodImage: list.product_picture1,
+                  category: list.product_category
+              })
+            })
+          }
         })
         prominent(Storeimg, { amount: 3 }).then((color) => {
-          console.log(color); // [241, 221, 63]
+          // return RGB color for example [241, 221, 63]
           var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
           var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
           this.brightenColor(merchantColor, 70, productColor, 60)
-          this.setState({ data: stateData });
+          console.log(stateData);
+          console.log(productCateg);
+          this.setState({ data: stateData, showcategName: productCateg, idCateg});
           document.addEventListener('scroll', this.loadMoreMerchant)
         });
     })
@@ -181,14 +203,12 @@ export class ProductView extends React.Component {
     if(this.state.testColor == true) {
       if(this.state.testingchange == false) {
         prominent(Storeimg, { amount: 3 }).then((color) => {
-          console.log(color); // [241, 221, 63]
           var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
           var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
           this.brightenColor(merchantColor, 70, productColor, 60)
         });
       } else {
         prominent(Storeimg2, { amount: 3 }).then((color) => {
-          console.log(color); // [241, 221, 63]
           var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
           var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
           this.brightenColor(merchantColor, 70, productColor, 60)
@@ -198,44 +218,16 @@ export class ProductView extends React.Component {
 
     this.scrolltoMenu()
 
-    if(this.state.idCateg > 1 ) {
-      if(this.state.boolpage == true) {
-        const value = queryString.parse(window.location.search);
-        const mid = value.mid;
-        let addressRoute = address + "home/v1/list/product/";
-        var stateData;
-        let uuid = uuidV4();
-        uuid = uuid.replaceAll("-", "");
-        const date = new Date().toISOString();
-        Axios(addressRoute, {
-          headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token": "PUBLIC",
-            "mid": mid,
-          },
-          method: "GET",
-        })
-        .then((res) => {
-            stateData = { ...this.state.data };
-            let responseDatas = res.data.results;
-            responseDatas.forEach((data) => {
-              stateData.data.push({
-                  productId: data.product_id,
-                  foodName: data.product_name,
-                  foodDesc: "",
-                  foodPrice: data.product_price,
-                  foodImage: data.product_picture[0],
-              })
-            })
-            this.setState({boolpage: false})
-            document.addEventListener('scroll', this.loadMoreMerchant)
-        })
-        .catch((err) => {
-        });
-      }
+    if(this.state.idCateg) { //load more products with selected index of category
+      this.state.idCateg.forEach((val, index)=> {
+        if(index === this.state.choosenIndCateg) {
+          if(val > 1 ) {
+            if(this.state.boolpage == true) {
+              this.loadProducts()
+            }
+          }
+        }
+      })
     }
   }
   //testing changebackground
@@ -275,7 +267,57 @@ export class ProductView extends React.Component {
     document.body.style.backgroundColor = '#' + hex;
   }
 
-  handlePhone = (phone) => {
+  loadProducts = () => {
+    const value = queryString.parse(window.location.search);
+    const mid = value.mid;
+    var getLocation = JSON.parse(localStorage.getItem("longlat"))
+    var latitude = getLocation.lat
+    var longitude = getLocation.lon
+    let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/ALL/` 
+    var stateData;
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "category": "1",
+      },
+      method: "GET",
+      params: {
+        page: this.state.page,
+        size: this.state.size
+      }
+    })
+    .then((res) => {
+        stateData = { ...this.state.data };
+        let responseDatas = res.data.results;
+        responseDatas.forEach((data) => {
+          if(data.mid === mid) {
+            data.products.forEach((list)=> {
+              stateData.data.push({
+                  productId: list.product_id,
+                  foodName: list.product_name,
+                  foodDesc: "",
+                  foodPrice: list.product_price,
+                  foodImage: list.product_picture1,
+                  category: list.product_category
+              })
+            })
+          }
+        })
+        this.setState({boolpage: false})
+        document.addEventListener('scroll', this.loadMoreMerchant)
+    })
+    .catch((err) => {
+    });
+  }
+
+  handlePhone = (phone) => { //go to Whatsapp chat
     phone.substring(1)
     let waNumber = '62' + phone
     window.location.href = `https://wa.me/${waNumber}`
@@ -446,6 +488,7 @@ export class ProductView extends React.Component {
 
   changeMenu = () => {
     this.setState({openSelect: !this.state.openSelect})
+    document.removeEventListener('scroll', this.loadMoreMerchant)
   }
 
   changeHeader = (menu) => {
@@ -456,6 +499,9 @@ export class ProductView extends React.Component {
     if(this.state.categName !== "All Categories") {
       if(this.state.openSelect == false) {
         //scroll to selected menu
+        document.addEventListener('scroll', this.loadMoreMerchant)
+        console.log(this.state.showcategName[0].category_name);
+        console.log(this.state.categName);
         document.getElementById(this.state.categName).scrollIntoView({behavior: "smooth"})
       }
     }
@@ -466,20 +512,87 @@ export class ProductView extends React.Component {
   }
 
   loadMoreMerchant = () => {
-    const wrappedElement = document.getElementById(this.state.showcategName[0])
-    if(this.state.idCateg <= this.state.testpage) {
-      if(this.isBottom(wrappedElement)) {
-        console.log('testloadmore');
-        this.setState({idCateg: this.state.idCateg + 1, boolpage: true})
+    this.state.showcategName.forEach((val, ind)=> {
+      const wrappedElement = document.getElementById(val.category_name + ind)
+      if(this.state.idCateg[ind] <= this.state.testpage) {
+        if(this.isBottom(wrappedElement)) {
+          console.log('testloadmore');
+          var openidCateg = [...this.state.idCateg]
+          openidCateg[ind] += 1
+          this.setState({idCateg: openidCateg, boolpage: true, choosenIndCateg: ind})
+          document.removeEventListener('scroll', this.loadMoreMerchant)
+        }
+      } else {
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
-    } else {
-      document.removeEventListener('scroll', this.loadMoreMerchant)
-    }
+    })
   }
 
   componentWillUnmount() {
     document.removeEventListener('scroll', this.loadMoreMerchant)
+  }
+
+  contentView = () => {
+    return this.state.showcategName.map((categ, indcateg)=> {
+      return (
+        <div className='product-section'>
+          <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={30} width={100} />}</h2>
+
+          <div className='list-product'>
+            {
+              this.state.data.data.map((product)=> {
+                if(product.category == categ.category_id) {
+                  return (
+                    <div className='product-merchant' onClick={() => this.handleDetail(product)}>
+                      <div className='product-img'>
+                        {
+                          product.foodImage?
+                          <img src={product.foodImage? product.foodImage : Productimg} style={{objectFit: 'cover'}} width='100%' height='100%' />
+                          :
+                          <Skeleton height={120} style={{paddingTop: 50}}/>
+                        }
+                      </div>
+  
+                      <div className='product-detail-mob'>
+                        <div className='product-detail'>
+                          <div className='product-star'>
+                            <img className='product-star-img' src={StarIcon} />
+                            <h6 className='product-star-rating'>5.0</h6>
+                          </div>
+  
+                          <div className='product-name'>
+                            {product.foodName || <Skeleton style={{paddingTop: 10}} />}
+                          </div>
+  
+                          <div className='product-desc'>
+                            {product.foodDesc? product.foodDesc : "Product Description"}
+                          </div>
+  
+                          <div className='product-price'>
+                            {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                          </div>
+                        </div>
+                        <div className='product-price-mob'>
+                          {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+              })
+            }
+          </div>
+          {
+            this.state.idCateg[indcateg] <= this.state.testpage?
+            <div id={categ.category_name + indcateg}>
+              <Skeleton style={{paddingTop:100, borderRadius: 30}} />
+            </div>
+            :
+            null
+          }
+        </div>
+      );
+    })
   }
 
   render() {
@@ -497,18 +610,6 @@ export class ProductView extends React.Component {
     } else {
       modal = <></>;
     }
-    const storeDatas = this.state.data.data.map((data) => {
-      return data;
-    });
-
-    let categories = [];
-    categories = storeDatas.filter((data) => {
-      if (!categories.includes(data.category)) {
-        return categories.push(data.category);
-      } else {
-        return null;
-      }
-    });
 
     let cartButton;
     if (cart.length > 1) {
@@ -520,138 +621,6 @@ export class ProductView extends React.Component {
     } else {
       cartButton = <></>;
     }
-    console.log(categories);
-    console.log(storeDatas);
-    const contentView = categories.map((data) => {
-      if (data.category === "All Category") {
-        var allCards = storeDatas.map((cardData, index) => {
-          if (cardData.category === "All Category") {
-            return null;
-          } else {
-            return (
-              <div className='product-merchant' onClick={() => this.handleDetail(cardData)}>
-                <div className='product-img'>
-                  <img src={cardData.foodImage? cardData.foodImage : Productimg} style={{objectFit: 'cover'}} width='100%' height='100%' />
-                </div>
-
-                <div className='product-detail-mob'>
-                  <div className='product-detail'>
-                    <div className='product-star'>
-                      <img className='product-star-img' src={StarIcon} />
-                      <h6 className='product-star-rating'>5.0</h6>
-                    </div>
-
-                    <div className='product-name'>
-                      {cardData.foodName || <Skeleton style={{paddingTop: 10}} />}
-                    </div>
-
-                    <div className='product-desc'>
-                      {cardData.foodDesc? cardData.foodDesc : "Product Description"}
-                    </div>
-
-                    <div className='product-price'>
-                      {Intl.NumberFormat("id-ID").format(cardData.foodPrice)}
-                    </div>
-                  </div>
-                  <div className='product-price-mob'>
-                    {Intl.NumberFormat("id-ID").format(cardData.foodPrice)}
-                  </div>
-                </div>
-              </div>
-            );
-          }
-        });
-        return allCards
-      } else {
-        // var cards = storeDatas.map((cardData) => {
-        //   if (data.category === cardData.category) {
-        //     return (
-        //       <div className='product-merchant' onClick={() => this.handleDetail(cardData)}>
-        //         <div className='product-img'>
-        //           <img src={cardData.foodImage? cardData.foodImage : Productimg} style={{objectFit: 'cover'}} width='100%' height='100%' />
-        //         </div>
-
-        //         <div className='product-detail-mob'>
-        //           <div className='product-detail'>
-        //             <div className='product-star'>
-        //               <img className='product-star-img' src={StarIcon} />
-        //               <h6 className='product-star-rating'>5.0</h6>
-        //             </div>
-
-        //             <div className='product-name'>
-        //               {cardData.foodName}
-        //             </div>
-
-        //             <div className='product-desc'>
-        //               {cardData.foodDesc}
-        //             </div>
-
-        //             <div className='product-price'>
-        //               {/* {Intl.NumberFormat("id-ID", {
-        //                   style: "currency",
-        //                   currency: "IDR",
-        //                 }).format(cardData.foodPrice)} */}
-        //                 {cardData.foodPrice}
-        //             </div>
-        //           </div>
-        //           <div className='product-price-mob'>
-        //             {cardData.foodPrice}
-        //           </div>
-        //         </div>
-        //       </div>
-        //       // <Card>
-        //       //   <Row>
-        //       //     <Col xs={4} md={3}>
-        //       //       <Image
-        //       //         src={cardData.foodImage}
-        //       //         rounded
-        //       //         fluid
-        //       //         className="foodImage"
-        //       //       />
-        //       //     </Col>
-        //       //     <Col xs={8} md={9}>
-        //       //     <Row>
-        //       //       <Col xs={7} md={9}>
-        //       //         <h5 className="foodTitle">{cardData.foodName}</h5>
-        //       //         <p className="foodDesc">{cardData.foodDesc}</p>
-        //       //         <div className="foodButton">
-        //       //           <PikaButton
-        //       //             title="ADD TO CART"
-        //       //             buttonStyle="cartPika"
-        //       //             handleClick={() => this.handleDetail(cardData)}
-        //       //           />
-        //       //         </div>
-        //       //       </Col>
-        //       //       <Col xs={5} md={3}>
-        //       //         <h6 className="foodPrice">
-        //       //           {Intl.NumberFormat("id-ID", {
-        //       //             style: "currency",
-        //       //             currency: "IDR",
-        //       //           }).format(cardData.foodPrice)}
-        //       //         </h6>
-        //       //       </Col>
-        //       //     </Row>
-        //       //   </Col>
-        //       //   </Row>
-        //       // </Card>
-        //     );
-        //   } else {
-        //     return null;
-        //   }
-        // });
-        // return (
-        //   // <Tab eventKey={data.category} title={data.category}>
-        //   //   <Row>
-        //   //     <Col>
-        //   //       <h5 className="foodHeader">{data.category}</h5>
-        //   //     </Col>
-        //   //   </Row>
-        //   //   {cards}
-        //   // </Tab>
-        //   cards
-        // );
-      }
-    });
 
     return (
       <>
@@ -702,8 +671,15 @@ export class ProductView extends React.Component {
                                 <div className='merchant-categName'>
                                     <div className='merchant-allcateg'>Merchant Category</div>
                                     <div className='merchant-starInfo'>
-                                        <img className='star-img' src={StarIcon} />
-                                        <div className='merchant-star'>{this.state.data.rating? this.state.data.rating : "No Rating" || <Skeleton />}</div>
+                                        {
+                                          this.state.data.rating?
+                                          <>
+                                            <img className='star-img' src={StarIcon} />
+                                            <div className='merchant-star'>{this.state.data.rating}</div>
+                                          </>
+                                          :
+                                          <Skeleton width={50} />
+                                        }
                                         {/* <div className='star-votes'>(50+ Upvotes)</div> */}
                                     </div>
                                 </div>
@@ -754,65 +730,35 @@ export class ProductView extends React.Component {
                 </div>
             </div>
             <div className='merchant-category'>
-                <div className='select-category'>
-                    <div className='listCategory'>
-                        <h2 className='categoryName'>{this.state.categName || <Skeleton />}</h2>
+              <div className='select-category'>
+                  <div className='listCategory'>
+                      <h2 className='categoryName'>{this.state.categName}</h2>
 
-                        <div className='arrow-based' onClick={()=> this.changeMenu()} >
-                            <img className='arrowicon' src={ArrowIcon} />
-                        </div>
-                    </div>
-
-                    {
-                      this.state.openSelect?
-                      <div className='custom-options'>
-                          <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
-                          {
-                            this.state.showcategName.map((menuCategory)=> (
-                              <span className='custom-option' onClick={()=> this.changeHeader(menuCategory)}>{menuCategory}</span>
-                            ))
-                          }
+                      <div className='arrow-based' onClick={()=> this.changeMenu()} >
+                          <img className='arrowicon' src={ArrowIcon} />
                       </div>
-                      :
-                      null
-                    }
-                </div>    
+                  </div>
+
+                  {
+                    this.state.openSelect?
+                    <div className='custom-options'>
+                        <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
+                        {
+                          this.state.showcategName.map((menuCategory)=> (
+                            <span className='custom-option' onClick={()=> this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
+                          ))
+                        }
+                    </div>
+                    :
+                    null
+                  }
+              </div>    
             </div>
           </div>
         </div>
         <div className='product-layout' style={{backgroundColor: this.state.backColor2}}>
           <div className='mainproduct-sec'>
-            <div className='product-section'>
-              <h2 className='product-categ'>Rice Box</h2>
-
-              <div className='list-product'>
-                {contentView}
-              </div>
-              {
-                this.state.idCateg <= this.state.testpage?
-                <div id={this.state.showcategName[0]}>
-                  <Skeleton style={{paddingTop:100, marginTop: 10, borderRadius: 30}} />
-                </div>
-                :
-                null
-              }
-            </div>
-
-            {/* <div className='product-section'>
-              <h2 className='product-categ'>Drinks</h2>
-
-              <div id={this.state.showcategName[1]} className='list-product'>
-                {contentView}
-              </div>
-            </div>
-
-            <div className='product-section'>
-              <h2 className='product-categ'>Bento</h2>
-
-              <div id={this.state.showcategName[2]} className='list-product'>
-                {contentView}
-              </div>
-            </div> */}
+            {this.contentView()}
 
             <div className='pikapp-info'>
               <h3 className='pikappInfo'>Digital Menu By</h3>
@@ -822,33 +768,6 @@ export class ProductView extends React.Component {
         </div>
         {modal}
         {cartButton}
-
-        {/* <Row>
-          <Col xs={4} md={2}>
-            <Image
-              src={this.state.data.image}
-              roundedCircle
-              className="storeImage"
-            />
-          </Col>
-          <Col xs={8} md={4} className="storeColumn">
-            <h2 className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.data.title}
-            </h2>
-            <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.data.desc}
-            </p>
-          </Col>
-          <Col />
-        </Row>
-        <Row />
-        <Row>
-          <Col md={12}>
-            <Tabs defaultActiveKey="All Category">{contentView}</Tabs>
-          </Col>
-        </Row>
-        {modal}
-        {cartButton} */}
       </>
     );
   }
