@@ -105,6 +105,8 @@ class ProfileView extends React.Component {
           method: "GET",
         })
         .then((res) => {
+          var lastLink = { value: window.location.origin}
+          Cookies.set("lastLink", lastLink,{ expires: 1})
           localStorage.removeItem("cart")
           Cookies.remove("auth")
           auth = null;
