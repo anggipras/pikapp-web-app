@@ -198,17 +198,18 @@ class FormView extends React.Component {
           var getLocation = JSON.parse(localStorage.getItem("longlat"))
           var latitude = getLocation.lat
           var longitude = getLocation.lon
-          this.props.DoneLoad()
           if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value
           } else {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
+          this.props.DoneLoad()
         }
       })
       .catch((err) => {
         if(err.response.data !== undefined) {
           alert(err.response.data.err_message)
+          this.props.DoneLoad()
         }
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });

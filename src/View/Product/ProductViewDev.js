@@ -135,7 +135,7 @@ export class ProductView extends React.Component {
       },
       method: "GET",
       params: {
-        page: this.state.page,
+        page: 0,
         size: this.state.size
       }
     })
@@ -299,6 +299,8 @@ export class ProductView extends React.Component {
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
+    var inputPage = this.state.idCateg
+    inputPage[indexOfCateg] -= 1
     Axios(addressRoute, {
       headers: {
         "Content-Type": "application/json",
@@ -310,7 +312,7 @@ export class ProductView extends React.Component {
       },
       method: "GET",
       params: {
-        page: this.state.testpage[indexOfCateg],
+        page: inputPage[indexOfCateg],
         size: this.state.size
       }
     })
