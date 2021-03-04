@@ -32,7 +32,7 @@ export class StoreView extends React.Component {
       ],
     },
     idCol: 1,
-    testpage: 1,
+    testpage: 0,
     boolpage: false,
     loadView: true,
   };
@@ -81,30 +81,30 @@ export class StoreView extends React.Component {
     latitude = value.latitude || latitude
     merchant = value.merchant;
 
-    //GOOGLE GEOCODE
-    // Geocode.setApiKey(googleKey)
-    // Geocode.fromLatLng(latitude,longitude)
-    // .then((res) => {
-    //   console.log(res.results[0].formatted_address);
-    //   this.setState({location: res.results[0].formatted_address})
-    // })
-    // .catch((err) => {
-    //   this.setState({location: "Tidak tersedia"})
-    // })
-
-    //OPENCAGE API
-    let opencagelonglat = latitude + "," + longitude
-    Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-        params:{
-            key: 'cdeab36e4fec4073b0de60ff6b595c70',
-            q: opencagelonglat
-        }
-    }).then((res)=> {
-      console.log(res.data.results[0].formatted);
-      this.setState({location: res.data.results[0].formatted})
-    }).catch((err) => {
+    // GOOGLE GEOCODE
+    Geocode.setApiKey(googleKey)
+    Geocode.fromLatLng(latitude,longitude)
+    .then((res) => {
+      console.log(res.results[0].formatted_address);
+      this.setState({location: res.results[0].formatted_address})
+    })
+    .catch((err) => {
       this.setState({location: "Tidak tersedia"})
     })
+
+    //OPENCAGE API
+    // let opencagelonglat = latitude + "," + longitude
+    // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+    //     params:{
+    //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
+    //         q: opencagelonglat
+    //     }
+    // }).then((res)=> {
+    //   console.log(res.data.results[0].formatted);
+    //   this.setState({location: res.data.results[0].formatted})
+    // }).catch((err) => {
+    //   this.setState({location: "Tidak tersedia"})
+    // })
 
     let addressRoute;
     if (merchant === undefined) {
@@ -159,7 +159,7 @@ export class StoreView extends React.Component {
                 storeImage: data.merchant_pict,
             })
           })
-          this.setState({ data: stateData, loadView: false });
+          this.setState({ data: stateData, loadView: false, page: responseDatas.total_pages - 1 });
           document.addEventListener('scroll', this.loadMoreMerchant)
       })
       .catch((err) => {
@@ -262,15 +262,15 @@ export class StoreView extends React.Component {
   }
 
   isBottom = (el) => {
-    return (el.getBoundingClientRect().top + 100) <= window.innerHeight
+    return (el.getBoundingClientRect().top + 50) <= window.innerHeight
   }
 
   loadMoreMerchant = () => {
     const wrappedElement = document.getElementById("idCol")
-    if(this.state.idCol <= this.state.testpage) {
+    if(this.state.idCol <= this.state.page) {
       if(this.isBottom(wrappedElement)) {
         console.log('testloadmore');
-        this.setState({idCol: this.state.idCol + 1, boolpage: true})
+        this.setState({idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true})
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
     } else {
@@ -291,7 +291,7 @@ export class StoreView extends React.Component {
         <Row>
           <Col xs={7} md={9}>
             <Skeleton style={{width:100, height: 30, marginLeft: 10}} />
-            {/* <Skeleton style={{width:100, height: 20, marginLeft: 10}} /> */}
+            <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
             <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
           </Col>
         </Row>
@@ -375,7 +375,7 @@ export class StoreView extends React.Component {
             <Col md={12}>{allCards}</Col>
             {
               !this.state.loadView?
-                this.state.idCol <= this.state.testpage ?
+                this.state.idCol <= this.state.page ?
                 <div id={"idCol"}>
                   {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
                   {this.merchantLoading()}

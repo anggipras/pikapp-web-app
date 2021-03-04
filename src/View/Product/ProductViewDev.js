@@ -13,7 +13,7 @@ import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg2 from '../../Asset/Illustration/storeimg.jpg'
 import Storeimg from '../../Asset/Illustration/storeimg2.png'
-import Productimg from '../../Asset/Illustration/productimg.png'
+// import Productimg from '../../Asset/Illustration/productimg.png'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -38,10 +38,10 @@ var currentExt = {
 export class ProductView extends React.Component {
   state = {
     // mountTest: true,
-    page: 0,
-    size: 10,
+    page: 0, //products pagination
+    size: 10, //set amount of products to be shown in frontend
     boolpage: false,
-    testpage: 1,
+    testpage: [],
     idCateg: [],
     testColor: false,
     testingchange: false, //only for testing, would be remove
@@ -89,8 +89,9 @@ export class ProductView extends React.Component {
     backColor2: "", //products info background color
     openSelect: false,
     categName: "All Categories", //initial for dropdown select
-    showcategName: [{category_id: "", category_name: "", order: null}], //tobe shown in products area
-    choosenIndCateg: null //index of category selected when load more products in selected category
+    showcategName: [{category_id: "", category_name: "", order: null, category_products: []}], //tobe shown in products area
+    choosenIndCateg: null, //index of category selected when load more products in selected category
+    counterLoad: 0,
   };
 
   componentDidMount() {
@@ -160,21 +161,37 @@ export class ProductView extends React.Component {
         })
         var productCateg = []
         var idCateg = []
+        var pageProduct = []
         responseDatas.forEach((data) => {
           if(data.mid === mid) {
-            productCateg = data.categories.map((categ, index)=> {
+            productCateg = data.categories.map((categ)=> {
               idCateg.push(1)
+              pageProduct.push(res.data.total_pages - 1)
               return categ
             })
 
-            data.products.forEach((list)=> {
-              stateData.data.push({
-                  productId: list.product_id,
-                  foodName: list.product_name,
-                  foodDesc: "",
-                  foodPrice: list.product_price,
-                  foodImage: list.product_picture1,
-                  category: list.product_category
+            productCateg.forEach((val)=> {
+              val.category_products = []
+            })
+
+            productCateg.forEach((categProd)=> {
+              data.products.forEach((allproducts)=> {
+                if(categProd.category_id == allproducts.product_category) {
+                  categProd.category_products.push({
+                    productId: allproducts.product_id,
+                    category: allproducts.product_category,
+                    foodName: allproducts.product_name,
+                    foodDesc: "",
+                    foodPrice: allproducts.product_price,
+                    foodImage: allproducts.product_picture1,
+                    foodExt: [
+                      {
+                        name: "",
+                        amount: 0,
+                      },
+                    ],
+                  })
+                }
               })
             })
           }
@@ -186,7 +203,8 @@ export class ProductView extends React.Component {
           this.brightenColor(merchantColor, 70, productColor, 60)
           console.log(stateData);
           console.log(productCateg);
-          this.setState({ data: stateData, showcategName: productCateg, idCateg});
+          console.log(pageProduct);
+          this.setState({ data: stateData, showcategName: productCateg, idCateg, testpage: pageProduct});
           document.addEventListener('scroll', this.loadMoreMerchant)
         });
     })
@@ -218,12 +236,15 @@ export class ProductView extends React.Component {
 
     this.scrolltoMenu()
 
+
     if(this.state.idCateg) { //load more products with selected index of category
       this.state.idCateg.forEach((val, index)=> {
         if(index === this.state.choosenIndCateg) {
           if(val > 1 ) {
             if(this.state.boolpage == true) {
-              this.loadProducts()
+              this.loadProducts(index)
+            } else {
+              document.addEventListener('scroll', this.loadMoreMerchant)
             }
           }
         }
@@ -267,7 +288,7 @@ export class ProductView extends React.Component {
     document.body.style.backgroundColor = '#' + hex;
   }
 
-  loadProducts = () => {
+  loadProducts = (indexOfCateg) => {
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     var getLocation = JSON.parse(localStorage.getItem("longlat"))
@@ -289,7 +310,7 @@ export class ProductView extends React.Component {
       },
       method: "GET",
       params: {
-        page: this.state.page,
+        page: this.state.testpage[indexOfCateg],
         size: this.state.size
       }
     })
@@ -298,14 +319,26 @@ export class ProductView extends React.Component {
         let responseDatas = res.data.results;
         responseDatas.forEach((data) => {
           if(data.mid === mid) {
-            data.products.forEach((list)=> {
-              stateData.data.push({
-                  productId: list.product_id,
-                  foodName: list.product_name,
-                  foodDesc: "",
-                  foodPrice: list.product_price,
-                  foodImage: list.product_picture1,
-                  category: list.product_category
+            this.state.showcategName.forEach((categProd, indexAllCateg)=> {
+              data.products.forEach((allproducts)=> {
+                if(categProd.category_id == allproducts.product_category) {
+                  if(indexAllCateg == indexOfCateg) {
+                    categProd.category_products.push({
+                      productId: allproducts.product_id,
+                      category: allproducts.product_category,
+                      foodName: allproducts.product_name,
+                      foodDesc: "",
+                      foodPrice: allproducts.product_price,
+                      foodImage: allproducts.product_picture1,
+                      foodExt: [
+                        {
+                          name: "",
+                          amount: 0,
+                        },
+                      ],
+                    })
+                  }
+                }
               })
             })
           }
@@ -511,19 +544,33 @@ export class ProductView extends React.Component {
     return (el.getBoundingClientRect().top + 100) <= window.innerHeight
   }
 
+  stopAndLoadMore = (ind) => {
+    console.log(ind);
+    console.log(this.state.idCateg[ind]);
+    console.log(this.state.testpage[ind]);
+    if(this.state.idCateg[ind] <= this.state.testpage[ind]) {
+      console.log('testloadmore');
+      var openidCateg = [...this.state.idCateg]
+      openidCateg[ind] += 1
+      this.setState({idCateg: openidCateg, boolpage: true, choosenIndCateg: ind})
+    } else {
+      console.log('nambah');
+      var num = this.state.counterLoad
+      num++
+      this.setState({counterLoad: num})
+    }
+  }
+
   loadMoreMerchant = () => {
+    console.log(this.state.showcategName);
     this.state.showcategName.forEach((val, ind)=> {
-      const wrappedElement = document.getElementById(val.category_name + ind)
-      if(this.state.idCateg[ind] <= this.state.testpage) {
-        if(this.isBottom(wrappedElement)) {
-          console.log('testloadmore');
-          var openidCateg = [...this.state.idCateg]
-          openidCateg[ind] += 1
-          this.setState({idCateg: openidCateg, boolpage: true, choosenIndCateg: ind})
+      var wrappedElement = document.getElementById(ind)
+      if(this.isBottom(wrappedElement)) { 
+        console.log(this.state.counterLoad);
+        if(wrappedElement.id == this.state.counterLoad) {
           document.removeEventListener('scroll', this.loadMoreMerchant)
+          this.stopAndLoadMore(ind)
         }
-      } else {
-        document.removeEventListener('scroll', this.loadMoreMerchant)
       }
     })
   }
@@ -540,55 +587,55 @@ export class ProductView extends React.Component {
 
           <div className='list-product'>
             {
-              this.state.data.data.map((product)=> {
-                if(product.category == categ.category_id) {
-                  return (
-                    <div className='product-merchant' onClick={() => this.handleDetail(product)}>
-                      <div className='product-img'>
-                        {
-                          product.foodImage?
-                          <img src={product.foodImage? product.foodImage : Productimg} style={{objectFit: 'cover'}} width='100%' height='100%' />
-                          :
-                          <Skeleton height={120} style={{paddingTop: 50}}/>
-                        }
-                      </div>
-  
-                      <div className='product-detail-mob'>
-                        <div className='product-detail'>
-                          <div className='product-star'>
-                            <img className='product-star-img' src={StarIcon} />
-                            <h6 className='product-star-rating'>5.0</h6>
-                          </div>
-  
-                          <div className='product-name'>
-                            {product.foodName || <Skeleton style={{paddingTop: 10}} />}
-                          </div>
-  
-                          <div className='product-desc'>
-                            {product.foodDesc? product.foodDesc : "Product Description"}
-                          </div>
-  
-                          <div className='product-price'>
-                            {Intl.NumberFormat("id-ID").format(product.foodPrice)}
-                          </div>
+              categ.category_products.map((product)=> {
+                return (
+                  <div className='product-merchant' onClick={() => this.handleDetail(product)}>
+                    <div className='product-img'>
+                      {
+                        product.foodImage?
+                        <img src={product.foodImage} style={{objectFit: 'cover'}} width='100%' height='100%' />
+                        :
+                        <Skeleton height={120} style={{paddingTop: 50}}/>
+                      }
+                    </div>
+
+                    <div className='product-detail-mob'>
+                      <div className='product-detail'>
+                        <div className='product-star'>
+                          <img className='product-star-img' src={StarIcon} />
+                          <h6 className='product-star-rating'>5.0</h6>
                         </div>
-                        <div className='product-price-mob'>
+
+                        <div className='product-name'>
+                          {product.foodName || <Skeleton style={{paddingTop: 10}} />}
+                        </div>
+
+                        <div className='product-desc'>
+                          {product.foodDesc? product.foodDesc : "Product Description"}
+                        </div>
+
+                        <div className='product-price'>
                           {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                         </div>
                       </div>
+                      <div className='product-price-mob'>
+                        {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
                     </div>
-                  )
-                }
+                  </div>
+                )
               })
             }
           </div>
           {
-            this.state.idCateg[indcateg] <= this.state.testpage?
-            <div id={categ.category_name + indcateg}>
+            this.state.idCateg[indcateg] <= this.state.testpage[indcateg]?
+            <div id={indcateg}>
               <Skeleton style={{paddingTop:100, borderRadius: 30}} />
             </div>
             :
-            null
+            <div id={indcateg}>
+              {/* <Skeleton style={{paddingTop:100, borderRadius: 30}} /> */}
+            </div>
           }
         </div>
       );
