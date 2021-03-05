@@ -2,8 +2,11 @@ import React from "react";
 import { Row, Col, ButtonGroup, Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import PikaButton from "../Button/PikaButton";
+import Autosize from 'autosize'
+import {ValidQty} from '../../Redux/Actions'
+import {connect} from 'react-redux'
 
-export class PikaModal extends React.Component {
+class PikaModal extends React.Component {
   state = {
     detailCategory: [
       {
@@ -15,6 +18,7 @@ export class PikaModal extends React.Component {
   };
 
   componentDidMount() {
+    Autosize(document.getElementById("note"))
     var list = [{ ...this.state.detailCategory }];
     var datas = this.props.datas;
     list.pop();
@@ -35,6 +39,7 @@ export class PikaModal extends React.Component {
     let updatedFoodlist = foodList.map((food) => {
       if (food === e && food.amount > 1) {
         food.amount = food.amount - 1;
+        this.props.ValidQty(food.amount)
       }
       return food;
     });
@@ -47,6 +52,7 @@ export class PikaModal extends React.Component {
     let updatedFoodlist = foodList.map((food) => {
       if (food === e) {
         food.amount = food.amount + 1;
+        this.props.ValidQty(food.amount)
       }
       return food;
     });
@@ -148,13 +154,16 @@ export class PikaModal extends React.Component {
             <Col>
               <Form>
                 <Form.Label className={"modalNoteLabel"}>Catatan</Form.Label>
-                <Form.Control
+                {/* <Form.Control
                   placeholder={"Tambahkan catatanmu"}
                   className={"modalNote"}
                   fluid
                   onChange={this.handleNote}
-                ></Form.Control>
+                ></Form.Control> */}
               </Form>
+              <div style={{width: '100%', paddingLeft: '16px', paddingRight: '16px'}}>
+                <textarea id="note" rows="1" placeholder={"Tambahkan catatanmu"} onChange={this.handleNote} style={{width: '100%'}}></textarea>
+              </div>
             </Col>
           </Row>
           <Row>
@@ -174,3 +183,5 @@ export class PikaModal extends React.Component {
     );
   }
 }
+
+export default connect(null,{ValidQty})(PikaModal)

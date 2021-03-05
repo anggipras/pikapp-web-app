@@ -1,7 +1,7 @@
 import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
-import { PikaModal } from "../../Component/Modal/PikaModal";
+import PikaModal from "../../Component/Modal/PikaModal";
 import queryString from "query-string";
 import { cart } from "../../index.js";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
@@ -24,6 +24,8 @@ import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import Skeleton from 'react-loading-skeleton'
+import {connect} from 'react-redux'
+import {ValidQty} from '../../Redux/Actions'
 
 var currentExt = {
   detailCategory: [
@@ -35,7 +37,7 @@ var currentExt = {
   note: "",
 };
 
-export class ProductView extends React.Component {
+class ProductView extends React.Component {
   state = {
     // mountTest: true,
     page: 0, //products pagination
@@ -95,6 +97,7 @@ export class ProductView extends React.Component {
   };
 
   componentDidMount() {
+    this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, {expires: 1})
     var auth = {
@@ -372,6 +375,9 @@ export class ProductView extends React.Component {
   };
 
   handleAddCart = () => {
+    if(this.props.AllRedu.validQTY < 1) {
+      alert('minium 1 product')
+    } else {
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
@@ -519,6 +525,7 @@ export class ProductView extends React.Component {
     })
     .catch((err) => {
     });
+  }
   };
 
   changeMenu = () => {
@@ -821,3 +828,11 @@ export class ProductView extends React.Component {
     );
   }
 }
+
+const Mapstatetoprops = (state) => {
+  return {
+    AllRedu: state.AllRedu
+  }
+}
+
+export default connect(Mapstatetoprops,{ValidQty})(ProductView)

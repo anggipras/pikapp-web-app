@@ -203,7 +203,6 @@ class FormView extends React.Component {
           } else {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
-          this.props.DoneLoad()
         }
       })
       .catch((err) => {
