@@ -82,15 +82,24 @@ export class StoreView extends React.Component {
     merchant = value.merchant;
 
     // GOOGLE GEOCODE
-    Geocode.setApiKey(googleKey)
-    Geocode.fromLatLng(latitude,longitude)
-    .then((res) => {
-      console.log(res.results[0].formatted_address);
-      this.setState({location: res.results[0].formatted_address})
-    })
-    .catch((err) => {
-      this.setState({location: "Tidak tersedia"})
-    })
+    if(localStorage.getItem("address")) {
+      var getAdress = JSON.parse(localStorage.getItem("address"))
+      this.setState({location: getAdress})
+      console.log('localstorage');
+    } else {
+      console.log('nolocalstorage');
+      Geocode.setApiKey(googleKey)
+      Geocode.fromLatLng(latitude,longitude)
+      .then((res) => {
+        console.log(res.results[0].formatted_address);
+        this.setState({location: res.results[0].formatted_address})
+        localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
+      })
+      .catch((err) => {
+        this.setState({location: "Tidak tersedia"})
+      })
+    }
+
 
     //OPENCAGE API
     // let opencagelonglat = latitude + "," + longitude
