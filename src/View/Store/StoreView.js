@@ -8,8 +8,10 @@ import Axios from "axios";
 import Cookies from "js-cookie"
 import Geocode from "react-geocode"
 import Skeleton from 'react-loading-skeleton'
+import {connect} from 'react-redux'
+import {DoneLoad} from '../../Redux/Actions'
 
-export class StoreView extends React.Component {
+class StoreView extends React.Component {
   state = {
     page: 0,
     size: 10,
@@ -38,6 +40,7 @@ export class StoreView extends React.Component {
   };
 
   componentDidMount() {
+    this.props.DoneLoad()
     Cookies.set("homePage", window.location.search)
     var auth = {
       isLogged: false,
@@ -401,3 +404,5 @@ export class StoreView extends React.Component {
     );
   }
 }
+
+export default connect(null, {DoneLoad})(StoreView)

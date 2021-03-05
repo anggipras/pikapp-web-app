@@ -9,3 +9,10 @@ export const DoneLoad = () => {
         type: 'DONELOAD'
     }
 }
+
+export const ValidQty = (num) => {
+    return {
+        type: 'VALIDATIONQTY',
+        payload: num
+    }
+}

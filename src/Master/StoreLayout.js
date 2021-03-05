@@ -1,6 +1,6 @@
 import React from "react";
 import MainNavigation from "./MainNavigation";
-import { StoreView } from "../View/Store/StoreView";
+import StoreView from "../View/Store/StoreView";
 import {
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
