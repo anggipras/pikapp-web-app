@@ -7,9 +7,14 @@ import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Geocode from "react-geocode"
+import Skeleton from 'react-loading-skeleton'
+import {connect} from 'react-redux'
+import {DoneLoad} from '../../Redux/Actions'
 
-export class StoreView extends React.Component {
+class StoreView extends React.Component {
   state = {
+    page: 0,
+    size: 10,
     location: "",
     data: {
       title: "",
@@ -28,9 +33,14 @@ export class StoreView extends React.Component {
         },
       ],
     },
+    idCol: 1,
+    testpage: 0,
+    boolpage: false,
+    loadView: true,
   };
 
   componentDidMount() {
+    this.props.DoneLoad()
     Cookies.set("homePage", window.location.search)
     var auth = {
       isLogged: false,
@@ -74,16 +84,25 @@ export class StoreView extends React.Component {
     latitude = value.latitude || latitude
     merchant = value.merchant;
 
-    //GOOGLE GEOCODE
-    Geocode.setApiKey(googleKey)
-    Geocode.fromLatLng(latitude,longitude)
-    .then((res) => {
-      console.log(res.results[0].formatted_address);
-      this.setState({location: res.results[0].formatted_address})
-    })
-    .catch((err) => {
-      this.setState({location: "Tidak tersedia"})
-    })
+    // GOOGLE GEOCODE
+    if(localStorage.getItem("address")) {
+      var getAdress = JSON.parse(localStorage.getItem("address"))
+      this.setState({location: getAdress})
+      console.log('localstorage');
+    } else {
+      console.log('nolocalstorage');
+      Geocode.setApiKey(googleKey)
+      Geocode.fromLatLng(latitude,longitude)
+      .then((res) => {
+        console.log(res.results[0].formatted_address);
+        this.setState({location: res.results[0].formatted_address})
+        localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
+      })
+      .catch((err) => {
+        this.setState({location: "Tidak tersedia"})
+      })
+    }
+
 
     //OPENCAGE API
     // let opencagelonglat = latitude + "," + longitude
@@ -102,7 +121,7 @@ export class StoreView extends React.Component {
     let addressRoute;
     if (merchant === undefined) {
       addressRoute =
-        address + "home/v1/merchant/" + longitude + "/" + latitude + "/ALL/";
+        address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
     } else {
       addressRoute =
         address +
@@ -130,8 +149,13 @@ export class StoreView extends React.Component {
         "category": "1",
       },
       method: "GET",
+      params: {
+        page: this.state.page,
+        size: this.state.size
+      }
     })
       .then((res) => {
+        console.log(res.data.results);
           stateData = { ...this.state.data };
           let responseDatas = res.data;
           stateData.data.pop();
@@ -147,28 +171,82 @@ export class StoreView extends React.Component {
                 storeImage: data.merchant_pict,
             })
           })
-          this.setState({ data: stateData });
+          this.setState({ data: stateData, loadView: false, page: responseDatas.total_pages - 1 });
+          document.addEventListener('scroll', this.loadMoreMerchant)
       })
       .catch((err) => {
       });
+  }
 
-    // var data = { ...this.state.data };
-    // data.title = "Location";
-    // data.image = "";
-    // data.desc = "This is a store desc";
-    // data.data.pop();
-    // data.data.push({
-    //   address: "address",
-    //   rating: "1",
-    //   logo: "logo",
-    //   distance: "1",
-    //   storeId: "1",
-    //   storeName: "name",
-    //   storeDesc: "",
-    //   storeImage: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-    // });
-    // this.setState({ data: data });
+  componentDidUpdate() {
+    if(this.state.idCol > 1) {
+      if(this.state.boolpage == true) {
+        const value = queryString.parse(window.location.search);
+        var longitude = "";
+        var latitude = "";
+        var merchant = "";
+        longitude = value.longitude
+        latitude = value.latitude
+        merchant = value.merchant;
 
+        let addressRoute;
+        if (merchant === undefined) {
+          addressRoute =
+            address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
+        } else {
+          addressRoute =
+            address +
+            "home/v1/merchant/" +
+            longitude +
+            "/" +
+            latitude +
+            "/" +
+            merchant
+            + "/"
+        }
+        var stateData;
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
+        Axios(addressRoute, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token": "PUBLIC",
+            "category": "1",
+          },
+          method: "GET",
+          params: {
+            page: this.state.page,
+            size: this.state.size
+          }
+        })
+          .then((res) => {
+              stateData = { ...this.state.data };
+              let responseDatas = res.data;
+              responseDatas.results.forEach((data) => {
+                stateData.data.push({
+                    address: data.merchant_address,
+                    rating: data.merchant_rating,
+                    logo: data.merchant_logo,
+                    distance: data.merchant_distance,
+                    storeId: data.mid,
+                    storeName: data.merchant_name,
+                    storeDesc: "",
+                    storeImage: data.merchant_pict,
+                })
+              })
+              console.log(this.state.idCol);
+              console.log(this.state.data.data);
+              this.setState({boolpage: false})
+              document.addEventListener('scroll', this.loadMoreMerchant)
+          })
+          .catch((err) => {
+          });
+      }
+    }
   }
 
   storeClick = (e) => {
@@ -195,6 +273,44 @@ export class StoreView extends React.Component {
     return <Link to={"/status"}></Link>;
   }
 
+  isBottom = (el) => {
+    return (el.getBoundingClientRect().top + 50) <= window.innerHeight
+  }
+
+  loadMoreMerchant = () => {
+    const wrappedElement = document.getElementById("idCol")
+    if(this.state.idCol <= this.state.page) {
+      if(this.isBottom(wrappedElement)) {
+        console.log('testloadmore');
+        this.setState({idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true})
+        document.removeEventListener('scroll', this.loadMoreMerchant)
+      }
+    } else {
+      document.removeEventListener('scroll', this.loadMoreMerchant)
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this.loadMoreMerchant)
+  }
+
+  merchantLoading = () => (
+    <Row>
+      <Col xs={3} md={3}>
+        <Skeleton style={{width:70, height: 70, marginLeft: 10}} />
+      </Col>
+      <Col xs={9} md={6}>
+        <Row>
+          <Col xs={7} md={9}>
+            <Skeleton style={{width:100, height: 30, marginLeft: 10}} />
+            <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
+            <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  )
+
   render() {
     const storeDatas = this.state.data.data.map((data) => {
       return data;
@@ -203,32 +319,47 @@ export class StoreView extends React.Component {
       return (
         <Row>
           <Col xs={3} md={3}>
-            <Image
-              src={cardData.storeImage}
-              rounded
-              fluid
-              className="storeImage"
-            />
+            {
+              this.state.loadView?
+              <Skeleton width={70} height={70}/>
+              :
+              <Image
+                src={cardData.storeImage}
+                rounded
+                fluid
+                className="storeImage"
+              />
+            }
           </Col>
           <Col xs={9} md={6}>
             <Row>
               <Col xs={7} md={9}>
-                <h5 className="foodTitle">{cardData.storeName}</h5>
+                {
+                  this.state.loadView?
+                  <Skeleton style={{width:100, height: 30, marginLeft: 20}} />
+                  :
+                  <h5 className="foodTitle">{cardData.storeName}</h5>
+                }
                 <p className="storeDesc">{cardData.storeDesc}</p>
-                <div className="foodButton">
-                  <Link
-                    className={"btn-cartPika"}
-                    to={"/store?mid=" + cardData.storeId}
-                    style={{
-                      padding: 8,
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                    onClick={()=> this.storeClick(cardData)}
-                  >
-                    Go to store
-                  </Link>
-                </div>
+                {
+                  this.state.loadView?
+                  <Skeleton style={{width:100, height: 20, marginLeft: 20}} />
+                  :
+                  <div className="foodButton">
+                    <Link
+                      className={"btn-cartPika"}
+                      to={"/store?mid=" + cardData.storeId}
+                      style={{
+                        padding: 8,
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      onClick={()=> this.storeClick(cardData)}
+                    >
+                      Go to store
+                    </Link>
+                  </div>
+                }
               </Col>
             </Row>
           </Col>
@@ -245,17 +376,33 @@ export class StoreView extends React.Component {
               Lokasi:
             </h6>
             <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.location}
+              {this.state.location || <Skeleton height={20} />}
             </p>
           </Col>
           <Col />
         </Row>
         <Row />
         <Row>
-          <Col md={12}>{allCards}</Col>
+          <div>
+            <Col md={12}>{allCards}</Col>
+            {
+              !this.state.loadView?
+                this.state.idCol <= this.state.page ?
+                <div id={"idCol"}>
+                  {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
+                  {this.merchantLoading()}
+                </div>
+                :
+                null
+              :
+              null
+            }
+          </div>
         </Row>
         <Row></Row>
       </div>
     );
   }
 }
+
+export default connect(null, {DoneLoad})(StoreView)

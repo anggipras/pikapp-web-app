@@ -1,14 +1,16 @@
 import React from "react";
-import { Alert, Col, Form, Row } from "react-bootstrap";
-import { PikaButton } from "../../Component/Button/PikaButton";
-import { PikaTextField } from "../../Component/TextField/PikaTextField";
+import { Alert, Col, Fade, Form, Row } from "react-bootstrap";
+import PikaButton from "../../Component/Button/PikaButton";
+import PikaTextField from "../../Component/TextField/PikaTextField";
 import axios from "axios";
 import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-import {geolocated} from 'react-geolocated'
+// import {geolocated} from 'react-geolocated'
+import {connect} from 'react-redux'
+import {LoadingButton, DoneLoad} from '../../Redux/Actions'
 
 class FormView extends React.Component {
   state = {
@@ -23,39 +25,40 @@ class FormView extends React.Component {
     errorMsg: "",
     lat: "",
     lon: "",
-    noreload: false,
   };
 
   componentDidMount() {
-    if(this.props.coords) {
-      let latitude = this.props.coords.latitude
-      let longitude = this.props.coords.longitude
-      let longlat = {lat: latitude, lon: longitude}
-      console.log(latitude, longitude);
-      localStorage.setItem("longlat", JSON.stringify(longlat))
-    } else {
-      this.setState({noreload: true})
-    }
+    // if(this.props.coords) {
+    //   let latitude = this.props.coords.latitude
+    //   let longitude = this.props.coords.longitude
+    //   let longlat = {lat: latitude, lon: longitude}
+    //   console.log(latitude, longitude);
+    //   localStorage.setItem("longlat", JSON.stringify(longlat))
+    // } else {
+    //   this.setState({noreload: true})
+    // }
+    // this.setState({noreload: true})
+    this.geoLocation()
   }
 
-  componentDidUpdate() {
-    if(this.state.noreload) {
-      if(this.props.coords) {
-        let latitude = this.props.coords.latitude
-        let longitude = this.props.coords.longitude
-        let longlat = {lat: latitude, lon: longitude}
-        console.log(latitude, longitude);
-        localStorage.setItem("longlat", JSON.stringify(longlat))
-      }
-    }
-  }
+  // componentDidUpdate() {
+  //   if(this.state.noreload) {
+  //     if(this.props.coords) {
+  //       let latitude = this.props.coords.latitude
+  //       let longitude = this.props.coords.longitude
+  //       let longlat = {lat: latitude, lon: longitude}
+  //       console.log(latitude, longitude);
+  //       localStorage.setItem("longlat", JSON.stringify(longlat))
+  //     }
+  //   }
+  // }
 
   handleEmail = (e) => {
-    this.setState({ email: e.target.value, noreload: false});
+    this.setState({ email: e.target.value});
   };
 
   handlePassword = (e) => {
-    this.setState({ password: e.target.value, noreload: false});
+    this.setState({ password: e.target.value});
   };
 
   handleName = (e) => {
@@ -128,22 +131,22 @@ class FormView extends React.Component {
   };
 
   //show current location start
-  // showPosition = (position) => {
-  //   let latitude = position.coords.latitude
-  //   let longitude = position.coords.longitude
-  //   let longlat = {lat: latitude, lon: longitude}
-  //   console.log(latitude, longitude);
-  //   this.setState({lat: latitude, lon: longitude})
-  //   localStorage.setItem("longlat", JSON.stringify(longlat))
-  // }
+  showPosition = (position) => {
+    let latitude = position.coords.latitude
+    let longitude = position.coords.longitude
+    let longlat = {lat: latitude, lon: longitude}
+    console.log(latitude, longitude);
+    this.setState({lat: latitude, lon: longitude})
+    localStorage.setItem("longlat", JSON.stringify(longlat))
+  }
 
-  // geoLocation = () => {
-  //   if(navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(this.showPosition)
-  //   } else {
-  //     alert('Geolocation is not supported by this browser.')
-  //   }
-  // }
+  geoLocation = () => {
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.showPosition)
+    } else {
+      alert('Geolocation is not supported by this browser.')
+    }
+  }
   //show current location end
 
   handleLogin = (e) => {
@@ -155,7 +158,8 @@ class FormView extends React.Component {
     //   this.setState({ isValid: false });
     //   return;
     // }
-
+  
+    this.props.LoadingButton()
     this.setState({ isValid: true });
     const data = {
       username: this.state.email,
@@ -200,11 +204,11 @@ class FormView extends React.Component {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
         }
-        alert("Login berhasil.")
       })
       .catch((err) => {
         if(err.response.data !== undefined) {
           alert(err.response.data.err_message)
+          this.props.DoneLoad()
         }
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });
@@ -443,11 +447,10 @@ class FormView extends React.Component {
   }
 }
 
-export default geolocated({
-  positionOptions:{
-    enableHighAccuracy: false
-  },
-  userDecisionTimeout: 5000
-})(FormView)
+const Mapstatetoprops = (state) => {
+  return {
+    theLoading: state.AllRedu
+  }
+}
 
-// export default FormView
+export default connect(Mapstatetoprops,{LoadingButton, DoneLoad})(FormView)
