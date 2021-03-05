@@ -251,6 +251,7 @@ export class CartView extends React.Component {
       .catch((err) => {
         if(err.response.data !== undefined) {
           alert(err.response.data.err_message)
+          this.setState({loadButton: true})
         }
       });
     })

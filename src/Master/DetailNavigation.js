@@ -4,19 +4,22 @@ import { Link } from "react-router-dom";
 import Cookies from "js-cookie"
 
 export default class DetailNavigation extends React.Component {
+  goBack = () => {
+    // let homePage = Cookies.get("lastProduct")
+    // window.location.href = homePage
+    window.history.back()
+  }
+
   render() {
-    let homePage = "/" + Cookies.get("homePage")
     return (
       <div>
         <Navbar>
-          <Navbar>
-            <Link to={homePage}>
-              <img
-                src={this.props.backIcon}
-                className={"icon"}
-                alt={"back"}
-              ></img>
-            </Link>
+          <Navbar onClick={this.goBack}>
+            <img
+              src={this.props.backIcon}
+              className={"icon"}
+              alt={"back"}
+            ></img>
           </Navbar>
           <Navbar.Brand className={"navbar-center"}>
             <img src={this.props.centerImage} alt={"title"} class ={this.props.centerStyle}></img>

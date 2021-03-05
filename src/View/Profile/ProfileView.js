@@ -107,8 +107,7 @@ class ProfileView extends React.Component {
         .then((res) => {
           var lastLink = { value: window.location.origin}
           Cookies.set("lastLink", lastLink,{ expires: 1})
-          localStorage.removeItem("cart")
-          localStorage.removeItem("address")
+          localStorage.clear()
           Cookies.remove("auth")
           auth = null;
           this.props.DoneLoad()
