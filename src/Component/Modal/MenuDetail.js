@@ -30,6 +30,7 @@ const MenuDetail = (props) => {
             }} onClick={closeModal}
             >
                 <div className='modal-content' onClick={e => e.stopPropagation()}>
+                    <div className='scrollArea'>
                     <div className='menuBanner'>
                         <img className='menuimg' src={prodPhoto} />
                         <span className='iconClose' onClick={closeModal}>
@@ -68,6 +69,7 @@ const MenuDetail = (props) => {
                                 TAMBAH KE KERANJANG
                                 </h2>
                         </div>
+                    </div>
                     </div>
                 </div>
 

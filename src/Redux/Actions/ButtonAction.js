@@ -16,3 +16,10 @@ export const ValidQty = (num) => {
         payload: num
     }
 }
+
+export const OpenSelect = (bool) => {
+    return {
+        type: 'OPENSELECT',
+        payload: bool
+    }
+}

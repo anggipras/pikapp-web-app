@@ -12,15 +12,16 @@
     position: fixed; /* Fix position on the top-left corner*/
     top: 0;
     left: 0;
-    overflow: auto; /* Enable scroll if needed */
-    padding-top: 80px; /* Location of the content container */
+    // overflow: auto; /* Enable scroll if needed */
+    // padding-top: 80px; /* Location of the content container */
 }
 /* Modal content */
 .modal-content {
     background-color: white;
     width: calc(100% - 100px); /* Width in proportion to its parent container*/
     max-width: 100%; /* Max width where it stops expanding */
-    height: auto; /* Height in proportion to its parent container */
+    height: calc(100vh - 100px); /* Height in proportion to its parent container*/
+    max-height: 100%; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */
     border: none;
     border-radius: 50px; /* Optional. Rounds container corners */
@@ -28,6 +29,12 @@
     -webkit-animation-duration: 0.4s;
     animation-name: animatetop;
     animation-duration: 0.4s;
+}
+
+.scrollArea {
+    margin: 0;
+    padding: 0;
+    overflow: auto; /* Enable scroll if needed */
 }
 
 .menuBanner {
