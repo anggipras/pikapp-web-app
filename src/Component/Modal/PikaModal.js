@@ -26,9 +26,10 @@ class PikaModal extends React.Component {
       datas.foodExt.map((data) => {
         return list.push({
           name: data.name,
-          amount: data.amount,
+          amount: data.amount + 1,
         });
       });
+      this.props.ValidQty(1)
       this.setState({ detailCategory: list });
     }
   }
