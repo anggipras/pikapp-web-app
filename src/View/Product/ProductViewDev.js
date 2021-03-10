@@ -2,6 +2,7 @@ import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
 import PikaModal from "../../Component/Modal/PikaModal";
+import MenuDetail from "../../Component/Modal/MenuDetail";
 import queryString from "query-string";
 import { cart } from "../../index.js";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
@@ -48,6 +49,7 @@ class ProductView extends React.Component {
     testColor: false,
     testingchange: false, //only for testing, would be remove
     showModal: false,
+    showMenuDet: false,
     data: {
       mid: "",
       title: "",
@@ -56,22 +58,22 @@ class ProductView extends React.Component {
       address: "",
       rating: "",
       phone: "",
-      data: [
-        {
-          productId: "",
-          category: "",
-          foodName: "",
-          foodDesc: "",
-          foodPrice: 0,
-          foodImage: "",
-          foodExt: [
-            {
-              name: "",
-              amount: 0,
-            },
-          ],
-        },
-      ],
+      // data: [
+      //   {
+      //     productId: "",
+      //     category: "",
+      //     foodName: "",
+      //     foodDesc: "",
+      //     foodPrice: 0,
+      //     foodImage: "",
+      //     foodExt: [
+      //       {
+      //         name: "",
+      //         amount: 0,
+      //       },
+      //     ],
+      //   },
+      // ],
       currentData: {
         productId: "",
         category: "",
@@ -145,7 +147,7 @@ class ProductView extends React.Component {
     .then((res) => {
         stateData = { ...this.state.data };
         let responseDatas = res.data.results;
-        stateData.data.pop();
+        // stateData.data.pop();
         stateData.mid = mid;
         stateData.title = currentMerchant.storeName;
         stateData.image = currentMerchant.storeImage;
@@ -154,14 +156,14 @@ class ProductView extends React.Component {
         stateData.rating = currentMerchant.storeRating;
         stateData.phone = "081296000823";
         stateData.notable = notab
-        stateData.data.push({
-          category: "All Category",
-          productId: "",
-          foodName: "",
-          foodDesc: "",
-          foodPrice: "",
-          foodImage: "",
-        })
+        // stateData.data.push({
+        //   category: "All Category",
+        //   productId: "",
+        //   foodName: "",
+        //   foodDesc: "",
+        //   foodPrice: "",
+        //   foodImage: "",
+        // })
         var productCateg = []
         var idCateg = []
         var pageProduct = []
@@ -363,11 +365,15 @@ class ProductView extends React.Component {
 
   handleDetail(data) {
     this.setState({ currentData: data });
-    this.setState({ showModal: true });
+    this.setState({ showMenuDet: true });
   }
 
   setModal(isShow) {
     this.setState({ showModal: isShow });
+  }
+
+  setMenuDetail(isShow) {
+    this.setState({ showMenuDet: isShow })
   }
 
   handleCart = (data) => {
@@ -571,7 +577,6 @@ class ProductView extends React.Component {
   }
 
   loadMoreMerchant = () => {
-    console.log(this.state.showcategName);
     this.state.showcategName.forEach((val, ind)=> {
       var wrappedElement = document.getElementById(ind)
       if(this.isBottom(wrappedElement)) { 
@@ -591,14 +596,14 @@ class ProductView extends React.Component {
   contentView = () => {
     return this.state.showcategName.map((categ, indcateg)=> {
       return (
-        <div className='product-section'>
+        <div key={indcateg} className='product-section'>
           <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={30} width={100} />}</h2>
 
           <div className='list-product'>
             {
-              categ.category_products.map((product)=> {
+              categ.category_products.map((product, indprod)=> {
                 return (
-                  <div className='product-merchant' onClick={() => this.handleDetail(product)}>
+                  <div key={indprod} className='product-merchant' onClick={() => this.handleDetail(product)}>
                     <div className='product-img'>
                       {
                         product.foodImage?
@@ -649,6 +654,20 @@ class ProductView extends React.Component {
         </div>
       );
     })
+  }
+
+  menuDetail = () => {
+    if (this.state.showMenuDet === true) {
+      return (
+        <MenuDetail
+          isShow={this.state.showMenuDet}
+          onHide={() => this.setMenuDetail(false)}
+          datas={this.state.currentData}
+          menuClick={() => this.setModal(true)}
+          handleCateg={this.state.showcategName}
+        />
+      );
+    }
   }
 
   render() {
@@ -824,6 +843,7 @@ class ProductView extends React.Component {
         </div>
         {modal}
         {cartButton}
+        {this.menuDetail()}
       </>
     );
   }
