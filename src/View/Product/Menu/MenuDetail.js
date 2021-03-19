@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-// import { ValidQty } from '../../Redux/Actions'
-// import { connect } from 'react-redux'
 import '../../../Asset/scss/MenuDetail.scss'
 import prodPhoto from '../../../Asset/Illustration/samplefood.jpg'
 import closeLogo from '../../../Asset/Icon/close.png'
@@ -25,14 +23,17 @@ const MenuDetail = (props) => {
         props.onHide()
     }
 
-    const backModal = (e) => {
+    const backModal = () => {
         setmenuSelect(false)
         dispatch({ type: 'DEFAULTSTATE' })
     }
 
     const addtoCart = () => {
         if (AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY) {
-            alert('in the development stage')
+            props.handleClick()
+            dispatch({ type: 'DEFAULTSTATE' })
+            props.onHide()
+            // alert('in the development stage')
         }
     }
 
@@ -40,7 +41,7 @@ const MenuDetail = (props) => {
         let totalPrice = 0
         let sumAllPrice = AllRedu.checkboxes
         sumAllPrice.forEach(firstVal => {
-            firstVal.forEach(nestedVal=> {
+            firstVal.forEach(nestedVal => {
                 totalPrice += nestedVal.price
             })
         });

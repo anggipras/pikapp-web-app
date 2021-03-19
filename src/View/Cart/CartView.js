@@ -128,7 +128,8 @@ export class CartView extends React.Component {
           Cookies.set("addedMerchants", addedMerchants)
         })
         if(addedMerchants.length < 2) {
-          window.location.href = Cookies.get("lastProduct")
+          window.history.back()
+          // window.location.href = Cookies.get("lastProduct")
         } else {
           window.location.reload()
         }
@@ -257,6 +258,26 @@ export class CartView extends React.Component {
     })
   };
 
+  newListCheck = (food) => {
+    let newlistArr = ''
+    food.foodListCheckbox.forEach((val)=> {
+      val.forEach((val2)=> {
+        return newlistArr += `${val2.name},`
+      })
+    })
+    return <p>{newlistArr}</p>
+  }
+
+  newListRadio = (food) => {
+    let newlistArr = ''
+    food.foodListRadio.forEach((val)=> {
+      val.forEach((val2)=> {
+        return newlistArr += `${val2},`
+      })
+    })
+    return <p>{newlistArr}</p>
+  }
+
   render() {
     var auth = {
       isLogged: false,
@@ -342,6 +363,8 @@ export class CartView extends React.Component {
                 <Row>
                   <Col>
                     <p className={"cartContentFood"}>{food.foodName}</p>
+                    <p>List Check: {this.newListCheck(food)}</p>
+                    <p>List Option: {this.newListRadio(food)}</p>
                     <p className={"cartContentPrice"}>Catatan:</p>
                     <p className={"cartContentPrice"}>{food.foodNote}</p>
                     <p className={"cartContentPrice"}>

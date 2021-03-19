@@ -199,7 +199,9 @@ const MenuSelection = (props) => {
 
     var thedata = {
         detailCategory: detailCategory,
-        note: note
+        note: note,
+        listcheckbox: checkboxVal,
+        listradio: radioVal
     }
     props.handleData(thedata)
     return (
