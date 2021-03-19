@@ -2,7 +2,7 @@ import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
 import PikaModal from "../../Component/Modal/PikaModal";
-import MenuDetail from "../../Component/Modal/MenuDetail";
+import MenuDetail from "./Menu/MenuDetail";
 import queryString from "query-string";
 import { cart } from "../../index.js";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
@@ -90,7 +90,6 @@ class ProductView extends React.Component {
     },
     backColor1: "", //merchant info background color
     backColor2: "", //products info background color
-    // openSelect: false, //open select drop down
     categName: "All Categories", //initial for dropdown select
     showcategName: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     choosenIndCateg: null, //index of category selected when load more products in selected category
@@ -237,9 +236,6 @@ class ProductView extends React.Component {
       }
     }
 
-    // this.scrolltoMenu()
-
-
     if (this.state.idCateg) { //load more products with selected index of category
       this.state.idCateg.forEach((val, index) => {
         if (index === this.state.choosenIndCateg) {
@@ -363,6 +359,7 @@ class ProductView extends React.Component {
   handleDetail(data) {
     this.setState({ currentData: data });
     this.setState({ showMenuDet: true });
+    document.body.style.overflowY = 'hidden'
   }
 
   setModal(isShow) {
@@ -371,6 +368,7 @@ class ProductView extends React.Component {
 
   setMenuDetail(isShow) {
     this.setState({ showMenuDet: isShow })
+    document.body.style.overflowY = ''
   }
 
   handleCart = (data) => {
@@ -378,182 +376,164 @@ class ProductView extends React.Component {
   };
 
   handleAddCart = () => {
-    if (this.props.AllRedu.validQTY < 1) {
-      alert('minium 1 product')
-    } else {
-      var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
-      const value = queryString.parse(window.location.search);
-      const mid = value.mid;
-      this.setModal(false);
-      var isStorePresent = false;
-      cart.forEach((data) => {
-        if (data.mid === this.state.data.mid) {
-          isStorePresent = true;
-        }
-      });
+    var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    const value = queryString.parse(window.location.search);
+    const mid = value.mid;
+    this.setModal(false);
+    var isStorePresent = false;
+    cart.forEach((data) => {
+      if (data.mid === this.state.data.mid) {
+        isStorePresent = true;
+      }
+    });
 
-      var isDuplicate = false;
-      cart.forEach((data) => {
-        if (data.mid === this.state.data.mid) {
-          data.food.forEach((food) => {
-            if (food.productId === this.state.currentData.productId) {
-              isDuplicate = true;
-            }
-          });
-        }
-      });
+    var isDuplicate = false;
+    cart.forEach((data) => {
+      if (data.mid === this.state.data.mid) {
+        data.food.forEach((food) => {
+          if (food.productId === this.state.currentData.productId) {
+            isDuplicate = true;
+          }
+        });
+      }
+    });
 
-      var isFound = false
-      if (isStorePresent === true) {
-        if (isDuplicate === true) {
-          cart.forEach((data) => {
-            if (isFound === false) {
-              if (data.mid === this.state.data.mid) {
-                data.food.forEach((food) => {
-                  if (isFound === false) {
-                    if (food.foodNote === currentExt.note) {
-                      if (food.productId === this.state.currentData.productId) {
-                        isFound = true
-                        food.foodAmount += currentExt.detailCategory[0].amount;
-                      }
+    var isFound = false
+    if (isStorePresent === true) {
+      if (isDuplicate === true) {
+        cart.forEach((data) => {
+          if (isFound === false) {
+            if (data.mid === this.state.data.mid) {
+              data.food.forEach((food) => {
+                if (isFound === false) {
+                  if (food.foodNote === currentExt.note) {
+                    if (food.productId === this.state.currentData.productId) {
+                      isFound = true
+                      food.foodAmount += currentExt.detailCategory[0].amount;
                     }
                   }
-                });
-              }
-            }
-          })
-          if (isFound === false) {
-            var isAdded = false
-            cart.forEach((data) => {
-              if (data.mid === this.state.data.mid) {
-                data.food.forEach((food) => {
-                  if (isAdded === false) {
-                    isAdded = true
-                    data.food.push({
-                      productId: this.state.currentData.productId,
-                      foodName: this.state.currentData.foodName,
-                      foodPrice: this.state.currentData.foodPrice,
-                      foodImage: this.state.currentData.foodImage,
-                      foodAmount: currentExt.detailCategory[0].amount,
-                      foodNote: currentExt.note,
-                    });
-                  }
-                });
-              }
-            })
-          };
-        } else {
-          cart.forEach((data) => {
-            if (data.mid === this.state.data.mid) {
-              data.food.push({
-                productId: this.state.currentData.productId,
-                foodName: this.state.currentData.foodName,
-                foodPrice: this.state.currentData.foodPrice,
-                foodImage: this.state.currentData.foodImage,
-                foodAmount: currentExt.detailCategory[0].amount,
-                foodNote: currentExt.note,
+                }
               });
             }
-          });
-        }
+          }
+        })
+        if (isFound === false) {
+          var isAdded = false
+          cart.forEach((data) => {
+            if (data.mid === this.state.data.mid) {
+              data.food.forEach((food) => {
+                if (isAdded === false) {
+                  isAdded = true
+                  data.food.push({
+                    productId: this.state.currentData.productId,
+                    foodName: this.state.currentData.foodName,
+                    foodPrice: this.state.currentData.foodPrice,
+                    foodImage: this.state.currentData.foodImage,
+                    foodAmount: currentExt.detailCategory[0].amount,
+                    foodNote: currentExt.note,
+                  });
+                }
+              });
+            }
+          })
+        };
       } else {
-        cart.push({
-          mid: mid,
-          storeName: currentMerchant.storeName,
-          storeDesc: currentMerchant.storeDesc,
-          storeDistance: currentMerchant.distance,
-          food: [
-            {
+        cart.forEach((data) => {
+          if (data.mid === this.state.data.mid) {
+            data.food.push({
               productId: this.state.currentData.productId,
               foodName: this.state.currentData.foodName,
               foodPrice: this.state.currentData.foodPrice,
               foodImage: this.state.currentData.foodImage,
               foodAmount: currentExt.detailCategory[0].amount,
               foodNote: currentExt.note,
-            },
-          ],
+            });
+          }
         });
       }
-      let addedMerchants = []
-      if (Cookies.get("addedMerchants") === undefined) {
-        if (!addedMerchants.includes(mid)) {
-          addedMerchants.push(mid)
-          Cookies.set("addedMerchants", addedMerchants)
-        }
-      } else {
-        addedMerchants = JSON.parse(Cookies.get("addedMerchants"))
-        if (!addedMerchants.includes(mid)) {
-          addedMerchants.push(mid)
-          Cookies.set("addedMerchants", addedMerchants)
-        }
-      }
-      localStorage.setItem("cart", JSON.stringify(cart));
-      var auth = {
-        isLogged: false,
-        token: "",
-        new_event: true,
-        recommendation_status: false,
-        email: "",
-      };
-      if (Cookies.get("auth") !== undefined) {
-        auth = JSON.parse(Cookies.get("auth"))
-      }
-      if (auth.isLogged === false) {
-        var lastLink = { value: window.location.href }
-        Cookies.set("lastLink", lastLink, { expires: 1 })
-        window.location.href = "/login"
-      }
-      let uuid = uuidV4();
-      const date = new Date().toISOString();
-      uuid = uuid.replaceAll("-", "");
-      let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-      Axios(address + "/txn/v1/cart-post/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "x-signature": signature,
-          "token": auth.token,
-        },
-        method: "POST",
-        data: {
-          mid: this.state.data.mid,
-          pid: this.state.currentData.productId,
-          qty: currentExt.detailCategory[0].amount,
-          notes: currentExt.note,
-        }
-      })
-        .then((res) => {
-        })
-        .catch((err) => {
-        });
+    } else {
+      cart.push({
+        mid: mid,
+        storeName: currentMerchant.storeName,
+        storeDesc: currentMerchant.storeDesc,
+        storeDistance: currentMerchant.distance,
+        food: [
+          {
+            productId: this.state.currentData.productId,
+            foodName: this.state.currentData.foodName,
+            foodPrice: this.state.currentData.foodPrice,
+            foodImage: this.state.currentData.foodImage,
+            foodAmount: currentExt.detailCategory[0].amount,
+            foodNote: currentExt.note,
+          },
+        ],
+      });
     }
+    let addedMerchants = []
+    if (Cookies.get("addedMerchants") === undefined) {
+      if (!addedMerchants.includes(mid)) {
+        addedMerchants.push(mid)
+        Cookies.set("addedMerchants", addedMerchants)
+      }
+    } else {
+      addedMerchants = JSON.parse(Cookies.get("addedMerchants"))
+      if (!addedMerchants.includes(mid)) {
+        addedMerchants.push(mid)
+        Cookies.set("addedMerchants", addedMerchants)
+      }
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
+      window.location.href = "/login"
+    }
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replaceAll("-", "");
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    Axios(address + "/txn/v1/cart-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: {
+        mid: this.state.data.mid,
+        pid: this.state.currentData.productId,
+        qty: currentExt.detailCategory[0].amount,
+        notes: currentExt.note,
+      }
+    })
+      .then((res) => {
+      })
+      .catch((err) => {
+      });
   };
 
   changeMenu = () => {
     this.props.OpenSelect(!this.props.AllRedu.openSelect)
-    // this.setState({openSelect: !this.state.openSelect})
     document.removeEventListener('scroll', this.loadMoreMerchant)
   }
 
   changeHeader = (menu) => {
     this.props.OpenSelect(false)
-    // this.setState({categName: menu, openSelect: false})
     this.setState({ categName: menu })
   }
-
-  // scrolltoMenu = () => {
-  //   if (this.state.categName !== "All Categories") {
-  //     if(this.state.openSelect == false) {
-  //       //scroll to selected menu
-  //       document.addEventListener('scroll', this.loadMoreMerchant)
-  //       console.log(this.state.showcategName[0].category_name);
-  //       console.log(this.state.categName);
-  //       document.getElementById(this.state.categName).scrollIntoView({behavior: "smooth"})
-  //     }
-  //   }
-  // }
 
   isBottom = (el) => {
     return (el.getBoundingClientRect().top + 100) <= window.innerHeight
@@ -663,8 +643,9 @@ class ProductView extends React.Component {
           isShow={this.state.showMenuDet}
           onHide={() => this.setMenuDetail(false)}
           datas={this.state.currentData}
-          menuClick={() => this.setModal(true)}
           handleCateg={this.state.showcategName}
+          handleClick={this.handleAddCart}
+          handleData={this.handleCart}
         />
       );
     }
@@ -703,12 +684,8 @@ class ProductView extends React.Component {
         document.addEventListener('scroll', this.loadMoreMerchant)
         console.log(this.state.showcategName[0].category_name);
         console.log(this.state.categName);
-        if(this.state.showModal || this.state.showMenuDet) {
-
-        } else if(!this.state.showModal || !this.state.showMenuDet) {
-
-          document.getElementById(this.state.categName).scrollIntoView({ behavior: "smooth" })
-        }
+        document.getElementById(this.state.categName).scrollIntoView({ behavior: "smooth" })
+        this.setState({ categName: 'All Categories' })
       }
     }
 
@@ -830,7 +807,6 @@ class ProductView extends React.Component {
                 </div>
 
                 {
-                  // this.state.openSelect ?
                   this.props.AllRedu.openSelect ?
                     <div className='custom-options'>
                       <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
