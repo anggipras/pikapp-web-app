@@ -3,6 +3,16 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
+@font-face {
+    font-family: "SF-Compact-Rounded-Medium";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Semibold";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
 .modalMenuDetail {
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
@@ -119,12 +129,12 @@
 }
 
 .menu-star-img {
-    width: 17px;
-    height: 17px;
+    width: 20px;
+    height: 20px;
 }
 
 .menu-star-rating {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: "SF-Compact-Rounded-Medium", sans-serif;
     font-weight: 600;
     font-style: normal;
     font-size: 20px;
@@ -157,7 +167,7 @@
 .menu-price {
     min-width: 160px;
     width: auto;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: "SF-Compact-Rounded-Semibold", sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 30px;
@@ -181,7 +191,7 @@
 
 .menuDesc-title {
     width: 100%;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: "SF-Compact-Rounded-Semibold", sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 28px;
@@ -225,7 +235,7 @@
     font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
-    font-size: 23px;
+    font-size: 28px;
     line-height: 20px;
     text-transform: capitalize;
     color: #ffffff;
@@ -263,7 +273,7 @@
         display: block;
         position: relative;
         width: 100%;
-        height: 168px;
+        height: 169px;
         border-radius: 20px;
     }
 
@@ -297,7 +307,6 @@
         display: flex;
         justify-content: space-between;
         padding: 15px 19px 14px 18px;
-        // box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
     }
 
     .mob-menu-detail {
@@ -318,8 +327,8 @@
     }
 
     .mob-menu-star-img {
-        width: 11.7px;
-        height: 11.7px;
+        width: 12px;
+        height: 12px;
     }
 
     .mob-menu-star-rating {
@@ -367,7 +376,6 @@
         max-width: 120px;
         font-size: 14px;
         line-height: 17px;
-        // margin-top: 12px;
     }
 
     .mob-menu-price {
@@ -386,7 +394,6 @@
 
     .mob-menuButton {
         padding: 9px 19px 15px 17px;
-        // box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.1);
     }
 
     .mob-openMenuSelection {
@@ -407,7 +414,7 @@
         text-transform: capitalize;
         color: #ffffff;
         line-height: 20px;
-        font-size: 14px;
+        font-size: 18px;
     }
 }
 

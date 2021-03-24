@@ -3,6 +3,16 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
+@font-face {
+    font-family: "SF-Compact-Rounded-Medium";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Semibold";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
 .menuSelection-layout {
     padding: 17px 38px 23px 34px;
 }
@@ -34,7 +44,7 @@
 }
 
 .titleSelection {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: "SF-Compact-Rounded-Semibold", sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 25px;
@@ -277,18 +287,24 @@
     border: 1px solid #aaaaaa;
     box-sizing: border-box;
     border-radius: 20px;
-    background-color: #eeeeee;
+    background-color: #f5f6f7;
     margin-top: 12.5px;
 }
 
 .note-area {
     width: 100%;
     height: 54px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-transform: capitalize;
+    font-size: 20px;
+    color: #aaaaaa;
     background-color: transparent;
+    padding-left: 20px;
+    padding-top: 15px;
     border: none;
     outline: none;
-    padding-left: 20px;
-    padding-top: 17px;
 }
 
 @media (max-width: 768px) {
@@ -410,11 +426,13 @@
     .note-box {
         border-radius: 5px;
         margin-top: 7px;
+        background-color: #eeeeee;
     }
 
     .note-area {
         height: 30px;
         padding-left: 15px;
-        padding-top: 5px;
+        padding-top: 8px;
+        font-size: 12px;
     }
 }

@@ -36,6 +36,7 @@ var currentExt = {
     },
   ],
   note: "",
+  foodCategory: '',
   listcheckbox: [],
   listradio: []
 };
@@ -389,58 +390,191 @@ class ProductView extends React.Component {
       }
     });
 
+    let duplicateProduct = []
     var isDuplicate = false;
     cart.forEach((data) => {
       if (data.mid === this.state.data.mid) {
         data.food.forEach((food) => {
           if (food.productId === this.state.currentData.productId) {
             isDuplicate = true;
+            duplicateProduct.push(food)
           }
         });
       }
     });
 
+    var isDuplicateSelection = false
+    let indexOfspesificCart = 0 //get index of spesific cart product after break loop or match condition
+    if (isStorePresent && isDuplicate) {
+      let countAllSelection = 0
+      let sizecartArr = 0 //size cart of spesific index
+      let sizecurrentArr = 0 //size current selected menu
+
+      //loop list checkbox from current menu selection
+      currentExt.listcheckbox.forEach((currentfirstVal) => {
+        currentfirstVal.forEach((currentnestedVal) => {
+          if (currentnestedVal.name) {
+            sizecurrentArr += 1
+          }
+        })
+      })
+
+      //loop list radio from current menu selection
+      currentExt.listradio.forEach((currentfirstVal) => {
+        currentfirstVal.forEach((currentnestedVal) => {
+          if (currentnestedVal) {
+            sizecurrentArr += 1
+          }
+        })
+      })
+
+      let boolSpesificInd = true //to break following loop
+      duplicateProduct.forEach((menuProd, index) => {
+        if (boolSpesificInd) {
+          //loop list checkbox from cart
+          menuProd.foodListCheckbox.forEach(firstVal => {
+            firstVal.forEach(nestedVal => {
+              if (nestedVal.name) {
+                sizecartArr += 1
+              }
+            })
+          })
+
+          //loop list radio from cart
+          menuProd.foodListRadio.forEach(firstVal => {
+            firstVal.forEach(nestedVal => {
+              if (nestedVal) {
+                sizecartArr += 1
+              }
+            })
+          })
+
+          console.log(sizecartArr);
+          console.log(sizecurrentArr);
+          if (sizecartArr === sizecurrentArr) {
+            menuProd.foodListCheckbox.forEach((firstVal) => {
+              firstVal.forEach((nestedVal) => {
+
+                //loop listcheckbox from current advance selection to be match with added cart
+                currentExt.listcheckbox.forEach((currentfirstVal) => {
+                  currentfirstVal.forEach((currentnestedVal) => {
+                    if (nestedVal.name === currentnestedVal.name) {
+                      countAllSelection += 1
+                    }
+                  })
+                })
+              })
+            })
+
+            // loop radio from added cart
+            menuProd.foodListRadio.forEach((firstVal) => {
+              firstVal.forEach((nestedVal) => {
+
+                //loop radio from current advance selection to be match with added cart
+                currentExt.listradio.forEach((currentfirstVal) => {
+                  currentfirstVal.forEach((currentnestedVal) => {
+                    if (nestedVal === currentnestedVal) {
+                      countAllSelection += 1
+                    }
+                  })
+                })
+              })
+            })
+
+            if (sizecartArr === countAllSelection) {
+              if (menuProd.foodNote === currentExt.note) {
+                indexOfspesificCart = index
+                isDuplicateSelection = true
+                boolSpesificInd = false
+              } else {
+                sizecartArr = 0
+                countAllSelection = 0
+              }
+            } else {
+              sizecartArr = 0
+              countAllSelection = 0
+            }
+          } else {
+            sizecartArr = 0
+          }
+        }
+      })
+
+      console.log(sizecartArr);
+      console.log(sizecurrentArr);
+      console.log(countAllSelection);
+    }
+
     var isFound = false
     if (isStorePresent === true) {
       if (isDuplicate === true) {
-        cart.forEach((data) => {
-          if (isFound === false) {
-            if (data.mid === this.state.data.mid) {
-              data.food.forEach((food) => {
+        if (isDuplicateSelection) {
+          console.log('duplicate');
+          cart.forEach((data) => {
+            if (isFound === false) {
+              if (data.mid === this.state.data.mid) {
+                console.log('same mid');
+                // data.food.forEach((food) => {
+                //   if (isFound === false) {
+                //     if (food.foodNote === currentExt.note) {
+                //       if (food.productId === this.state.currentData.productId) {
+                //         isFound = true
+                //         food.foodAmount += currentExt.detailCategory[0].amount;
+                //       }
+                //     }
+                //   }
+                // });
+
                 if (isFound === false) {
-                  if (food.foodNote === currentExt.note) {
-                    if (food.productId === this.state.currentData.productId) {
-                      isFound = true
-                      food.foodAmount += currentExt.detailCategory[0].amount;
-                    }
+                  if (duplicateProduct[indexOfspesificCart].foodNote === currentExt.note) {
+                    isFound = true
+                    duplicateProduct[indexOfspesificCart].foodAmount += currentExt.detailCategory[0].amount
                   }
                 }
-              });
+              }
             }
-          }
-        })
-        if (isFound === false) {
-          var isAdded = false
+          })
+          if (isFound === false) {
+            var isAdded = false
+            cart.forEach((data) => {
+              if (data.mid === this.state.data.mid) {
+                data.food.forEach((food) => {
+                  if (isAdded === false) {
+                    isAdded = true
+                    data.food.push({
+                      productId: this.state.currentData.productId,
+                      foodName: this.state.currentData.foodName,
+                      foodPrice: this.state.currentData.foodPrice,
+                      foodImage: this.state.currentData.foodImage,
+                      foodCategory: currentExt.foodCategory,
+                      foodAmount: currentExt.detailCategory[0].amount,
+                      foodNote: currentExt.note,
+                      foodListCheckbox: currentExt.listcheckbox,
+                      foodListRadio: currentExt.listradio,
+                    });
+                  }
+                });
+              }
+            })
+          };
+        } else {
+          console.log('noduplicate');
           cart.forEach((data) => {
             if (data.mid === this.state.data.mid) {
-              data.food.forEach((food) => {
-                if (isAdded === false) {
-                  isAdded = true
-                  data.food.push({
-                    productId: this.state.currentData.productId,
-                    foodName: this.state.currentData.foodName,
-                    foodPrice: this.state.currentData.foodPrice,
-                    foodImage: this.state.currentData.foodImage,
-                    foodAmount: currentExt.detailCategory[0].amount,
-                    foodNote: currentExt.note,
-                    foodListCheckbox: currentExt.listcheckbox,
-                    foodListRadio: currentExt.listradio,
-                  });
-                }
+              data.food.push({
+                productId: this.state.currentData.productId,
+                foodName: this.state.currentData.foodName,
+                foodPrice: this.state.currentData.foodPrice,
+                foodImage: this.state.currentData.foodImage,
+                foodCategory: currentExt.foodCategory,
+                foodAmount: currentExt.detailCategory[0].amount,
+                foodNote: currentExt.note,
+                foodListCheckbox: currentExt.listcheckbox,
+                foodListRadio: currentExt.listradio,
               });
             }
           })
-        };
+        }
       } else {
         cart.forEach((data) => {
           if (data.mid === this.state.data.mid) {
@@ -449,6 +583,7 @@ class ProductView extends React.Component {
               foodName: this.state.currentData.foodName,
               foodPrice: this.state.currentData.foodPrice,
               foodImage: this.state.currentData.foodImage,
+              foodCategory: currentExt.foodCategory,
               foodAmount: currentExt.detailCategory[0].amount,
               foodNote: currentExt.note,
               foodListCheckbox: currentExt.listcheckbox,
@@ -469,6 +604,7 @@ class ProductView extends React.Component {
             foodName: this.state.currentData.foodName,
             foodPrice: this.state.currentData.foodPrice,
             foodImage: this.state.currentData.foodImage,
+            foodCategory: currentExt.foodCategory,
             foodAmount: currentExt.detailCategory[0].amount,
             foodNote: currentExt.note,
             foodListCheckbox: currentExt.listcheckbox,
@@ -661,31 +797,43 @@ class ProductView extends React.Component {
   }
 
   render() {
-    let modal;
-    if (this.state.showModal === true) {
-      modal = (
-        <PikaModal
-          isShow={() => this.setModal(true)}
-          onHide={() => this.setModal(false)}
-          datas={this.state.currentData}
-          handleClick={this.handleAddCart}
-          handleData={this.handleCart}
-        />
-      );
-    } else {
-      modal = <></>;
-    }
+    // let modal;
+    // if (this.state.showModal === true) {
+    //   modal = (
+    //     <PikaModal
+    //       isShow={() => this.setModal(true)}
+    //       onHide={() => this.setModal(false)}
+    //       datas={this.state.currentData}
+    //       handleClick={this.handleAddCart}
+    //       handleData={this.handleCart}
+    //     />
+    //   );
+    // } else {
+    //   modal = <></>;
+    // }
 
     let cartButton;
-    let allCart = JSON.parse(localStorage.getItem('cart'))
-    if (allCart.length > 1) {
-      cartButton = (
-        <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
-          <img src={cartIcon} alt={"cart"} />
-        </Link>
-      );
+    if (JSON.parse(localStorage.getItem('cart'))) {
+      let allCart = JSON.parse(localStorage.getItem('cart'))
+      if (allCart.length > 1) {
+        cartButton = (
+          <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
+            <img src={cartIcon} alt={"cart"} />
+          </Link>
+        );
+      } else {
+        cartButton = <></>;
+      }
     } else {
-      cartButton = <></>;
+      if (cart.length > 1) {
+        cartButton = (
+          <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
+            <img src={cartIcon} alt={"cart"} />
+          </Link>
+        );
+      } else {
+        cartButton = <></>;
+      }
     }
 
     if (this.state.categName !== "All Categories") {
@@ -843,7 +991,7 @@ class ProductView extends React.Component {
             </div>
           </div>
         </div>
-        {modal}
+        {/* {modal} */}
         {cartButton}
         {this.menuDetail()}
       </>

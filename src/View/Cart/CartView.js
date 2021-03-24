@@ -17,6 +17,9 @@ import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Loader from 'react-loader'
+import MenuDetail from '../Product/Menu/MenuDetail'
+import { connect } from "react-redux";
+import { EditMenuCart, GetCheckbox, CountCheckbox, GetRadio } from '../../Redux/Actions'
 
 var options = {
   lines: 13,
@@ -36,15 +39,15 @@ var options = {
   hwaccel: false,
 };
 
-export class CartView extends React.Component {
+class CartView extends React.Component {
   state = {
     notable: "",
     showModal: false,
     currentModalTitle: "",
     paymentOption: "Pembayaran di kasir",
     paymentType: "PAY_BY_CASHIER",
-    biz_type: this.props.noTable.table !== ""? this.props.noTable.table > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
-    eat_type: this.props.noTable.table !== ""? this.props.noTable.table > 0 ? "Makan di tempat" : "Bungkus / Takeaway" : "Makan di tempat",
+    biz_type: this.props.noTable.table !== "" ? this.props.noTable.table > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
+    eat_type: this.props.noTable.table !== "" ? this.props.noTable.table > 0 ? "Makan di tempat" : "Bungkus / Takeaway" : "Makan di tempat",
     currentModal: [
       {
         image: "",
@@ -52,11 +55,10 @@ export class CartView extends React.Component {
       },
     ],
     loadButton: true,
+    showMenuDet: false,
+    filteredCart: [],
+    currentData: {}
   };
-
-  componentDidMount() {
-  //  console.log(); 
-  }
 
   handleDetail(data) {
     if (data === "eat-method") {
@@ -104,46 +106,98 @@ export class CartView extends React.Component {
     this.forceUpdate();
   }
 
-  handleDelete(e) {
+  handleDelete(e, ind, mid) {
     let filteredCart;
-    cart.forEach((store) => {
-      let filteredStore = store.food.filter((data) => {
-        if(data.productId === e.productId) {
-          if(data.foodNote !== e.foodNote) {
-            return data
-          }
-        } else {
-          return data
-        }
-      });
-      store.food = filteredStore;
-      if(store.food.length === 0) {
-        filteredCart = cart.filter((filterStore) => {
-          return filterStore.mid !== store.mid;
-        });
-        localStorage.setItem("cart",JSON.stringify(filteredCart))
-        let addedMerchants = []
-        filteredCart.forEach((cart) => {
-          addedMerchants.push(cart.mid)
-          Cookies.set("addedMerchants", addedMerchants)
+    let addedMerchants = []
+    let newAllCart = []
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    allCart.forEach((store) => {
+      if (store.mid === mid) {
+        let filteredStore = store.food.filter((data, index) => {
+          return index !== ind
         })
-        if(addedMerchants.length < 2) {
-          window.history.back()
-          // window.location.href = Cookies.get("lastProduct")
+
+        console.log(filteredStore);
+        if (filteredStore.length === 0) {
+          filteredCart = cart.filter((filterStore) => {
+            return filterStore.mid !== store.mid;
+          });
+          localStorage.setItem("cart", JSON.stringify(filteredCart))
+          filteredCart.forEach((cart) => {
+            addedMerchants.push(cart.mid)
+            Cookies.set("addedMerchants", addedMerchants)
+          })
         } else {
-          window.location.reload()
+          let newFilter = store.food
+          newFilter = []
+          filteredStore.forEach((val) => {
+            console.log(val);
+            newFilter.push(val)
+          })
+          store.food = newFilter
+          newAllCart.push(store)
         }
+      } else {
+        newAllCart.push(store)
       }
     });
+
+    if (newAllCart.length < 2) {
+      // this.props.GetCheckbox([])
+      // this.props.CountCheckbox([])
+      // this.props.GetRadio([])
+      window.history.back()
+      // window.location.href = Cookies.get("lastProduct")
+    } else {
+      localStorage.setItem("cart", JSON.stringify(newAllCart))
+      window.location.reload()
+    }
+
+    // cart.forEach((store) => {
+    //   let filteredStore = store.food.filter((data) => {
+    //     if (data.productId === e.productId) {
+    //       if (data.foodNote !== e.foodNote) {
+    //         return data
+    //       }
+    //     } else {
+    //       return data
+    //     }
+    //   });
+    //   console.log(filteredStore);
+    //   store.food = filteredStore;
+    //   if (store.food.length === 0) {
+    //     filteredCart = cart.filter((filterStore) => {
+    //       return filterStore.mid !== store.mid;
+    //     });
+    //     console.log(filteredCart);
+    //     localStorage.setItem("cart", JSON.stringify(filteredCart))
+    //     let addedMerchants = []
+    //     filteredCart.forEach((cart) => {
+    //       addedMerchants.push(cart.mid)
+    //       Cookies.set("addedMerchants", addedMerchants)
+    //     })
+    //     console.log(addedMerchants);
+    //     if (addedMerchants.length < 2) {
+    //       window.history.back()
+    //       // window.location.href = Cookies.get("lastProduct")
+    //     } else {
+    //       console.log('ntaps bro');
+    //       window.location.reload()
+    //     }
+    //   } else {
+    //     console.log('ntaps mantaapp');
+    //   }
+    // });
     this.forceUpdate();
   }
+
   handleOption = (data) => {
-    if(this.props.noTable.table !== "") {
-      if(data == 1) {
+    if (this.props.noTable.table !== "") {
+      if (data == 1) {
         let newUrl = window.location.search
         let changeTable = newUrl.slice(0, -1)
         changeTable += 0
-        window.location.href = changeTable 
+        window.location.href = changeTable
       } else {
         let value = Cookies.get("lastProduct")
         console.log(value);
@@ -151,26 +205,27 @@ export class CartView extends React.Component {
         let newUrl = window.location.search
         let changeTable = newUrl.slice(0, -1)
         changeTable += getPrevTable
-        window.location.href = changeTable 
+        window.location.href = changeTable
       }
     }
-    if(this.state.currentModalTitle === "Cara makan anda?") {
-      if(data === 0 || this.props.noTable.table > 0) {
-        this.setState({biz_type: "DINE_IN"})
-        this.setState({eat_type: "Makan di tempat"})
+    if (this.state.currentModalTitle === "Cara makan anda?") {
+      if (data === 0 || this.props.noTable.table > 0) {
+        this.setState({ biz_type: "DINE_IN" })
+        this.setState({ eat_type: "Makan di tempat" })
       } else {
-        this.setState({biz_type: "TAKE_AWAY"})
-        this.setState({eat_type: "Bungkus / Takeaway"})
+        this.setState({ biz_type: "TAKE_AWAY" })
+        this.setState({ eat_type: "Bungkus / Takeaway" })
       }
     } else if (this.state.currentModalTitle === "Bayar pakai apa?") {
-      if(data === 0) {
-        this.setState({paymentType: "PAY_BY_CASHIER"})
-        this.setState({paymentOption: "Pembayaran di kasir"})
+      if (data === 0) {
+        this.setState({ paymentType: "PAY_BY_CASHIER" })
+        this.setState({ paymentOption: "Pembayaran di kasir" })
       }
     }
   }
+
   handlePayment = () => {
-    this.setState({loadButton: false})
+    this.setState({ loadButton: false })
     var auth = {
       isLogged: false,
       token: "",
@@ -178,12 +233,12 @@ export class CartView extends React.Component {
       recommendation_status: false,
       email: "",
     };
-    if(Cookies.get("auth") !== undefined) {
+    if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
-    if(auth.isLogged === false) {
-      var lastLink = { value: window.location.href}
-      Cookies.set("lastLink", lastLink,{ expires: 1})
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
       window.location.href = "/login"
     }
     let totalAmount = 0;
@@ -206,7 +261,7 @@ export class CartView extends React.Component {
     merchantIds.forEach((merchant) => {
       var requestData = {
         products: [{
-          product_id :"",
+          product_id: "",
           notes: "",
           qty: 0
         }],
@@ -219,9 +274,9 @@ export class CartView extends React.Component {
       requestData.products.pop()
       cart.forEach((merchant) => {
         let addedMerchants = Cookies.get("addedMerchants")
-        if(addedMerchants.includes(merchant.mid)) {
+        if (addedMerchants.includes(merchant.mid)) {
           merchant.food.forEach((data) => {
-            if(data.productId !== "") {
+            if (data.productId !== "") {
               requestData.products.push({
                 product_id: data.productId,
                 notes: data.foodNote,
@@ -231,7 +286,7 @@ export class CartView extends React.Component {
           })
         }
       })
-      
+
       Axios(address + "/txn/v1/txn-post/", {
         headers: {
           "Content-Type": "application/json",
@@ -244,24 +299,24 @@ export class CartView extends React.Component {
         method: "POST",
         data: requestData,
       })
-      .then((res) => {
-        localStorage.removeItem("cart")
-        alert("Pembelian telah berhasil.")
-        window.location.href = "/status"
-      })
-      .catch((err) => {
-        if(err.response.data !== undefined) {
-          alert(err.response.data.err_message)
-          this.setState({loadButton: true})
-        }
-      });
+        .then((res) => {
+          localStorage.removeItem("cart")
+          alert("Pembelian telah berhasil.")
+          window.location.href = "/status"
+        })
+        .catch((err) => {
+          if (err.response.data !== undefined) {
+            alert(err.response.data.err_message)
+            this.setState({ loadButton: true })
+          }
+        });
     })
   };
 
   newListCheck = (food) => {
     let newlistArr = ''
-    food.foodListCheckbox.forEach((val)=> {
-      val.forEach((val2)=> {
+    food.foodListCheckbox.forEach((val) => {
+      val.forEach((val2) => {
         return newlistArr += `${val2.name},`
       })
     })
@@ -270,12 +325,63 @@ export class CartView extends React.Component {
 
   newListRadio = (food) => {
     let newlistArr = ''
-    food.foodListRadio.forEach((val)=> {
-      val.forEach((val2)=> {
+    food.foodListRadio.forEach((val) => {
+      val.forEach((val2) => {
         return newlistArr += `${val2},`
       })
     })
     return <p>{newlistArr}</p>
+  }
+
+  onEditCart = (ind, mid) => {
+    let filteredStore = []
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    allCart.forEach((store) => {
+      if (store.mid === mid) {
+        filteredStore = store.food.filter((data, index) => {
+          return index === ind
+        })
+      }
+    });
+
+    var objFilteredCart = {
+      productId: filteredStore[0].productId,
+      foodName: filteredStore[0].foodName,
+      foodDesc: "",
+      foodCategory: filteredStore[0].foodCategory,
+      foodPrice: filteredStore[0].foodPrice,
+      foodImage: filteredStore[0].foodImage,
+      foodExt: [
+        {
+          name: "",
+          amount: filteredStore[0].foodAmount,
+        },
+      ],
+    }
+
+    this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart })
+    this.props.EditMenuCart(true)
+    document.body.style.overflowY = 'hidden'
+  }
+
+  setMenuDetail(isShow) {
+    this.setState({ showMenuDet: isShow })
+    document.body.style.overflowY = ''
+  }
+
+  menuDetail = () => {
+    if (this.state.showMenuDet === true) {
+      return (
+        <MenuDetail
+          isShow={this.state.showMenuDet}
+          onHide={() => this.setMenuDetail(false)}
+          datas={this.state.currentData}
+          handleCateg={this.state.allProductsandCategories}
+        // handleClick={this.handleAddCart}
+        // handleData={this.handleCart}
+        />
+      );
+    }
   }
 
   render() {
@@ -286,12 +392,12 @@ export class CartView extends React.Component {
       recommendation_status: false,
       email: "",
     };
-    if(Cookies.get("auth") !== undefined) {
+    if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
-    if(auth.isLogged === false) {
-      var lastLink = { value: window.location.href}
-      Cookies.set("lastLink", lastLink,{ expires: 1})
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
       window.location.href = "/login"
     }
     let modal;
@@ -304,7 +410,7 @@ export class CartView extends React.Component {
         </Link>
       );
     } else {
-      if(this.state.loadButton) {
+      if (this.state.loadButton) {
         paymentButton = (
           <button className={"iconButton"} onClick={() => this.handlePayment()}>
             <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
@@ -313,7 +419,7 @@ export class CartView extends React.Component {
         );
       } else {
         paymentButton = (
-          <Loader loaded={this.state.loadButton} options={options} className="spinner"/>
+          <Loader loaded={this.state.loadButton} options={options} className="spinner" />
         )
       }
     }
@@ -324,8 +430,8 @@ export class CartView extends React.Component {
           onHide={() => this.setModal(false)}
           title={this.state.currentModalTitle}
           detailOptions={this.state.currentModal}
-          handleData = {this.handleOption}
-          notable = {this.props.noTable}
+          handleData={this.handleOption}
+          notable={this.props.noTable}
         />
       );
     } else {
@@ -347,71 +453,72 @@ export class CartView extends React.Component {
 
     let contentView = storeList.map((store) => {
       let itemListView = data.map((cartData) => {
-        if(cartData.mid === store.mid) {
-          return store.food.map((food) => {
+        if (cartData.mid === store.mid) {
+          return store.food.map((food, index) => {
             return (
               <Row>
-              <Col xs={0} md={3} />
-              <Col xs={3} md={1}>
-                <img
-                  src={food.foodImage}
-                  alt={"food"}
-                  className={"cartFoodImage"}
-                />
-              </Col>
-              <Col>
-                <Row>
-                  <Col>
-                    <p className={"cartContentFood"}>{food.foodName}</p>
-                    <p>List Check: {this.newListCheck(food)}</p>
-                    <p>List Option: {this.newListRadio(food)}</p>
-                    <p className={"cartContentPrice"}>Catatan:</p>
-                    <p className={"cartContentPrice"}>{food.foodNote}</p>
-                    <p className={"cartContentPrice"}>
-                      {Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      }).format(food.foodPrice)}
-                    </p>
-                  </Col>
-                </Row>
-              </Col>
-              <Col>
-                <Row>
-                  <Col>
-                    <button
-                      className={"iconButton"}
-                      onClick={() => this.handleDelete(food)}
-                    >
-                      <img src={removeIcon} alt={"remove icon"} />
-                    </button>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <ButtonGroup className={"cartModalButtonGroup"}>
-                      <Button
-                        onClick={() => this.handleDecrease(food)}
-                        variant="cartModalMiniButton"
+                <Col xs={0} md={3} />
+                <Col xs={3} md={1}>
+                  <img
+                    src={food.foodImage}
+                    alt={"food"}
+                    className={"cartFoodImage"}
+                  />
+                </Col>
+                <Col>
+                  <Row>
+                    <Col>
+                      <p className={"cartContentFood"}>{food.foodName}</p>
+                      <p>List Check: {this.newListCheck(food)}</p>
+                      <p>List Option: {this.newListRadio(food)}</p>
+                      <p className={"cartContentPrice"}>Catatan:</p>
+                      <p className={"cartContentPrice"}>{food.foodNote}</p>
+                      <p className={"cartContentPrice"}>
+                        {Intl.NumberFormat("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        }).format(food.foodPrice)}
+                      </p>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Row>
+                    <Col>
+                      <button
+                        className={"iconButton"}
+                        onClick={() => this.handleDelete(food, index, store.mid)}
                       >
-                        -
+                        <img src={removeIcon} alt={"remove icon"} />
+                      </button>
+                      <button onClick={() => this.onEditCart(index, store.mid)}>EDIT</button>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <ButtonGroup className={"cartModalButtonGroup"}>
+                        <Button
+                          onClick={() => this.handleDecrease(food)}
+                          variant="cartModalMiniButton"
+                        >
+                          -
                       </Button>
-                      <Form.Control
-                        value={food.foodAmount}
-                        className="cartModalField"
-                        disabled
-                      ></Form.Control>
-                      <Button
-                        onClick={() => this.handleIncrease(food)}
-                        variant="cartModalMiniButton"
-                      >
-                        +
+                        <Form.Control
+                          value={food.foodAmount}
+                          className="cartModalField"
+                          disabled
+                        ></Form.Control>
+                        <Button
+                          onClick={() => this.handleIncrease(food)}
+                          variant="cartModalMiniButton"
+                        >
+                          +
                       </Button>
-                    </ButtonGroup>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
+                      </ButtonGroup>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
             )
           })
         }
@@ -457,12 +564,12 @@ export class CartView extends React.Component {
 
     let paymentImage;
     let eatImage;
-    if(this.state.biz_type === "DINE_IN") {
+    if (this.state.biz_type === "DINE_IN") {
       eatImage = dineinIcon;
     } else if (this.state.biz_type === "TAKE_AWAY") {
       eatImage = takeawayIcon;
     }
-    if(this.state.paymentType === "PAY_BY_CASHIER") {
+    if (this.state.paymentType === "PAY_BY_CASHIER") {
       paymentImage = cashierIcon
     }
     return (
@@ -470,15 +577,15 @@ export class CartView extends React.Component {
         <Row>
           <Col xs={0} md={3} />
           <Col>
-          <Row>
-            <Col><p className={"cartTitle"}>Pilih cara makan anda</p></Col>
-          </Row>
-          <Row>
-            <Col xs ={1} md={1}>
-              <img src={eatImage} class="cartModalImage" alt="icon" />
-            </Col>
-            <Col>{this.state.eat_type}</Col>
-          </Row>
+            <Row>
+              <Col><p className={"cartTitle"}>Pilih cara makan anda</p></Col>
+            </Row>
+            <Row>
+              <Col xs={1} md={1}>
+                <img src={eatImage} class="cartModalImage" alt="icon" />
+              </Col>
+              <Col>{this.state.eat_type}</Col>
+            </Row>
           </Col>
           <Col xs={2} md={3}>
             <button className={"iconButton"}>
@@ -499,7 +606,7 @@ export class CartView extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Col xs ={1} md={1}>
+              <Col xs={1} md={1}>
                 <img src={paymentImage} class="cartModalImage" alt="icon" />
               </Col>
               <Col>
@@ -588,7 +695,16 @@ export class CartView extends React.Component {
           </Col>
         </Row>
         {modal}
+        {this.menuDetail()}
       </>
     );
   }
 }
+
+const Mapstatetoprops = (state) => {
+  return {
+    AllRedu: state.AllRedu
+  }
+}
+
+export default connect(Mapstatetoprops, { EditMenuCart, GetCheckbox, CountCheckbox, GetRadio })(CartView)

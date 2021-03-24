@@ -7,8 +7,8 @@ import { connect } from 'react-redux'
 import { useDispatch, useSelector } from 'react-redux'
 
 const checkboxData = [
-    { additionname: 'topping', listaddition: [{ name: 'coklat', price: 5000 }, { name: 'keju', price: 6000 }, { name: 'pisang', price: 7000 }] },
-    { additionname: 'boba', listaddition: [{ name: 'rainbow', price: 2000 }, { name: 'ball', price: 3000 }, { name: 'jelly', price: 4000 },] },
+    { additionname: 'topping', maxchoice: 3, listaddition: [{ name: 'coklat', price: 5000 }, { name: 'keju', price: 6000 }, { name: 'pisang', price: 7000 }, { name: 'wijen', price: 8000 }] },
+    { additionname: 'boba', maxchoice: 2, listaddition: [{ name: 'rainbow', price: 1000 }, { name: 'jelly', price: 2000 }, { name: 'pudding', price: 3000 }, { name: 'pearl', price: 4000 }] },
 ]
 
 const radioData = [
@@ -27,6 +27,7 @@ const MenuSelection = (props) => {
     ])
     const [note, setnote] = useState('')
     const [checkboxVal, setcheckboxVal] = useState([[], []])
+
     const [radioVal, setradioVal] = useState([[], []])
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
@@ -61,7 +62,7 @@ const MenuSelection = (props) => {
                             listname.listaddition.map((listadd, indlistadd) => {
                                 return (
                                     <div key={indlistadd} className='box-section'>
-                                        <input disabled={AllRedu.validQTY === 0} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price)} />
+                                        <input disabled={AllRedu.validQTY === 0} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`${listname.additionname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `${listname.additionname}`, listname.maxchoice)} />
                                         <label htmlFor={listadd.name}>
                                             <div className='checkBox-side'>
                                                 <div className='check-box' />
@@ -113,28 +114,33 @@ const MenuSelection = (props) => {
         })
     }
 
-    const onCheckboxChange = (e, indexlistname, listprice) => {
-        let checkboxArr = [...checkboxVal]
-        if (e.target.checked) {
-            checkboxArr[indexlistname].push({ name: e.target.value, price: listprice })
-            setcheckboxVal(checkboxArr)
-            dispatch({ type: 'CHECKBOXES', payload: checkboxArr })
+    const onCheckboxChange = (e, indexlistname, listprice, name, max) => {
+        var checkedChecks = document.querySelectorAll(`.${name}:checked`)
+        if (checkedChecks.length > max) {
+            e.target.checked = false
         } else {
-            checkboxArr[indexlistname] = checkboxArr[indexlistname].filter(val => val.name !== e.target.value)
-            console.log(checkboxArr);
-            setcheckboxVal(checkboxArr)
-            let sizeArr = 0
-            checkboxArr.forEach((firstVal) => {
-                firstVal.forEach((nestedVal) => {
-                    if (nestedVal.name) {
-                        sizeArr += 1
-                    }
-                })
-            })
-            if (sizeArr > 0) {
+            let checkboxArr = [...checkboxVal]
+            if (e.target.checked) {
+                checkboxArr[indexlistname].push({ name: e.target.value, price: listprice })
+                setcheckboxVal(checkboxArr)
                 dispatch({ type: 'CHECKBOXES', payload: checkboxArr })
             } else {
-                dispatch({ type: 'CHECKBOXES', payload: [] })
+                checkboxArr[indexlistname] = checkboxArr[indexlistname].filter(val => val.name !== e.target.value)
+                console.log(checkboxArr);
+                setcheckboxVal(checkboxArr)
+                let sizeArr = 0
+                checkboxArr.forEach((firstVal) => {
+                    firstVal.forEach((nestedVal) => {
+                        if (nestedVal.name) {
+                            sizeArr += 1
+                        }
+                    })
+                })
+                if (sizeArr > 0) {
+                    dispatch({ type: 'CHECKBOXES', payload: checkboxArr })
+                } else {
+                    dispatch({ type: 'CHECKBOXES', payload: [] })
+                }
             }
         }
     }
@@ -200,6 +206,7 @@ const MenuSelection = (props) => {
     var thedata = {
         detailCategory: detailCategory,
         note: note,
+        foodCategory: AllRedu.foodCateg,
         listcheckbox: checkboxVal,
         listradio: radioVal
     }

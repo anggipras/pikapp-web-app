@@ -23,3 +23,31 @@ export const OpenSelect = (bool) => {
         payload: bool
     }
 }
+
+export const GetCheckbox = (data) => {
+    return {
+        type: 'CHECKBOXES',
+        payload: data
+    }
+}
+
+export const CountCheckbox = (data) => {
+    return {
+        type: 'COUNTCHECKBOX',
+        payload: data
+    }
+}
+
+export const GetRadio = (data) => {
+    return {
+        type: 'RADIOBUTTON',
+        payload: data
+    }
+}
+
+export const EditMenuCart = (bool) => {
+    return {
+        type: 'EDITCART',
+        payload: bool
+    }
+}

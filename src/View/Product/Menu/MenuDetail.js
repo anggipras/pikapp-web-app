@@ -14,6 +14,7 @@ const MenuDetail = (props) => {
     const AllRedu = useSelector(state => state.AllRedu)
     const [menuCateg, setmenuCateg] = useState(props.handleCateg)
     const [menuSelect, setmenuSelect] = useState(false)
+    const [menuCondition, setmenuCondition] = useState(false)
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
 
@@ -33,7 +34,6 @@ const MenuDetail = (props) => {
             props.handleClick()
             dispatch({ type: 'DEFAULTSTATE' })
             props.onHide()
-            // alert('in the development stage')
         }
     }
 
@@ -49,10 +49,24 @@ const MenuDetail = (props) => {
         return totalPrice
     }
 
-    var findCateg = menuCateg.filter((val) => {
-        return props.datas.category === parseInt(val.category_id)
-    })
-    findCateg = findCateg[0].category_name.toLowerCase()
+    const openMenuSelect = () => {
+        setmenuSelect(true)
+        dispatch({ type: 'FOODCATEG', payload: findCateg })
+    }
+
+    let findCateg
+    if (AllRedu.openMenuCart) {
+        findCateg = props.datas.foodCategory
+        if(!menuCondition) {
+            setmenuSelect(true)
+            setmenuCondition(true)
+        }
+    } else {
+        findCateg = menuCateg.filter((val) => {
+            return props.datas.category === parseInt(val.category_id)
+        })
+        findCateg = findCateg[0].category_name.toLowerCase()
+    }
 
     return (
         <div>
@@ -131,7 +145,7 @@ const MenuDetail = (props) => {
                                                     </h2>
                                                 </div>
                                                 :
-                                                <div onClick={() => setmenuSelect(true)} className='openMenuSelection'>
+                                                <div onClick={openMenuSelect} className='openMenuSelection'>
                                                     <h2 className='add-words'>
                                                         PESAN
                                                     </h2>
@@ -212,7 +226,7 @@ const MenuDetail = (props) => {
                                                 </h2>
                                             </div>
                                             :
-                                            <div onClick={() => setmenuSelect(true)} className='mob-openMenuSelection' style={{ backgroundColor: '#4bb7ac' }}>
+                                            <div onClick={openMenuSelect} className='mob-openMenuSelection' style={{ backgroundColor: '#4bb7ac' }}>
                                                 <h2 className='mob-add-words'>
                                                     PESAN
                                                 </h2>

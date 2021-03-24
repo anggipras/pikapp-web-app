@@ -1,6 +1,6 @@
 import React from "react";
 import DetailNavigation from "./DetailNavigation";
-import { CartView } from "../View/Cart/CartView";
+import CartView from "../View/Cart/CartView";
 import {
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
