@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import '../../../Asset/scss/MenuDetail.scss'
-import prodPhoto from '../../../Asset/Illustration/samplefood.jpg'
-import closeLogo from '../../../Asset/Icon/close.png'
-import backLogo from '../../../Asset/Icon/arrow-left.png'
-import StarIcon from '../../../Asset/Icon/star.png'
+import '../../Asset/scss/MenuDetail.scss'
+import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
+import closeLogo from '../../Asset/Icon/close.png'
+import backLogo from '../../Asset/Icon/arrow-left.png'
+import StarIcon from '../../Asset/Icon/star.png'
 import { useMediaQuery } from 'react-responsive'
 import { Scrollbars } from 'react-custom-scrollbars'
 import MenuSelection from './MenuSelection'
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 const MenuDetail = (props) => {
     const dispatch = useDispatch()
     const AllRedu = useSelector(state => state.AllRedu)
-    const [menuCateg, setmenuCateg] = useState(props.handleCateg)
+    const menuCateg = props.handleCateg
     const [menuSelect, setmenuSelect] = useState(false)
     const [menuCondition, setmenuCondition] = useState(false)
 
@@ -24,9 +24,16 @@ const MenuDetail = (props) => {
         props.onHide()
     }
 
-    const backModal = () => {
-        setmenuSelect(false)
-        dispatch({ type: 'DEFAULTSTATE' })
+    const backModal = (e) => {
+        if (AllRedu.openMenuCart) {
+            setmenuSelect(false)
+            e.stopPropagation()
+            dispatch({ type: 'DEFAULTSTATE' })
+            props.onHide()
+        } else {
+            setmenuSelect(false)
+            dispatch({ type: 'DEFAULTSTATE' })
+        }
     }
 
     const addtoCart = () => {
@@ -54,10 +61,12 @@ const MenuDetail = (props) => {
         dispatch({ type: 'FOODCATEG', payload: findCateg })
     }
 
+    console.log(AllRedu.mandatCheck, AllRedu.mandatCheckCond);
+
     let findCateg
     if (AllRedu.openMenuCart) {
         findCateg = props.datas.foodCategory
-        if(!menuCondition) {
+        if (!menuCondition) {
             setmenuSelect(true)
             setmenuCondition(true)
         }
@@ -80,23 +89,23 @@ const MenuDetail = (props) => {
                             {
                                 menuSelect ?
                                     <span className='iconBack' onClick={backModal}>
-                                        <img src={backLogo} className='backLogo' />
+                                        <img src={backLogo} className='backLogo' alt='' />
                                     </span>
                                     :
                                     <span className='iconClose' onClick={closeModal}>
-                                        <img src={closeLogo} className='closeLogo' />
+                                        <img src={closeLogo} className='closeLogo' alt='' />
                                     </span>
                             }
 
                             <div className='menuDetail-layout'>
                                 <div className='menuContain-left'>
                                     <div className='menuBanner'>
-                                        <img className='menuimg' src={prodPhoto} />
+                                        <img className='menuimg' src={prodPhoto} alt='' />
                                     </div>
 
                                     <div className='menu-detail'>
                                         <div className='menu-star'>
-                                            <img className='menu-star-img' src={StarIcon} />
+                                            <img className='menu-star-img' src={StarIcon} alt='' />
                                             <h6 className='menu-star-rating'>5.0</h6>
                                         </div>
 
@@ -163,15 +172,15 @@ const MenuDetail = (props) => {
                     >
                         <div className='mob-modal-content-menudetail' onClick={e => e.stopPropagation()} style={{ height: menuSelect ? '88vh' : 'auto' }}>
                             <div className='mob-menuBanner'>
-                                <img className='mob-menuimg' src={prodPhoto} />
+                                <img className='mob-menuimg' src={prodPhoto} alt='' />
                                 {
                                     menuSelect ?
                                         <span className='mob-iconClose' onClick={backModal}>
-                                            <img src={closeLogo} className='mob-closeLogo' />
+                                            <img src={closeLogo} className='mob-closeLogo' alt='' />
                                         </span>
                                         :
                                         <span className='mob-iconClose' onClick={closeModal}>
-                                            <img src={closeLogo} className='mob-closeLogo' />
+                                            <img src={closeLogo} className='mob-closeLogo' alt='' />
                                         </span>
                                 }
                             </div>
@@ -180,7 +189,7 @@ const MenuDetail = (props) => {
                                 <div className='mob-inside-menuContain' style={{ boxShadow: menuSelect ? "0px 5px 4px rgba(0, 0, 0, 0.1)" : "none" }}>
                                     <div className='mob-menu-detail'>
                                         <div className='mob-menu-star'>
-                                            <img className='mob-menu-star-img' src={StarIcon} />
+                                            <img className='mob-menu-star-img' src={StarIcon} alt='' />
                                             <h6 className='mob-menu-star-rating'>5.0</h6>
                                         </div>
 
@@ -215,7 +224,19 @@ const MenuDetail = (props) => {
 
                                     {
                                         menuSelect ?
-                                            <div className='mob-openMenuSelection' style={{ backgroundColor: AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ? '#4bb7ac' : '#aaaaaa' }} onClick={addtoCart}>
+                                            <div className='mob-openMenuSelection' style={{
+                                                backgroundColor:
+                                                    AllRedu.mandatCheck && AllRedu.mandatCheckCond ?
+                                                        '#4bb7ac'
+                                                        :
+                                                        !AllRedu.mandatCheck && !AllRedu.mandatCheckCond ?
+                                                            '#4bb7ac'
+                                                            :
+                                                            !AllRedu.mandatCheck && AllRedu.mandatCheckCond ?
+                                                                '#aaaaaa'
+                                                                :
+                                                                '#aaaaaa'
+                                            }} onClick={addtoCart}>
                                                 <h2 className='mob-add-words'>
                                                     {
                                                         AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?

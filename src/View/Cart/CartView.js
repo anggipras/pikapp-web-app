@@ -17,9 +17,9 @@ import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Loader from 'react-loader'
-import MenuDetail from '../Product/Menu/MenuDetail'
+import MenuDetail from '../../Component/Menu/MenuDetail'
 import { connect } from "react-redux";
-import { EditMenuCart, GetCheckbox, CountCheckbox, GetRadio } from '../../Redux/Actions'
+import { EditMenuCart } from '../../Redux/Actions'
 
 var options = {
   lines: 13,
@@ -37,6 +37,19 @@ var options = {
   fps: 20,
   shadow: false,
   hwaccel: false,
+};
+
+var currentExt = {
+  detailCategory: [
+    {
+      name: "",
+      amount: 0,
+    },
+  ],
+  note: "",
+  foodCategory: '',
+  listcheckbox: [],
+  listradio: []
 };
 
 class CartView extends React.Component {
@@ -57,7 +70,9 @@ class CartView extends React.Component {
     loadButton: true,
     showMenuDet: false,
     filteredCart: [],
-    currentData: {}
+    currentData: {},
+    themid: '',
+    indexEdit: 0,
   };
 
   handleDetail(data) {
@@ -117,7 +132,6 @@ class CartView extends React.Component {
           return index !== ind
         })
 
-        console.log(filteredStore);
         if (filteredStore.length === 0) {
           filteredCart = cart.filter((filterStore) => {
             return filterStore.mid !== store.mid;
@@ -142,10 +156,10 @@ class CartView extends React.Component {
       }
     });
 
+
     if (newAllCart.length < 2) {
-      // this.props.GetCheckbox([])
-      // this.props.CountCheckbox([])
-      // this.props.GetRadio([])
+      cart.splice(1)
+      localStorage.setItem("cart", JSON.stringify(newAllCart))
       window.history.back()
       // window.location.href = Cookies.get("lastProduct")
     } else {
@@ -327,7 +341,7 @@ class CartView extends React.Component {
     let newlistArr = ''
     food.foodListRadio.forEach((val) => {
       val.forEach((val2) => {
-        return newlistArr += `${val2},`
+        return newlistArr += `${val2.name},`
       })
     })
     return <p>{newlistArr}</p>
@@ -351,6 +365,8 @@ class CartView extends React.Component {
       foodCategory: filteredStore[0].foodCategory,
       foodPrice: filteredStore[0].foodPrice,
       foodImage: filteredStore[0].foodImage,
+      foodListCheckbox: filteredStore[0].foodListCheckbox,
+      foodListRadio: filteredStore[0].foodListRadio,
       foodExt: [
         {
           name: "",
@@ -359,7 +375,7 @@ class CartView extends React.Component {
       ],
     }
 
-    this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart })
+    this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart, indexEdit: ind, themid: mid })
     this.props.EditMenuCart(true)
     document.body.style.overflowY = 'hidden'
   }
@@ -376,12 +392,38 @@ class CartView extends React.Component {
           isShow={this.state.showMenuDet}
           onHide={() => this.setMenuDetail(false)}
           datas={this.state.currentData}
-          handleCateg={this.state.allProductsandCategories}
-        // handleClick={this.handleAddCart}
-        // handleData={this.handleCart}
+          handleClick={this.handleSaveCart}
+          handleData={this.handleCart}
         />
       );
     }
+  }
+
+  handleCart = (data) => {
+    currentExt = data
+  }
+
+  handleSaveCart = () => {
+    let filteredStore = []
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    allCart.forEach((store) => {
+      if (store.mid === this.state.themid) {
+        filteredStore = store.food.filter((data, index) => {
+          return index === this.state.indexEdit
+        })
+
+        filteredStore[0].foodAmount = currentExt.detailCategory[0].amount
+        filteredStore[0].foodListCheckbox = currentExt.listcheckbox
+        filteredStore[0].foodListRadio = currentExt.listradio
+        filteredStore[0].foodNote = currentExt.note
+
+        console.log(filteredStore[0]);
+
+        store.food[this.state.indexEdit] = filteredStore[0]
+      }
+    });
+    localStorage.setItem('cart', JSON.stringify(allCart))
+    window.location.reload()
   }
 
   render() {
@@ -707,4 +749,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { EditMenuCart, GetCheckbox, CountCheckbox, GetRadio })(CartView)
+export default connect(Mapstatetoprops, { EditMenuCart })(CartView)

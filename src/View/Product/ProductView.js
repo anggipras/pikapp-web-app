@@ -1,15 +1,15 @@
 import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
-import PikaModal from "../../Component/Modal/PikaModal";
-import MenuDetail from "./Menu/MenuDetail";
+// import PikaModal from "../../Component/Modal/PikaModal";
+import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
 import { cart } from "../../index.js";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
+// import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg2 from '../../Asset/Illustration/storeimg.jpg'
@@ -207,8 +207,6 @@ class ProductView extends React.Component {
           var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
           var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
           this.brightenColor(merchantColor, 70, productColor, 60)
-          console.log(stateData);
-          console.log(productCateg);
           this.setState({ data: stateData, allProductsandCategories: productCateg, idCateg, productPage: pageProduct });
           document.addEventListener('scroll', this.loadMoreMerchant)
         });
@@ -223,8 +221,8 @@ class ProductView extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.testColor == true) {
-      if (this.state.testingchange == false) {
+    if (this.state.testColor === true) {
+      if (this.state.testingchange === false) {
         prominent(Storeimg, { amount: 3 }).then((color) => {
           var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
           var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
@@ -243,7 +241,7 @@ class ProductView extends React.Component {
       this.state.idCateg.forEach((val, index) => {
         if (index === this.state.choosenIndCateg) {
           if (val > 1) {
-            if (this.state.boolpage == true) {
+            if (this.state.boolpage === true) {
               this.loadProducts(index)
             } else {
               document.addEventListener('scroll', this.loadMoreMerchant)
@@ -422,7 +420,7 @@ class ProductView extends React.Component {
       //loop list radio from current menu selection
       currentExt.listradio.forEach((currentfirstVal) => {
         currentfirstVal.forEach((currentnestedVal) => {
-          if (currentnestedVal) {
+          if (currentnestedVal.name) {
             sizecurrentArr += 1
           }
         })
@@ -443,7 +441,7 @@ class ProductView extends React.Component {
           //loop list radio from cart
           menuProd.foodListRadio.forEach(firstVal => {
             firstVal.forEach(nestedVal => {
-              if (nestedVal) {
+              if (nestedVal.name) {
                 sizecartArr += 1
               }
             })
@@ -473,7 +471,7 @@ class ProductView extends React.Component {
                 //loop radio from current advance selection to be match with added cart
                 currentExt.listradio.forEach((currentfirstVal) => {
                   currentfirstVal.forEach((currentnestedVal) => {
-                    if (nestedVal === currentnestedVal) {
+                    if (nestedVal.name === currentnestedVal.name) {
                       countAllSelection += 1
                     }
                   })
@@ -500,9 +498,9 @@ class ProductView extends React.Component {
         }
       })
 
-      console.log(sizecartArr);
-      console.log(sizecurrentArr);
-      console.log(countAllSelection);
+      // console.log(sizecartArr);
+      // console.log(sizecurrentArr);
+      // console.log(countAllSelection);
     }
 
     var isFound = false
@@ -558,7 +556,7 @@ class ProductView extends React.Component {
             })
           };
         } else {
-          console.log('noduplicate');
+          console.log('noduplicate choice');
           cart.forEach((data) => {
             if (data.mid === this.state.data.mid) {
               data.food.push({
@@ -576,6 +574,7 @@ class ProductView extends React.Component {
           })
         }
       } else {
+        console.log('noduplicate product');
         cart.forEach((data) => {
           if (data.mid === this.state.data.mid) {
             data.food.push({
@@ -732,7 +731,7 @@ class ProductView extends React.Component {
                     <div className='product-img'>
                       {
                         product.foodImage ?
-                          <img src={product.foodImage} style={{ objectFit: 'cover' }} width='100%' height='100%' />
+                          <img src={product.foodImage} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                           :
                           <Skeleton height={120} style={{ paddingTop: 50 }} />
                       }
@@ -741,7 +740,7 @@ class ProductView extends React.Component {
                     <div className='product-detail-mob'>
                       <div className='product-detail'>
                         <div className='product-star'>
-                          <img className='product-star-img' src={StarIcon} />
+                          <img className='product-star-img' src={StarIcon} alt='' />
                           <h6 className='product-star-rating'>5.0</h6>
                         </div>
 
@@ -818,7 +817,7 @@ class ProductView extends React.Component {
       if (allCart.length > 1) {
         cartButton = (
           <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
-            <img src={cartIcon} alt={"cart"} />
+            <img src={cartIcon} alt={"cart"} alt='' />
           </Link>
         );
       } else {
@@ -837,7 +836,7 @@ class ProductView extends React.Component {
     }
 
     if (this.state.categName !== "All Categories") {
-      if (this.props.AllRedu.openSelect == false) {
+      if (this.props.AllRedu.openSelect === false) {
         //scroll to selected menu
         document.addEventListener('scroll', this.loadMoreMerchant)
         console.log(this.state.allProductsandCategories[0].category_name);
@@ -851,17 +850,17 @@ class ProductView extends React.Component {
       <>
         <div className='storeBanner' onClick={() => this.changeBackground()}>
           {//only for testing, would be remove
-            this.state.testingchange == false ?
-              <img src={Storeimg} style={{ objectFit: 'cover' }} width='100%' height='100%' />
+            this.state.testingchange === false ?
+              <img src={Storeimg} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
               :
-              <img src={Storeimg2} style={{ objectFit: 'cover' }} width='100%' height='100%' />
+              <img src={Storeimg2} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
           }
           <div className='iconBanner'>
             <Link to={"/profile"}>
               <div className='profileIcon-sec'>
                 <div className='profileIcon'>
                   <span className='reactProfIcons'>
-                    <img className='profileicon-img' src={ProfileIcon} />
+                    <img className='profileicon-img' src={ProfileIcon} alt='' />
                   </span>
                 </div>
               </div>
@@ -871,7 +870,7 @@ class ProductView extends React.Component {
               <div className='notifIcon-sec'>
                 <div className='notifIcon'>
                   <span className='reactNotifIcons'>
-                    <img className='notificon-img' src={NotifIcon} />
+                    <img className='notificon-img' src={NotifIcon} alt='' />
                   </span>
                 </div>
               </div>
@@ -885,7 +884,7 @@ class ProductView extends React.Component {
                 <div className='inside-topMerchantInfo'>
                   <div className='merchant-title'>
                     <div className='merchant-logo'>
-                      <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' />
+                      <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                     </div>
 
                     <div className='merchant-name'>
@@ -899,7 +898,7 @@ class ProductView extends React.Component {
                           {
                             this.state.data.rating ?
                               <>
-                                <img className='star-img' src={StarIcon} />
+                                <img className='star-img' src={StarIcon} alt='' />
                                 <div className='merchant-star'>{this.state.data.rating}</div>
                               </>
                               :
@@ -913,7 +912,7 @@ class ProductView extends React.Component {
                   <div className='merchant-call-sec' onClick={() => this.handlePhone(this.state.data.phone)}>
                     <div className='merchant-call'>
                       <span className='merchantCall-icon'>
-                        <img className='merchantCall-img' src={PhoneIcon} />
+                        <img className='merchantCall-img' src={PhoneIcon} alt='' />
                       </span>
                     </div>
                   </div>
@@ -923,7 +922,7 @@ class ProductView extends React.Component {
                 <div className='inside-bottomMerchantInfo'>
                   <div className='merchantdetail-section'>
                     <div className='icon-based'>
-                      <img className='openhouricon' src={OpenHourIcon} />
+                      <img className='openhouricon' src={OpenHourIcon} alt='' />
                     </div>
 
                     <div className='detail-info'>
@@ -933,7 +932,7 @@ class ProductView extends React.Component {
                   </div>
                   <div className='merchantdetail-section'>
                     <div className='icon-based'>
-                      <img className='coinicon' src={CoinIcon} />
+                      <img className='coinicon' src={CoinIcon} alt='' />
                     </div>
 
                     <div className='detail-info'>
@@ -943,7 +942,7 @@ class ProductView extends React.Component {
                   </div>
                   <div className='merchantdetail-section'>
                     <div className='icon-based'>
-                      <img className='locationicon' src={LocationIcon} />
+                      <img className='locationicon' src={LocationIcon} alt='' />
                     </div>
 
                     <div className='detail-info'>
@@ -960,7 +959,7 @@ class ProductView extends React.Component {
                   <h2 className='categoryName'>{this.state.categName}</h2>
 
                   <div className='arrow-based' onClick={() => this.changeMenu()} >
-                    <img className='arrowicon' src={ArrowIcon} />
+                    <img className='arrowicon' src={ArrowIcon} alt='' />
                   </div>
                 </div>
 
@@ -987,7 +986,7 @@ class ProductView extends React.Component {
 
             <div className='pikapp-info'>
               <h3 className='pikappInfo'>Digital Menu By</h3>
-              <img className='Logopikapp' src={Logopikapp} />
+              <img className='Logopikapp' src={Logopikapp} alt='' />
             </div>
           </div>
         </div>
