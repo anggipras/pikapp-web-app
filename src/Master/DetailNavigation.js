@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
-import Cookies from "js-cookie"
+// import { Link } from "react-router-dom";
+// import Cookies from "js-cookie"
 
 export default class DetailNavigation extends React.Component {
   goBack = () => {

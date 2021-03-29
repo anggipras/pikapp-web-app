@@ -180,7 +180,7 @@ class StoreView extends React.Component {
 
   componentDidUpdate() {
     if(this.state.idCol > 1) {
-      if(this.state.boolpage == true) {
+      if(this.state.boolpage === true) {
         const value = queryString.parse(window.location.search);
         var longitude = "";
         var latitude = "";

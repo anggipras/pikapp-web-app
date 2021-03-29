@@ -1,5 +1,5 @@
 @font-face {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: "SF-Compact-Rounded";
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
@@ -409,6 +409,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 28px;
+    cursor: pointer;
   }
 
   .product-merchant:nth-child(3n + 2) {
