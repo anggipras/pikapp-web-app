@@ -141,7 +141,7 @@ const MenuDetail = (props) => {
                                 <div className='menuContain-right'>
                                     {
                                         menuSelect ?
-                                            <Scrollbars style={{ height: "80%" }}>
+                                            <Scrollbars style={{ height: "calc(100% - 133px)" }}>
                                                 <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} />
                                             </Scrollbars>
                                             :
