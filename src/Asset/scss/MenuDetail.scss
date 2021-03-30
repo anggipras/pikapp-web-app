@@ -32,7 +32,7 @@
     width: 80vw; /* Width in proportion to its parent container*/
     max-width: 968px; /* Max width where it stops expanding */
     height: 90vh; /* Height in proportion to its parent container*/
-    // max-height: 655px; /* Max Height where it stops expanding */
+    max-height: 655px; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */
     margin-top: 5vh;
     border: none;
@@ -90,7 +90,7 @@
     width: 47%;
     height: 100%;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-direction: column;
     padding: 61px 25px 52px 39px;
     box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.05);
