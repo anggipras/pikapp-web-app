@@ -29,10 +29,10 @@
 .modal-content-menudetail {
     background-color: white;
     position: relative;
-    max-width: 968px; /* Max width where it stops expanding */
     width: 80vw; /* Width in proportion to its parent container*/
+    max-width: 968px; /* Max width where it stops expanding */
     height: 90vh; /* Height in proportion to its parent container*/
-    max-height: 655px; /* Max Height where it stops expanding */
+    // max-height: 655px; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */
     margin-top: 5vh;
     border: none;
@@ -78,14 +78,15 @@
 
 .menuDetail-layout {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: flex;
     position: relative;
     margin: 0;
     padding: 0;
 }
 
-.menuContain-left { //menu image and detail section
+.menuContain-left {
+    //menu image and detail section
     width: 47%;
     height: 100%;
     display: flex;
@@ -180,12 +181,15 @@
 
 .menuContain-right {
     width: 53%;
+    height: 100%;
     margin: 0;
     padding: 0;
 }
 
-.menuDesc { //menu description section
-    height: 80%;
+.menuDesc {
+    //menu description section
+    position: relative;
+    height: calc(100% - 133px);
     padding: 48px 40px 0px 35px;
 }
 
@@ -213,7 +217,12 @@
     margin-top: 8px;
 }
 
-.menuButton { //menu button bottom section
+.menuButton {
+    //menu button bottom section
+    // position: sticky;
+    // bottom: 0;
+    // right: 0;
+    height: 133px;
     padding: 17px 23px 19px 18px;
     box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.1);
 }
