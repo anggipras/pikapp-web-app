@@ -37,10 +37,24 @@ const MenuDetail = (props) => {
     }
 
     const addtoCart = () => {
-        if (AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY) {
+        if (AllRedu.mandatCheck && AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond) {
             props.handleClick()
             dispatch({ type: 'DEFAULTSTATE' })
             props.onHide()
+        } else if (!AllRedu.mandatCheck && !AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond) {
+            props.handleClick()
+            dispatch({ type: 'DEFAULTSTATE' })
+            props.onHide()
+        } else if (AllRedu.mandatCheck && AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond) {
+            props.handleClick()
+            dispatch({ type: 'DEFAULTSTATE' })
+            props.onHide()
+        } else if (!AllRedu.mandatCheck && !AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond) {
+            props.handleClick()
+            dispatch({ type: 'DEFAULTSTATE' })
+            props.onHide()
+        } else {
+            alert('cannot buy')
         }
     }
 
@@ -61,7 +75,8 @@ const MenuDetail = (props) => {
         dispatch({ type: 'FOODCATEG', payload: findCateg })
     }
 
-    console.log(AllRedu.mandatCheck, AllRedu.mandatCheckCond);
+    // console.log(AllRedu.mandatCheck, AllRedu.mandatCheckCond, 'check');
+    // console.log(AllRedu.mandatRadio, AllRedu.mandatRadioCond, 'radio');
 
     let findCateg
     if (AllRedu.openMenuCart) {
@@ -143,7 +158,22 @@ const MenuDetail = (props) => {
                                     <div className='menuButton'>
                                         {
                                             menuSelect ?
-                                                <div className='openMenuSelection' style={{ backgroundColor: AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ? '#4bb7ac' : '#aaaaaa' }} onClick={addtoCart}>
+                                                <div className='openMenuSelection' style={{
+                                                    backgroundColor:
+                                                        AllRedu.mandatCheck && AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond ?
+                                                            '#4bb7ac'
+                                                            :
+                                                            !AllRedu.mandatCheck && !AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond ?
+                                                                '#4bb7ac'
+                                                                :
+                                                                AllRedu.mandatCheck && AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond ?
+                                                                    '#4bb7ac'
+                                                                    :
+                                                                    !AllRedu.mandatCheck && !AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond ?
+                                                                        '#4bb7ac'
+                                                                        :
+                                                                        '#aaaaaa'
+                                                }} onClick={addtoCart}>
                                                     <h2 className='add-words'>
                                                         {
                                                             AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
@@ -226,16 +256,19 @@ const MenuDetail = (props) => {
                                         menuSelect ?
                                             <div className='mob-openMenuSelection' style={{
                                                 backgroundColor:
-                                                    AllRedu.mandatCheck && AllRedu.mandatCheckCond ?
+                                                    AllRedu.mandatCheck && AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond ?
                                                         '#4bb7ac'
                                                         :
-                                                        !AllRedu.mandatCheck && !AllRedu.mandatCheckCond ?
+                                                        !AllRedu.mandatCheck && !AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond ?
                                                             '#4bb7ac'
                                                             :
-                                                            !AllRedu.mandatCheck && AllRedu.mandatCheckCond ?
-                                                                '#aaaaaa'
+                                                            AllRedu.mandatCheck && AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond ?
+                                                                '#4bb7ac'
                                                                 :
-                                                                '#aaaaaa'
+                                                                !AllRedu.mandatCheck && !AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond ?
+                                                                    '#4bb7ac'
+                                                                    :
+                                                                    '#aaaaaa'
                                             }} onClick={addtoCart}>
                                                 <h2 className='mob-add-words'>
                                                     {
