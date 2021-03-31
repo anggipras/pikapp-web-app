@@ -75,9 +75,6 @@ const MenuDetail = (props) => {
         dispatch({ type: 'FOODCATEG', payload: findCateg })
     }
 
-    // console.log(AllRedu.mandatCheck, AllRedu.mandatCheckCond, 'check');
-    // console.log(AllRedu.mandatRadio, AllRedu.mandatRadioCond, 'radio');
-
     let findCateg
     if (AllRedu.openMenuCart) {
         findCateg = props.datas.foodCategory

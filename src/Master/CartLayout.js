@@ -16,7 +16,6 @@ export default class CartLayout extends React.Component {
     
     render() {
     const value = queryString.parse(window.location.search);
-    console.log(value.table);
     return (
       <html>
         <header>

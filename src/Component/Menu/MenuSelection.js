@@ -35,7 +35,6 @@ const MenuSelection = (props) => {
 
     const [radioVal, setradioVal] = useState([[], []])
     const [radioData, setradioData] = useState([])
-    // const [indexRadioMandat, setindexRadioMandat] = useState(null)
 
     const [updateDataEdit, setupdateDataEdit] = useState(false)
     const [updateEditChoice, setupdateEditChoice] = useState(false)
@@ -104,7 +103,7 @@ const MenuSelection = (props) => {
                 },
                 method: 'GET'
             }).then(productRes => {
-                console.log(productRes.data.results);
+                // console.log(productRes.data.results);
                 let productDet = productRes.data.results.extra_menus
                 if (productDet.menu_type === 'RADIO') {
                     let listadditioncheckbox = []
@@ -122,7 +121,6 @@ const MenuSelection = (props) => {
                         isMandat: productDet.menu_extra_item[0].is_mandatory,
                         listaddition: listadditioncheckbox
                     })
-                    // console.log(checkboxData);
                 }
             }).catch(err => console.log(err))
         } else {
@@ -163,7 +161,6 @@ const MenuSelection = (props) => {
                                         isChecked: true
                                     })
                                 } else {
-                                    console.log(foodListCheckbox[0]);
                                     if (countNoMatch === foodfirstVal.length) {
                                         newlistcheckboxAddition.push({
                                             name: secondVal.name,
@@ -382,7 +379,6 @@ const MenuSelection = (props) => {
     const onRadioChange = (e, indexlistname, mandat) => {
         if (mandat) {
             dispatch({ type: 'MANDATRADIO', payload: mandat })
-            // setindexRadioMandat(indexlistname)
         }
         let radiobuttonArr = [...radioVal]
         radiobuttonArr[indexlistname].pop()
@@ -448,7 +444,6 @@ const MenuSelection = (props) => {
         listcheckbox: checkboxVal,
         listradio: radioVal
     }
-    // console.log(thedata);
     props.handleData(thedata)
 
     return (
@@ -480,7 +475,7 @@ const MenuSelection = (props) => {
                             </div>
 
                             <div className='note-box'>
-                                <textarea id="note" placeholder={"Tambahkan Catatanmu"} className='note-area' onChange={handleNote} />
+                                <textarea id="note" placeholder={"Tambahkan Catatanmu"} defaultValue={props.datas.foodNote} className='note-area' onChange={handleNote} />
                             </div>
                         </div>
                     </div>
@@ -510,7 +505,7 @@ const MenuSelection = (props) => {
                             </div>
 
                             <div className='note-box'>
-                                <textarea id="note" placeholder={"Tambahkan Catatanmu"} className='note-area' onChange={handleNote} />
+                                <textarea id="note" placeholder={"Tambahkan Catatanmu"} defaultValue={props.datas.foodNote} className='note-area' onChange={handleNote} />
                             </div>
                         </div>
                     </div>

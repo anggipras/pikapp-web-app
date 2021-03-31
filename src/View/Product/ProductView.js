@@ -4,7 +4,7 @@ import rgbHex from 'rgb-hex'
 // import PikaModal from "../../Component/Modal/PikaModal";
 import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
-import { cart } from "../../index.js";
+import { cart } from "../../App";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
@@ -60,22 +60,6 @@ class ProductView extends React.Component {
       address: "",
       rating: "",
       phone: "",
-      // data: [
-      //   {
-      //     productId: "",
-      //     category: "",
-      //     foodName: "",
-      //     foodDesc: "",
-      //     foodPrice: 0,
-      //     foodImage: "",
-      //     foodExt: [
-      //       {
-      //         name: "",
-      //         amount: 0,
-      //       },
-      //     ],
-      //   },
-      // ],
       currentData: {
         productId: "",
         category: "",
@@ -148,7 +132,6 @@ class ProductView extends React.Component {
       .then((res) => {
         stateData = { ...this.state.data };
         let responseDatas = res.data.results;
-        // stateData.data.pop();
         stateData.mid = mid;
         stateData.title = currentMerchant.storeName;
         stateData.image = currentMerchant.storeImage;
@@ -157,14 +140,6 @@ class ProductView extends React.Component {
         stateData.rating = currentMerchant.storeRating;
         stateData.phone = "081296000823";
         stateData.notable = notab
-        // stateData.data.push({
-        //   category: "All Category",
-        //   productId: "",
-        //   foodName: "",
-        //   foodDesc: "",
-        //   foodPrice: "",
-        //   foodImage: "",
-        // })
         var productCateg = []
         var idCateg = []
         var pageProduct = []
@@ -497,10 +472,6 @@ class ProductView extends React.Component {
           }
         }
       })
-
-      // console.log(sizecartArr);
-      // console.log(sizecurrentArr);
-      // console.log(countAllSelection);
     }
 
     var isFound = false
@@ -684,16 +655,16 @@ class ProductView extends React.Component {
   }
 
   stopAndLoadMore = (ind) => {
-    console.log(ind);
-    console.log(this.state.idCateg[ind]);
-    console.log(this.state.productPage[ind]);
+    // console.log(ind);
+    // console.log(this.state.idCateg[ind]);
+    // console.log(this.state.productPage[ind]);
     if (this.state.idCateg[ind] <= this.state.productPage[ind]) {
       console.log('testloadmore');
       var openidCateg = [...this.state.idCateg]
       openidCateg[ind] += 1
       this.setState({ idCateg: openidCateg, boolpage: true, choosenIndCateg: ind })
     } else {
-      console.log('nambah');
+      // console.log('nambah');
       var num = this.state.counterLoad
       num++
       this.setState({ counterLoad: num })
@@ -704,7 +675,7 @@ class ProductView extends React.Component {
     this.state.allProductsandCategories.forEach((val, ind) => {
       var wrappedElement = document.getElementById(ind)
       if (this.isBottom(wrappedElement)) {
-        console.log(this.state.counterLoad);
+        // console.log(this.state.counterLoad);
         if (wrappedElement.id == this.state.counterLoad) {
           document.removeEventListener('scroll', this.loadMoreMerchant)
           this.stopAndLoadMore(ind)
@@ -839,8 +810,6 @@ class ProductView extends React.Component {
       if (this.props.AllRedu.openSelect === false) {
         //scroll to selected menu
         document.addEventListener('scroll', this.loadMoreMerchant)
-        console.log(this.state.allProductsandCategories[0].category_name);
-        console.log(this.state.categName);
         document.getElementById(this.state.categName).scrollIntoView({ behavior: "smooth" })
         this.setState({ categName: 'All Categories' })
       }
@@ -968,8 +937,8 @@ class ProductView extends React.Component {
                     <div className='custom-options'>
                       <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
                       {
-                        this.state.allProductsandCategories.map((menuCategory) => (
-                          <span className='custom-option' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
+                        this.state.allProductsandCategories.map((menuCategory, index) => (
+                          <span key={index} className='custom-option' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
                         ))
                       }
                     </div>
