@@ -39,6 +39,7 @@ class FormView extends React.Component {
     // }
     // this.setState({noreload: true})
     this.geoLocation()
+    localStorage.setItem('page', JSON.stringify(0))
   }
 
   // componentDidUpdate() {

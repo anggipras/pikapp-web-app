@@ -9,7 +9,7 @@ import cashierIcon from "../../Asset/Icon/cashier_icon.png";
 import dineinIcon from "../../Asset/Icon/dinein_icon.png";
 import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 import { CartModal } from "../../Component/Modal/CartModal";
-import { cart } from "../../index.js";
+import { cart } from "../../App";
 import { Link } from "react-router-dom";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
@@ -365,6 +365,7 @@ class CartView extends React.Component {
       foodCategory: filteredStore[0].foodCategory,
       foodPrice: filteredStore[0].foodPrice,
       foodImage: filteredStore[0].foodImage,
+      foodNote: filteredStore[0].foodNote,
       foodListCheckbox: filteredStore[0].foodListCheckbox,
       foodListRadio: filteredStore[0].foodListRadio,
       foodExt: [
