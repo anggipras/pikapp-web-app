@@ -40,6 +40,8 @@ class StoreView extends React.Component {
     allMerchantAPI: []
   };
 
+  //test
+
   componentDidMount() {
     this.props.DoneLoad()
     Cookies.set("homePage", window.location.search)

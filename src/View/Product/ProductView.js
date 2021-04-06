@@ -84,6 +84,8 @@ class ProductView extends React.Component {
     counterLoad: 0,
   };
 
+  //test
+
   componentDidMount() {
     this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'

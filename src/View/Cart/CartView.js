@@ -77,6 +77,8 @@ class CartView extends React.Component {
     indexEdit: 0,
   };
 
+  //test
+
   handleDetail(data) {
     if (data === "eat-method") {
       this.setState({ showModal: true });
@@ -743,7 +745,7 @@ class CartView extends React.Component {
                   </div>
 
                   <span className='cart-OrderButton-orderArrow'>
-                    
+
                   </span>
                 </div>
               </div>

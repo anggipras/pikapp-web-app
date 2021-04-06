@@ -75,6 +75,8 @@ class CartView extends React.Component {
     indexEdit: 0,
   };
 
+  //test
+
   handleDetail(data) {
     if (data === "eat-method") {
       this.setState({ showModal: true });
@@ -162,7 +164,7 @@ class CartView extends React.Component {
       window.history.back()
       // window.location.href = Cookies.get("lastProduct")
     } else {
-      let filterMerchantCart = newAllCart.filter(valueCart=> {
+      let filterMerchantCart = newAllCart.filter(valueCart => {
         return valueCart.mid === mid
       })
       localStorage.setItem("cart", JSON.stringify(newAllCart))

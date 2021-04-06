@@ -102,6 +102,8 @@ const MenuDetail = (props) => {
         findCateg = findCateg[0].category_name.toLowerCase()
     }
 
+    //test
+
     return (
         <div>
             {

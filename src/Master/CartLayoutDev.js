@@ -12,18 +12,20 @@ import queryString from "query-string"
 export default class CartLayout extends React.Component {
   componentDidMount() {
     document.body.style.backgroundColor = secondary_color;
-    }
-    
-    render() {
+  }
+
+  //test
+
+  render() {
     const value = queryString.parse(window.location.search);
     return (
       <html>
         <header>
-          <DetailNavigation centerImage={cartLogo} backIcon={backIcon} centerStyle={"cartCenter"}/>
+          <DetailNavigation centerImage={cartLogo} backIcon={backIcon} centerStyle={"cartCenter"} />
         </header>
         <body>
           <Container>
-            <CartView noTable={value}/>
+            <CartView noTable={value} />
           </Container>
         </body>
       </html>

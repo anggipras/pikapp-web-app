@@ -7,6 +7,8 @@ export default class CartLayout extends React.Component {
     document.body.style.backgroundColor = 'white';
   }
 
+  //test
+
   render() {
     const value = queryString.parse(window.location.search);
     return (
