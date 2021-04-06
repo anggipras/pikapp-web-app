@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { geolocated } from "react-geolocated";
 import { v4 as uuidV4 } from "uuid";
-import { address, clientId, googleKey } from "../Asset/Constant/APIConstant";
+import { address, clientId } from "../Asset/Constant/APIConstant";
 import Axios from "axios";
 import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
@@ -19,7 +19,7 @@ const MerchantResto = (props) => {
       storeImage: "",
     },
   ]);
-  const [longlat, setlonglat] = useState("");
+  const [longlatad, setlonglat] = useState("");
   let history = useHistory();
 
   useEffect(() => {
@@ -40,6 +40,7 @@ const MerchantResto = (props) => {
       let longitude = props.coords.longitude;
       let longlat = { lat: latitude, lon: longitude };
       console.log(latitude, longitude);
+      console.log(longlatad);
       localStorage.setItem("longlat", JSON.stringify(longlat));
       getMerchantData(latitude, longitude)
     }
@@ -128,5 +129,3 @@ export default geolocated({
   },
   userDecisionTimeout: 5000,
 })(MerchantResto);
-
-// export default MerchantResto

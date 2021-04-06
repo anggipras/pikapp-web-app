@@ -1,6 +1,6 @@
 import React from "react";
 import DetailNavigation from "./DetailNavigation";
-import { CartView } from "../View/Cart/CartView";
+import CartView from "../View/Cart/CartView";
 import {
   secondary_color,
 } from "../Asset/Constant/ColorConstant";
@@ -16,7 +16,6 @@ export default class CartLayout extends React.Component {
     
     render() {
     const value = queryString.parse(window.location.search);
-    console.log(value.table);
     return (
       <html>
         <header>

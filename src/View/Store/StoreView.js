@@ -8,8 +8,8 @@ import Axios from "axios";
 import Cookies from "js-cookie"
 import Geocode from "react-geocode"
 import Skeleton from 'react-loading-skeleton'
-import {connect} from 'react-redux'
-import {DoneLoad} from '../../Redux/Actions'
+import { connect } from 'react-redux'
+import { DoneLoad } from '../../Redux/Actions'
 
 class StoreView extends React.Component {
   state = {
@@ -49,7 +49,7 @@ class StoreView extends React.Component {
       recommendation_status: false,
       email: "",
     };
-    if(Cookies.get("auth") !== undefined) {
+    if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
     const value = queryString.parse(window.location.search);
@@ -58,7 +58,7 @@ class StoreView extends React.Component {
     var latitude = "";
     var merchant = "";
 
-    if(localStorage.getItem("longlat")) {
+    if (localStorage.getItem("longlat")) {
       var getLocation = JSON.parse(localStorage.getItem("longlat"))
       latitude = getLocation.lat
       longitude = getLocation.lon
@@ -66,16 +66,16 @@ class StoreView extends React.Component {
       window.location.href = "/login"
     }
 
-    if(auth.isLogged === false) {
-      var lastLink = { value: window.location.href}
-      Cookies.set("lastLink", lastLink,{ expires: 1})
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
       window.location.href = "/login"
-    } 
+    }
     else {
       longitude = value.longitude || longitude
       latitude = value.latitude || latitude
-      if(window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
-        
+      if (window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
+
       } else {
         window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
       }
@@ -85,22 +85,22 @@ class StoreView extends React.Component {
     merchant = value.merchant;
 
     // GOOGLE GEOCODE
-    if(localStorage.getItem("address")) {
+    if (localStorage.getItem("address")) {
       var getAdress = JSON.parse(localStorage.getItem("address"))
-      this.setState({location: getAdress})
+      this.setState({ location: getAdress })
       console.log('localstorage');
     } else {
       console.log('nolocalstorage');
       Geocode.setApiKey(googleKey)
-      Geocode.fromLatLng(latitude,longitude)
-      .then((res) => {
-        console.log(res.results[0].formatted_address);
-        this.setState({location: res.results[0].formatted_address})
-        localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
-      })
-      .catch((err) => {
-        this.setState({location: "Tidak tersedia"})
-      })
+      Geocode.fromLatLng(latitude, longitude)
+        .then((res) => {
+          console.log(res.results[0].formatted_address);
+          this.setState({ location: res.results[0].formatted_address })
+          localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
+        })
+        .catch((err) => {
+          this.setState({ location: "Tidak tersedia" })
+        })
     }
 
 
@@ -156,31 +156,31 @@ class StoreView extends React.Component {
     })
       .then((res) => {
         console.log(res.data.results);
-          stateData = { ...this.state.data };
-          let responseDatas = res.data;
-          stateData.data.pop();
-          responseDatas.results.forEach((data) => {
-            stateData.data.push({
-                address: data.merchant_address,
-                rating: data.merchant_rating,
-                logo: data.merchant_logo,
-                distance: data.merchant_distance,
-                storeId: data.mid,
-                storeName: data.merchant_name,
-                storeDesc: "",
-                storeImage: data.merchant_pict,
-            })
+        stateData = { ...this.state.data };
+        let responseDatas = res.data;
+        stateData.data.pop();
+        responseDatas.results.forEach((data) => {
+          stateData.data.push({
+            address: data.merchant_address,
+            rating: data.merchant_rating,
+            logo: data.merchant_logo,
+            distance: data.merchant_distance,
+            storeId: data.mid,
+            storeName: data.merchant_name,
+            storeDesc: "",
+            storeImage: data.merchant_pict,
           })
-          this.setState({ data: stateData, loadView: false, page: responseDatas.total_pages - 1 });
-          document.addEventListener('scroll', this.loadMoreMerchant)
+        })
+        this.setState({ data: stateData, loadView: false, page: responseDatas.total_pages - 1 });
+        document.addEventListener('scroll', this.loadMoreMerchant)
       })
       .catch((err) => {
       });
   }
 
   componentDidUpdate() {
-    if(this.state.idCol > 1) {
-      if(this.state.boolpage == true) {
+    if (this.state.idCol > 1) {
+      if (this.state.boolpage === true) {
         const value = queryString.parse(window.location.search);
         var longitude = "";
         var latitude = "";
@@ -224,24 +224,24 @@ class StoreView extends React.Component {
           }
         })
           .then((res) => {
-              stateData = { ...this.state.data };
-              let responseDatas = res.data;
-              responseDatas.results.forEach((data) => {
-                stateData.data.push({
-                    address: data.merchant_address,
-                    rating: data.merchant_rating,
-                    logo: data.merchant_logo,
-                    distance: data.merchant_distance,
-                    storeId: data.mid,
-                    storeName: data.merchant_name,
-                    storeDesc: "",
-                    storeImage: data.merchant_pict,
-                })
+            stateData = { ...this.state.data };
+            let responseDatas = res.data;
+            responseDatas.results.forEach((data) => {
+              stateData.data.push({
+                address: data.merchant_address,
+                rating: data.merchant_rating,
+                logo: data.merchant_logo,
+                distance: data.merchant_distance,
+                storeId: data.mid,
+                storeName: data.merchant_name,
+                storeDesc: "",
+                storeImage: data.merchant_pict,
               })
-              console.log(this.state.idCol);
-              console.log(this.state.data.data);
-              this.setState({boolpage: false})
-              document.addEventListener('scroll', this.loadMoreMerchant)
+            })
+            console.log(this.state.idCol);
+            console.log(this.state.data.data);
+            this.setState({ boolpage: false })
+            document.addEventListener('scroll', this.loadMoreMerchant)
           })
           .catch((err) => {
           });
@@ -267,7 +267,8 @@ class StoreView extends React.Component {
     currentMerchant.storeAdress = e.address;
     currentMerchant.storeRating = e.rating;
 
-    Cookies.set("currentMerchant", currentMerchant, {expires: 1})
+    Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
+    localStorage.setItem('page', JSON.stringify(1))
   }
   handleDetail(data) {
     return <Link to={"/status"}></Link>;
@@ -279,10 +280,10 @@ class StoreView extends React.Component {
 
   loadMoreMerchant = () => {
     const wrappedElement = document.getElementById("idCol")
-    if(this.state.idCol <= this.state.page) {
-      if(this.isBottom(wrappedElement)) {
+    if (this.state.idCol <= this.state.page) {
+      if (this.isBottom(wrappedElement)) {
         console.log('testloadmore');
-        this.setState({idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true})
+        this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
     } else {
@@ -297,14 +298,14 @@ class StoreView extends React.Component {
   merchantLoading = () => (
     <Row>
       <Col xs={3} md={3}>
-        <Skeleton style={{width:70, height: 70, marginLeft: 10}} />
+        <Skeleton style={{ width: 70, height: 70, marginLeft: 10 }} />
       </Col>
       <Col xs={9} md={6}>
         <Row>
           <Col xs={7} md={9}>
-            <Skeleton style={{width:100, height: 30, marginLeft: 10}} />
-            <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
-            <Skeleton style={{width:100, height: 20, marginLeft: 10}} />
+            <Skeleton style={{ width: 100, height: 30, marginLeft: 10 }} />
+            <Skeleton style={{ width: 100, height: 20, marginLeft: 10 }} />
+            <Skeleton style={{ width: 100, height: 20, marginLeft: 10 }} />
           </Col>
         </Row>
       </Col>
@@ -312,6 +313,13 @@ class StoreView extends React.Component {
   )
 
   render() {
+    if (localStorage.getItem('page')) {
+      let currentPage = JSON.parse(localStorage.getItem('page'))
+      if (currentPage === 1) {
+        localStorage.setItem('page', JSON.stringify(0))
+        window.location.reload()
+      }
+    }
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });
@@ -320,45 +328,45 @@ class StoreView extends React.Component {
         <Row>
           <Col xs={3} md={3}>
             {
-              this.state.loadView?
-              <Skeleton width={70} height={70}/>
-              :
-              <Image
-                src={cardData.storeImage}
-                rounded
-                fluid
-                className="storeImage"
-              />
+              this.state.loadView ?
+                <Skeleton width={70} height={70} />
+                :
+                <Image
+                  src={cardData.storeImage}
+                  rounded
+                  fluid
+                  className="storeImage"
+                />
             }
           </Col>
           <Col xs={9} md={6}>
             <Row>
               <Col xs={7} md={9}>
                 {
-                  this.state.loadView?
-                  <Skeleton style={{width:100, height: 30, marginLeft: 20}} />
-                  :
-                  <h5 className="foodTitle">{cardData.storeName}</h5>
+                  this.state.loadView ?
+                    <Skeleton style={{ width: 100, height: 30, marginLeft: 20 }} />
+                    :
+                    <h5 className="foodTitle">{cardData.storeName}</h5>
                 }
                 <p className="storeDesc">{cardData.storeDesc}</p>
                 {
-                  this.state.loadView?
-                  <Skeleton style={{width:100, height: 20, marginLeft: 20}} />
-                  :
-                  <div className="foodButton">
-                    <Link
-                      className={"btn-cartPika"}
-                      to={"/store?mid=" + cardData.storeId}
-                      style={{
-                        padding: 8,
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onClick={()=> this.storeClick(cardData)}
-                    >
-                      Go to store
+                  this.state.loadView ?
+                    <Skeleton style={{ width: 100, height: 20, marginLeft: 20 }} />
+                    :
+                    <div className="foodButton">
+                      <Link
+                        className={"btn-cartPika"}
+                        to={"/store?mid=" + cardData.storeId}
+                        style={{
+                          padding: 8,
+                          textDecoration: "none",
+                          color: "black",
+                        }}
+                        onClick={() => this.storeClick(cardData)}
+                      >
+                        Go to store
                     </Link>
-                  </div>
+                    </div>
                 }
               </Col>
             </Row>
@@ -370,7 +378,7 @@ class StoreView extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={4} md={1}/>
+          <Col xs={4} md={1} />
           <Col xs={0} md={4} className="storeColumn">
             <h6 className="" style={{ textAlign: "left" }}>
               Lokasi:
@@ -386,16 +394,16 @@ class StoreView extends React.Component {
           <div>
             <Col md={12}>{allCards}</Col>
             {
-              !this.state.loadView?
+              !this.state.loadView ?
                 this.state.idCol <= this.state.page ?
-                <div id={"idCol"}>
-                  {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
-                  {this.merchantLoading()}
-                </div>
+                  <div id={"idCol"}>
+                    {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
+                    {this.merchantLoading()}
+                  </div>
+                  :
+                  null
                 :
                 null
-              :
-              null
             }
           </div>
         </Row>
@@ -405,4 +413,4 @@ class StoreView extends React.Component {
   }
 }
 
-export default connect(null, {DoneLoad})(StoreView)
+export default connect(null, { DoneLoad })(StoreView)
