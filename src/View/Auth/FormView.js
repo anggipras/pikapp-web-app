@@ -194,16 +194,18 @@ class FormView extends React.Component {
         auth.recommendation_status = res.data.recommendation_status;
         auth.email = this.state.email;
         Cookies.set("auth", auth, { expires: 1});
+        var getLocation = JSON.parse(localStorage.getItem("longlat"))
+        var latitude = getLocation.lat
+        var longitude = getLocation.lon
         if(Cookies.get("lastLink") !== undefined) {
           var lastlink = JSON.parse(Cookies.get("lastLink")).value
-          var getLocation = JSON.parse(localStorage.getItem("longlat"))
-          var latitude = getLocation.lat
-          var longitude = getLocation.lon
           if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value
           } else {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
+        } else {
+          window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
         }
       })
       .catch((err) => {

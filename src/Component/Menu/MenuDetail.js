@@ -59,13 +59,26 @@ const MenuDetail = (props) => {
     }
 
     const countTotalPrice = () => {
+        let totalCheckPrice = 0
+        let totalRadioPrice = 0
         let totalPrice = 0
-        let sumAllPrice = AllRedu.checkboxes
-        sumAllPrice.forEach(firstVal => {
+        let sumCheckPrice = AllRedu.checkboxes
+        sumCheckPrice.forEach(firstVal => {
             firstVal.forEach(nestedVal => {
-                totalPrice += nestedVal.price
+                totalCheckPrice += nestedVal.price
             })
         });
+
+        let sumRadioPrice = AllRedu.radiobutton
+        sumRadioPrice.forEach(firstVal => {
+            firstVal.forEach(nestedVal => {
+                totalRadioPrice += nestedVal.price
+            })
+        });
+
+        totalCheckPrice = totalCheckPrice * AllRedu.validQTY
+        totalRadioPrice = totalRadioPrice * AllRedu.validQTY
+        totalPrice += totalCheckPrice + totalRadioPrice
         totalPrice += AllRedu.validQTY * props.datas.foodPrice
         return totalPrice
     }

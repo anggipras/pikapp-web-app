@@ -14,7 +14,7 @@ import { DoneLoad } from '../../Redux/Actions'
 class StoreView extends React.Component {
   state = {
     page: 0,
-    size: 10,
+    size: 6,
     location: "",
     data: {
       title: "",
@@ -33,10 +33,11 @@ class StoreView extends React.Component {
         },
       ],
     },
-    idCol: 1,
-    testpage: 0,
+    idCol: 0,
+    totalPage: 0,
     boolpage: false,
     loadView: true,
+    allMerchantAPI: []
   };
 
   componentDidMount() {
@@ -88,9 +89,7 @@ class StoreView extends React.Component {
     if (localStorage.getItem("address")) {
       var getAdress = JSON.parse(localStorage.getItem("address"))
       this.setState({ location: getAdress })
-      console.log('localstorage');
     } else {
-      console.log('nolocalstorage');
       Geocode.setApiKey(googleKey)
       Geocode.fromLatLng(latitude, longitude)
         .then((res) => {
@@ -171,7 +170,7 @@ class StoreView extends React.Component {
             storeImage: data.merchant_pict,
           })
         })
-        this.setState({ data: stateData, loadView: false, page: responseDatas.total_pages - 1 });
+        this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
         document.addEventListener('scroll', this.loadMoreMerchant)
       })
       .catch((err) => {
@@ -179,7 +178,7 @@ class StoreView extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.idCol > 1) {
+    if (this.state.idCol > 0) {
       if (this.state.boolpage === true) {
         const value = queryString.parse(window.location.search);
         var longitude = "";
@@ -238,10 +237,15 @@ class StoreView extends React.Component {
                 storeImage: data.merchant_pict,
               })
             })
-            console.log(this.state.idCol);
-            console.log(this.state.data.data);
-            this.setState({ boolpage: false })
+            let updateMerchant = [...this.state.allMerchantAPI]
+            responseDatas.results.forEach((data) => {
+              updateMerchant.push(data)
+            })
+            this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
             document.addEventListener('scroll', this.loadMoreMerchant)
+            if (this.state.page === this.state.totalPage - 1) {
+              this.setState({ idCol: this.state.idCol + 1 })
+            }
           })
           .catch((err) => {
           });
@@ -250,6 +254,9 @@ class StoreView extends React.Component {
   }
 
   storeClick = (e) => {
+    let selectedStore = this.state.allMerchantAPI.filter(value => {
+      return value.mid === e.storeId
+    })
     var currentMerchant = {
       mid: "",
       storeName: "",
@@ -267,6 +274,7 @@ class StoreView extends React.Component {
     currentMerchant.storeAdress = e.address;
     currentMerchant.storeRating = e.rating;
 
+    localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
     Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
     localStorage.setItem('page', JSON.stringify(1))
   }
@@ -282,7 +290,7 @@ class StoreView extends React.Component {
     const wrappedElement = document.getElementById("idCol")
     if (this.state.idCol <= this.state.page) {
       if (this.isBottom(wrappedElement)) {
-        console.log('testloadmore');
+        // console.log('testloadmore');
         this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
@@ -403,7 +411,7 @@ class StoreView extends React.Component {
                   :
                   null
                 :
-                null
+                this.merchantLoading()
             }
           </div>
         </Row>

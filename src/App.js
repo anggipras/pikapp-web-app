@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "./Asset/scss/App.scss";
 import AuthLayout from "./Master/AuthLayout";
 import ProductLayout from "./Master/ProductLayout";
-import CartLayout from "./Master/CartLayout";
+import CartLayout from "./Master/CartLayoutDev";
 import StatusLayout from "./Master/StatusLayout";
 import StoreLayout from "./Master/StoreLayout";
 import ProfileLayout from "./Master/ProfileLayout";
