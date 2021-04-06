@@ -1,15 +1,13 @@
 import React from "react";
-// import { Row, Col, Button, ButtonGroup, Form } from "react-bootstrap";
-import PikappLogo from "../../Asset/Logo/logo4x.png";
-import CartProduct from "../../Asset/Illustration/productimg/png";
-// import chevronImage from "../../Asset/Icon/chevron_right.png";
-// import removeIcon from "../../Asset/Icon/remove_icon.png";
-// import storeIcon from "../../Asset/Icon/store_icon.png";
-// import checklistIcon from "../../Asset/Icon/checklist_icon.png";
-// import frontIcon from "../../Asset/Icon/front_icon.png";
-// import cashierIcon from "../../Asset/Icon/cashier_icon.png";
-// import dineinIcon from "../../Asset/Icon/dinein_icon.png";
-// import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
+import { Row, Col, Button, ButtonGroup, Form } from "react-bootstrap";
+import chevronImage from "../../Asset/Icon/chevron_right.png";
+import removeIcon from "../../Asset/Icon/remove_icon.png";
+import storeIcon from "../../Asset/Icon/store_icon.png";
+import checklistIcon from "../../Asset/Icon/checklist_icon.png";
+import frontIcon from "../../Asset/Icon/front_icon.png";
+import cashierIcon from "../../Asset/Icon/cashier_icon.png";
+import dineinIcon from "../../Asset/Icon/dinein_icon.png";
+import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 import { CartModal } from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { Link } from "react-router-dom";
@@ -164,7 +162,7 @@ class CartView extends React.Component {
       window.history.back()
       // window.location.href = Cookies.get("lastProduct")
     } else {
-      let filterMerchantCart = newAllCart.filter(valueCart => {
+      let filterMerchantCart = newAllCart.filter(valueCart=> {
         return valueCart.mid === mid
       })
       localStorage.setItem("cart", JSON.stringify(newAllCart))
@@ -174,6 +172,42 @@ class CartView extends React.Component {
         window.history.back()
       }
     }
+
+    // cart.forEach((store) => {
+    //   let filteredStore = store.food.filter((data) => {
+    //     if (data.productId === e.productId) {
+    //       if (data.foodNote !== e.foodNote) {
+    //         return data
+    //       }
+    //     } else {
+    //       return data
+    //     }
+    //   });
+    //   console.log(filteredStore);
+    //   store.food = filteredStore;
+    //   if (store.food.length === 0) {
+    //     filteredCart = cart.filter((filterStore) => {
+    //       return filterStore.mid !== store.mid;
+    //     });
+    //     console.log(filteredCart);
+    //     localStorage.setItem("cart", JSON.stringify(filteredCart))
+    //     let addedMerchants = []
+    //     filteredCart.forEach((cart) => {
+    //       addedMerchants.push(cart.mid)
+    //       Cookies.set("addedMerchants", addedMerchants)
+    //     })
+    //     console.log(addedMerchants);
+    //     if (addedMerchants.length < 2) {
+    //       window.history.back()
+    //       // window.location.href = Cookies.get("lastProduct")
+    //     } else {
+    //       console.log('ntaps bro');
+    //       window.location.reload()
+    //     }
+    //   } else {
+    //     console.log('ntaps mantaapp');
+    //   }
+    // });
     this.forceUpdate();
   }
 
@@ -594,173 +628,7 @@ class CartView extends React.Component {
     }
     return (
       <>
-        <div className='cartLayout'>
-          <div className='cartTitle'>
-            <span>
-              <img src={PikappLogo} alt='' />
-            </span>
-
-            <h2>Konfirmasi Pesanan Anda</h2>
-          </div>
-
-          <div className='cartContent'>
-            <div className='cart-LeftSide'>
-              <div className='cartList'>
-                <h4 className='cartList-title'>
-                  Item Yang Dibeli
-                </h4>
-
-                <div className='cartList-content'>
-                  <div className='cartList-content-image'>
-                    <img src={CartProduct} alt='' />
-                  </div>
-
-                  <div className='cartList-content-detail'>
-                    <div className='cartList-content-detail-left'>
-                      <h2 className='cartList-content-title'>MondMilk Pure Chocolate</h2>
-                      <h5 className='cartList-content-choice'></h5>
-                      <h5 className='cartList-content-notes'>Tambahkan Catatanmu</h5>
-                      <h3 className='cartList-content-price'>17.000</h3>
-                    </div>
-
-                    <div className='cartList-content-detail-right'>
-                      <div className='cartList-editButton'>
-                        <h2>EDIT</h2>
-                      </div>
-
-                      <div className='cartList-amountBox'>
-                        <div className='cartList-amountBox-inside'>
-                          <div className='cartList-minusBox'>
-                            <div className='cartList-minusSym'>
-                              -
-                            </div>
-                          </div>
-
-                          <div className='cartList-numberArea'>
-                            1
-                          </div>
-
-                          <div className='cartList-plusBox'>
-                            <div className='cartList-plusSym'>
-                              +
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className='cart-RightSide'>
-              <div className='cart-storeBox'>
-                <div className='cart-storeBox-header'>
-                  <div className='cart-storeBox-title'>
-                    Store Location
-                  </div>
-
-                  <div className='cart-storeBox-distance'>
-                    27.96 Km
-                  </div>
-                </div>
-
-                <div className='cart-storeBox-content'>
-                  <div className='cart-storeBox-descArea'>
-                    Description 1 Description 2 Description 3
-                  </div>
-                </div>
-              </div>
-
-              <div className='cart-foodService'>
-                <div className='cart-foodService-header'>
-                  <div className='cart-foodService-title'>
-                    Pilih Cara Makan Anda
-                  </div>
-
-                  <div className='cart-foodService-selectButton'>
-
-                  </div>
-                </div>
-
-                <div className='cart-foodService-content'>
-                  <div className='cart-foodService-descArea'>
-                    <span className='cart-foodService-logo'>
-
-                    </span>
-
-                    <h3 className='cart-foodService-words'>
-                      Makan Di Tempat
-                    </h3>
-                  </div>
-                </div>
-              </div>
-
-              <div className='cart-paymentService'>
-                <div className='cart-paymentService-header'>
-                  <div className='cart-paymentService-title'>
-                    Bayar Pakai Apa?
-                  </div>
-
-                  <div className='cart-paymentService-selectButton'>
-
-                  </div>
-                </div>
-
-                <div className='cart-paymentService-content'>
-                  <div className='cart-paymentService-descArea'>
-                    <span className='cart-paymentService-logo'>
-
-                    </span>
-
-                    <h3 className='cart-paymentService-words'>
-                      Pembayaran Di Kasir
-                    </h3>
-                  </div>
-                </div>
-              </div>
-
-              <div className='cart-checkoutArea'>
-                <div className='cart-TotalAmount'>
-                  <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
-
-                  <div className='cart-TotalAmount-bottom'>
-                    <h2 className='cart-TotalAmount-price'>Rp. 20.000</h2>
-
-                    <span className='cart-TotalAmount-detailArrow'>
-
-                    </span>
-                  </div>
-                </div>
-
-                <div className='cart-OrderButton'>
-                  <div className='cart-OrderButton-content'>
-                    <span className='cart-OrderButton-checklist'>
-
-                    </span>
-
-                    <h1 className='cart-OrderButton-word'>PESAN</h1>
-                  </div>
-
-                  <span className='cart-OrderButton-orderArrow'>
-                    
-                  </span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-
-
-
-
-
-
-
-
-        {/* <Row>
+        <Row>
           <Col xs={0} md={3} />
           <Col>
             <Row>
@@ -881,7 +749,7 @@ class CartView extends React.Component {
           </Col>
         </Row>
         {modal}
-        {this.menuDetail()} */}
+        {this.menuDetail()}
       </>
     );
   }

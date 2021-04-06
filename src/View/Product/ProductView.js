@@ -44,7 +44,7 @@ var currentExt = {
 class ProductView extends React.Component {
   state = {
     page: 0, //products pagination
-    size: 10, //set amount of products to be shown in frontend
+    size: 3, //set amount of products to be shown in frontend
     boolpage: false,
     productPage: [], //set how many page of product merchant from backend server
     idCateg: [], //set current product page of specific size of loaded products
@@ -78,7 +78,8 @@ class ProductView extends React.Component {
     backColor1: "", //merchant info background color
     backColor2: "", //products info background color
     categName: "All Categories", //initial for dropdown select
-    allProductsandCategories: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
+    allProductsandCategories: [{ category_id: "", category_name: "", order: null, category_products: [] }], //mapping from API
+    productCategpersize: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     choosenIndCateg: null, //index of category selected when load more products in selected category
     counterLoad: 0,
   };
@@ -103,91 +104,194 @@ class ProductView extends React.Component {
       window.location.href = "/login"
     }
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    var getLocation = JSON.parse(localStorage.getItem("longlat"))
-    var latitude = getLocation.lat
-    var longitude = getLocation.lon
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     const notab = value.table || ""
-    let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/${currentMerchant.storeName}/`
-    var stateData;
-    let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
-    const date = new Date().toISOString();
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "category": "1",
-      },
-      method: "GET",
-      params: {
-        page: 0,
-        size: this.state.size
-      }
+    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+    let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+
+    let stateData = { ...this.state.data };
+    stateData.mid = mid;
+    stateData.title = currentMerchant.storeName;
+    stateData.image = currentMerchant.storeImage;
+    stateData.desc = currentMerchant.storeDistance;
+    stateData.address = currentMerchant.storeAdress;
+    stateData.rating = currentMerchant.storeRating;
+    stateData.phone = "081296000823";
+    stateData.notable = notab
+    var productCateg = []
+    var idCateg = []
+    var productPage = []
+    productCateg = selectedMerchant[0].categories.map((categ) => {
+      idCateg.push(0)
+      productPage.push(this.state.size)
+      return categ
     })
-      .then((res) => {
-        stateData = { ...this.state.data };
-        let responseDatas = res.data.results;
-        stateData.mid = mid;
-        stateData.title = currentMerchant.storeName;
-        stateData.image = currentMerchant.storeImage;
-        stateData.desc = currentMerchant.storeDistance;
-        stateData.address = currentMerchant.storeAdress;
-        stateData.rating = currentMerchant.storeRating;
-        stateData.phone = "081296000823";
-        stateData.notable = notab
-        var productCateg = []
-        var idCateg = []
-        var pageProduct = []
-        responseDatas.forEach((data) => {
-          if (data.mid === mid) {
-            productCateg = data.categories.map((categ) => {
-              idCateg.push(1)
-              pageProduct.push(res.data.total_pages - 1)
-              return categ
-            })
 
-            productCateg.forEach((val) => {
-              val.category_products = []
-            })
+    productCateg.forEach((val) => {
+      val.category_products = []
+    })
 
-            productCateg.forEach((categProd) => {
-              data.products.forEach((allproducts) => {
-                if (categProd.category_id == allproducts.product_category) {
-                  categProd.category_products.push({
-                    productId: allproducts.product_id,
-                    category: allproducts.product_category,
-                    foodName: allproducts.product_name,
-                    foodDesc: "",
-                    foodPrice: allproducts.product_price,
-                    foodImage: allproducts.product_picture1,
-                    foodExt: [
-                      {
-                        name: "",
-                        amount: 0,
-                      },
-                    ],
-                  })
-                }
-              })
-            })
-          }
-        })
-        prominent(Storeimg, { amount: 3 }).then((color) => {
-          // return RGB color for example [241, 221, 63]
-          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-          this.brightenColor(merchantColor, 70, productColor, 60)
-          this.setState({ data: stateData, allProductsandCategories: productCateg, idCateg, productPage: pageProduct });
-          document.addEventListener('scroll', this.loadMoreMerchant)
-        });
+    productCateg.forEach((categProd) => {
+      selectedMerchant[0].products.forEach((allproducts) => {
+        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+          categProd.category_products.push({
+            productId: allproducts.product_id,
+            category: allproducts.product_category,
+            foodName: allproducts.product_name,
+            foodDesc: "",
+            foodPrice: allproducts.product_price,
+            foodImage: allproducts.product_picture1,
+            foodExt: [
+              {
+                name: "",
+                amount: 0,
+              },
+            ],
+          })
+        }
       })
-      .catch((err) => {
-      });
+    })
+
+    let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
+      return categ
+    })
+
+    productPerSize.forEach((val) => {
+      val.category_products = []
+    })
+
+    productPerSize.forEach((categProd) => {
+      filtersizeMerchant[0].products.forEach((allproducts) => {
+        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+          categProd.category_products.push({
+            productId: allproducts.product_id,
+            category: allproducts.product_category,
+            foodName: allproducts.product_name,
+            foodDesc: "",
+            foodPrice: allproducts.product_price,
+            foodImage: allproducts.product_picture1,
+            foodExt: [
+              {
+                name: "",
+                amount: 0,
+              },
+            ],
+          })
+        }
+      })
+    })
+
+    let firstShownProduct = []
+    productPerSize.forEach((categProd, indexcategProd) => {
+      firstShownProduct.push(categProd)
+      let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
+        return indexvalProd < this.state.size
+      })
+      categProd.category_products = newFilter
+      firstShownProduct[indexcategProd].category_products = []
+      firstShownProduct[indexcategProd].category_products = newFilter
+    })
+
+    // console.log(productCateg);
+    // console.log(firstShownProduct);
+    prominent(Storeimg, { amount: 3 }).then((color) => {
+      // return RGB color for example [241, 221, 63]
+      var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+      var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+      this.brightenColor(merchantColor, 70, productColor, 60)
+      this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+      document.addEventListener('scroll', this.loadMoreMerchant)
+    });
+
+    // var getLocation = JSON.parse(localStorage.getItem("longlat"))
+    // var latitude = getLocation.lat
+    // var longitude = getLocation.lon
+    // const value = queryString.parse(window.location.search);
+    // const mid = value.mid;
+    // const notab = value.table || ""
+    // let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/${currentMerchant.storeName}/`
+    // var stateData;
+    // let uuid = uuidV4();
+    // uuid = uuid.replaceAll("-", "");
+    // const date = new Date().toISOString();
+    // Axios(addressRoute, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //     "token": "PUBLIC",
+    //     "category": "1",
+    //   },
+    //   method: "GET",
+    //   params: {
+    //     page: 0,
+    //     size: this.state.size
+    //   }
+    // })
+    //   .then((res) => {
+    //     stateData = { ...this.state.data };
+    //     let responseDatas = res.data.results;
+    //     stateData.mid = mid;
+    //     stateData.title = currentMerchant.storeName;
+    //     stateData.image = currentMerchant.storeImage;
+    //     stateData.desc = currentMerchant.storeDistance;
+    //     stateData.address = currentMerchant.storeAdress;
+    //     stateData.rating = currentMerchant.storeRating;
+    //     stateData.phone = "081296000823";
+    //     stateData.notable = notab
+    //     var productCateg = []
+    //     var idCateg = []
+    //     var pageProduct = []
+    //     responseDatas.forEach((data) => {
+    //       if (data.mid === mid) {
+    //         productCateg = data.categories.map((categ) => {
+    //           idCateg.push(1)
+    //           pageProduct.push(res.data.total_pages - 1)
+    //           return categ
+    //         })
+
+    //         productCateg.forEach((val) => {
+    //           val.category_products = []
+    //         })
+
+    //         productCateg.forEach((categProd) => {
+    //           data.products.forEach((allproducts) => {
+    //             if (categProd.category_id == allproducts.product_category) {
+    //               categProd.category_products.push({
+    //                 productId: allproducts.product_id,
+    //                 category: allproducts.product_category,
+    //                 foodName: allproducts.product_name,
+    //                 foodDesc: "",
+    //                 foodPrice: allproducts.product_price,
+    //                 foodImage: allproducts.product_picture1,
+    //                 foodExt: [
+    //                   {
+    //                     name: "",
+    //                     amount: 0,
+    //                   },
+    //                 ],
+    //               })
+    //             }
+    //           })
+    //         })
+    //       }
+    //     })
+    //     console.log(productCateg);
+    //     console.log(pageProduct);
+    //     console.log(idCateg);
+    //     prominent(Storeimg, { amount: 3 }).then((color) => {
+    //       // return RGB color for example [241, 221, 63]
+    //       var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+    //       var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+    //       this.brightenColor(merchantColor, 70, productColor, 60)
+    //       this.setState({ data: stateData, allProductsandCategories: productCateg, idCateg, productPage: pageProduct });
+    //       document.addEventListener('scroll', this.loadMoreMerchant)
+    //     });
+    //   })
+    //   .catch((err) => {
+    //   });
   }
 
   //testing changebackground
@@ -212,19 +316,28 @@ class ProductView extends React.Component {
       }
     }
 
-    if (this.state.idCateg) { //load more products with selected index of category
-      this.state.idCateg.forEach((val, index) => {
-        if (index === this.state.choosenIndCateg) {
-          if (val > 1) {
-            if (this.state.boolpage === true) {
-              this.loadProducts(index)
-            } else {
-              document.addEventListener('scroll', this.loadMoreMerchant)
-            }
-          }
-        }
-      })
+    // if (this.state.idCateg) { //load more products with selected index of category
+    //   this.state.idCateg.forEach((val, index) => {
+    //     if (index === this.state.choosenIndCateg) {
+    //       if (val > 0) {
+    //         if (this.state.boolpage === true) {
+    //           this.loadProducts(index)
+    //         } else {
+    //           document.addEventListener('scroll', this.loadMoreMerchant)
+    //         }
+    //       }
+    //     }
+    //   })
+    // }
+
+    if (this.state.idCateg[this.state.choosenIndCateg] > 0) { //load more products with selected index of category
+      if (this.state.boolpage === true) {
+        this.loadProducts(this.state.choosenIndCateg)
+      } else {
+        document.addEventListener('scroll', this.loadMoreMerchant)
+      }
     }
+
   }
   //testing changebackground
 
@@ -263,67 +376,84 @@ class ProductView extends React.Component {
   }
 
   loadProducts = (indexOfCateg) => {
-    const value = queryString.parse(window.location.search);
-    const mid = value.mid;
-    var getLocation = JSON.parse(localStorage.getItem("longlat"))
-    var latitude = getLocation.lat
-    var longitude = getLocation.lon
-    let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/ALL/`
-    var stateData;
-    let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
-    const date = new Date().toISOString();
-    var inputPage = this.state.idCateg
-    inputPage[indexOfCateg] -= 1
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "category": "1",
-      },
-      method: "GET",
-      params: {
-        page: inputPage[indexOfCateg],
-        size: this.state.size
+    let getindexProd = this.state.allProductsandCategories[indexOfCateg].category_products
+    let loadtheProd = getindexProd.filter((valProd, indvalProd) => {
+      return indvalProd >= this.state.idCateg[indexOfCateg] && indvalProd < this.state.productPage[indexOfCateg]
+    })
+
+    let updatedProduct = this.state.productCategpersize
+    updatedProduct.forEach((value, index) => {
+      if (index === indexOfCateg) {
+        loadtheProd.forEach((valLoadProd) => {
+          value.category_products.push(valLoadProd)
+        })
       }
     })
-      .then((res) => {
-        stateData = { ...this.state.data };
-        let responseDatas = res.data.results;
-        responseDatas.forEach((data) => {
-          if (data.mid === mid) {
-            this.state.allProductsandCategories.forEach((categProd, indexAllCateg) => {
-              data.products.forEach((allproducts) => {
-                if (categProd.category_id == allproducts.product_category) {
-                  if (indexAllCateg == indexOfCateg) {
-                    categProd.category_products.push({
-                      productId: allproducts.product_id,
-                      category: allproducts.product_category,
-                      foodName: allproducts.product_name,
-                      foodDesc: "",
-                      foodPrice: allproducts.product_price,
-                      foodImage: allproducts.product_picture1,
-                      foodExt: [
-                        {
-                          name: "",
-                          amount: 0,
-                        },
-                      ],
-                    })
-                  }
-                }
-              })
-            })
-          }
-        })
-        this.setState({ boolpage: false })
-        document.addEventListener('scroll', this.loadMoreMerchant)
-      })
-      .catch((err) => {
-      });
+
+    this.setState({ boolpage: false, productCategpersize: updatedProduct })
+    document.addEventListener('scroll', this.loadMoreMerchant)
+
+    // const value = queryString.parse(window.location.search);
+    // const mid = value.mid;
+    // var getLocation = JSON.parse(localStorage.getItem("longlat"))
+    // var latitude = getLocation.lat
+    // var longitude = getLocation.lon
+    // let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/ALL/`
+    // var stateData;
+    // let uuid = uuidV4();
+    // uuid = uuid.replaceAll("-", "");
+    // const date = new Date().toISOString();
+    // var inputPage = this.state.idCateg
+    // inputPage[indexOfCateg] -= 1
+    // Axios(addressRoute, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //     "token": "PUBLIC",
+    //     "category": "1",
+    //   },
+    //   method: "GET",
+    //   params: {
+    //     page: inputPage[indexOfCateg],
+    //     size: this.state.size
+    //   }
+    // })
+    //   .then((res) => {
+    //     stateData = { ...this.state.data };
+    //     let responseDatas = res.data.results;
+    //     responseDatas.forEach((data) => {
+    //       if (data.mid === mid) {
+    //         this.state.productCategpersize.forEach((categProd, indexAllCateg) => {
+    //           data.products.forEach((allproducts) => {
+    //             if (categProd.category_id == allproducts.product_category) {
+    //               if (indexAllCateg == indexOfCateg) {
+    //                 categProd.category_products.push({
+    //                   productId: allproducts.product_id,
+    //                   category: allproducts.product_category,
+    //                   foodName: allproducts.product_name,
+    //                   foodDesc: "",
+    //                   foodPrice: allproducts.product_price,
+    //                   foodImage: allproducts.product_picture1,
+    //                   foodExt: [
+    //                     {
+    //                       name: "",
+    //                       amount: 0,
+    //                     },
+    //                   ],
+    //                 })
+    //               }
+    //             }
+    //           })
+    //         })
+    //       }
+    //     })
+    //     this.setState({ boolpage: false })
+    //     document.addEventListener('scroll', this.loadMoreMerchant)
+    //   })
+    //   .catch((err) => {
+    //   });
   }
 
   handlePhone = (phone) => { //go to Whatsapp chat
@@ -658,11 +788,15 @@ class ProductView extends React.Component {
     // console.log(ind);
     // console.log(this.state.idCateg[ind]);
     // console.log(this.state.productPage[ind]);
-    if (this.state.idCateg[ind] <= this.state.productPage[ind]) {
-      console.log('testloadmore');
+    if (this.state.productCategpersize[ind].category_products.length < this.state.allProductsandCategories[ind].category_products.length) {
+      // console.log('testloadmore');
       var openidCateg = [...this.state.idCateg]
-      openidCateg[ind] += 1
-      this.setState({ idCateg: openidCateg, boolpage: true, choosenIndCateg: ind })
+      openidCateg[ind] += this.state.size
+
+      var openproductPage = [...this.state.productPage]
+      openproductPage[ind] += this.state.size
+
+      this.setState({ idCateg: openidCateg, productPage: openproductPage, boolpage: true, choosenIndCateg: ind })
     } else {
       // console.log('nambah');
       var num = this.state.counterLoad
@@ -672,11 +806,13 @@ class ProductView extends React.Component {
   }
 
   loadMoreMerchant = () => {
-    this.state.allProductsandCategories.forEach((val, ind) => {
+    this.state.productCategpersize.forEach((val, ind) => {
       var wrappedElement = document.getElementById(ind)
       if (this.isBottom(wrappedElement)) {
-        // console.log(this.state.counterLoad);
+        // console.log(this.state.counterLoad, 'counterLoad');
+        // console.log(wrappedElement.id, 'wrap');
         if (wrappedElement.id == this.state.counterLoad) {
+          // console.log(ind, 'selected index');
           document.removeEventListener('scroll', this.loadMoreMerchant)
           this.stopAndLoadMore(ind)
         }
@@ -689,7 +825,7 @@ class ProductView extends React.Component {
   }
 
   contentView = () => {
-    return this.state.allProductsandCategories.map((categ, indcateg) => {
+    return this.state.productCategpersize.map((categ, indcateg) => {
       return (
         <div key={indcateg} className='product-section'>
           <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={30} width={100} />}</h2>
@@ -737,7 +873,7 @@ class ProductView extends React.Component {
             }
           </div>
           {
-            this.state.idCateg[indcateg] <= this.state.productPage[indcateg] ?
+            this.state.productCategpersize[indcateg].category_products.length < this.state.allProductsandCategories[indcateg].category_products.length ?
               <div id={indcateg}>
                 <Skeleton style={{ paddingTop: 100, borderRadius: 30 }} />
               </div>
@@ -758,7 +894,7 @@ class ProductView extends React.Component {
           isShow={this.state.showMenuDet}
           onHide={() => this.setMenuDetail(false)}
           datas={this.state.currentData}
-          handleCateg={this.state.allProductsandCategories}
+          handleCateg={this.state.productCategpersize}
           handleClick={this.handleAddCart}
           handleData={this.handleCart}
         />
@@ -767,6 +903,8 @@ class ProductView extends React.Component {
   }
 
   render() {
+    // console.log(this.state.productCategpersize[0].category_products.length);
+    // console.log(this.state.allProductsandCategories[0].category_products.length);
     // let modal;
     // if (this.state.showModal === true) {
     //   modal = (
@@ -785,12 +923,19 @@ class ProductView extends React.Component {
     let cartButton;
     if (JSON.parse(localStorage.getItem('cart'))) {
       let allCart = JSON.parse(localStorage.getItem('cart'))
-      if (allCart.length > 1) {
-        cartButton = (
-          <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
-            <img src={cartIcon} alt={"cart"} alt='' />
-          </Link>
-        );
+      let filterMerchantCart = allCart.filter(cartVal => {
+        return this.state.data.mid === cartVal.mid
+      })
+      if (filterMerchantCart.length) {
+        if (filterMerchantCart[0].mid) {
+          cartButton = (
+            <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
+              <img src={cartIcon} alt={"cart"} alt='' />
+            </Link>
+          );
+        } else {
+          cartButton = <></>;
+        }
       } else {
         cartButton = <></>;
       }
@@ -937,7 +1082,7 @@ class ProductView extends React.Component {
                     <div className='custom-options'>
                       <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
                       {
-                        this.state.allProductsandCategories.map((menuCategory, index) => (
+                        this.state.productCategpersize.map((menuCategory, index) => (
                           <span key={index} className='custom-option' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
                         ))
                       }
