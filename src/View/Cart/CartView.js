@@ -605,7 +605,9 @@ class CartView extends React.Component {
       <>
         <div className='cartLayout'>
           <div className='cartTitle'>
-            <img className='LogoPikappCart' src={PikappLogo} alt='' />
+            <span className='logopikappCenter'>
+              <img className='LogoPikappCart' src={PikappLogo} alt='' />
+            </span>
 
             <h2 className='confirmationOrder'>Konfirmasi Pesanan Anda</h2>
           </div>
@@ -628,7 +630,7 @@ class CartView extends React.Component {
                     <div className='cartList-content-detail-left'>
                       <h2 className='cartList-content-title'>MondMilk Pure Chocolate</h2>
                       <h5 className='cartList-content-choice'></h5>
-                      <h5 className='cartList-content-notes'>Tambahkan Catatanmu jos mak nyuss broo</h5>
+                      <h5 className='cartList-content-notes'>Tambahkan Catatanmu</h5>
                       <h3 className='cartList-content-price'>17.000</h3>
                     </div>
 
