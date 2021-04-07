@@ -160,8 +160,6 @@ class FormView extends React.Component {
     //   return;
     // }
 
-    //test
-
     this.props.LoadingButton()
     this.setState({ isValid: true });
     const data = {

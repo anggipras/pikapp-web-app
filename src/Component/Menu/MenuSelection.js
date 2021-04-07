@@ -41,8 +41,6 @@ const MenuSelection = (props) => {
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
 
-    //test
-
     useEffect(() => {
         Autosize(document.getElementById('note'))
 
