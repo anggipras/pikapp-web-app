@@ -75,8 +75,6 @@ class CartView extends React.Component {
     indexEdit: 0,
   };
 
-  //test
-
   handleDetail(data) {
     if (data === "eat-method") {
       this.setState({ showModal: true });
