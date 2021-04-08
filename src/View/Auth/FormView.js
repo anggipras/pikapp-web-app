@@ -239,6 +239,7 @@ class FormView extends React.Component {
       return;
     }
 
+    this.props.LoadingButton()
     this.setState({ isValid: true });
     const data = {
       full_name: this.state.name,
@@ -270,6 +271,7 @@ class FormView extends React.Component {
       .catch((err) => {
         if (err.response.data !== undefined) {
           alert(err.response.data.err_message)
+          this.props.DoneLoad()
         }
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });

@@ -921,6 +921,8 @@ class ProductView extends React.Component {
     // }
 
     let cartButton;
+    const value = queryString.parse(window.location.search);
+    const notab = value.table || ""
     if (JSON.parse(localStorage.getItem('cart'))) {
       let allCart = JSON.parse(localStorage.getItem('cart'))
       let filterMerchantCart = allCart.filter(cartVal => {
@@ -928,8 +930,10 @@ class ProductView extends React.Component {
       })
       if (filterMerchantCart.length) {
         if (filterMerchantCart[0].mid) {
+          localStorage.setItem('table', notab)
+          localStorage.setItem('lastTable', notab)
           cartButton = (
-            <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
+            <Link to={"/cart"} className={"btn-productCart"}>
               <img src={cartIcon} alt={"cart"} alt='' />
             </Link>
           );
@@ -941,8 +945,10 @@ class ProductView extends React.Component {
       }
     } else {
       if (cart.length > 1) {
+        localStorage.setItem('table', notab)
+        localStorage.setItem('lastTable', notab)
         cartButton = (
-          <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
+          <Link to={"/cart"} className={"btn-productCart"}>
             <img src={cartIcon} alt={"cart"} />
           </Link>
         );

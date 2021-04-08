@@ -5,10 +5,9 @@ import CartProduct from "../../Asset/Illustration/productimg2.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
-import diningTableWhite from "../../Asset/Icon/diningTableWhite.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
-import takeawayWhite from "../../Asset/Icon/takeawayWhite.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
+import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 // import chevronImage from "../../Asset/Icon/chevron_right.png";
 // import removeIcon from "../../Asset/Icon/remove_icon.png";
@@ -19,6 +18,7 @@ import checklistLogo from "../../Asset/Icon/checklist.png";
 // import dineinIcon from "../../Asset/Icon/dinein_icon.png";
 // import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 import { CartModal } from "../../Component/Modal/CartModal";
+import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
 import { Link } from "react-router-dom";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -67,10 +67,12 @@ class CartView extends React.Component {
     notable: "",
     showModal: false,
     currentModalTitle: "",
-    paymentOption: "Pembayaran di kasir",
+    paymentOption: "Pembayaran Di Kasir",
     paymentType: "PAY_BY_CASHIER",
-    biz_type: this.props.noTable.table !== "" ? this.props.noTable.table > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
-    eat_type: this.props.noTable.table !== "" ? this.props.noTable.table > 0 ? "Makan di tempat" : "Bungkus / Takeaway" : "Makan di tempat",
+    biz_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
+    eat_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "Makan Di Tempat" : "Bungkus / Takeaway" : "Makan Di Tempat",
+    indexOptionEat: this.props.noTable !== undefined ? this.props.noTable > 0 ? 0 : 1 : 0,
+    indexOptionPay: 0,
     currentModal: [
       {
         image: "",
@@ -85,39 +87,54 @@ class CartView extends React.Component {
     indexEdit: 0,
   };
 
-  // handleDetail(data) {
-  //   if (data === "eat-method") {
-  //     this.setState({ showModal: true });
-  //     this.setState({ currentModalTitle: "Cara makan anda?" });
-  //     this.setState({
-  //       currentModal: [
-  //         {
-  //           image: "dineIn",
-  //           option: "Makan di tempat",
-  //         },
-  //         {
-  //           image: "takeaway",
-  //           option: "Bungkus / Takeaway",
-  //         },
-  //       ],
-  //     });
-  //   } else if (data === "pay-method") {
-  //     this.setState({ showModal: true });
-  //     this.setState({ currentModalTitle: "Bayar pakai apa?" });
-  //     this.setState({
-  //       currentModal: [
-  //         {
-  //           image: "cashier",
-  //           option: "Pembayaran di kasir",
-  //         },
-  //       ],
-  //     });
-  //   }
-  // }
+  handleDetail(data) {
+    if (data === "eat-method") {
+      this.setState({ showModal: true });
+      this.setState({ currentModalTitle: "Pilih Cara Makan Anda" });
+      this.setState({
+        currentModal: [
+          {
+            image: "dineIn",
+            option: "Makan Di Tempat",
+          },
+          {
+            image: "takeaway",
+            option: "Takeaway / Bungkus",
+          },
+        ],
+      });
+    } else if (data === "pay-method") {
+      this.setState({ showModal: true });
+      this.setState({ currentModalTitle: "Bayar Pakai Apa" });
+      this.setState({
+        currentModal: [
+          {
+            image: "cashier",
+            option: "Pembayaran Di Kasir",
+          },
+          {
+            image: "ovo",
+            option: "Pembayaran Ovo",
+          },
+        ],
+      });
+    } else if (data === "payment-detail") {
+      this.setState({ showModal: true });
+      this.setState({ currentModalTitle: "Rincian Pembayaran" });
+      this.setState({
+        currentModal: [
+          {
+            totalPrice: 20000,
+            discountPrice: 0,
+          },
+        ],
+      });
+    }
+  }
 
-  // setModal(isShow) {
-  //   this.setState({ showModal: isShow });
-  // }
+  setModal(isShow) {
+    this.setState({ showModal: isShow });
+  }
 
   // handleDecrease(e) {
   //   if (e.foodAmount > 1) {
@@ -185,38 +202,46 @@ class CartView extends React.Component {
   //   this.forceUpdate();
   // }
 
-  // handleOption = (data) => {
-  //   if (this.props.noTable.table !== "") {
-  //     if (data == 1) {
-  //       let newUrl = window.location.search
-  //       let changeTable = newUrl.slice(0, -1)
-  //       changeTable += 0
-  //       window.location.href = changeTable
-  //     } else {
-  //       let value = Cookies.get("lastProduct")
-  //       console.log(value);
-  //       let getPrevTable = value.charAt(value.length - 1)
-  //       let newUrl = window.location.search
-  //       let changeTable = newUrl.slice(0, -1)
-  //       changeTable += getPrevTable
-  //       window.location.href = changeTable
-  //     }
-  //   }
-  //   if (this.state.currentModalTitle === "Cara makan anda?") {
-  //     if (data === 0 || this.props.noTable.table > 0) {
-  //       this.setState({ biz_type: "DINE_IN" })
-  //       this.setState({ eat_type: "Makan di tempat" })
-  //     } else {
-  //       this.setState({ biz_type: "TAKE_AWAY" })
-  //       this.setState({ eat_type: "Bungkus / Takeaway" })
-  //     }
-  //   } else if (this.state.currentModalTitle === "Bayar pakai apa?") {
-  //     if (data === 0) {
-  //       this.setState({ paymentType: "PAY_BY_CASHIER" })
-  //       this.setState({ paymentOption: "Pembayaran di kasir" })
-  //     }
-  //   }
-  // }
+  handleOption = (data) => {
+    let valueTab
+    if (this.props.noTable !== undefined) {
+      if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
+        if (data == 1) {
+          // let newUrl = window.location.search
+          // let changeTable = newUrl.slice(0, -1)
+          // changeTable += 0
+          // window.location.href = changeTable
+          valueTab = 0
+          valueTab.toString()
+          localStorage.setItem('table', valueTab)
+        } else {
+          // let value = Cookies.get("lastProduct")
+          // console.log(value);
+          // let getPrevTable = value.charAt(value.length - 1)
+          // let newUrl = window.location.search
+          // let changeTable = newUrl.slice(0, -1)
+          // changeTable += getPrevTable
+          // window.location.href = changeTable
+          valueTab = localStorage.getItem('lastTable')
+          valueTab.toString()
+          localStorage.setItem('table', valueTab)
+        }
+      }
+    }
+    if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
+      if (data == 0) {
+        this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
+      } else {
+        this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
+      }
+    } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
+      if (data === 0) {
+        this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
+      } else {
+        this.setState({ paymentType: "PAY_BY_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
+      }
+    }
+  }
 
   // handlePayment = () => {
   //   this.setState({ loadButton: false })
@@ -463,6 +488,24 @@ class CartView extends React.Component {
     //   modal = <></>;
     // }
 
+    let modal
+    if (this.state.showModal === true) {
+      modal = (
+        <CartModalDev
+          isShow={this.state.showModal}
+          onHide={() => this.setModal(false)}
+          title={this.state.currentModalTitle}
+          detailOptions={this.state.currentModal}
+          handleData={this.handleOption}
+          // notable={this.props.noTable}
+          indexOptionEat={this.state.indexOptionEat}
+          indexOptionPay={this.state.indexOptionPay}
+        />
+      );
+    } else {
+      modal = <></>
+    }
+
     // let data = cart;
     // let totalAmount = 0;
     // data.forEach((store) => {
@@ -590,16 +633,18 @@ class CartView extends React.Component {
     //   }
     // });
 
-    // let paymentImage;
-    // let eatImage;
-    // if (this.state.biz_type === "DINE_IN") {
-    //   eatImage = dineinIcon;
-    // } else if (this.state.biz_type === "TAKE_AWAY") {
-    //   eatImage = takeawayIcon;
-    // }
-    // if (this.state.paymentType === "PAY_BY_CASHIER") {
-    //   paymentImage = cashierIcon
-    // }
+    let paymentImage;
+    let eatImage;
+    if (this.state.biz_type === "DINE_IN") {
+      eatImage = diningTableColor;
+    } else if (this.state.biz_type === "TAKE_AWAY") {
+      eatImage = takeawayColor;
+    }
+    if (this.state.paymentType === "PAY_BY_CASHIER") {
+      paymentImage = CashierPayment
+    } else if(this.state.paymentType === "PAY_BY_OVO") {
+      paymentImage = OvoPayment
+    }
 
     return (
       <>
@@ -684,13 +729,13 @@ class CartView extends React.Component {
                   </div>
                 </div>
 
-                <div className='cart-foodService'>
+                <div className='cart-foodService' onClick={() => this.handleDetail("eat-method")}>
                   <div className='cart-foodService-header'>
                     <div className='cart-foodService-title'>
                       Pilih Cara Makan Anda
                     </div>
 
-                    <div className='cart-foodService-selectButton'>
+                    <div className='cart-foodService-selectButton' >
                       <img className='cart-foodService-selectIcon' src={ArrowDownColor} />
                     </div>
                   </div>
@@ -698,17 +743,17 @@ class CartView extends React.Component {
                   <div className='cart-foodService-content'>
                     <div className='cart-foodService-descArea'>
                       <span>
-                        <img className='cart-foodService-logo' src={diningTableColor} />
+                        <img className='cart-foodService-logo' src={eatImage} />
                       </span>
 
                       <h3 className='cart-foodService-words'>
-                        Makan Di Tempat
+                        {this.state.eat_type}
                       </h3>
                     </div>
                   </div>
                 </div>
 
-                <div className='cart-paymentService'>
+                <div className='cart-paymentService' onClick={() => this.handleDetail("pay-method")}>
                   <div className='cart-paymentService-header'>
                     <div className='cart-paymentService-title'>
                       Bayar Pakai Apa?
@@ -722,18 +767,18 @@ class CartView extends React.Component {
                   <div className='cart-paymentService-content'>
                     <div className='cart-paymentService-descArea'>
                       <span>
-                        <img className='cart-paymentService-logo' src={CashierPayment} />
+                        <img className='cart-paymentService-logo' src={paymentImage} />
                       </span>
 
                       <h3 className='cart-paymentService-words'>
-                        Pembayaran Di Kasir
+                        {this.state.paymentOption}
                       </h3>
                     </div>
                   </div>
                 </div>
 
                 <div className='cart-checkoutArea'>
-                  <div className='cart-TotalAmount'>
+                  <div className='cart-TotalAmount' onClick={() => this.handleDetail("payment-detail")}>
                     <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
 
                     <div className='cart-TotalAmount-bottom'>
@@ -766,7 +811,7 @@ class CartView extends React.Component {
         <div className='cartLayout-mob'>
           <div className='cart-checkoutArea-mob'>
 
-            <div className='cart-TotalAmount-mob'>
+            <div className='cart-TotalAmount-mob' onClick={() => this.handleDetail("payment-detail")}>
               <h3 className='cart-TotalAmount-title-mob'>Total Bayar</h3>
 
               <div className='cart-TotalAmount-bottom-mob'>
@@ -793,6 +838,7 @@ class CartView extends React.Component {
             </div>
           </div>
         </div>
+        {modal}
 
 
 

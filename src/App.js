@@ -1,5 +1,6 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "./Asset/scss/App.scss";
 import AuthLayout from "./Master/AuthLayout";
 import ProductLayout from "./Master/ProductLayout";
