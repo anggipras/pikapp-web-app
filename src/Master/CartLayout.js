@@ -8,9 +8,13 @@ export default class CartLayout extends React.Component {
   }
 
   render() {
-    const value = queryString.parse(window.location.search);
+    // const value = queryString.parse(window.location.search);
+    let valueTable
+    if (localStorage.getItem('table')) {
+      valueTable = localStorage.getItem('table')
+    }
     return (
-      <CartView noTable={value} />
+      <CartView noTable={valueTable} />
     );
   }
 }
