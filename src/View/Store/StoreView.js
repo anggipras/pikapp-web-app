@@ -136,8 +136,6 @@ class StoreView extends React.Component {
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
-    console.log(uuid);
-    console.log(date);
     Axios(addressRoute, {
       headers: {
         "Content-Type": "application/json",
@@ -404,14 +402,17 @@ class StoreView extends React.Component {
             {
               !this.state.loadView ?
                 this.state.idCol <= this.state.page ?
-                  <div id={"idCol"}>
-                    {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
-                    {this.merchantLoading()}
-                  </div>
+                  this.state.totalPage-1 === this.state.page ?
+                    null
+                    :
+                    <div id={"idCol"}>
+                      {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
+                      {this.merchantLoading()}
+                    </div>
                   :
                   null
                 :
-                this.merchantLoading()
+                null
             }
           </div>
         </Row>

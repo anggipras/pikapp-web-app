@@ -32,6 +32,8 @@ export var cart = [
 
 if (localStorage.getItem("cart")) {
     cart = JSON.parse(localStorage.getItem("cart"));
+} else {
+    localStorage.setItem('cart', JSON.stringify(cart))
 }
 
 function App() {

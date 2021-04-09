@@ -7,19 +7,21 @@ import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
 
 const MerchantResto = (props) => {
-  const [merchant, setmerchant] = useState([
-    {
-      address: "",
-      rating: "",
-      logo: "",
-      distance: "",
-      storeId: "",
-      storeName: "",
-      storeDesc: "",
-      storeImage: "",
-    },
-  ]);
+  // const [merchant, setmerchant] = useState([
+  //   {
+  //     address: "",
+  //     rating: "",
+  //     logo: "",
+  //     distance: "",
+  //     storeId: "",
+  //     storeName: "",
+  //     storeDesc: "",
+  //     storeImage: "",
+  //   },
+  // ]);
   const [longlatad, setlonglat] = useState("");
+  const [page, setpage] = useState(0);
+  const [pageCond, setpageCond] = useState(false);
   let history = useHistory();
 
   useEffect(() => {
@@ -47,77 +49,68 @@ const MerchantResto = (props) => {
   });
 
   const getMerchantData = (lat, lon) => {
-    if (merchant[0].storeId == "") {
-      let addressRoute =
-        address + "home/v2/merchant/" + lon + "/" + lat + "/ALL/";
-      var stateData;
-      let uuid = uuidV4();
-      uuid = uuid.replaceAll("-", "");
-      const date = new Date().toISOString();
-      Axios(addressRoute, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "category": "1",
-        },
-        method: "GET",
-        params: {
-          page: 0,
-          size: 10
-        }
-      })
-        .then((res) => {
-          stateData = [{ ...merchant }];
-          let responseDatas = res.data;
-          stateData.pop();
-          responseDatas.results.forEach((data) => {
-            stateData.push({
-              address: data.merchant_address,
-              rating: data.merchant_rating,
-              logo: data.merchant_logo,
-              distance: data.merchant_distance,
-              storeId: data.mid,
-              storeName: data.merchant_name,
+    let addressRoute =
+      address + "home/v2/merchant/" + lon + "/" + lat + "/ALL/";
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "category": "1",
+      },
+      method: "GET",
+      params: {
+        page: page,
+        size: 6
+      }
+    })
+      .then((res) => {
+        let responseDatas = res.data.results;
+        responseDatas.forEach((dataMerch, indexMerch) => {
+          if (dataMerch.mid === props.match.params.mid) {
+            // condition where api response and params at url match
+            let stateData = []
+            stateData.push(dataMerch)
+            var currentMerchant = {
+              mid: "",
+              storeName: "",
               storeDesc: "",
-              storeImage: data.merchant_pict,
-            });
-          });
-          console.log(stateData);
-          console.log(props.match.params.mid);
-          console.log(stateData[0].storeId);
-          let matchmid = stateData.filter((val) => {
-            return val.storeId == props.match.params.mid;
-          });
-          console.log(matchmid[0].storeId);
-          var currentMerchant = {
-            mid: "",
-            storeName: "",
-            storeDesc: "",
-            distance: "",
-            storeImage: "",
-            storeAdress: "",
-            storeRating: "",
-          };
-          currentMerchant.mid = matchmid[0].storeId;
-          currentMerchant.storeName = matchmid[0].storeName;
-          currentMerchant.storeDesc = "Desc";
-          currentMerchant.distance = matchmid[0].distance;
-          currentMerchant.storeImage = matchmid[0].storeImage;
-          currentMerchant.storeAdress = matchmid[0].address;
-          currentMerchant.storeRating = matchmid[0].rating;
-          Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
-          history.push(
-            "/store?mid=" +
-              matchmid[0].storeId +
+              distance: "",
+              storeImage: "",
+              storeAdress: "",
+              storeRating: "",
+            };
+            currentMerchant.mid = dataMerch.mid;
+            currentMerchant.storeName = dataMerch.merchant_name;
+            currentMerchant.storeDesc = "Desc";
+            currentMerchant.distance = dataMerch.merchant_distance;
+            currentMerchant.storeImage = dataMerch.merchant_pict;
+            currentMerchant.storeAdress = dataMerch.merchant_address;
+            currentMerchant.storeRating = dataMerch.merchant_rating;
+            Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
+            localStorage.setItem('selectedMerchant', JSON.stringify(stateData))
+            history.push(
+              "/store?mid=" +
+              dataMerch.mid +
               "&table=" +
               props.match.params.notab
-          );
+            );
+          } else {
+            if (indexMerch === responseDatas.length-1) {
+              let nextPage = page
+              nextPage++
+              setpage(nextPage)
+            }
+          }
         })
-        .catch((err) => console.log(err));
-    }
+      })
+      .catch((err) => console.log(err));
   }
 
   return <div></div>;

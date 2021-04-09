@@ -1,7 +1,6 @@
 import React from "react";
 // import { Row, Col, Button, ButtonGroup, Form } from "react-bootstrap";
 import PikappLogo from "../../Asset/Logo/logo4x.png";
-import CartProduct from "../../Asset/Illustration/productimg2.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
@@ -62,6 +61,15 @@ var currentExt = {
   listradio: []
 };
 
+var currentTotal = 0
+
+var finalProduct = [
+  {
+    totalPrice: 20000,
+    discountPrice: 0,
+  },
+]
+
 class CartView extends React.Component {
   state = {
     notable: "",
@@ -85,6 +93,7 @@ class CartView extends React.Component {
     currentData: {},
     themid: '',
     indexEdit: 0,
+    updateData: ''
   };
 
   handleDetail(data) {
@@ -122,12 +131,7 @@ class CartView extends React.Component {
       this.setState({ showModal: true });
       this.setState({ currentModalTitle: "Rincian Pembayaran" });
       this.setState({
-        currentModal: [
-          {
-            totalPrice: 20000,
-            discountPrice: 0,
-          },
-        ],
+        currentModal: finalProduct
       });
     }
   }
@@ -136,92 +140,112 @@ class CartView extends React.Component {
     this.setState({ showModal: isShow });
   }
 
-  // handleDecrease(e) {
-  //   if (e.foodAmount > 1) {
-  //     e.foodAmount -= 1;
-  //     this.forceUpdate();
-  //   }
-  // }
+  handleDecrease(e, ind, mid) {
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    if (e.foodAmount > 1) {
+      let filteredStore = []
+      allCart.forEach((store) => {
+        if (store.mid === mid) {
+          filteredStore = store.food.filter((data, index) => {
+            return index === ind
+          })
 
-  // handleIncrease(e) {
-  //   e.foodAmount += 1;
-  //   this.forceUpdate();
-  // }
+          let { foodAmount, foodTotalPrice } = filteredStore[0]
 
-  // handleDelete(e, ind, mid) {
-  //   let filteredCart;
-  //   let addedMerchants = []
-  //   let newAllCart = []
-  //   let allCart = JSON.parse(localStorage.getItem('cart'))
-  //   allCart.forEach((store) => {
-  //     if (store.mid === mid) {
-  //       let filteredStore = store.food.filter((data, index) => {
-  //         return index !== ind
-  //       })
+          let countAmount = foodTotalPrice - (foodTotalPrice / foodAmount)
 
-  //       if (filteredStore.length === 0) {
-  //         filteredCart = cart.filter((filterStore) => {
-  //           return filterStore.mid !== store.mid;
-  //         });
-  //         localStorage.setItem("cart", JSON.stringify(filteredCart))
-  //         filteredCart.forEach((cart) => {
-  //           addedMerchants.push(cart.mid)
-  //           Cookies.set("addedMerchants", addedMerchants)
-  //         })
-  //       } else {
-  //         let newFilter = store.food
-  //         newFilter = []
-  //         filteredStore.forEach((val) => {
-  //           console.log(val);
-  //           newFilter.push(val)
-  //         })
-  //         store.food = newFilter
-  //         newAllCart.push(store)
-  //       }
-  //     } else {
-  //       newAllCart.push(store)
-  //     }
-  //   });
+          filteredStore[0].foodTotalPrice = countAmount
+          filteredStore[0].foodAmount = foodAmount - 1
+          store.food[ind] = filteredStore[0]
+        }
+      });
 
-  //   if (newAllCart.length < 2) {
-  //     cart.splice(1)
-  //     localStorage.setItem("cart", JSON.stringify(newAllCart))
-  //     window.history.back()
-  //     // window.location.href = Cookies.get("lastProduct")
-  //   } else {
-  //     let filterMerchantCart = newAllCart.filter(valueCart => {
-  //       return valueCart.mid === mid
-  //     })
-  //     localStorage.setItem("cart", JSON.stringify(newAllCart))
-  //     if (filterMerchantCart.length) {
-  //       window.location.reload()
-  //     } else {
-  //       window.history.back()
-  //     }
-  //   }
-  //   this.forceUpdate();
-  // }
+      localStorage.setItem('cart', JSON.stringify(allCart))
+      this.setState({ updateData: 'updated' })
+    } else {
+      let filteredCart;
+      let addedMerchants = []
+      let newAllCart = []
+      allCart.forEach((store) => {
+        if (store.mid === mid) {
+          let filteredStore = store.food.filter((data, index) => {
+            return index !== ind
+          })
+
+          if (filteredStore.length === 0) {
+            filteredCart = cart.filter((filterStore) => {
+              return filterStore.mid !== store.mid;
+            });
+            localStorage.setItem("cart", JSON.stringify(filteredCart))
+            filteredCart.forEach((cart) => {
+              addedMerchants.push(cart.mid)
+              Cookies.set("addedMerchants", addedMerchants)
+            })
+          } else {
+            let newFilter = store.food
+            newFilter = []
+            filteredStore.forEach((val) => {
+              console.log(val);
+              newFilter.push(val)
+            })
+            store.food = newFilter
+            newAllCart.push(store)
+          }
+        } else {
+          newAllCart.push(store)
+        }
+      });
+
+      if (newAllCart.length < 2) {
+        cart.splice(1)
+        localStorage.setItem("cart", JSON.stringify(newAllCart))
+        window.history.back()
+      } else {
+        let filterMerchantCart = newAllCart.filter(valueCart => {
+          return valueCart.mid === mid
+        })
+        localStorage.setItem("cart", JSON.stringify(newAllCart))
+        if (filterMerchantCart.length) {
+          this.setState({ updateData: 'updated' })
+        } else {
+          window.history.back()
+        }
+      }
+    }
+  }
+
+  handleIncrease(e, ind, mid) {
+    let filteredStore = []
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    allCart.forEach((store) => {
+      if (store.mid === mid) {
+        filteredStore = store.food.filter((data, index) => {
+          return index === ind
+        })
+
+        let { foodAmount, foodTotalPrice } = filteredStore[0]
+
+        let countAmount = foodTotalPrice + (foodTotalPrice / foodAmount)
+
+        filteredStore[0].foodTotalPrice = countAmount
+        filteredStore[0].foodAmount = foodAmount + 1
+        store.food[ind] = filteredStore[0]
+      }
+    });
+
+    localStorage.setItem('cart', JSON.stringify(allCart))
+    this.setState({ updateData: 'updated' })
+  }
 
   handleOption = (data) => {
     let valueTab
     if (this.props.noTable !== undefined) {
       if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
         if (data == 1) {
-          // let newUrl = window.location.search
-          // let changeTable = newUrl.slice(0, -1)
-          // changeTable += 0
-          // window.location.href = changeTable
           valueTab = 0
           valueTab.toString()
           localStorage.setItem('table', valueTab)
         } else {
-          // let value = Cookies.get("lastProduct")
-          // console.log(value);
-          // let getPrevTable = value.charAt(value.length - 1)
-          // let newUrl = window.location.search
-          // let changeTable = newUrl.slice(0, -1)
-          // changeTable += getPrevTable
-          // window.location.href = changeTable
           valueTab = localStorage.getItem('lastTable')
           valueTab.toString()
           localStorage.setItem('table', valueTab)
@@ -332,125 +356,124 @@ class CartView extends React.Component {
   //   })
   // };
 
-  // newListCheck = (food) => {
-  //   let newlistArr = ''
-  //   food.foodListCheckbox.forEach((val) => {
-  //     val.forEach((val2) => {
-  //       return newlistArr += `${val2.name},`
-  //     })
-  //   })
-  //   return <p>{newlistArr}</p>
-  // }
+  newListAllChoices = (food) => {
+    let newlistArr = ''
+    food.foodListCheckbox.forEach((val) => {
+      val.forEach((val2) => {
+        return newlistArr += `${val2.name}, `
+      })
+    })
 
-  // newListRadio = (food) => {
-  //   let newlistArr = ''
-  //   food.foodListRadio.forEach((val) => {
-  //     val.forEach((val2) => {
-  //       return newlistArr += `${val2.name},`
-  //     })
-  //   })
-  //   return <p>{newlistArr}</p>
-  // }
+    food.foodListRadio.forEach((val) => {
+      val.forEach((val2) => {
+        return newlistArr += `${val2.name}, `
+      })
+    })
+    return <h5 className='cartList-content-choice'>{newlistArr}</h5>
+  }
 
-  // onEditCart = (ind, mid) => {
-  //   let filteredStore = []
-  //   let allCart = JSON.parse(localStorage.getItem('cart'))
-  //   allCart.forEach((store) => {
-  //     if (store.mid === mid) {
-  //       filteredStore = store.food.filter((data, index) => {
-  //         return index === ind
-  //       })
-  //     }
-  //   });
+  onEditCart = (ind, mid) => {
+    let filteredStore = []
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    allCart.forEach((store) => {
+      if (store.mid === mid) {
+        filteredStore = store.food.filter((data, index) => {
+          return index === ind
+        })
+      }
+    });
 
-  //   var objFilteredCart = {
-  //     productId: filteredStore[0].productId,
-  //     foodName: filteredStore[0].foodName,
-  //     foodDesc: "",
-  //     foodCategory: filteredStore[0].foodCategory,
-  //     foodPrice: filteredStore[0].foodPrice,
-  //     foodImage: filteredStore[0].foodImage,
-  //     foodNote: filteredStore[0].foodNote,
-  //     foodListCheckbox: filteredStore[0].foodListCheckbox,
-  //     foodListRadio: filteredStore[0].foodListRadio,
-  //     foodExt: [
-  //       {
-  //         name: "",
-  //         amount: filteredStore[0].foodAmount,
-  //       },
-  //     ],
-  //   }
+    var objFilteredCart = {
+      productId: filteredStore[0].productId,
+      foodName: filteredStore[0].foodName,
+      foodDesc: "",
+      foodCategory: filteredStore[0].foodCategory,
+      foodPrice: filteredStore[0].foodPrice,
+      foodImage: filteredStore[0].foodImage,
+      foodNote: filteredStore[0].foodNote,
+      foodListCheckbox: filteredStore[0].foodListCheckbox,
+      foodListRadio: filteredStore[0].foodListRadio,
+      foodTotalPrice: filteredStore[0].foodTotalPrice,
+      foodExt: [
+        {
+          name: "",
+          amount: filteredStore[0].foodAmount,
+        },
+      ],
+    }
 
-  //   this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart, indexEdit: ind, themid: mid })
-  //   this.props.EditMenuCart(true)
-  //   document.body.style.overflowY = 'hidden'
-  // }
+    this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart, indexEdit: ind, themid: mid })
+    this.props.EditMenuCart(true)
+    document.body.style.overflowY = 'hidden'
+  }
 
-  // setMenuDetail(isShow) {
-  //   this.setState({ showMenuDet: isShow })
-  //   document.body.style.overflowY = ''
-  // }
+  setMenuDetail(isShow) {
+    this.setState({ showMenuDet: isShow })
+    document.body.style.overflowY = ''
+  }
 
-  // menuDetail = () => {
-  //   if (this.state.showMenuDet === true) {
-  //     return (
-  //       <MenuDetail
-  //         isShow={this.state.showMenuDet}
-  //         onHide={() => this.setMenuDetail(false)}
-  //         datas={this.state.currentData}
-  //         handleClick={this.handleSaveCart}
-  //         handleData={this.handleCart}
-  //       />
-  //     );
-  //   }
-  // }
+  handleCartAmount = (price) => {
+    currentTotal = price
+  }
 
-  // handleCart = (data) => {
-  //   currentExt = data
-  // }
+  menuDetail = () => {
+    if (this.state.showMenuDet === true) {
+      return (
+        <MenuDetail
+          isShow={this.state.showMenuDet}
+          onHide={() => this.setMenuDetail(false)}
+          datas={this.state.currentData}
+          handleAmount={this.handleCartAmount}
+          handleClick={this.handleSaveCart}
+          handleData={this.handleCart}
+        />
+      );
+    }
+  }
 
-  // handleSaveCart = () => {
-  //   let filteredStore = []
-  //   let allCart = JSON.parse(localStorage.getItem('cart'))
-  //   allCart.forEach((store) => {
-  //     if (store.mid === this.state.themid) {
-  //       filteredStore = store.food.filter((data, index) => {
-  //         return index === this.state.indexEdit
-  //       })
+  handleCart = (data) => {
+    currentExt = data
+  }
 
-  //       console.log(currentExt);
+  handleSaveCart = () => {
+    let filteredStore = []
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    allCart.forEach((store) => {
+      if (store.mid === this.state.themid) {
+        filteredStore = store.food.filter((data, index) => {
+          return index === this.state.indexEdit
+        })
 
-  //       filteredStore[0].foodAmount = currentExt.detailCategory[0].amount
-  //       filteredStore[0].foodListCheckbox = currentExt.listcheckbox
-  //       filteredStore[0].foodListRadio = currentExt.listradio
-  //       filteredStore[0].foodNote = currentExt.note
+        filteredStore[0].foodAmount = currentExt.detailCategory[0].amount
+        filteredStore[0].foodListCheckbox = currentExt.listcheckbox
+        filteredStore[0].foodListRadio = currentExt.listradio
+        filteredStore[0].foodNote = currentExt.note
+        filteredStore[0].foodTotalPrice = currentTotal
 
-  //       console.log(filteredStore[0]);
-
-  //       store.food[this.state.indexEdit] = filteredStore[0]
-  //     }
-  //   });
-  //   localStorage.setItem('cart', JSON.stringify(allCart))
-  //   window.location.reload()
-  // }
+        store.food[this.state.indexEdit] = filteredStore[0]
+      }
+    });
+    localStorage.setItem('cart', JSON.stringify(allCart))
+    this.setState({ updateData: 'updated' })
+  }
 
   render() {
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
-    // if (auth.isLogged === false) {
-    //   var lastLink = { value: window.location.href }
-    //   Cookies.set("lastLink", lastLink, { expires: 1 })
-    //   window.location.href = "/login"
-    // }
-    // let modal;
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
+      window.location.href = "/login"
+    }
+    let modal;
     // let paymentButton;
     // if (auth.isLoggedIn === false) {
     //   paymentButton = (
@@ -473,22 +496,7 @@ class CartView extends React.Component {
     //     )
     //   }
     // }
-    // if (this.state.showModal === true) {
-    //   modal = (
-    //     <CartModal
-    //       isShow={() => this.setModal(true)}
-    //       onHide={() => this.setModal(false)}
-    //       title={this.state.currentModalTitle}
-    //       detailOptions={this.state.currentModal}
-    //       handleData={this.handleOption}
-    //       notable={this.props.noTable}
-    //     />
-    //   );
-    // } else {
-    //   modal = <></>;
-    // }
 
-    let modal
     if (this.state.showModal === true) {
       modal = (
         <CartModalDev
@@ -497,7 +505,6 @@ class CartView extends React.Component {
           title={this.state.currentModalTitle}
           detailOptions={this.state.currentModal}
           handleData={this.handleOption}
-          // notable={this.props.noTable}
           indexOptionEat={this.state.indexOptionEat}
           indexOptionPay={this.state.indexOptionPay}
         />
@@ -506,132 +513,112 @@ class CartView extends React.Component {
       modal = <></>
     }
 
-    // let data = cart;
-    // let totalAmount = 0;
-    // data.forEach((store) => {
-    //   store.food.forEach((food) => {
-    //     totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-    //   });
-    // });
-    // let storeList = data.filter((store) => {
-    //   if (store.mid !== "") {
-    //     return store;
-    //   }
-    // });
+    let storageData = JSON.parse(localStorage.getItem('cart'))
+    let data = storageData;
+    let totalAmount = 0;
+    data.forEach((store) => {
+      store.food.forEach((food) => {
+        totalAmount = totalAmount + food.foodPrice * food.foodAmount;
+      });
+    });
+    let storeList = data.filter((store) => {
+      if (store.mid !== "") {
+        return store;
+      }
+    });
 
-    // const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    // let contentView = storeList.map((store) => {
-    //   if (store.mid === currentCartMerchant.mid) {
-    //     let itemListView = data.map((cartData) => {
-    //       if (cartData.mid === store.mid) {
-    //         return store.food.map((food, index) => {
-    //           return (
-    //             <Row>
-    //               <Col xs={0} md={3} />
-    //               <Col xs={3} md={1}>
-    //                 <img
-    //                   src={food.foodImage}
-    //                   alt={"food"}
-    //                   className={"cartFoodImage"}
-    //                 />
-    //               </Col>
-    //               <Col>
-    //                 <Row>
-    //                   <Col>
-    //                     <p className={"cartContentFood"}>{food.foodName}</p>
-    //                     <p>List Check: {this.newListCheck(food)}</p>
-    //                     <p>List Option: {this.newListRadio(food)}</p>
-    //                     <p className={"cartContentPrice"}>Catatan:</p>
-    //                     <p className={"cartContentPrice"}>{food.foodNote}</p>
-    //                     <p className={"cartContentPrice"}>
-    //                       {Intl.NumberFormat("id-ID", {
-    //                         style: "currency",
-    //                         currency: "IDR",
-    //                       }).format(food.foodPrice)}
-    //                     </p>
-    //                   </Col>
-    //                 </Row>
-    //               </Col>
-    //               <Col>
-    //                 <Row>
-    //                   <Col>
-    //                     <button
-    //                       className={"iconButton"}
-    //                       onClick={() => this.handleDelete(food, index, store.mid)}
-    //                     >
-    //                       <img src={removeIcon} alt={"remove icon"} />
-    //                     </button>
-    //                     <button onClick={() => this.onEditCart(index, store.mid)}>EDIT</button>
-    //                   </Col>
-    //                 </Row>
-    //                 <Row>
-    //                   <Col>
-    //                     <ButtonGroup className={"cartModalButtonGroup"}>
-    //                       <Button
-    //                         onClick={() => this.handleDecrease(food)}
-    //                         variant="cartModalMiniButton"
-    //                       >
-    //                         -
-    //                     </Button>
-    //                       <Form.Control
-    //                         value={food.foodAmount}
-    //                         className="cartModalField"
-    //                         disabled
-    //                       ></Form.Control>
-    //                       <Button
-    //                         onClick={() => this.handleIncrease(food)}
-    //                         variant="cartModalMiniButton"
-    //                       >
-    //                         +
-    //                     </Button>
-    //                     </ButtonGroup>
-    //                   </Col>
-    //                 </Row>
-    //               </Col>
-    //             </Row>
-    //           )
-    //         })
-    //       }
-    //     });
-    //     return (
-    //       <>
-    //         <Row>
-    //           <Col xs={0} md={3} />
-    //           <Col>
-    //             <p className={"cartTitle"}>{store.storeName}</p>
-    //           </Col>
-    //         </Row>
-    //         <Row>
-    //           <Col xs={0} md={3} />
-    //           <Col xs={1} md={1}>
-    //             <img src={storeIcon} className={"cartIcon"} alt={"store icon"} />
-    //           </Col>
-    //           <Col>
-    //             <Row>
-    //               <Col>
-    //                 <p className={"cartNote"}>Store Location</p>
-    //                 <p className={"cartTitle"}>{store.storeDesc}</p>
-    //                 <p className={"cartNote"}>
-    //                   <b>{store.storeDistance}</b>
-    //                 </p>
-    //               </Col>
-    //             </Row>
-    //           </Col>
-    //           <Col xs={2} md={3}>
-    //             <button className={"iconButton"}>
-    //               <img
-    //                 src={chevronImage}
-    //                 onClick={() => this.handleDetail()}
-    //                 alt={"chevron right"}
-    //               />
-    //             </button>
-    //           </Col>
-    //         </Row>
-    //         {itemListView}
-    //       </>
-    //     );
-    //   }
-    // });
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let contentView = storeList.map((store) => {
+      let storeFood
+      if (store.mid === currentCartMerchant.mid) {
+        storeFood = store.food.map((food, index) => {
+          return (
+            <div key={index} className='cartList-content'>
+              <div className='cartList-content-frame'>
+                <img className='cartList-content-image' src={food.foodImage} alt='' />
+              </div>
+
+              <div className='cartList-content-detail'>
+                <div className='cartList-content-detail-left'>
+                  <h2 className='cartList-content-title'>{food.foodName}</h2>
+                  {this.newListAllChoices(food)}
+                  <h5 className='cartList-content-notes'>{food.foodNote}</h5>
+                  <h3 className='cartList-content-price'>{Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                </div>
+
+                <div className='cartList-content-detail-right'>
+                  <div className='cartList-editButton' onClick={() => this.onEditCart(index, store.mid)}>
+                    <div className='cartList-editWord'>EDIT</div>
+                  </div>
+
+                  <div className='cartList-amountBox'>
+                    <div className='cartList-amountBox-inside'>
+                      <div className='cartList-minusBox' onClick={() => this.handleDecrease(food, index, store.mid)}>
+                        <div className='cartList-minusSym'>
+                          -
+                        </div>
+                      </div>
+
+                      <div className='cartList-numberArea'>
+                        {food.foodAmount}
+                      </div>
+
+                      <div className='cartList-plusBox' onClick={() => this.handleIncrease(food, index, store.mid)}>
+                        <div className='cartList-plusSym'>
+                          +
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })
+      }
+      return storeFood
+    });
+
+    let detailView = storeList.map((store, index) => {
+      if (store.mid === currentCartMerchant.mid) {
+        return (
+          <div key={index} className='cart-storeBox'>
+            <div className='cart-storeBox-header'>
+              <div className='cart-storeBox-title'>
+                Store Location
+              </div>
+
+              <div className='cart-storeBox-distance'>
+                {store.storeDistance}
+              </div>
+            </div>
+
+            <div className='cart-storeBox-content'>
+              <h4 className='cart-storeBox-descArea'>
+                {store.storeDesc}
+              </h4>
+            </div>
+          </div>
+        )
+      }
+    });
+
+    let totalPaymentShow = storeList.map(store => {
+      if (store.mid === currentCartMerchant.mid) {
+        let countAllProduct = 0
+        store.food.forEach(food => {
+          countAllProduct += food.foodTotalPrice
+        })
+        return countAllProduct
+      }
+    });
+
+    finalProduct = [
+      {
+        totalPrice: Intl.NumberFormat("id-ID").format(totalPaymentShow),
+        discountPrice: 0,
+      },
+    ]
 
     let paymentImage;
     let eatImage;
@@ -642,7 +629,7 @@ class CartView extends React.Component {
     }
     if (this.state.paymentType === "PAY_BY_CASHIER") {
       paymentImage = CashierPayment
-    } else if(this.state.paymentType === "PAY_BY_OVO") {
+    } else if (this.state.paymentType === "PAY_BY_OVO") {
       paymentImage = OvoPayment
     }
 
@@ -666,68 +653,13 @@ class CartView extends React.Component {
                   </h4>
                 </div>
 
-                <div className='cartList-content'>
-                  <div className='cartList-content-frame'>
-                    <img className='cartList-content-image' src={CartProduct} alt='' />
-                  </div>
-
-                  <div className='cartList-content-detail'>
-                    <div className='cartList-content-detail-left'>
-                      <h2 className='cartList-content-title'>MondMilk Pure Chocolate</h2>
-                      <h5 className='cartList-content-choice'></h5>
-                      <h5 className='cartList-content-notes'>Tambahkan Catatanmu</h5>
-                      <h3 className='cartList-content-price'>17.000</h3>
-                    </div>
-
-                    <div className='cartList-content-detail-right'>
-                      <div className='cartList-editButton'>
-                        <div className='cartList-editWord'>EDIT</div>
-                      </div>
-
-                      <div className='cartList-amountBox'>
-                        <div className='cartList-amountBox-inside'>
-                          <div className='cartList-minusBox'>
-                            <div className='cartList-minusSym'>
-                              -
-                            </div>
-                          </div>
-
-                          <div className='cartList-numberArea'>
-                            1
-                          </div>
-
-                          <div className='cartList-plusBox'>
-                            <div className='cartList-plusSym'>
-                              +
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {contentView}
               </div>
             </div>
 
             <div className='cart-RightSide'>
               <div className='flex-RightSide'>
-                <div className='cart-storeBox'>
-                  <div className='cart-storeBox-header'>
-                    <div className='cart-storeBox-title'>
-                      Store Location
-                    </div>
-
-                    <div className='cart-storeBox-distance'>
-                      27.96 Km
-                    </div>
-                  </div>
-
-                  <div className='cart-storeBox-content'>
-                    <h4 className='cart-storeBox-descArea'>
-                      Description 1 Description 2 Description 3
-                    </h4>
-                  </div>
-                </div>
+                {detailView}
 
                 <div className='cart-foodService' onClick={() => this.handleDetail("eat-method")}>
                   <div className='cart-foodService-header'>
@@ -736,14 +668,14 @@ class CartView extends React.Component {
                     </div>
 
                     <div className='cart-foodService-selectButton' >
-                      <img className='cart-foodService-selectIcon' src={ArrowDownColor} />
+                      <img className='cart-foodService-selectIcon' src={ArrowDownColor} alt='' />
                     </div>
                   </div>
 
                   <div className='cart-foodService-content'>
                     <div className='cart-foodService-descArea'>
                       <span>
-                        <img className='cart-foodService-logo' src={eatImage} />
+                        <img className='cart-foodService-logo' src={eatImage} alt='' />
                       </span>
 
                       <h3 className='cart-foodService-words'>
@@ -760,14 +692,14 @@ class CartView extends React.Component {
                     </div>
 
                     <div className='cart-paymentService-selectButton'>
-                      <img className='cart-paymentService-selectIcon' src={ArrowDownColor} />
+                      <img className='cart-paymentService-selectIcon' src={ArrowDownColor} alt='' />
                     </div>
                   </div>
 
                   <div className='cart-paymentService-content'>
                     <div className='cart-paymentService-descArea'>
                       <span>
-                        <img className='cart-paymentService-logo' src={paymentImage} />
+                        <img className='cart-paymentService-logo' src={paymentImage} alt='' />
                       </span>
 
                       <h3 className='cart-paymentService-words'>
@@ -782,23 +714,23 @@ class CartView extends React.Component {
                     <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
 
                     <div className='cart-TotalAmount-bottom'>
-                      <h2 className='cart-TotalAmount-price'>Rp. 20.000</h2>
+                      <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
 
-                      <img className='cart-TotalAmount-detailArrow' src={ArrowDownColor} />
+                      <img className='cart-TotalAmount-detailArrow' src={ArrowDownColor} alt='' />
                     </div>
                   </div>
 
                   <div className='cart-OrderButton'>
                     <div className='cart-OrderButton-content'>
                       <span className='cart-OrderButton-Frame'>
-                        <img className='cart-OrderButton-checklist' src={checklistLogo} />
+                        <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
                       </span>
 
                       <h1 className='cart-OrderButton-word'>PESAN</h1>
                     </div>
 
                     <span>
-                      <img className='cart-OrderButton-orderArrow' src={ArrowRightWhite} />
+                      <img className='cart-OrderButton-orderArrow' src={ArrowRightWhite} alt='' />
                     </span>
                   </div>
                 </div>
@@ -815,10 +747,10 @@ class CartView extends React.Component {
               <h3 className='cart-TotalAmount-title-mob'>Total Bayar</h3>
 
               <div className='cart-TotalAmount-bottom-mob'>
-                <h2 className='cart-TotalAmount-price-mob'>Rp. 20.000</h2>
+                <h2 className='cart-TotalAmount-price-mob'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
 
                 <span className='cart-TotalAmount-detailArrowCenter-mob'>
-                  <img className='cart-TotalAmount-detailArrow-mob' src={ArrowDownColor} />
+                  <img className='cart-TotalAmount-detailArrow-mob' src={ArrowDownColor} alt='' />
                 </span>
               </div>
             </div>
@@ -826,19 +758,20 @@ class CartView extends React.Component {
             <div className='cart-OrderButton-mob'>
               <div className='cart-OrderButton-content-mob'>
                 <span className='cart-OrderButton-Frame-mob'>
-                  <img className='cart-OrderButton-checklist-mob' src={checklistLogo} />
+                  <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
                 </span>
 
                 <h1 className='cart-OrderButton-word-mob'>PESAN</h1>
               </div>
 
               <span className='cart-OrderButton-orderArrowCenter-mob'>
-                <img className='cart-OrderButton-orderArrow-mob' src={ArrowRightWhite} />
+                <img className='cart-OrderButton-orderArrow-mob' src={ArrowRightWhite} alt='' />
               </span>
             </div>
           </div>
         </div>
         {modal}
+        {this.menuDetail()}
 
 
 
