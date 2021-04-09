@@ -102,6 +102,29 @@ const MenuDetail = (props) => {
         findCateg = findCateg[0].category_name.toLowerCase()
     }
 
+    let totalCheckPrice = 0
+    let totalRadioPrice = 0
+    let totalPrice = 0
+    let sumCheckPrice = AllRedu.checkboxes
+    sumCheckPrice.forEach(firstVal => {
+        firstVal.forEach(nestedVal => {
+            totalCheckPrice += nestedVal.price
+        })
+    });
+
+    let sumRadioPrice = AllRedu.radiobutton
+    sumRadioPrice.forEach(firstVal => {
+        firstVal.forEach(nestedVal => {
+            totalRadioPrice += nestedVal.price
+        })
+    });
+
+    totalCheckPrice = totalCheckPrice * AllRedu.validQTY
+    totalRadioPrice = totalRadioPrice * AllRedu.validQTY
+    totalPrice += totalCheckPrice + totalRadioPrice
+    totalPrice += AllRedu.validQTY * props.datas.foodPrice
+    props.handleAmount(totalPrice)
+
     return (
         <div>
             {

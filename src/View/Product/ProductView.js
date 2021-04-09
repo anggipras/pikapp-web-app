@@ -4,13 +4,13 @@ import rgbHex from 'rgb-hex'
 // import PikaModal from "../../Component/Modal/PikaModal";
 import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
-import { cart } from "../../App";
+// import { cart } from "../../App";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-import { address, clientId } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
+// import { address, clientId } from "../../Asset/Constant/APIConstant";
+// import { v4 as uuidV4 } from "uuid";
 // import sha256 from "crypto-js/hmac-sha256";
-import Axios from "axios";
+// import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg2 from '../../Asset/Illustration/storeimg.jpg'
 import Storeimg from '../../Asset/Illustration/storeimg2.png'
@@ -38,8 +38,11 @@ var currentExt = {
   note: "",
   foodCategory: '',
   listcheckbox: [],
-  listradio: []
+  listradio: [],
+  foodTotal: 0,
 };
+
+var currentTotal = 0
 
 class ProductView extends React.Component {
   state = {
@@ -487,6 +490,7 @@ class ProductView extends React.Component {
     const mid = value.mid;
     this.setModal(false);
     var isStorePresent = false;
+    let cart = JSON.parse(localStorage.getItem('cart'))
     cart.forEach((data) => {
       if (data.mid === this.state.data.mid) {
         isStorePresent = true;
@@ -628,6 +632,7 @@ class ProductView extends React.Component {
                   if (duplicateProduct[indexOfspesificCart].foodNote === currentExt.note) {
                     isFound = true
                     duplicateProduct[indexOfspesificCart].foodAmount += currentExt.detailCategory[0].amount
+                    duplicateProduct[indexOfspesificCart].foodTotalPrice += currentTotal
                   }
                 }
               }
@@ -650,6 +655,7 @@ class ProductView extends React.Component {
                       foodNote: currentExt.note,
                       foodListCheckbox: currentExt.listcheckbox,
                       foodListRadio: currentExt.listradio,
+                      foodTotalPrice: currentTotal
                     });
                   }
                 });
@@ -670,6 +676,7 @@ class ProductView extends React.Component {
                 foodNote: currentExt.note,
                 foodListCheckbox: currentExt.listcheckbox,
                 foodListRadio: currentExt.listradio,
+                foodTotalPrice: currentTotal
               });
             }
           })
@@ -688,6 +695,7 @@ class ProductView extends React.Component {
               foodNote: currentExt.note,
               foodListCheckbox: currentExt.listcheckbox,
               foodListRadio: currentExt.listradio,
+              foodTotalPrice: currentTotal
             });
           }
         });
@@ -709,6 +717,7 @@ class ProductView extends React.Component {
             foodNote: currentExt.note,
             foodListCheckbox: currentExt.listcheckbox,
             foodListRadio: currentExt.listradio,
+            foodTotalPrice: currentTotal
           },
         ],
       });
@@ -887,6 +896,10 @@ class ProductView extends React.Component {
     })
   }
 
+  handleCartAmount = (price) => {
+    currentTotal = price
+  }
+
   menuDetail = () => {
     if (this.state.showMenuDet === true) {
       return (
@@ -895,6 +908,7 @@ class ProductView extends React.Component {
           onHide={() => this.setMenuDetail(false)}
           datas={this.state.currentData}
           handleCateg={this.state.productCategpersize}
+          handleAmount={this.handleCartAmount}
           handleClick={this.handleAddCart}
           handleData={this.handleCart}
         />
@@ -929,12 +943,12 @@ class ProductView extends React.Component {
         return this.state.data.mid === cartVal.mid
       })
       if (filterMerchantCart.length) {
+        localStorage.setItem('table', notab)
+        localStorage.setItem('lastTable', notab)
         if (filterMerchantCart[0].mid) {
-          localStorage.setItem('table', notab)
-          localStorage.setItem('lastTable', notab)
           cartButton = (
             <Link to={"/cart"} className={"btn-productCart"}>
-              <img src={cartIcon} alt={"cart"} alt='' />
+              <img src={cartIcon} alt='' />
             </Link>
           );
         } else {
@@ -944,6 +958,7 @@ class ProductView extends React.Component {
         cartButton = <></>;
       }
     } else {
+      let cart = JSON.parse(localStorage.getItem('cart'))
       if (cart.length > 1) {
         localStorage.setItem('table', notab)
         localStorage.setItem('lastTable', notab)

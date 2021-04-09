@@ -1,6 +1,6 @@
 import React from "react";
 import CartView from "../View/Cart/CartView";
-import queryString from "query-string"
+// import queryString from "query-string"
 
 export default class CartLayout extends React.Component {
   componentDidMount() {
