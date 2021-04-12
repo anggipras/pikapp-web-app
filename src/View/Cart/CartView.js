@@ -8,6 +8,7 @@ import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
+import ArrowBack from "../../Asset/Icon/arrow-left.png";
 // import chevronImage from "../../Asset/Icon/chevron_right.png";
 // import removeIcon from "../../Asset/Icon/remove_icon.png";
 // import storeIcon from "../../Asset/Icon/store_icon.png";
@@ -16,7 +17,7 @@ import checklistLogo from "../../Asset/Icon/checklist.png";
 // import cashierIcon from "../../Asset/Icon/cashier_icon.png";
 // import dineinIcon from "../../Asset/Icon/dinein_icon.png";
 // import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
-import { CartModal } from "../../Component/Modal/CartModal";
+// import { CartModal } from "../../Component/Modal/CartModal";
 import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
 import { Link } from "react-router-dom";
@@ -185,7 +186,6 @@ class CartView extends React.Component {
             let newFilter = store.food
             newFilter = []
             filteredStore.forEach((val) => {
-              console.log(val);
               newFilter.push(val)
             })
             store.food = newFilter
@@ -515,12 +515,12 @@ class CartView extends React.Component {
 
     let storageData = JSON.parse(localStorage.getItem('cart'))
     let data = storageData;
-    let totalAmount = 0;
-    data.forEach((store) => {
-      store.food.forEach((food) => {
-        totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-      });
-    });
+    // let totalAmount = 0;
+    // data.forEach((store) => {
+    //   store.food.forEach((food) => {
+    //     totalAmount = totalAmount + food.foodPrice * food.foodAmount;
+    //   });
+    // });
     let storeList = data.filter((store) => {
       if (store.mid !== "") {
         return store;
@@ -585,7 +585,7 @@ class CartView extends React.Component {
           <div key={index} className='cart-storeBox'>
             <div className='cart-storeBox-header'>
               <div className='cart-storeBox-title'>
-                Store Location
+                {store.storeName}
               </div>
 
               <div className='cart-storeBox-distance'>
@@ -637,8 +637,8 @@ class CartView extends React.Component {
       <>
         <div className='cartLayout'>
           <div className='cartTitle'>
-            <span className='logopikappCenter'>
-              <img className='LogoPikappCart' src={PikappLogo} alt='' />
+            <span className='logopikappCenter' onClick={() => window.history.back()} >
+              <img className='LogoPikappCart' src={ArrowBack} alt='' />
             </span>
 
             <h2 className='confirmationOrder'>Konfirmasi Pesanan Anda</h2>

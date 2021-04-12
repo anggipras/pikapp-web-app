@@ -54,7 +54,6 @@ class StoreView extends React.Component {
       auth = JSON.parse(Cookies.get("auth"))
     }
     const value = queryString.parse(window.location.search);
-    console.log(value);
     var longitude = "";
     var latitude = "";
     var merchant = "";
@@ -170,6 +169,9 @@ class StoreView extends React.Component {
         })
         this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
         document.addEventListener('scroll', this.loadMoreMerchant)
+        if (res.data.results.length < 6) {
+          document.removeEventListener('scroll', this.loadMoreMerchant)
+        }
       })
       .catch((err) => {
       });

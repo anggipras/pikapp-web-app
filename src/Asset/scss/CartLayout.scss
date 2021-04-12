@@ -35,8 +35,9 @@
 }
 
 .LogoPikappCart {
-  width: 135px;
-  height: 54px;
+  width: 46px;
+  height: 43px;
+  cursor: pointer;
 }
 
 .confirmationOrder {
@@ -174,6 +175,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .cartList-editWord {
@@ -277,10 +279,11 @@
   display: flex;
   position: relative;
   justify-content: space-between;
+  align-items: center;
   box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.05);
   background-color: #f5f6f7;
-  height: 40px;
-  padding: 12px 15px 0px 15px;
+  height: auto;
+  padding: 12px 15px 7px 15px;
   border-radius: 8px 8px 0px 0px;
 }
 
@@ -292,6 +295,7 @@
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
+  max-width: 300px;
 }
 
 .cart-storeBox-distance {
@@ -716,11 +720,12 @@
   }
 
   .cart-storeBox-header {
-    height: 32px;
+    height: auto;
     padding: 5px 12px 0px 12px;
   }
 
   .cart-storeBox-title {
+    max-width: 250px;
     font-size: 15px;
   }
 
