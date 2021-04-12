@@ -153,7 +153,7 @@ const MenuDetail = (props) => {
                             <div className='menuDetail-layout'>
                                 <div className='menuContain-left'>
                                     <div className='menuBanner'>
-                                        <img className='menuimg' src={prodPhoto} alt='' />
+                                        <img className='menuimg' src={props.datas.foodImage} alt='' />
                                     </div>
 
                                     <div className='menu-detail'>
@@ -240,7 +240,7 @@ const MenuDetail = (props) => {
                     >
                         <div className='mob-modal-content-menudetail' onClick={e => e.stopPropagation()} style={{ height: menuSelect ? '88vh' : 'auto' }}>
                             <div className='mob-menuBanner'>
-                                <img className='mob-menuimg' src={prodPhoto} alt='' />
+                                <img className='mob-menuimg' src={props.datas.foodImage} alt='' />
                                 {
                                     menuSelect ?
                                         <span className='mob-iconClose' onClick={backModal}>

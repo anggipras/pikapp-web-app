@@ -31,6 +31,7 @@ const MenuSelection = (props) => {
     const [note, setnote] = useState('')
     const [checkboxVal, setcheckboxVal] = useState([])
     const [checkboxData, setcheckboxData] = useState([])
+    const [checkboxMatch, setcheckboxMatch] = useState([])
     const [indexCheckMandat, setindexCheckMandat] = useState(null)
 
     const [radioVal, setradioVal] = useState([])
@@ -59,6 +60,7 @@ const MenuSelection = (props) => {
             },
             method: 'GET'
         }).then(productRes => {
+            console.log(productRes.data.results);
             let productDet = productRes.data.results.extra_menus.extra_menu
             let radioResponse = []
             let checkboxResponse = []
@@ -83,7 +85,7 @@ const MenuSelection = (props) => {
                 })
                 radioData.push({
                     additionname: valRadRes.menu_name,
-                    isMandat: valRadRes.menu_extra_item[0].is_mandatory,
+                    isMandat: valRadRes.is_mandatory,
                     listaddition: listadditionradio
                 })
                 radioValData.push([])
@@ -102,19 +104,24 @@ const MenuSelection = (props) => {
                 })
                 checkboxData.push({
                     additionname: valCheckRes.menu_name,
-                    maxchoice: valCheckRes.menu_extra_item[0].max_choice,
-                    isMandat: valCheckRes.menu_extra_item[0].is_mandatory,
+                    maxchoice: valCheckRes.max_choice,
+                    isMandat: valCheckRes.is_mandatory,
                     listaddition: listadditioncheckbox
                 })
                 checkValData.push([])
             })
+            console.log(checkboxData);
 
             //set mandatory for checkboxes
             let mandatCheckAvailability = checkboxData.length
             let mandatCheckLength = checkboxData.length
+            let checkboxMandat = []
             checkboxData.forEach(valCheck => {
                 if (valCheck.isMandat) {
-                    mandatCheckAvailability = checkboxData.length - 1
+                    checkboxMandat.push(false)
+                    mandatCheckAvailability = mandatCheckAvailability - 1
+                } else {
+                    checkboxMandat.push(false)
                 }
             })
             if (mandatCheckLength === mandatCheckAvailability) {
@@ -122,13 +129,14 @@ const MenuSelection = (props) => {
             } else {
                 dispatch({ type: 'MANDATCHECKCOND', payload: true })
             }
+            setcheckboxMatch(checkboxMandat)
 
             //set mandatory for radio
             let mandatRadioAvailability = radioData.length
             let mandatRadioLength = radioData.length
             radioData.forEach(valCheck => {
                 if (valCheck.isMandat) {
-                    mandatRadioAvailability = radioData.length - 1
+                    mandatRadioAvailability = mandatRadioAvailability - 1
                 }
             })
             if (mandatRadioLength === mandatRadioAvailability) {
@@ -375,8 +383,8 @@ const MenuSelection = (props) => {
                                                 </div>
 
                                                 <div className='additon-amount'>
-                                                        +{listadd.price}
-                                                    </div>
+                                                    +{listadd.price}
+                                                </div>
                                             </label>
                                         </div>
                                 )
@@ -393,10 +401,12 @@ const MenuSelection = (props) => {
         if (checkedChecks.length > max) {
             e.target.checked = false
         } else {
+            let checkMandat = [...checkboxMatch]
             if (mandat) {
-                dispatch({ type: 'MANDATCHECK', payload: mandat })
+                checkMandat[indexlistname] = mandat
                 setindexCheckMandat(indexlistname)
             }
+
             let checkboxArr = [...checkboxVal]
             if (e.target.checked) {
                 checkboxArr[indexlistname].push({ name: e.target.value, price: listprice, isChecked: true })
@@ -417,14 +427,27 @@ const MenuSelection = (props) => {
                     dispatch({ type: 'CHECKBOXES', payload: checkboxArr })
                     if (indexCheckMandat === indexlistname) {
                         if (checkboxArr[indexCheckMandat].length === 0) {
-                            dispatch({ type: 'MANDATCHECK', payload: false })
+                            checkMandat[indexCheckMandat] = false
+                            // dispatch({ type: 'MANDATCHECK', payload: false })
+
                         }
                     }
                 } else {
+                    checkMandat[indexlistname] = false
                     dispatch({ type: 'CHECKBOXES', payload: [] })
-                    dispatch({ type: 'MANDATCHECK', payload: false })
+                    // dispatch({ type: 'MANDATCHECK', payload: false })
                 }
             }
+
+            // console.log(checkMandat);
+            let reduxMandat = true
+            checkMandat.forEach(valMandat=> {
+                if (!valMandat) {
+                    reduxMandat = false
+                }
+            })
+            dispatch({ type: 'MANDATCHECK', payload: reduxMandat })
+            setcheckboxMatch(checkMandat)
         }
     }
 

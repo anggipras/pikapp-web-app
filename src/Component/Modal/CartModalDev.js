@@ -74,7 +74,7 @@ const CartModal = (props) => {
                     <div key={keyOption} className='modalCart-detailTotalPrice'>
                         <div className='modalCart-totalPrice'>
                             <h2 className='modalCart-totalPrice-left'>Total Harga Barang</h2>
-                            <h2 className='modalCart-totalPrice-right'>{optionVal.totalPrice}</h2>
+                            <h2 className='modalCart-totalPrice-right'>{Intl.NumberFormat("id-ID").format(optionVal.totalPrice)}</h2>
                         </div>
 
                         <div className='modalCart-discount'>
