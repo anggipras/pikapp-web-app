@@ -1,7 +1,13 @@
 import React from "react";
 // import { Row, Col, Button, ButtonGroup, Form } from "react-bootstrap";
 import PikappLogo from "../../Asset/Logo/logo4x.png";
-import CartProduct from "../../Asset/Illustration/productimg/png";
+import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
+import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
+import diningTableColor from "../../Asset/Icon/diningTableColor.png";
+import takeawayColor from "../../Asset/Icon/takeawayColor.png";
+import CashierPayment from "../../Asset/Icon/CashierPayment.png";
+import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import checklistLogo from "../../Asset/Icon/checklist.png";
 // import chevronImage from "../../Asset/Icon/chevron_right.png";
 // import removeIcon from "../../Asset/Icon/remove_icon.png";
 // import storeIcon from "../../Asset/Icon/store_icon.png";
@@ -11,6 +17,7 @@ import CartProduct from "../../Asset/Illustration/productimg/png";
 // import dineinIcon from "../../Asset/Icon/dinein_icon.png";
 // import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 import { CartModal } from "../../Component/Modal/CartModal";
+import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
 import { Link } from "react-router-dom";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -54,15 +61,26 @@ var currentExt = {
   listradio: []
 };
 
+var currentTotal = 0
+
+var finalProduct = [
+  {
+    totalPrice: 20000,
+    discountPrice: 0,
+  },
+]
+
 class CartView extends React.Component {
   state = {
     notable: "",
     showModal: false,
     currentModalTitle: "",
-    paymentOption: "Pembayaran di kasir",
+    paymentOption: "Pembayaran Di Kasir",
     paymentType: "PAY_BY_CASHIER",
-    biz_type: this.props.noTable.table !== "" ? this.props.noTable.table > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
-    eat_type: this.props.noTable.table !== "" ? this.props.noTable.table > 0 ? "Makan di tempat" : "Bungkus / Takeaway" : "Makan di tempat",
+    biz_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
+    eat_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "Makan Di Tempat" : "Bungkus / Takeaway" : "Makan Di Tempat",
+    indexOptionEat: this.props.noTable !== undefined ? this.props.noTable > 0 ? 0 : 1 : 0,
+    indexOptionPay: 0,
     currentModal: [
       {
         image: "",
@@ -75,34 +93,45 @@ class CartView extends React.Component {
     currentData: {},
     themid: '',
     indexEdit: 0,
+    updateData: ''
   };
 
   handleDetail(data) {
     if (data === "eat-method") {
       this.setState({ showModal: true });
-      this.setState({ currentModalTitle: "Cara makan anda?" });
+      this.setState({ currentModalTitle: "Pilih Cara Makan Anda" });
       this.setState({
         currentModal: [
           {
             image: "dineIn",
-            option: "Makan di tempat",
+            option: "Makan Di Tempat",
           },
           {
             image: "takeaway",
-            option: "Bungkus / Takeaway",
+            option: "Takeaway / Bungkus",
           },
         ],
       });
     } else if (data === "pay-method") {
       this.setState({ showModal: true });
-      this.setState({ currentModalTitle: "Bayar pakai apa?" });
+      this.setState({ currentModalTitle: "Bayar Pakai Apa" });
       this.setState({
         currentModal: [
           {
             image: "cashier",
-            option: "Pembayaran di kasir",
+            option: "Pembayaran Di Kasir",
+          },
+          {
+            image: "ovo",
+            option: "Pembayaran Ovo",
           },
         ],
+      });
+    } else if (data === "payment-detail") {
+      this.setState({ showModal: true });
+      this.setState({ currentModalTitle: "Rincian Pembayaran" });
+      this.setState({
+        currentModal: finalProduct
       });
     }
   }
@@ -111,212 +140,236 @@ class CartView extends React.Component {
     this.setState({ showModal: isShow });
   }
 
-  handleDecrease(e) {
+  handleDecrease(e, ind, mid) {
+    let allCart = JSON.parse(localStorage.getItem('cart'))
     if (e.foodAmount > 1) {
-      e.foodAmount -= 1;
-      this.forceUpdate();
+      let filteredStore = []
+      allCart.forEach((store) => {
+        if (store.mid === mid) {
+          filteredStore = store.food.filter((data, index) => {
+            return index === ind
+          })
+
+          let { foodAmount, foodTotalPrice } = filteredStore[0]
+
+          let countAmount = foodTotalPrice - (foodTotalPrice / foodAmount)
+
+          filteredStore[0].foodTotalPrice = countAmount
+          filteredStore[0].foodAmount = foodAmount - 1
+          store.food[ind] = filteredStore[0]
+        }
+      });
+
+      localStorage.setItem('cart', JSON.stringify(allCart))
+      this.setState({ updateData: 'updated' })
+    } else {
+      let filteredCart;
+      let addedMerchants = []
+      let newAllCart = []
+      allCart.forEach((store) => {
+        if (store.mid === mid) {
+          let filteredStore = store.food.filter((data, index) => {
+            return index !== ind
+          })
+
+          if (filteredStore.length === 0) {
+            filteredCart = cart.filter((filterStore) => {
+              return filterStore.mid !== store.mid;
+            });
+            localStorage.setItem("cart", JSON.stringify(filteredCart))
+            filteredCart.forEach((cart) => {
+              addedMerchants.push(cart.mid)
+              Cookies.set("addedMerchants", addedMerchants)
+            })
+          } else {
+            let newFilter = store.food
+            newFilter = []
+            filteredStore.forEach((val) => {
+              console.log(val);
+              newFilter.push(val)
+            })
+            store.food = newFilter
+            newAllCart.push(store)
+          }
+        } else {
+          newAllCart.push(store)
+        }
+      });
+
+      if (newAllCart.length < 2) {
+        cart.splice(1)
+        localStorage.setItem("cart", JSON.stringify(newAllCart))
+        window.history.back()
+      } else {
+        let filterMerchantCart = newAllCart.filter(valueCart => {
+          return valueCart.mid === mid
+        })
+        localStorage.setItem("cart", JSON.stringify(newAllCart))
+        if (filterMerchantCart.length) {
+          this.setState({ updateData: 'updated' })
+        } else {
+          window.history.back()
+        }
+      }
     }
   }
 
-  handleIncrease(e) {
-    e.foodAmount += 1;
-    this.forceUpdate();
-  }
-
-  handleDelete(e, ind, mid) {
-    let filteredCart;
-    let addedMerchants = []
-    let newAllCart = []
+  handleIncrease(e, ind, mid) {
+    let filteredStore = []
     let allCart = JSON.parse(localStorage.getItem('cart'))
     allCart.forEach((store) => {
       if (store.mid === mid) {
-        let filteredStore = store.food.filter((data, index) => {
-          return index !== ind
+        filteredStore = store.food.filter((data, index) => {
+          return index === ind
         })
 
-        if (filteredStore.length === 0) {
-          filteredCart = cart.filter((filterStore) => {
-            return filterStore.mid !== store.mid;
-          });
-          localStorage.setItem("cart", JSON.stringify(filteredCart))
-          filteredCart.forEach((cart) => {
-            addedMerchants.push(cart.mid)
-            Cookies.set("addedMerchants", addedMerchants)
-          })
-        } else {
-          let newFilter = store.food
-          newFilter = []
-          filteredStore.forEach((val) => {
-            console.log(val);
-            newFilter.push(val)
-          })
-          store.food = newFilter
-          newAllCart.push(store)
-        }
-      } else {
-        newAllCart.push(store)
+        let { foodAmount, foodTotalPrice } = filteredStore[0]
+
+        let countAmount = foodTotalPrice + (foodTotalPrice / foodAmount)
+
+        filteredStore[0].foodTotalPrice = countAmount
+        filteredStore[0].foodAmount = foodAmount + 1
+        store.food[ind] = filteredStore[0]
       }
     });
 
-    if (newAllCart.length < 2) {
-      cart.splice(1)
-      localStorage.setItem("cart", JSON.stringify(newAllCart))
-      window.history.back()
-      // window.location.href = Cookies.get("lastProduct")
-    } else {
-      let filterMerchantCart = newAllCart.filter(valueCart => {
-        return valueCart.mid === mid
-      })
-      localStorage.setItem("cart", JSON.stringify(newAllCart))
-      if (filterMerchantCart.length) {
-        window.location.reload()
-      } else {
-        window.history.back()
-      }
-    }
-    this.forceUpdate();
+    localStorage.setItem('cart', JSON.stringify(allCart))
+    this.setState({ updateData: 'updated' })
   }
 
   handleOption = (data) => {
-    if (this.props.noTable.table !== "") {
-      if (data == 1) {
-        let newUrl = window.location.search
-        let changeTable = newUrl.slice(0, -1)
-        changeTable += 0
-        window.location.href = changeTable
-      } else {
-        let value = Cookies.get("lastProduct")
-        console.log(value);
-        let getPrevTable = value.charAt(value.length - 1)
-        let newUrl = window.location.search
-        let changeTable = newUrl.slice(0, -1)
-        changeTable += getPrevTable
-        window.location.href = changeTable
+    let valueTab
+    if (this.props.noTable !== undefined) {
+      if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
+        if (data == 1) {
+          valueTab = 0
+          valueTab.toString()
+          localStorage.setItem('table', valueTab)
+        } else {
+          valueTab = localStorage.getItem('lastTable')
+          valueTab.toString()
+          localStorage.setItem('table', valueTab)
+        }
       }
     }
-    if (this.state.currentModalTitle === "Cara makan anda?") {
-      if (data === 0 || this.props.noTable.table > 0) {
-        this.setState({ biz_type: "DINE_IN" })
-        this.setState({ eat_type: "Makan di tempat" })
+    if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
+      if (data == 0) {
+        this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
       } else {
-        this.setState({ biz_type: "TAKE_AWAY" })
-        this.setState({ eat_type: "Bungkus / Takeaway" })
+        this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
       }
-    } else if (this.state.currentModalTitle === "Bayar pakai apa?") {
+    } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
       if (data === 0) {
-        this.setState({ paymentType: "PAY_BY_CASHIER" })
-        this.setState({ paymentOption: "Pembayaran di kasir" })
+        this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
+      } else {
+        this.setState({ paymentType: "PAY_BY_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
       }
     }
   }
 
-  handlePayment = () => {
-    this.setState({ loadButton: false })
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
-    if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href }
-      Cookies.set("lastLink", lastLink, { expires: 1 })
-      window.location.href = "/login"
-    }
-    let totalAmount = 0;
-    let data = cart;
-    data.forEach((store) => {
-      store.food.forEach((food) => {
-        totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-      });
-    });
+  // handlePayment = () => {
+  //   this.setState({ loadButton: false })
+  //   var auth = {
+  //     isLogged: false,
+  //     token: "",
+  //     new_event: true,
+  //     recommendation_status: false,
+  //     email: "",
+  //   };
+  //   if (Cookies.get("auth") !== undefined) {
+  //     auth = JSON.parse(Cookies.get("auth"))
+  //   }
+  //   if (auth.isLogged === false) {
+  //     var lastLink = { value: window.location.href }
+  //     Cookies.set("lastLink", lastLink, { expires: 1 })
+  //     window.location.href = "/login"
+  //   }
+  //   let totalAmount = 0;
+  //   let data = cart;
+  //   data.forEach((store) => {
+  //     store.food.forEach((food) => {
+  //       totalAmount = totalAmount + food.foodPrice * food.foodAmount;
+  //     });
+  //   });
 
-    let merchantIds = JSON.parse(Cookies.get("addedMerchants"))
-    merchantIds = merchantIds.filter((merchant) => {
-      return merchant !== ""
-    })
-    let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
-    const date = new Date().toISOString();
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+  //   let merchantIds = JSON.parse(Cookies.get("addedMerchants"))
+  //   merchantIds = merchantIds.filter((merchant) => {
+  //     return merchant !== ""
+  //   })
+  //   let uuid = uuidV4();
+  //   uuid = uuid.replaceAll("-", "");
+  //   const date = new Date().toISOString();
+  //   let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
-    merchantIds.forEach((merchant) => {
-      var requestData = {
-        products: [{
-          product_id: "",
-          notes: "",
-          qty: 0
-        }],
-        payment_with: this.state.paymentType,
-        mid: merchant,
-        prices: totalAmount,
-        biz_type: this.state.biz_type,
-        table_no: "1"
-      }
-      requestData.products.pop()
-      cart.forEach((merchant) => {
-        let addedMerchants = Cookies.get("addedMerchants")
-        if (addedMerchants.includes(merchant.mid)) {
-          merchant.food.forEach((data) => {
-            if (data.productId !== "") {
-              requestData.products.push({
-                product_id: data.productId,
-                notes: data.foodNote,
-                qty: data.foodAmount,
-              })
-            }
-          })
-        }
-      })
+  //   merchantIds.forEach((merchant) => {
+  //     var requestData = {
+  //       products: [{
+  //         product_id: "",
+  //         notes: "",
+  //         qty: 0
+  //       }],
+  //       payment_with: this.state.paymentType,
+  //       mid: merchant,
+  //       prices: totalAmount,
+  //       biz_type: this.state.biz_type,
+  //       table_no: "1"
+  //     }
+  //     requestData.products.pop()
+  //     cart.forEach((merchant) => {
+  //       let addedMerchants = Cookies.get("addedMerchants")
+  //       if (addedMerchants.includes(merchant.mid)) {
+  //         merchant.food.forEach((data) => {
+  //           if (data.productId !== "") {
+  //             requestData.products.push({
+  //               product_id: data.productId,
+  //               notes: data.foodNote,
+  //               qty: data.foodAmount,
+  //             })
+  //           }
+  //         })
+  //       }
+  //     })
 
-      Axios(address + "/txn/v1/txn-post/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "x-signature": signature,
-          "token": auth.token,
-        },
-        method: "POST",
-        data: requestData,
-      })
-        .then((res) => {
-          localStorage.removeItem("cart")
-          alert("Pembelian telah berhasil.")
-          window.location.href = "/status"
-        })
-        .catch((err) => {
-          if (err.response.data !== undefined) {
-            alert(err.response.data.err_message)
-            this.setState({ loadButton: true })
-          }
-        });
-    })
-  };
+  //     Axios(address + "/txn/v1/txn-post/", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "x-request-id": uuid,
+  //         "x-request-timestamp": date,
+  //         "x-client-id": clientId,
+  //         "x-signature": signature,
+  //         "token": auth.token,
+  //       },
+  //       method: "POST",
+  //       data: requestData,
+  //     })
+  //       .then((res) => {
+  //         localStorage.removeItem("cart")
+  //         alert("Pembelian telah berhasil.")
+  //         window.location.href = "/status"
+  //       })
+  //       .catch((err) => {
+  //         if (err.response.data !== undefined) {
+  //           alert(err.response.data.err_message)
+  //           this.setState({ loadButton: true })
+  //         }
+  //       });
+  //   })
+  // };
 
-  newListCheck = (food) => {
+  newListAllChoices = (food) => {
     let newlistArr = ''
     food.foodListCheckbox.forEach((val) => {
       val.forEach((val2) => {
-        return newlistArr += `${val2.name},`
+        return newlistArr += `${val2.name}, `
       })
     })
-    return <p>{newlistArr}</p>
-  }
 
-  newListRadio = (food) => {
-    let newlistArr = ''
     food.foodListRadio.forEach((val) => {
       val.forEach((val2) => {
-        return newlistArr += `${val2.name},`
+        return newlistArr += `${val2.name}, `
       })
     })
-    return <p>{newlistArr}</p>
+    return <h5 className='cartList-content-choice'>{newlistArr}</h5>
   }
 
   onEditCart = (ind, mid) => {
@@ -340,6 +393,7 @@ class CartView extends React.Component {
       foodNote: filteredStore[0].foodNote,
       foodListCheckbox: filteredStore[0].foodListCheckbox,
       foodListRadio: filteredStore[0].foodListRadio,
+      foodTotalPrice: filteredStore[0].foodTotalPrice,
       foodExt: [
         {
           name: "",
@@ -358,6 +412,10 @@ class CartView extends React.Component {
     document.body.style.overflowY = ''
   }
 
+  handleCartAmount = (price) => {
+    currentTotal = price
+  }
+
   menuDetail = () => {
     if (this.state.showMenuDet === true) {
       return (
@@ -365,6 +423,7 @@ class CartView extends React.Component {
           isShow={this.state.showMenuDet}
           onHide={() => this.setMenuDetail(false)}
           datas={this.state.currentData}
+          handleAmount={this.handleCartAmount}
           handleClick={this.handleSaveCart}
           handleData={this.handleCart}
         />
@@ -385,20 +444,17 @@ class CartView extends React.Component {
           return index === this.state.indexEdit
         })
 
-        console.log(currentExt);
-
         filteredStore[0].foodAmount = currentExt.detailCategory[0].amount
         filteredStore[0].foodListCheckbox = currentExt.listcheckbox
         filteredStore[0].foodListRadio = currentExt.listradio
         filteredStore[0].foodNote = currentExt.note
-
-        console.log(filteredStore[0]);
+        filteredStore[0].foodTotalPrice = currentTotal
 
         store.food[this.state.indexEdit] = filteredStore[0]
       }
     });
     localStorage.setItem('cart', JSON.stringify(allCart))
-    window.location.reload()
+    this.setState({ updateData: 'updated' })
   }
 
   render() {
@@ -418,44 +474,47 @@ class CartView extends React.Component {
       window.location.href = "/login"
     }
     let modal;
-    let paymentButton;
-    if (auth.isLoggedIn === false) {
-      paymentButton = (
-        <Link to={"/login"} className={"iconButton"}>
-          <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-          <img src={frontIcon} alt={"checklist"} />
-        </Link>
-      );
-    } else {
-      if (this.state.loadButton) {
-        paymentButton = (
-          <button className={"iconButton"} onClick={() => this.handlePayment()}>
-            <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-            <img src={frontIcon} alt={"checklist"} />
-          </button>
-        );
-      } else {
-        paymentButton = (
-          <Loader loaded={this.state.loadButton} options={options} className="spinner" />
-        )
-      }
-    }
+    // let paymentButton;
+    // if (auth.isLoggedIn === false) {
+    //   paymentButton = (
+    //     <Link to={"/login"} className={"iconButton"}>
+    //       <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
+    //       <img src={frontIcon} alt={"checklist"} />
+    //     </Link>
+    //   );
+    // } else {
+    //   if (this.state.loadButton) {
+    //     paymentButton = (
+    //       <button className={"iconButton"} onClick={() => this.handlePayment()}>
+    //         <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
+    //         <img src={frontIcon} alt={"checklist"} />
+    //       </button>
+    //     );
+    //   } else {
+    //     paymentButton = (
+    //       <Loader loaded={this.state.loadButton} options={options} className="spinner" />
+    //     )
+    //   }
+    // }
+
     if (this.state.showModal === true) {
       modal = (
-        <CartModal
-          isShow={() => this.setModal(true)}
+        <CartModalDev
+          isShow={this.state.showModal}
           onHide={() => this.setModal(false)}
           title={this.state.currentModalTitle}
           detailOptions={this.state.currentModal}
           handleData={this.handleOption}
-          notable={this.props.noTable}
+          indexOptionEat={this.state.indexOptionEat}
+          indexOptionPay={this.state.indexOptionPay}
         />
       );
     } else {
-      modal = <></>;
+      modal = <></>
     }
 
-    let data = cart;
+    let storageData = JSON.parse(localStorage.getItem('cart'))
+    let data = storageData;
     let totalAmount = 0;
     data.forEach((store) => {
       store.food.forEach((food) => {
@@ -470,181 +529,43 @@ class CartView extends React.Component {
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let contentView = storeList.map((store) => {
+      let storeFood
       if (store.mid === currentCartMerchant.mid) {
-        let itemListView = data.map((cartData) => {
-          if (cartData.mid === store.mid) {
-            return store.food.map((food, index) => {
-              return (
-                <Row>
-                  <Col xs={0} md={3} />
-                  <Col xs={3} md={1}>
-                    <img
-                      src={food.foodImage}
-                      alt={"food"}
-                      className={"cartFoodImage"}
-                    />
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col>
-                        <p className={"cartContentFood"}>{food.foodName}</p>
-                        <p>List Check: {this.newListCheck(food)}</p>
-                        <p>List Option: {this.newListRadio(food)}</p>
-                        <p className={"cartContentPrice"}>Catatan:</p>
-                        <p className={"cartContentPrice"}>{food.foodNote}</p>
-                        <p className={"cartContentPrice"}>
-                          {Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                          }).format(food.foodPrice)}
-                        </p>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col>
-                        <button
-                          className={"iconButton"}
-                          onClick={() => this.handleDelete(food, index, store.mid)}
-                        >
-                          <img src={removeIcon} alt={"remove icon"} />
-                        </button>
-                        <button onClick={() => this.onEditCart(index, store.mid)}>EDIT</button>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <ButtonGroup className={"cartModalButtonGroup"}>
-                          <Button
-                            onClick={() => this.handleDecrease(food)}
-                            variant="cartModalMiniButton"
-                          >
-                            -
-                        </Button>
-                          <Form.Control
-                            value={food.foodAmount}
-                            className="cartModalField"
-                            disabled
-                          ></Form.Control>
-                          <Button
-                            onClick={() => this.handleIncrease(food)}
-                            variant="cartModalMiniButton"
-                          >
-                            +
-                        </Button>
-                        </ButtonGroup>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              )
-            })
-          }
-        });
-        return (
-          <>
-            <Row>
-              <Col xs={0} md={3} />
-              <Col>
-                <p className={"cartTitle"}>{store.storeName}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={0} md={3} />
-              <Col xs={1} md={1}>
-                <img src={storeIcon} className={"cartIcon"} alt={"store icon"} />
-              </Col>
-              <Col>
-                <Row>
-                  <Col>
-                    <p className={"cartNote"}>Store Location</p>
-                    <p className={"cartTitle"}>{store.storeDesc}</p>
-                    <p className={"cartNote"}>
-                      <b>{store.storeDistance}</b>
-                    </p>
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={2} md={3}>
-                <button className={"iconButton"}>
-                  <img
-                    src={chevronImage}
-                    onClick={() => this.handleDetail()}
-                    alt={"chevron right"}
-                  />
-                </button>
-              </Col>
-            </Row>
-            {itemListView}
-          </>
-        );
-      }
-    });
+        storeFood = store.food.map((food, index) => {
+          return (
+            <div key={index} className='cartList-content'>
+              <div className='cartList-content-frame'>
+                <img className='cartList-content-image' src={food.foodImage} alt='' />
+              </div>
 
-    let paymentImage;
-    let eatImage;
-    if (this.state.biz_type === "DINE_IN") {
-      eatImage = dineinIcon;
-    } else if (this.state.biz_type === "TAKE_AWAY") {
-      eatImage = takeawayIcon;
-    }
-    if (this.state.paymentType === "PAY_BY_CASHIER") {
-      paymentImage = cashierIcon
-    }
-    return (
-      <>
-        <div className='cartLayout'>
-          <div className='cartTitle'>
-            <span>
-              <img src={PikappLogo} alt='' />
-            </span>
+              <div className='cartList-content-detail'>
+                <div className='cartList-content-detail-left'>
+                  <h2 className='cartList-content-title'>{food.foodName}</h2>
+                  {this.newListAllChoices(food)}
+                  <h5 className='cartList-content-notes'>{food.foodNote}</h5>
+                  <h3 className='cartList-content-price'>{Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                </div>
 
-            <h2>Konfirmasi Pesanan Anda</h2>
-          </div>
-
-          <div className='cartContent'>
-            <div className='cart-LeftSide'>
-              <div className='cartList'>
-                <h4 className='cartList-title'>
-                  Item Yang Dibeli
-                </h4>
-
-                <div className='cartList-content'>
-                  <div className='cartList-content-image'>
-                    <img src={CartProduct} alt='' />
+                <div className='cartList-content-detail-right'>
+                  <div className='cartList-editButton' onClick={() => this.onEditCart(index, store.mid)}>
+                    <div className='cartList-editWord'>EDIT</div>
                   </div>
 
-                  <div className='cartList-content-detail'>
-                    <div className='cartList-content-detail-left'>
-                      <h2 className='cartList-content-title'>MondMilk Pure Chocolate</h2>
-                      <h5 className='cartList-content-choice'></h5>
-                      <h5 className='cartList-content-notes'>Tambahkan Catatanmu</h5>
-                      <h3 className='cartList-content-price'>17.000</h3>
-                    </div>
-
-                    <div className='cartList-content-detail-right'>
-                      <div className='cartList-editButton'>
-                        <h2>EDIT</h2>
+                  <div className='cartList-amountBox'>
+                    <div className='cartList-amountBox-inside'>
+                      <div className='cartList-minusBox' onClick={() => this.handleDecrease(food, index, store.mid)}>
+                        <div className='cartList-minusSym'>
+                          -
+                        </div>
                       </div>
 
-                      <div className='cartList-amountBox'>
-                        <div className='cartList-amountBox-inside'>
-                          <div className='cartList-minusBox'>
-                            <div className='cartList-minusSym'>
-                              -
-                            </div>
-                          </div>
+                      <div className='cartList-numberArea'>
+                        {food.foodAmount}
+                      </div>
 
-                          <div className='cartList-numberArea'>
-                            1
-                          </div>
-
-                          <div className='cartList-plusBox'>
-                            <div className='cartList-plusSym'>
-                              +
-                            </div>
-                          </div>
+                      <div className='cartList-plusBox' onClick={() => this.handleIncrease(food, index, store.mid)}>
+                        <div className='cartList-plusSym'>
+                          +
                         </div>
                       </div>
                     </div>
@@ -652,105 +573,205 @@ class CartView extends React.Component {
                 </div>
               </div>
             </div>
+          )
+        })
+      }
+      return storeFood
+    });
+
+    let detailView = storeList.map((store, index) => {
+      if (store.mid === currentCartMerchant.mid) {
+        return (
+          <div key={index} className='cart-storeBox'>
+            <div className='cart-storeBox-header'>
+              <div className='cart-storeBox-title'>
+                Store Location
+              </div>
+
+              <div className='cart-storeBox-distance'>
+                {store.storeDistance}
+              </div>
+            </div>
+
+            <div className='cart-storeBox-content'>
+              <h4 className='cart-storeBox-descArea'>
+                {store.storeDesc}
+              </h4>
+            </div>
+          </div>
+        )
+      }
+    });
+
+    let totalPaymentShow = storeList.map(store => {
+      if (store.mid === currentCartMerchant.mid) {
+        let countAllProduct = 0
+        store.food.forEach(food => {
+          countAllProduct += food.foodTotalPrice
+        })
+        return countAllProduct
+      }
+    });
+
+    finalProduct = [
+      {
+        totalPrice: Intl.NumberFormat("id-ID").format(totalPaymentShow),
+        discountPrice: 0,
+      },
+    ]
+
+    let paymentImage;
+    let eatImage;
+    if (this.state.biz_type === "DINE_IN") {
+      eatImage = diningTableColor;
+    } else if (this.state.biz_type === "TAKE_AWAY") {
+      eatImage = takeawayColor;
+    }
+    if (this.state.paymentType === "PAY_BY_CASHIER") {
+      paymentImage = CashierPayment
+    } else if (this.state.paymentType === "PAY_BY_OVO") {
+      paymentImage = OvoPayment
+    }
+
+    return (
+      <>
+        <div className='cartLayout'>
+          <div className='cartTitle'>
+            <span className='logopikappCenter'>
+              <img className='LogoPikappCart' src={PikappLogo} alt='' />
+            </span>
+
+            <h2 className='confirmationOrder'>Konfirmasi Pesanan Anda</h2>
+          </div>
+
+          <div className='cartContent'>
+            <div className='cart-LeftSide'>
+              <div className='cartList'>
+                <div className='cartList-header'>
+                  <h4 className='cartList-title'>
+                    Item Yang Dibeli
+                  </h4>
+                </div>
+
+                {contentView}
+              </div>
+            </div>
 
             <div className='cart-RightSide'>
-              <div className='cart-storeBox'>
-                <div className='cart-storeBox-header'>
-                  <div className='cart-storeBox-title'>
-                    Store Location
+              <div className='flex-RightSide'>
+                {detailView}
+
+                <div className='cart-foodService' onClick={() => this.handleDetail("eat-method")}>
+                  <div className='cart-foodService-header'>
+                    <div className='cart-foodService-title'>
+                      Pilih Cara Makan Anda
+                    </div>
+
+                    <div className='cart-foodService-selectButton' >
+                      <img className='cart-foodService-selectIcon' src={ArrowDownColor} alt='' />
+                    </div>
                   </div>
 
-                  <div className='cart-storeBox-distance'>
-                    27.96 Km
-                  </div>
-                </div>
+                  <div className='cart-foodService-content'>
+                    <div className='cart-foodService-descArea'>
+                      <span>
+                        <img className='cart-foodService-logo' src={eatImage} alt='' />
+                      </span>
 
-                <div className='cart-storeBox-content'>
-                  <div className='cart-storeBox-descArea'>
-                    Description 1 Description 2 Description 3
-                  </div>
-                </div>
-              </div>
-
-              <div className='cart-foodService'>
-                <div className='cart-foodService-header'>
-                  <div className='cart-foodService-title'>
-                    Pilih Cara Makan Anda
-                  </div>
-
-                  <div className='cart-foodService-selectButton'>
-
+                      <h3 className='cart-foodService-words'>
+                        {this.state.eat_type}
+                      </h3>
+                    </div>
                   </div>
                 </div>
 
-                <div className='cart-foodService-content'>
-                  <div className='cart-foodService-descArea'>
-                    <span className='cart-foodService-logo'>
+                <div className='cart-paymentService' onClick={() => this.handleDetail("pay-method")}>
+                  <div className='cart-paymentService-header'>
+                    <div className='cart-paymentService-title'>
+                      Bayar Pakai Apa?
+                    </div>
 
-                    </span>
+                    <div className='cart-paymentService-selectButton'>
+                      <img className='cart-paymentService-selectIcon' src={ArrowDownColor} alt='' />
+                    </div>
+                  </div>
 
-                    <h3 className='cart-foodService-words'>
-                      Makan Di Tempat
-                    </h3>
+                  <div className='cart-paymentService-content'>
+                    <div className='cart-paymentService-descArea'>
+                      <span>
+                        <img className='cart-paymentService-logo' src={paymentImage} alt='' />
+                      </span>
+
+                      <h3 className='cart-paymentService-words'>
+                        {this.state.paymentOption}
+                      </h3>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className='cart-paymentService'>
-                <div className='cart-paymentService-header'>
-                  <div className='cart-paymentService-title'>
-                    Bayar Pakai Apa?
+                <div className='cart-checkoutArea'>
+                  <div className='cart-TotalAmount' onClick={() => this.handleDetail("payment-detail")}>
+                    <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
+
+                    <div className='cart-TotalAmount-bottom'>
+                      <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
+
+                      <img className='cart-TotalAmount-detailArrow' src={ArrowDownColor} alt='' />
+                    </div>
                   </div>
 
-                  <div className='cart-paymentService-selectButton'>
+                  <div className='cart-OrderButton'>
+                    <div className='cart-OrderButton-content'>
+                      <span className='cart-OrderButton-Frame'>
+                        <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
+                      </span>
 
-                  </div>
-                </div>
+                      <h1 className='cart-OrderButton-word'>PESAN</h1>
+                    </div>
 
-                <div className='cart-paymentService-content'>
-                  <div className='cart-paymentService-descArea'>
-                    <span className='cart-paymentService-logo'>
-
-                    </span>
-
-                    <h3 className='cart-paymentService-words'>
-                      Pembayaran Di Kasir
-                    </h3>
-                  </div>
-                </div>
-              </div>
-
-              <div className='cart-checkoutArea'>
-                <div className='cart-TotalAmount'>
-                  <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
-
-                  <div className='cart-TotalAmount-bottom'>
-                    <h2 className='cart-TotalAmount-price'>Rp. 20.000</h2>
-
-                    <span className='cart-TotalAmount-detailArrow'>
-
+                    <span>
+                      <img className='cart-OrderButton-orderArrow' src={ArrowRightWhite} alt='' />
                     </span>
                   </div>
-                </div>
-
-                <div className='cart-OrderButton'>
-                  <div className='cart-OrderButton-content'>
-                    <span className='cart-OrderButton-checklist'>
-
-                    </span>
-
-                    <h1 className='cart-OrderButton-word'>PESAN</h1>
-                  </div>
-
-                  <span className='cart-OrderButton-orderArrow'>
-                    
-                  </span>
                 </div>
               </div>
 
             </div>
           </div>
         </div>
+
+        <div className='cartLayout-mob'>
+          <div className='cart-checkoutArea-mob'>
+
+            <div className='cart-TotalAmount-mob' onClick={() => this.handleDetail("payment-detail")}>
+              <h3 className='cart-TotalAmount-title-mob'>Total Bayar</h3>
+
+              <div className='cart-TotalAmount-bottom-mob'>
+                <h2 className='cart-TotalAmount-price-mob'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
+
+                <span className='cart-TotalAmount-detailArrowCenter-mob'>
+                  <img className='cart-TotalAmount-detailArrow-mob' src={ArrowDownColor} alt='' />
+                </span>
+              </div>
+            </div>
+
+            <div className='cart-OrderButton-mob'>
+              <div className='cart-OrderButton-content-mob'>
+                <span className='cart-OrderButton-Frame-mob'>
+                  <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
+                </span>
+
+                <h1 className='cart-OrderButton-word-mob'>PESAN</h1>
+              </div>
+
+              <span className='cart-OrderButton-orderArrowCenter-mob'>
+                <img className='cart-OrderButton-orderArrow-mob' src={ArrowRightWhite} alt='' />
+              </span>
+            </div>
+          </div>
+        </div>
+        {modal}
+        {this.menuDetail()}
 
 
 

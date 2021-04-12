@@ -162,7 +162,7 @@ class CartView extends React.Component {
       window.history.back()
       // window.location.href = Cookies.get("lastProduct")
     } else {
-      let filterMerchantCart = newAllCart.filter(valueCart=> {
+      let filterMerchantCart = newAllCart.filter(valueCart => {
         return valueCart.mid === mid
       })
       localStorage.setItem("cart", JSON.stringify(newAllCart))
