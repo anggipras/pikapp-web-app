@@ -1,5 +1,4 @@
 import React from "react";
-// import { Row, Col, Button, ButtonGroup, Form } from "react-bootstrap";
 import PikappLogo from "../../Asset/Logo/logo4x.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
@@ -9,14 +8,6 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
-// import chevronImage from "../../Asset/Icon/chevron_right.png";
-// import removeIcon from "../../Asset/Icon/remove_icon.png";
-// import storeIcon from "../../Asset/Icon/store_icon.png";
-// import checklistIcon from "../../Asset/Icon/checklist_icon.png";
-// import frontIcon from "../../Asset/Icon/front_icon.png";
-// import cashierIcon from "../../Asset/Icon/cashier_icon.png";
-// import dineinIcon from "../../Asset/Icon/dinein_icon.png";
-// import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
 // import { CartModal } from "../../Component/Modal/CartModal";
 import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
@@ -262,99 +253,116 @@ class CartView extends React.Component {
       if (data === 0) {
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
       } else {
-        this.setState({ paymentType: "PAY_BY_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
+        this.setState({ paymentType: "WALLET_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
       }
     }
   }
 
-  // handlePayment = () => {
-  //   this.setState({ loadButton: false })
-  //   var auth = {
-  //     isLogged: false,
-  //     token: "",
-  //     new_event: true,
-  //     recommendation_status: false,
-  //     email: "",
-  //   };
-  //   if (Cookies.get("auth") !== undefined) {
-  //     auth = JSON.parse(Cookies.get("auth"))
-  //   }
-  //   if (auth.isLogged === false) {
-  //     var lastLink = { value: window.location.href }
-  //     Cookies.set("lastLink", lastLink, { expires: 1 })
-  //     window.location.href = "/login"
-  //   }
-  //   let totalAmount = 0;
-  //   let data = cart;
-  //   data.forEach((store) => {
-  //     store.food.forEach((food) => {
-  //       totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-  //     });
-  //   });
+  handlePayment = () => {
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let storageData = JSON.parse(localStorage.getItem('cart'))
+    let noTab = this.props.noTable ? this.props.noTable : 0
+    let allMenu = storageData.filter(filterCart => {
+      return filterCart.mid === currentCartMerchant.mid
+    })
+    let selectedProd = []
 
-  //   let merchantIds = JSON.parse(Cookies.get("addedMerchants"))
-  //   merchantIds = merchantIds.filter((merchant) => {
-  //     return merchant !== ""
-  //   })
-  //   let uuid = uuidV4();
-  //   uuid = uuid.replaceAll("-", "");
-  //   const date = new Date().toISOString();
-  //   let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    allMenu[0].food.forEach(selectMenu => {
+      let newlistArr = ''
+      selectMenu.foodListCheckbox.forEach((val) => {
+        val.forEach((val2) => {
+          return newlistArr += `${val2.name}, `
+        })
+      })
 
-  //   merchantIds.forEach((merchant) => {
-  //     var requestData = {
-  //       products: [{
-  //         product_id: "",
-  //         notes: "",
-  //         qty: 0
-  //       }],
-  //       payment_with: this.state.paymentType,
-  //       mid: merchant,
-  //       prices: totalAmount,
-  //       biz_type: this.state.biz_type,
-  //       table_no: "1"
-  //     }
-  //     requestData.products.pop()
-  //     cart.forEach((merchant) => {
-  //       let addedMerchants = Cookies.get("addedMerchants")
-  //       if (addedMerchants.includes(merchant.mid)) {
-  //         merchant.food.forEach((data) => {
-  //           if (data.productId !== "") {
-  //             requestData.products.push({
-  //               product_id: data.productId,
-  //               notes: data.foodNote,
-  //               qty: data.foodAmount,
-  //             })
-  //           }
-  //         })
-  //       }
-  //     })
+      selectMenu.foodListRadio.forEach((val) => {
+        val.forEach((val2) => {
+          return newlistArr += `${val2.name}, `
+        })
+      })
 
-  //     Axios(address + "/txn/v1/txn-post/", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "x-request-id": uuid,
-  //         "x-request-timestamp": date,
-  //         "x-client-id": clientId,
-  //         "x-signature": signature,
-  //         "token": auth.token,
-  //       },
-  //       method: "POST",
-  //       data: requestData,
-  //     })
-  //       .then((res) => {
-  //         localStorage.removeItem("cart")
-  //         alert("Pembelian telah berhasil.")
-  //         window.location.href = "/status"
-  //       })
-  //       .catch((err) => {
-  //         if (err.response.data !== undefined) {
-  //           alert(err.response.data.err_message)
-  //           this.setState({ loadButton: true })
-  //         }
-  //       });
-  //   })
-  // };
+      newlistArr += selectMenu.foodNote
+
+      selectedProd.push({
+        product_id: selectMenu.productId,
+        notes: newlistArr,
+        qty: selectMenu.foodAmount
+      })
+    })
+
+    console.log(selectedProd);
+    console.log(this.state.paymentType);
+    console.log(finalProduct[0].totalPrice.toString());
+    console.log(this.state.biz_type);
+    console.log(currentCartMerchant.mid);
+    console.log(noTab.toString());
+
+    // this.setState({ loadButton: false })
+
+
+    // let merchantIds = JSON.parse(Cookies.get("addedMerchants"))
+    // merchantIds = merchantIds.filter((merchant) => {
+    //   return merchant !== ""
+    // })
+    // let uuid = uuidV4();
+    // uuid = uuid.replaceAll("-", "");
+    // const date = new Date().toISOString();
+    // let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+
+    // merchantIds.forEach((merchant) => {
+    //   var requestData = {
+    //     products: [{
+    //       product_id: "",
+    //       notes: "",
+    //       qty: 0
+    //     }],
+    //     payment_with: this.state.paymentType,
+    //     mid: merchant,
+    //     prices: totalAmount,
+    //     biz_type: this.state.biz_type,
+    //     table_no: "1"
+    //   }
+    //   requestData.products.pop()
+    //   cart.forEach((merchant) => {
+    //     let addedMerchants = Cookies.get("addedMerchants")
+    //     if (addedMerchants.includes(merchant.mid)) {
+    //       merchant.food.forEach((data) => {
+    //         if (data.productId !== "") {
+    //           requestData.products.push({
+    //             product_id: data.productId,
+    //             notes: data.foodNote,
+    //             qty: data.foodAmount,
+    //           })
+    //         }
+    //       })
+    //     }
+    //   })
+
+    //   Axios(address + "/txn/v1/txn-post/", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-request-id": uuid,
+    //       "x-request-timestamp": date,
+    //       "x-client-id": clientId,
+    //       "x-signature": signature,
+    //       "token": auth.token,
+    //     },
+    //     method: "POST",
+    //     data: requestData,
+    //   })
+    //     .then((res) => {
+    //       localStorage.removeItem("cart")
+    //       alert("Pembelian telah berhasil.")
+    //       window.location.href = "/status"
+    //     })
+    //     .catch((err) => {
+    //       if (err.response.data !== undefined) {
+    //         alert(err.response.data.err_message)
+    //         this.setState({ loadButton: true })
+    //       }
+    //     });
+    // })
+  };
 
   newListAllChoices = (food) => {
     let newlistArr = ''
@@ -515,12 +523,6 @@ class CartView extends React.Component {
 
     let storageData = JSON.parse(localStorage.getItem('cart'))
     let data = storageData;
-    // let totalAmount = 0;
-    // data.forEach((store) => {
-    //   store.food.forEach((food) => {
-    //     totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-    //   });
-    // });
     let storeList = data.filter((store) => {
       if (store.mid !== "") {
         return store;
@@ -615,7 +617,7 @@ class CartView extends React.Component {
 
     finalProduct = [
       {
-        totalPrice: Intl.NumberFormat("id-ID").format(totalPaymentShow),
+        totalPrice: totalPaymentShow[0],
         discountPrice: 0,
       },
     ]
@@ -629,7 +631,7 @@ class CartView extends React.Component {
     }
     if (this.state.paymentType === "PAY_BY_CASHIER") {
       paymentImage = CashierPayment
-    } else if (this.state.paymentType === "PAY_BY_OVO") {
+    } else if (this.state.paymentType === "WALLET_OVO") {
       paymentImage = OvoPayment
     }
 
@@ -720,7 +722,7 @@ class CartView extends React.Component {
                     </div>
                   </div>
 
-                  <div className='cart-OrderButton'>
+                  <div className='cart-OrderButton' onClick={() => this.handlePayment()}>
                     <div className='cart-OrderButton-content'>
                       <span className='cart-OrderButton-Frame'>
                         <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
@@ -755,7 +757,7 @@ class CartView extends React.Component {
               </div>
             </div>
 
-            <div className='cart-OrderButton-mob'>
+            <div className='cart-OrderButton-mob' onClick={() => this.handlePayment()}>
               <div className='cart-OrderButton-content-mob'>
                 <span className='cart-OrderButton-Frame-mob'>
                   <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
