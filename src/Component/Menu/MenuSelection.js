@@ -163,9 +163,9 @@ const MenuSelection = (props) => {
                 setnote(props.datas.foodNote)
                 setradioData(radioData)
                 setcheckboxData(checkboxData)
-                setupdateDataEdit(true)
                 dispatch({ type: 'CHECKBOXES', payload: props.datas.foodListCheckbox })
                 dispatch({ type: 'RADIOBUTTON', payload: props.datas.foodListRadio })
+                setupdateDataEdit(true)
                 setradioVal(props.datas.foodListRadio)
                 setcheckboxVal(props.datas.foodListCheckbox)
             }
@@ -179,6 +179,7 @@ const MenuSelection = (props) => {
             let editCheckbox = []
             let newlistcheckboxAddition = []
             let foodListCheckbox = props.datas.foodListCheckbox
+            let mandatCheck = false
 
             checkboxData.forEach((firstVal, indfirstVal) => {
                 firstVal.listaddition.forEach(secondVal => {
@@ -193,6 +194,7 @@ const MenuSelection = (props) => {
                                         price: secondVal.price,
                                         isChecked: true
                                     })
+                                    mandatCheck = true
                                 } else {
                                     if (countNoMatch === foodfirstVal.length) {
                                         newlistcheckboxAddition.push({
@@ -220,15 +222,18 @@ const MenuSelection = (props) => {
                 editCheckbox.push({
                     additionname: firstVal.additionname,
                     maxchoice: firstVal.maxchoice,
+                    isMandat: firstVal.isMandat,
                     listaddition: newlistcheckboxAddition
                 })
                 newlistcheckboxAddition = []
             })
+            dispatch({ type: 'MANDATCHECK', payload: mandatCheck })
 
             //this function is used for replace api data with edit data (RADIO)
             let editRadio = []
             let newlistradioAddition = []
             let foodListRadio = props.datas.foodListRadio
+            let mandatRadio = false
 
             radioData.forEach((firstVal, indfirstVal) => {
                 firstVal.listaddition.forEach(secondVal => {
@@ -242,6 +247,7 @@ const MenuSelection = (props) => {
                                         price: secondVal.price,
                                         isChecked: true
                                     })
+                                    mandatRadio = true
                                 } else {
                                     newlistradioAddition.push({
                                         name: secondVal.name,
@@ -263,10 +269,12 @@ const MenuSelection = (props) => {
                 })
                 editRadio.push({
                     additionname: firstVal.additionname,
+                    isMandat: firstVal.isMandat,
                     listaddition: newlistradioAddition
                 })
                 newlistradioAddition = []
             })
+            dispatch({ type: 'MANDATRADIO', payload: mandatRadio })
             setcheckboxData(editCheckbox)
             setradioData(editRadio)
             setupdateDataEdit(false)
@@ -280,7 +288,7 @@ const MenuSelection = (props) => {
                 <div key={indlistname} className='checkbox-section'>
                     <div className='title-section'>
                         <div className='titleSelection'>Tambah {listname.additionname.toUpperCase().toLowerCase()}</div>
-                        <div className='optionSelection'>Optional, Max {listname.maxchoice} items {listname.isMandat ? '*wajib' : null}</div>
+                        <div className='optionSelection'>{listname.isMandat ? 'Wajib' : 'Optional'}, Max {listname.maxchoice} items</div>
                     </div>
 
                     <div className='boxContainer'>
@@ -290,7 +298,7 @@ const MenuSelection = (props) => {
                                     AllRedu.openMenuCart ?
                                         updateEditChoice ?
                                             <div key={indlistadd} className='box-section'>
-                                                <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`${listname.additionname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `${listname.additionname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
+                                                <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
                                                 <label htmlFor={listadd.name}>
                                                     <div className='checkBox-side'>
                                                         <div className='check-box' />
@@ -306,7 +314,7 @@ const MenuSelection = (props) => {
                                             null
                                         :
                                         <div key={indlistadd} className='box-section'>
-                                            <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`${listname.additionname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `${listname.additionname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
+                                            <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
                                             <label htmlFor={listadd.name}>
                                                 <div className='checkBox-side'>
                                                     <div className='check-box' />
@@ -333,7 +341,7 @@ const MenuSelection = (props) => {
                 <div key={indlistname} className='radio-section'>
                     <div className='title-section'>
                         <div className='titleSelection'>{listname.additionname}</div>
-                        <div className='optionSelection'>Pilih Salah Satu {listname.isMandat ? '*wajib' : null}</div>
+                        <div className='optionSelection'>Pilih Salah Satu, {listname.isMandat ? 'Wajib' : 'Optional'}</div>
                     </div>
 
                     <div className='boxContainer'>

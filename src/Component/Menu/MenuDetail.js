@@ -125,6 +125,11 @@ const MenuDetail = (props) => {
     totalPrice += AllRedu.validQTY * props.datas.foodPrice
     props.handleAmount(totalPrice)
 
+    // console.log(AllRedu.mandatCheckCond, 'mandatCheckCond');
+    // console.log(AllRedu.mandatCheck, 'mandatCheck');
+    // console.log(AllRedu.mandatRadioCond, 'mandatRadioCond');
+    // console.log(AllRedu.mandatRadio, 'mandatRadio');
+
     return (
         <div>
             {
@@ -272,7 +277,7 @@ const MenuDetail = (props) => {
 
                                 {
                                     menuSelect ?
-                                        <Scrollbars style={{ height: "calc(88vh - 355px)" }}>
+                                        <Scrollbars style={{ height: "calc(88vh - 375px)" }}>
                                             <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} />
                                         </Scrollbars>
                                         :
