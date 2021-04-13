@@ -63,7 +63,7 @@ const MenuSelection = (props) => {
             },
             method: 'GET'
         }).then(productRes => {
-            console.log(productRes.data.results);
+            // console.log(productRes.data.results);
             let productDet = productRes.data.results.extra_menus.extra_menu
             let radioResponse = []
             let checkboxResponse = []
@@ -113,7 +113,6 @@ const MenuSelection = (props) => {
                 })
                 checkValData.push([])
             })
-            console.log(checkboxData);
 
             //set mandatory for checkboxes
             let mandatCheckAvailability = checkboxData.length
@@ -482,7 +481,7 @@ const MenuSelection = (props) => {
                 }
             }
 
-            console.log(checkMandat);
+            // console.log(checkMandat);
             let totalMandatCheck = 0
             checkMandat.forEach(valMandat => {
                 if (valMandat) {
@@ -513,7 +512,7 @@ const MenuSelection = (props) => {
         setradioVal(radiobuttonArr)
         dispatch({ type: 'RADIOBUTTON', payload: radiobuttonArr })
         
-        console.log(radioMandat);
+        // console.log(radioMandat);
         let totalMandatRadio = 0
         radioMandat.forEach(valMandat => {
             if (valMandat) {
