@@ -32,10 +32,13 @@ const MenuSelection = (props) => {
     const [checkboxVal, setcheckboxVal] = useState([])
     const [checkboxData, setcheckboxData] = useState([])
     const [checkboxMatch, setcheckboxMatch] = useState([])
+    const [totalCheckMandat, settotalCheckMandat] = useState(0)
     const [indexCheckMandat, setindexCheckMandat] = useState(null)
 
     const [radioVal, setradioVal] = useState([])
     const [radioData, setradioData] = useState([])
+    const [radioMatch, setradioMatch] = useState([])
+    const [totalRadioMandat, settotalRadioMandat] = useState(0)
 
     const [updateDataEdit, setupdateDataEdit] = useState(false)
     const [updateEditChoice, setupdateEditChoice] = useState(false)
@@ -116,9 +119,11 @@ const MenuSelection = (props) => {
             let mandatCheckAvailability = checkboxData.length
             let mandatCheckLength = checkboxData.length
             let checkboxMandat = []
+            let totalMandatforCheck = 0
             checkboxData.forEach(valCheck => {
                 if (valCheck.isMandat) {
                     checkboxMandat.push(false)
+                    totalMandatforCheck++
                     mandatCheckAvailability = mandatCheckAvailability - 1
                 } else {
                     checkboxMandat.push(false)
@@ -130,13 +135,20 @@ const MenuSelection = (props) => {
                 dispatch({ type: 'MANDATCHECKCOND', payload: true })
             }
             setcheckboxMatch(checkboxMandat)
+            settotalCheckMandat(totalMandatforCheck)
 
             //set mandatory for radio
             let mandatRadioAvailability = radioData.length
             let mandatRadioLength = radioData.length
+            let radioMandat = []
+            let totalMandatforRadio = 0
             radioData.forEach(valCheck => {
                 if (valCheck.isMandat) {
+                    radioMandat.push(false)
+                    totalMandatforRadio++
                     mandatRadioAvailability = mandatRadioAvailability - 1
+                } else {
+                    radioMandat.push(false)
                 }
             })
             if (mandatRadioLength === mandatRadioAvailability) {
@@ -144,6 +156,8 @@ const MenuSelection = (props) => {
             } else {
                 dispatch({ type: 'MANDATRADIOCOND', payload: true })
             }
+            setradioMatch(radioMandat)
+            settotalRadioMandat(totalMandatforRadio)
 
             if (!AllRedu.openMenuCart) {
                 var datas = props.datas
@@ -187,7 +201,6 @@ const MenuSelection = (props) => {
             let editCheckbox = []
             let newlistcheckboxAddition = []
             let foodListCheckbox = props.datas.foodListCheckbox
-            let mandatCheck = false
 
             checkboxData.forEach((firstVal, indfirstVal) => {
                 firstVal.listaddition.forEach(secondVal => {
@@ -202,7 +215,6 @@ const MenuSelection = (props) => {
                                         price: secondVal.price,
                                         isChecked: true
                                     })
-                                    mandatCheck = true
                                 } else {
                                     if (countNoMatch === foodfirstVal.length) {
                                         newlistcheckboxAddition.push({
@@ -235,13 +247,29 @@ const MenuSelection = (props) => {
                 })
                 newlistcheckboxAddition = []
             })
-            dispatch({ type: 'MANDATCHECK', payload: mandatCheck })
+            let editTotalcheckMandat = 0
+            let editArraycheckMandat = []
+            editCheckbox.forEach(valEdit => {
+                editArraycheckMandat.push(valEdit.isMandat)
+                if (valEdit.isMandat) {
+                    editTotalcheckMandat++
+                }
+            })
+            if (editTotalcheckMandat === totalCheckMandat) {
+                if (totalCheckMandat === 0) {
+                    dispatch({ type: 'MANDATCHECK', payload: false })
+                } else {
+                    dispatch({ type: 'MANDATCHECK', payload: true })
+                }
+            } else {
+                dispatch({ type: 'MANDATCHECK', payload: false })
+            }
+            setcheckboxMatch(editArraycheckMandat)
 
             //this function is used for replace api data with edit data (RADIO)
             let editRadio = []
             let newlistradioAddition = []
             let foodListRadio = props.datas.foodListRadio
-            let mandatRadio = false
 
             radioData.forEach((firstVal, indfirstVal) => {
                 firstVal.listaddition.forEach(secondVal => {
@@ -255,7 +283,6 @@ const MenuSelection = (props) => {
                                         price: secondVal.price,
                                         isChecked: true
                                     })
-                                    mandatRadio = true
                                 } else {
                                     newlistradioAddition.push({
                                         name: secondVal.name,
@@ -282,7 +309,25 @@ const MenuSelection = (props) => {
                 })
                 newlistradioAddition = []
             })
-            dispatch({ type: 'MANDATRADIO', payload: mandatRadio })
+            let editTotalradioMandat = 0
+            let editArrayradioMandat = []
+            editRadio.forEach(valEdit => {
+                editArrayradioMandat.push(valEdit.isMandat)
+                if (valEdit.isMandat) {
+                    editTotalradioMandat++
+                }
+            })
+            if (editTotalradioMandat === totalRadioMandat) {
+                if (totalRadioMandat === 0) {
+                    dispatch({ type: 'MANDATRADIO', payload: false })
+                } else {
+                    dispatch({ type: 'MANDATRADIO', payload: true })
+                }
+            } else {
+                dispatch({ type: 'MANDATRADIO', payload: false })
+            }
+            setradioMatch(editArrayradioMandat)
+
             setcheckboxData(editCheckbox)
             setradioData(editRadio)
             setupdateDataEdit(false)
@@ -425,12 +470,10 @@ const MenuSelection = (props) => {
                 })
                 if (sizeArr > 0) {
                     dispatch({ type: 'CHECKBOXES', payload: checkboxArr })
-                    if (indexCheckMandat === indexlistname) {
-                        if (checkboxArr[indexCheckMandat].length === 0) {
-                            checkMandat[indexCheckMandat] = false
-                            // dispatch({ type: 'MANDATCHECK', payload: false })
+                    if (checkboxArr[indexlistname].length === 0) {
+                        checkMandat[indexlistname] = false
+                        // dispatch({ type: 'MANDATCHECK', payload: false })
 
-                        }
                     }
                 } else {
                     checkMandat[indexlistname] = false
@@ -439,27 +482,54 @@ const MenuSelection = (props) => {
                 }
             }
 
-            // console.log(checkMandat);
-            let reduxMandat = true
-            checkMandat.forEach(valMandat=> {
-                if (!valMandat) {
-                    reduxMandat = false
+            console.log(checkMandat);
+            let totalMandatCheck = 0
+            checkMandat.forEach(valMandat => {
+                if (valMandat) {
+                    totalMandatCheck++
                 }
             })
-            dispatch({ type: 'MANDATCHECK', payload: reduxMandat })
+            if (totalMandatCheck === totalCheckMandat) {
+                if (totalCheckMandat === 0) {
+                    dispatch({ type: 'MANDATCHECK', payload: false })
+                } else {
+                    dispatch({ type: 'MANDATCHECK', payload: true })
+                }
+            } else {
+                dispatch({ type: 'MANDATCHECK', payload: false })
+            }
             setcheckboxMatch(checkMandat)
         }
     }
 
     const onRadioChange = (e, indexlistname, mandat, listprice) => {
+        let radioMandat = [...radioMatch]
         if (mandat) {
-            dispatch({ type: 'MANDATRADIO', payload: mandat })
+            radioMandat[indexlistname] = mandat
         }
         let radiobuttonArr = [...radioVal]
         radiobuttonArr[indexlistname].pop()
         radiobuttonArr[indexlistname].push({ name: e.target.value, price: listprice, isChecked: true })
         setradioVal(radiobuttonArr)
         dispatch({ type: 'RADIOBUTTON', payload: radiobuttonArr })
+        
+        console.log(radioMandat);
+        let totalMandatRadio = 0
+        radioMandat.forEach(valMandat => {
+            if (valMandat) {
+                totalMandatRadio++
+            }
+        })
+        if (totalMandatRadio === totalRadioMandat) {
+            if (totalRadioMandat === 0) {
+                dispatch({ type: 'MANDATRADIO', payload: false })
+            } else {
+                dispatch({ type: 'MANDATRADIO', payload: true })
+            }
+        } else {
+            dispatch({ type: 'MANDATRADIO', payload: false })
+        }
+        setradioMatch(radioMandat)
     }
 
     const handleDecrease = (e) => {
