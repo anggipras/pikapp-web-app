@@ -319,65 +319,43 @@ class CartView extends React.Component {
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
-    setTimeout(() => {
-      if (this.state.paymentType === 'PAY_BY_CASHIER') {
-        this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-        setTimeout(() => {
-          localStorage.removeItem("cart")
-          localStorage.removeItem("table")
-          localStorage.removeItem("lastTable")
-          window.location.href = '/status'
-        }, 1000);
-      } else {
-        this.setState({ successMessage: 'Transaksi OVO berhasil' })
-        console.log('berhasil broo');
-        setTimeout(() => {
-          localStorage.removeItem("cart")
-          localStorage.removeItem("table")
-          localStorage.removeItem("lastTable")
-          window.location.href = '/status'
-        }, 1000);
-      }
-    }, 20000);
-
-    // Axios(address + "/txn/v1/txn-post/", {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-request-id": uuid,
-    //     "x-request-timestamp": date,
-    //     "x-client-id": clientId,
-    //     "x-signature": signature,
-    //     "token": auth.token,
-    //   },
-    //   method: "POST",
-    //   data: requestData,
-    // })
-    //   .then((res) => {
-    //     if (this.state.paymentType === 'PAY_BY_CASHIER') {
-    //       this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-    //       setTimeout(() => {
-    //         localStorage.removeItem("cart")
-    //         localStorage.removeItem("table")
-    //         localStorage.removeItem("lastTable")
-    //         window.location.href = '/status'
-    //       }, 1000);
-    //     } else {
-    //       this.setState({ successMessage: 'Transaksi OVO berhasil' })
-    //       console.log('berhasil broo');
-    //       setTimeout(() => {
-    //         localStorage.removeItem("cart")
-    //         localStorage.removeItem("table")
-    //         localStorage.removeItem("lastTable")
-    //         window.location.href = '/status'
-    //       }, 1000);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     if (err.response.data !== undefined) {
-    //       alert(err.response.data.err_message)
-    //       this.setState({ loadButton: false })
-    //     }
-    //   });
+    Axios(address + "/txn/v1/txn-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: requestData,
+    })
+      .then((res) => {
+        if (this.state.paymentType === 'PAY_BY_CASHIER') {
+          this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+          setTimeout(() => {
+            localStorage.removeItem("cart")
+            localStorage.removeItem("table")
+            localStorage.removeItem("lastTable")
+            window.location.href = '/status'
+          }, 1000);
+        } else {
+          this.setState({ successMessage: 'Transaksi OVO berhasil' })
+          setTimeout(() => {
+            localStorage.removeItem("cart")
+            localStorage.removeItem("table")
+            localStorage.removeItem("lastTable")
+            window.location.href = '/status'
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        if (err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+          this.setState({ loadButton: false })
+        }
+      });
   };
 
   notifModal = () => {
