@@ -1,5 +1,5 @@
 import React from "react";
-import PikappLogo from "../../Asset/Logo/logo4x.png";
+// import PikappLogo from "../../Asset/Logo/logo4x.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
@@ -17,28 +17,11 @@ import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
-import Loader from 'react-loader'
 import MenuDetail from '../../Component/Menu/MenuDetail'
+import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
 import { EditMenuCart } from '../../Redux/Actions'
-
-var options = {
-  lines: 13,
-  length: 20,
-  width: 10,
-  radius: 30,
-  scale: 0.25,
-  corners: 1,
-  color: '#000',
-  opacity: 0.25,
-  rotate: 0,
-  direction: 1,
-  speed: 1,
-  trail: 60,
-  fps: 20,
-  shadow: false,
-  hwaccel: false,
-};
+import Loader from 'react-loader-spinner'
 
 var currentExt = {
   detailCategory: [
@@ -64,7 +47,7 @@ var finalProduct = [
 
 class CartView extends React.Component {
   state = {
-    notable: "",
+    changeUI: true,
     showModal: false,
     currentModalTitle: "",
     paymentOption: "Pembayaran Di Kasir",
@@ -79,14 +62,29 @@ class CartView extends React.Component {
         option: "",
       },
     ],
-    loadButton: true,
+    loadButton: false,
     showMenuDet: false,
     filteredCart: [],
     currentData: {},
     themid: '',
     indexEdit: 0,
-    updateData: ''
+    updateData: '',
+    successMessage: ''
   };
+
+  componentDidMount() {
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    let filterCart = allCart.filter(valCart => {
+      return valCart.mid === currentCartMerchant.mid
+    })
+    if (filterCart.length === 0) {
+      window.history.back()
+    } else {
+      this.setState({ changeUI: false })
+    }
+
+  }
 
   handleDetail(data) {
     if (data === "eat-method") {
@@ -259,6 +257,21 @@ class CartView extends React.Component {
   }
 
   handlePayment = () => {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if (auth.isLogged === false) {
+      window.history.back()
+    }
+    this.setState({ loadButton: true })
+
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let storageData = JSON.parse(localStorage.getItem('cart'))
     let noTab = this.props.noTable ? this.props.noTable : 0
@@ -290,79 +303,88 @@ class CartView extends React.Component {
       })
     })
 
-    console.log(selectedProd);
-    console.log(this.state.paymentType);
-    console.log(finalProduct[0].totalPrice.toString());
-    console.log(this.state.biz_type);
-    console.log(currentCartMerchant.mid);
-    console.log(noTab.toString());
+    var requestData = {
+      products: selectedProd,
+      payment_with: this.state.paymentType,
+      mid: currentCartMerchant.mid,
+      prices: finalProduct[0].totalPrice.toString(),
+      biz_type: this.state.biz_type,
+      table_no: noTab.toString()
+    }
 
-    // this.setState({ loadButton: false })
+    console.log(requestData);
 
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
-    // let merchantIds = JSON.parse(Cookies.get("addedMerchants"))
-    // merchantIds = merchantIds.filter((merchant) => {
-    //   return merchant !== ""
+    setTimeout(() => {
+      if (this.state.paymentType === 'PAY_BY_CASHIER') {
+        this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+        setTimeout(() => {
+          localStorage.removeItem("cart")
+          localStorage.removeItem("table")
+          localStorage.removeItem("lastTable")
+          window.location.href = '/status'
+        }, 1000);
+      } else {
+        this.setState({ successMessage: 'Transaksi OVO berhasil' })
+        console.log('berhasil broo');
+        setTimeout(() => {
+          localStorage.removeItem("cart")
+          localStorage.removeItem("table")
+          localStorage.removeItem("lastTable")
+          window.location.href = '/status'
+        }, 1000);
+      }
+    }, 20000);
+
+    // Axios(address + "/txn/v1/txn-post/", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //     "x-signature": signature,
+    //     "token": auth.token,
+    //   },
+    //   method: "POST",
+    //   data: requestData,
     // })
-    // let uuid = uuidV4();
-    // uuid = uuid.replaceAll("-", "");
-    // const date = new Date().toISOString();
-    // let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-
-    // merchantIds.forEach((merchant) => {
-    //   var requestData = {
-    //     products: [{
-    //       product_id: "",
-    //       notes: "",
-    //       qty: 0
-    //     }],
-    //     payment_with: this.state.paymentType,
-    //     mid: merchant,
-    //     prices: totalAmount,
-    //     biz_type: this.state.biz_type,
-    //     table_no: "1"
-    //   }
-    //   requestData.products.pop()
-    //   cart.forEach((merchant) => {
-    //     let addedMerchants = Cookies.get("addedMerchants")
-    //     if (addedMerchants.includes(merchant.mid)) {
-    //       merchant.food.forEach((data) => {
-    //         if (data.productId !== "") {
-    //           requestData.products.push({
-    //             product_id: data.productId,
-    //             notes: data.foodNote,
-    //             qty: data.foodAmount,
-    //           })
-    //         }
-    //       })
+    //   .then((res) => {
+    //     if (this.state.paymentType === 'PAY_BY_CASHIER') {
+    //       this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+    //       setTimeout(() => {
+    //         localStorage.removeItem("cart")
+    //         localStorage.removeItem("table")
+    //         localStorage.removeItem("lastTable")
+    //         window.location.href = '/status'
+    //       }, 1000);
+    //     } else {
+    //       this.setState({ successMessage: 'Transaksi OVO berhasil' })
+    //       console.log('berhasil broo');
+    //       setTimeout(() => {
+    //         localStorage.removeItem("cart")
+    //         localStorage.removeItem("table")
+    //         localStorage.removeItem("lastTable")
+    //         window.location.href = '/status'
+    //       }, 1000);
     //     }
     //   })
-
-    //   Axios(address + "/txn/v1/txn-post/", {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "x-request-id": uuid,
-    //       "x-request-timestamp": date,
-    //       "x-client-id": clientId,
-    //       "x-signature": signature,
-    //       "token": auth.token,
-    //     },
-    //     method: "POST",
-    //     data: requestData,
-    //   })
-    //     .then((res) => {
-    //       localStorage.removeItem("cart")
-    //       alert("Pembelian telah berhasil.")
-    //       window.location.href = "/status"
-    //     })
-    //     .catch((err) => {
-    //       if (err.response.data !== undefined) {
-    //         alert(err.response.data.err_message)
-    //         this.setState({ loadButton: true })
-    //       }
-    //     });
-    // })
+    //   .catch((err) => {
+    //     if (err.response.data !== undefined) {
+    //       alert(err.response.data.err_message)
+    //       this.setState({ loadButton: false })
+    //     }
+    //   });
   };
+
+  notifModal = () => {
+    if (this.state.loadButton) {
+      return <NotifModal isShowNotif={this.state.loadButton} responseMessage={this.state.successMessage} />
+    }
+  }
 
   newListAllChoices = (food) => {
     let newlistArr = ''
@@ -481,30 +503,8 @@ class CartView extends React.Component {
       Cookies.set("lastLink", lastLink, { expires: 1 })
       window.location.href = "/login"
     }
-    let modal;
-    // let paymentButton;
-    // if (auth.isLoggedIn === false) {
-    //   paymentButton = (
-    //     <Link to={"/login"} className={"iconButton"}>
-    //       <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-    //       <img src={frontIcon} alt={"checklist"} />
-    //     </Link>
-    //   );
-    // } else {
-    //   if (this.state.loadButton) {
-    //     paymentButton = (
-    //       <button className={"iconButton"} onClick={() => this.handlePayment()}>
-    //         <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-    //         <img src={frontIcon} alt={"checklist"} />
-    //       </button>
-    //     );
-    //   } else {
-    //     paymentButton = (
-    //       <Loader loaded={this.state.loadButton} options={options} className="spinner" />
-    //     )
-    //   }
-    // }
 
+    let modal;
     if (this.state.showModal === true) {
       modal = (
         <CartModalDev
@@ -633,6 +633,19 @@ class CartView extends React.Component {
       paymentImage = CashierPayment
     } else if (this.state.paymentType === "WALLET_OVO") {
       paymentImage = OvoPayment
+    }
+
+    if (this.state.changeUI) {
+      return (
+        <div style={{ display: 'flex', position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Loader
+            type="TailSpin"
+            color="#4bb7ac"
+            height={100}
+            width={100}
+          />
+        </div>
+      )
     }
 
     return (
@@ -774,137 +787,7 @@ class CartView extends React.Component {
         </div>
         {modal}
         {this.menuDetail()}
-
-
-
-
-
-
-
-
-
-        {/* <Row>
-          <Col xs={0} md={3} />
-          <Col>
-            <Row>
-              <Col><p className={"cartTitle"}>Pilih cara makan anda</p></Col>
-            </Row>
-            <Row>
-              <Col xs={1} md={1}>
-                <img src={eatImage} class="cartModalImage" alt="icon" />
-              </Col>
-              <Col>{this.state.eat_type}</Col>
-            </Row>
-          </Col>
-          <Col xs={2} md={3}>
-            <button className={"iconButton"}>
-              <img
-                src={chevronImage}
-                onClick={() => this.handleDetail("eat-method")}
-                alt={"chevron right"}
-              />
-            </button>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={0} md={3} />
-          <Col>
-            <Row>
-              <Col>
-                <p className={"cartTitle"}>Bayar pakai apa?</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={1} md={1}>
-                <img src={paymentImage} class="cartModalImage" alt="icon" />
-              </Col>
-              <Col>
-                {this.state.paymentOption}
-              </Col>
-            </Row>
-          </Col>
-          <Col xs={2} md={3}>
-            <button className={"iconButton"}>
-              <img
-                src={chevronImage}
-                onClick={() => this.handleDetail("pay-method")}
-                alt={"chevron right"}
-              />
-            </button>
-          </Col>
-        </Row>
-        {contentView}
-        <Row>
-          <Col>
-            <Row>
-              <Col xs={0} md={3} />
-              <Col>
-                <p className={"cartTitle"}>Rincian Pembayaran</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={0} md={3} />
-              <Col>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>Total harga barang:</p>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>Diskon:</p>
-                  </Col>
-                </Row>
-              </Col>
-              <Col>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>
-                      {Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      }).format(totalAmount)}
-                    </p>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>
-                      {Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      }).format(0)}
-                    </p>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col className={"cartPayment"}>
-            <Row>
-              <Col xs={1} md={3} />
-              <Col>
-                <p className={"cartTitle"}>Total Belanja Kamu</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={1} md={3} />
-              <Col>
-                <p className={"cartFinalPrice"}>
-                  {Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                  }).format(totalAmount)}
-                </p>
-              </Col>
-              <Col className={"cartFinalButton"}>{paymentButton}</Col>
-            </Row>
-          </Col>
-        </Row>
-        {modal}
-        {this.menuDetail()} */}
+        {this.notifModal()}
       </>
     );
   }

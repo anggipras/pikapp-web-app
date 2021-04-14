@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import '../../Asset/scss/MenuDetail.scss'
-import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
+// import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
 import closeLogo from '../../Asset/Icon/close.png'
 import backLogo from '../../Asset/Icon/arrow-left.png'
 import StarIcon from '../../Asset/Icon/star.png'
@@ -311,9 +311,9 @@ const MenuDetail = (props) => {
                                                 <h2 className='mob-add-words'>
                                                     {
                                                         AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                                                            'TAMBAH KERANJANG - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
+                                                            'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
                                                             :
-                                                            'TAMBAH KERANJANG - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
+                                                            'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
                                                     }
                                                 </h2>
                                             </div>

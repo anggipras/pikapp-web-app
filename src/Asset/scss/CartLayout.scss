@@ -556,6 +556,21 @@
   align-items: center;
 }
 
+.cart-OrderButton-content {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+// .loadedContent {
+//   margin: 0;
+//   padding: 0;
+//   display: flex;
+//   position: relative;
+//   align-items: center;
+// }
+
 .cart-OrderButton-Frame {
   width: 26px;
   height: 26px;
@@ -839,7 +854,7 @@
     margin: 0;
     padding: 0;
     background-color: #f5f6f7;
-    padding-bottom: 17px;
+    // padding-bottom: 17px;
   }
 
   .cart-checkoutArea-mob {

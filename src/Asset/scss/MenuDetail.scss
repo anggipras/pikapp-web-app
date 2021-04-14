@@ -296,8 +296,9 @@
     .mob-iconClose {
         display: flex;
         position: absolute;
-        top: 20px;
-        right: 19px;
+        top: 0;
+        right: 0;
+        padding: 20px;
     }
 
     .mob-closeLogo {
