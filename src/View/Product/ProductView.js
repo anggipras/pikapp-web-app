@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 // import sha256 from "crypto-js/hmac-sha256";
 // import Axios from "axios";
 import Cookies from "js-cookie"
-import Storeimg2 from '../../Asset/Illustration/storeimg.jpg'
 import Storeimg from '../../Asset/Illustration/storeimg2.png'
 // import Productimg from '../../Asset/Illustration/productimg.png'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
@@ -59,6 +58,7 @@ class ProductView extends React.Component {
       mid: "",
       title: "",
       image: "",
+      logo: "",
       desc: "",
       address: "",
       rating: "",
@@ -117,6 +117,7 @@ class ProductView extends React.Component {
     stateData.mid = mid;
     stateData.title = currentMerchant.storeName;
     stateData.image = currentMerchant.storeImage;
+    stateData.logo = currentMerchant.storeLogo;
     stateData.desc = currentMerchant.storeDistance;
     stateData.address = currentMerchant.storeAdress;
     stateData.rating = currentMerchant.storeRating;
@@ -196,9 +197,8 @@ class ProductView extends React.Component {
       firstShownProduct[indexcategProd].category_products = newFilter
     })
 
-    // console.log(productCateg);
-    // console.log(firstShownProduct);
-    prominent(Storeimg, { amount: 3 }).then((color) => {
+    console.log(currentMerchant.storeImage);
+    prominent(currentMerchant.storeImage, { amount: 3 }).then((color) => {
       // return RGB color for example [241, 221, 63]
       var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
       var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
@@ -297,28 +297,7 @@ class ProductView extends React.Component {
     //   });
   }
 
-  //testing changebackground
-  changeBackground = () => {
-    this.setState({ testingchange: !this.state.testingchange, testColor: true })
-  }
-
   componentDidUpdate() {
-    if (this.state.testColor === true) {
-      if (this.state.testingchange === false) {
-        prominent(Storeimg, { amount: 3 }).then((color) => {
-          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-          this.brightenColor(merchantColor, 70, productColor, 60)
-        });
-      } else {
-        prominent(Storeimg2, { amount: 3 }).then((color) => {
-          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-          this.brightenColor(merchantColor, 70, productColor, 60)
-        });
-      }
-    }
-
     // if (this.state.idCateg) { //load more products with selected index of category
     //   this.state.idCateg.forEach((val, index) => {
     //     if (index === this.state.choosenIndCateg) {
@@ -342,7 +321,6 @@ class ProductView extends React.Component {
     }
 
   }
-  //testing changebackground
 
   brightenColor = (hex, percent, hex2, percent2) => {
     // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
@@ -983,13 +961,8 @@ class ProductView extends React.Component {
 
     return (
       <>
-        <div className='storeBanner' onClick={() => this.changeBackground()}>
-          {//only for testing, would be remove
-            this.state.testingchange === false ?
-              <img src={Storeimg} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
-              :
-              <img src={Storeimg2} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
-          }
+        <div className='storeBanner'>
+          <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
           <div className='iconBanner'>
             <Link to={"/profile"}>
               <div className='profileIcon-sec'>
@@ -1019,7 +992,7 @@ class ProductView extends React.Component {
                 <div className='inside-topMerchantInfo'>
                   <div className='merchant-title'>
                     <div className='merchant-logo'>
-                      <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+                      <img src={this.state.data.logo || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                     </div>
 
                     <div className='merchant-name'>

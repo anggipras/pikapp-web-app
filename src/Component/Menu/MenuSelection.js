@@ -39,6 +39,8 @@ const MenuSelection = (props) => {
     const [radioData, setradioData] = useState([])
     const [radioMatch, setradioMatch] = useState([])
     const [totalRadioMandat, settotalRadioMandat] = useState(0)
+    const [indexGroupRadioMandat, setindexGroupRadioMandat] = useState(null)
+    const [indexEachRadioMandat, setindexEachRadioMandat] = useState(null)
 
     const [updateDataEdit, setupdateDataEdit] = useState(false)
     const [updateEditChoice, setupdateEditChoice] = useState(false)
@@ -339,7 +341,7 @@ const MenuSelection = (props) => {
             return (
                 <div key={indlistname} className='checkbox-section'>
                     <div className='title-section'>
-                        <div className='titleSelection'>Tambah {listname.additionname.toUpperCase().toLowerCase()}</div>
+                        <div className='titleSelection'>{listname.additionname.toUpperCase().toLowerCase()}</div>
                         <div className='optionSelection'>{listname.isMandat ? 'Wajib' : 'Optional'}, Max {listname.maxchoice} items</div>
                     </div>
 
@@ -393,7 +395,7 @@ const MenuSelection = (props) => {
                 <div key={indlistname} className='radio-section'>
                     <div className='title-section'>
                         <div className='titleSelection'>{listname.additionname}</div>
-                        <div className='optionSelection'>Pilih Salah Satu, {listname.isMandat ? 'Wajib' : 'Optional'}</div>
+                        <div className='optionSelection'>{listname.isMandat ? 'Wajib' : 'Optional'}, Pilih Salah Satu</div>
                     </div>
 
                     <div className='boxContainer'>
@@ -403,7 +405,7 @@ const MenuSelection = (props) => {
                                     AllRedu.openMenuCart ?
                                         updateEditChoice ?
                                             <div key={indlistadd} className='radiobox-section'>
-                                                <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat, listadd.price)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
+                                                <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat, listadd.price, indlistadd)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
                                                 <label htmlFor={listadd.name}>
                                                     <div className='radio-side'>
                                                         <div className='radio-circle' />
@@ -419,7 +421,7 @@ const MenuSelection = (props) => {
                                             null
                                         :
                                         <div key={indlistadd} className='radiobox-section'>
-                                            <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat, listadd.price)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
+                                            <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat, listadd.price, indlistadd)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
                                             <label htmlFor={listadd.name}>
                                                 <div className='radio-side'>
                                                     <div className='radio-circle' />
@@ -501,11 +503,21 @@ const MenuSelection = (props) => {
         }
     }
 
-    const onRadioChange = (e, indexlistname, mandat, listprice) => {
+    const onRadioChange = (e, indexlistname, mandat, listprice, indexlistadd) => {
         let radioMandat = [...radioMatch]
         if (mandat) {
             radioMandat[indexlistname] = mandat
         }
+        // console.log(indexlistname, indexGroupRadioMandat, 'selectGroupRadio');
+        // console.log(indexlistadd, indexEachRadioMandat, 'selectEachRadio');
+        // if (indexlistname === indexGroupRadioMandat) {
+        //     if (indexlistadd === indexEachRadioMandat) {
+        //         console.log('yoo');
+        //         if (e.target.checked) {
+        //             e.target.checked = false
+        //         }
+        //     }
+        // }
         let radiobuttonArr = [...radioVal]
         radiobuttonArr[indexlistname].pop()
         radiobuttonArr[indexlistname].push({ name: e.target.value, price: listprice, isChecked: true })
@@ -529,6 +541,8 @@ const MenuSelection = (props) => {
             dispatch({ type: 'MANDATRADIO', payload: false })
         }
         setradioMatch(radioMandat)
+        // setindexGroupRadioMandat(indexlistname)
+        // setindexEachRadioMandat(indexlistadd)
     }
 
     const handleDecrease = (e) => {

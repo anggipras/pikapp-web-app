@@ -265,6 +265,7 @@ class StoreView extends React.Component {
       storeImage: "",
       storeAdress: "",
       storeRating: "",
+      storeLogo: "",
     };
     currentMerchant.mid = e.storeId;
     currentMerchant.storeName = e.storeName;
@@ -273,6 +274,7 @@ class StoreView extends React.Component {
     currentMerchant.storeImage = e.storeImage;
     currentMerchant.storeAdress = e.address;
     currentMerchant.storeRating = e.rating;
+    currentMerchant.storeLogo = e.logo;
 
     localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
     Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
