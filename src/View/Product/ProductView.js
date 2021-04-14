@@ -197,7 +197,10 @@ class ProductView extends React.Component {
       firstShownProduct[indexcategProd].category_products = newFilter
     })
 
+    console.log('ahui');
+
     console.log(currentMerchant.storeImage);
+
     prominent(currentMerchant.storeImage, { amount: 3 }).then((color) => {
       // return RGB color for example [241, 221, 63]
       var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
