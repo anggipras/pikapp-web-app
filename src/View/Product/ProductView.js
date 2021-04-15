@@ -1,20 +1,16 @@
 import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
-// import PikaModal from "../../Component/Modal/PikaModal";
 import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
-// import { cart } from "../../App";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-// import { address, clientId } from "../../Asset/Constant/APIConstant";
-// import { v4 as uuidV4 } from "uuid";
-// import sha256 from "crypto-js/hmac-sha256";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
-import Storeimg from '../../Asset/Illustration/storeimg2.jpeg'
-import Storeimg2 from '../../Asset/Illustration/storeimg1.png'
-// import Productimg from '../../Asset/Illustration/productimg.png'
+// import Storeimg from '../../Asset/Illustration/storeimg2.jpeg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -198,10 +194,8 @@ class ProductView extends React.Component {
       firstShownProduct[indexcategProd].category_products = newFilter
     })
 
-    console.log(currentMerchant.storeImage);
     let newImage = currentMerchant.storeImage
     newImage = newImage.replace(/^https:\/\//i, 'http://')
-    console.log(newImage);
 
     prominent(newImage, { amount: 3 }).then((color) => {
       // return RGB color for example [241, 221, 63]
@@ -211,112 +205,9 @@ class ProductView extends React.Component {
       this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
       document.addEventListener('scroll', this.loadMoreMerchant)
     });
-
-    // var getLocation = JSON.parse(localStorage.getItem("longlat"))
-    // var latitude = getLocation.lat
-    // var longitude = getLocation.lon
-    // const value = queryString.parse(window.location.search);
-    // const mid = value.mid;
-    // const notab = value.table || ""
-    // let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/${currentMerchant.storeName}/`
-    // var stateData;
-    // let uuid = uuidV4();
-    // uuid = uuid.replaceAll("-", "");
-    // const date = new Date().toISOString();
-    // Axios(addressRoute, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-request-id": uuid,
-    //     "x-request-timestamp": date,
-    //     "x-client-id": clientId,
-    //     "token": "PUBLIC",
-    //     "category": "1",
-    //   },
-    //   method: "GET",
-    //   params: {
-    //     page: 0,
-    //     size: this.state.size
-    //   }
-    // })
-    //   .then((res) => {
-    //     stateData = { ...this.state.data };
-    //     let responseDatas = res.data.results;
-    //     stateData.mid = mid;
-    //     stateData.title = currentMerchant.storeName;
-    //     stateData.image = currentMerchant.storeImage;
-    //     stateData.desc = currentMerchant.storeDistance;
-    //     stateData.address = currentMerchant.storeAdress;
-    //     stateData.rating = currentMerchant.storeRating;
-    //     stateData.phone = "081296000823";
-    //     stateData.notable = notab
-    //     var productCateg = []
-    //     var idCateg = []
-    //     var pageProduct = []
-    //     responseDatas.forEach((data) => {
-    //       if (data.mid === mid) {
-    //         productCateg = data.categories.map((categ) => {
-    //           idCateg.push(1)
-    //           pageProduct.push(res.data.total_pages - 1)
-    //           return categ
-    //         })
-
-    //         productCateg.forEach((val) => {
-    //           val.category_products = []
-    //         })
-
-    //         productCateg.forEach((categProd) => {
-    //           data.products.forEach((allproducts) => {
-    //             if (categProd.category_id == allproducts.product_category) {
-    //               categProd.category_products.push({
-    //                 productId: allproducts.product_id,
-    //                 category: allproducts.product_category,
-    //                 foodName: allproducts.product_name,
-    //                 foodDesc: "",
-    //                 foodPrice: allproducts.product_price,
-    //                 foodImage: allproducts.product_picture1,
-    //                 foodExt: [
-    //                   {
-    //                     name: "",
-    //                     amount: 0,
-    //                   },
-    //                 ],
-    //               })
-    //             }
-    //           })
-    //         })
-    //       }
-    //     })
-    //     console.log(productCateg);
-    //     console.log(pageProduct);
-    //     console.log(idCateg);
-    //     prominent(Storeimg, { amount: 3 }).then((color) => {
-    //       // return RGB color for example [241, 221, 63]
-    //       var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-    //       var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-    //       this.brightenColor(merchantColor, 70, productColor, 60)
-    //       this.setState({ data: stateData, allProductsandCategories: productCateg, idCateg, productPage: pageProduct });
-    //       document.addEventListener('scroll', this.loadMoreMerchant)
-    //     });
-    //   })
-    //   .catch((err) => {
-    //   });
   }
 
   componentDidUpdate() {
-    // if (this.state.idCateg) { //load more products with selected index of category
-    //   this.state.idCateg.forEach((val, index) => {
-    //     if (index === this.state.choosenIndCateg) {
-    //       if (val > 0) {
-    //         if (this.state.boolpage === true) {
-    //           this.loadProducts(index)
-    //         } else {
-    //           document.addEventListener('scroll', this.loadMoreMerchant)
-    //         }
-    //       }
-    //     }
-    //   })
-    // }
-
     if (this.state.idCateg[this.state.choosenIndCateg] > 0) { //load more products with selected index of category
       if (this.state.boolpage === true) {
         this.loadProducts(this.state.choosenIndCateg)
@@ -378,68 +269,6 @@ class ProductView extends React.Component {
 
     this.setState({ boolpage: false, productCategpersize: updatedProduct })
     document.addEventListener('scroll', this.loadMoreMerchant)
-
-    // const value = queryString.parse(window.location.search);
-    // const mid = value.mid;
-    // var getLocation = JSON.parse(localStorage.getItem("longlat"))
-    // var latitude = getLocation.lat
-    // var longitude = getLocation.lon
-    // let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/ALL/`
-    // var stateData;
-    // let uuid = uuidV4();
-    // uuid = uuid.replaceAll("-", "");
-    // const date = new Date().toISOString();
-    // var inputPage = this.state.idCateg
-    // inputPage[indexOfCateg] -= 1
-    // Axios(addressRoute, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-request-id": uuid,
-    //     "x-request-timestamp": date,
-    //     "x-client-id": clientId,
-    //     "token": "PUBLIC",
-    //     "category": "1",
-    //   },
-    //   method: "GET",
-    //   params: {
-    //     page: inputPage[indexOfCateg],
-    //     size: this.state.size
-    //   }
-    // })
-    //   .then((res) => {
-    //     stateData = { ...this.state.data };
-    //     let responseDatas = res.data.results;
-    //     responseDatas.forEach((data) => {
-    //       if (data.mid === mid) {
-    //         this.state.productCategpersize.forEach((categProd, indexAllCateg) => {
-    //           data.products.forEach((allproducts) => {
-    //             if (categProd.category_id == allproducts.product_category) {
-    //               if (indexAllCateg == indexOfCateg) {
-    //                 categProd.category_products.push({
-    //                   productId: allproducts.product_id,
-    //                   category: allproducts.product_category,
-    //                   foodName: allproducts.product_name,
-    //                   foodDesc: "",
-    //                   foodPrice: allproducts.product_price,
-    //                   foodImage: allproducts.product_picture1,
-    //                   foodExt: [
-    //                     {
-    //                       name: "",
-    //                       amount: 0,
-    //                     },
-    //                   ],
-    //                 })
-    //               }
-    //             }
-    //           })
-    //         })
-    //       }
-    //     })
-    //     this.setState({ boolpage: false })
-    //     document.addEventListener('scroll', this.loadMoreMerchant)
-    //   })
-    //   .catch((err) => {
-    //   });
   }
 
   handlePhone = (phone) => { //go to Whatsapp chat
@@ -720,46 +549,63 @@ class ProductView extends React.Component {
     }
     localStorage.setItem("cart", JSON.stringify(cart));
     alert('berhasil masuk cart')
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
-    // if (auth.isLogged === false) {
-    //   var lastLink = { value: window.location.href }
-    //   Cookies.set("lastLink", lastLink, { expires: 1 })
-    //   window.location.href = "/login"
-    // }
-    // let uuid = uuidV4();
-    // const date = new Date().toISOString();
-    // uuid = uuid.replaceAll("-", "");
-    // let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    // Axios(address + "/txn/v1/cart-post/", {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-request-id": uuid,
-    //     "x-request-timestamp": date,
-    //     "x-client-id": clientId,
-    //     "x-signature": signature,
-    //     "token": auth.token,
-    //   },
-    //   method: "POST",
-    //   data: {
-    //     mid: this.state.data.mid,
-    //     pid: this.state.currentData.productId,
-    //     qty: currentExt.detailCategory[0].amount,
-    //     notes: currentExt.note,
-    //   }
-    // })
-    //   .then((res) => {
-    //   })
-    //   .catch((err) => {
-    //   });
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
+    let newNotes = ''
+    let filterAddCart = cart.filter(matchMid => {
+      return matchMid.mid === mid
+    })
+
+    filterAddCart[0].food.foodListCheckbox.forEach(val => {
+      val.forEach(val2 => {
+        return newNotes += `${val2.name}, `
+      })
+    })
+
+    filterAddCart[0].food.foodListRadio.forEach(val => {
+      val.forEach(val2 => {
+        return newNotes += `${val2.name}, `
+      })
+    })
+
+    newNotes += currentExt.note
+
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replaceAll("-", "");
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    Axios(address + "/txn/v1/cart-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: {
+        mid: this.state.data.mid,
+        pid: this.state.currentData.productId,
+        qty: currentExt.detailCategory[0].amount,
+        notes: newNotes,
+      }
+    })
+      .then(() => {
+        console.log('addtocart succeed');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   changeMenu = () => {
@@ -900,23 +746,6 @@ class ProductView extends React.Component {
   }
 
   render() {
-    // console.log(this.state.productCategpersize[0].category_products.length);
-    // console.log(this.state.allProductsandCategories[0].category_products.length);
-    // let modal;
-    // if (this.state.showModal === true) {
-    //   modal = (
-    //     <PikaModal
-    //       isShow={() => this.setModal(true)}
-    //       onHide={() => this.setModal(false)}
-    //       datas={this.state.currentData}
-    //       handleClick={this.handleAddCart}
-    //       handleData={this.handleCart}
-    //     />
-    //   );
-    // } else {
-    //   modal = <></>;
-    // }
-
     let cartButton;
     const value = queryString.parse(window.location.search);
     const notab = value.table || ""
@@ -1103,7 +932,6 @@ class ProductView extends React.Component {
             </div>
           </div>
         </div>
-        {/* {modal} */}
         {cartButton}
         {this.menuDetail()}
       </>

@@ -1,5 +1,4 @@
 import React from "react";
-// import PikappLogo from "../../Asset/Logo/logo4x.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
@@ -11,7 +10,7 @@ import ArrowBack from "../../Asset/Icon/arrow-left.png";
 // import { CartModal } from "../../Component/Modal/CartModal";
 import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
@@ -312,7 +311,7 @@ class CartView extends React.Component {
       table_no: noTab.toString()
     }
 
-    console.log(requestData);
+    // console.log(requestData);
 
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
