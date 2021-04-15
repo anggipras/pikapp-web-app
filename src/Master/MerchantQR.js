@@ -100,7 +100,7 @@ const MerchantResto = (props) => {
     })
       .then((res) => {
         let responseDatas = res.data.results;
-        responseDatas.forEach((dataMerch, indexMerch) => {
+        Array.prototype.forEach.call(responseDatas, (dataMerch, indexMerch) => {
           if (dataMerch.mid === props.match.params.mid) {
             // condition where api response and params at url match
             let stateData = []
@@ -130,13 +130,51 @@ const MerchantResto = (props) => {
               props.match.params.notab
             );
           } else {
-            if (indexMerch === responseDatas.length-1) {
+            if (indexMerch === responseDatas.length - 1) {
               let nextPage = page
               nextPage++
               setpage(nextPage)
             }
           }
         })
+
+        // responseDatas.forEach((dataMerch, indexMerch) => {
+        //   if (dataMerch.mid === props.match.params.mid) {
+        //     // condition where api response and params at url match
+        //     let stateData = []
+        //     stateData.push(dataMerch)
+        //     var currentMerchant = {
+        //       mid: "",
+        //       storeName: "",
+        //       storeDesc: "",
+        //       distance: "",
+        //       storeImage: "",
+        //       storeAdress: "",
+        //       storeRating: "",
+        //     };
+        //     currentMerchant.mid = dataMerch.mid;
+        //     currentMerchant.storeName = dataMerch.merchant_name;
+        //     currentMerchant.storeDesc = "Desc";
+        //     currentMerchant.distance = dataMerch.merchant_distance;
+        //     currentMerchant.storeImage = dataMerch.merchant_pict;
+        //     currentMerchant.storeAdress = dataMerch.merchant_address;
+        //     currentMerchant.storeRating = dataMerch.merchant_rating;
+        //     Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
+        //     localStorage.setItem('selectedMerchant', JSON.stringify(stateData))
+        //     history.push(
+        //       "/store?mid=" +
+        //       dataMerch.mid +
+        //       "&table=" +
+        //       props.match.params.notab
+        //     );
+        //   } else {
+        //     if (indexMerch === responseDatas.length-1) {
+        //       let nextPage = page
+        //       nextPage++
+        //       setpage(nextPage)
+        //     }
+        //   }
+        // })
       })
       .catch((err) => console.log(err));
   }
