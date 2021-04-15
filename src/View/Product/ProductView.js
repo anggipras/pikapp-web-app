@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 // import { address, clientId } from "../../Asset/Constant/APIConstant";
 // import { v4 as uuidV4 } from "uuid";
 // import sha256 from "crypto-js/hmac-sha256";
-// import Axios from "axios";
+import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg from '../../Asset/Illustration/storeimg2.jpeg'
 import Storeimg2 from '../../Asset/Illustration/storeimg1.png'
@@ -198,11 +198,12 @@ class ProductView extends React.Component {
       firstShownProduct[indexcategProd].category_products = newFilter
     })
 
-    console.log('ahui');
-
     console.log(currentMerchant.storeImage);
+    let newImage = currentMerchant.storeImage
+    newImage = newImage.replace(/^https:\/\//i, 'http://')
+    console.log(newImage);
 
-    prominent(Storeimg, { amount: 3 }).then((color) => {
+    prominent(newImage, { amount: 3 }).then((color) => {
       // return RGB color for example [241, 221, 63]
       var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
       var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
