@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { geolocated } from "react-geolocated";
 import { v4 as uuidV4 } from "uuid";
 import { address, clientId } from "../Asset/Constant/APIConstant";
@@ -19,32 +19,60 @@ const MerchantResto = (props) => {
   //     storeImage: "",
   //   },
   // ]);
-  const [longlatad, setlonglat] = useState("");
+  // const [longlatad, setlonglat] = useState("");
+  const [longlat, setlonglat] = useState({});
   const [page, setpage] = useState(0);
   const [pageCond, setpageCond] = useState(false);
   let history = useHistory();
+  const _isMounted = useRef(true)
+
+  // useEffect(() => {
+  //   if (props.coords) {
+  //     let latitude = props.coords.latitude;
+  //     let longitude = props.coords.longitude;
+  //     let longlat = { lat: latitude, lon: longitude };
+  //     console.log(latitude, longitude);
+  //     localStorage.setItem("longlat", JSON.stringify(longlat));
+  //   } else {
+  //     setlonglat("getloc succeed")
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (props.coords) {
-      let latitude = props.coords.latitude;
-      let longitude = props.coords.longitude;
-      let longlat = { lat: latitude, lon: longitude };
-      console.log(latitude, longitude);
-      localStorage.setItem("longlat", JSON.stringify(longlat));
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition)
     } else {
-      setlonglat("getloc succeed")
+      alert('Geolocation is not supported by this browser.')
+    }
+    return () => {
+      _isMounted.current = false
     }
   }, []);
 
+  const showPosition = (position) => {
+    let latitude = position.coords.latitude
+    let longitude = position.coords.longitude
+    let longlat = { lat: latitude, lon: longitude }
+    console.log(latitude, longitude);
+    setlonglat({ lat: latitude, lon: longitude })
+    localStorage.setItem("longlat", JSON.stringify(longlat))
+  }
+
+  // useEffect(() => {
+  //   if (props.coords) {
+  //     let latitude = props.coords.latitude;
+  //     let longitude = props.coords.longitude;
+  //     let longlat = { lat: latitude, lon: longitude };
+  //     console.log(latitude, longitude);
+  //     console.log(longlatad);
+  //     localStorage.setItem("longlat", JSON.stringify(longlat));
+  //     getMerchantData(latitude, longitude)
+  //   }
+  // });
+
   useEffect(() => {
-    if (props.coords) {
-      let latitude = props.coords.latitude;
-      let longitude = props.coords.longitude;
-      let longlat = { lat: latitude, lon: longitude };
-      console.log(latitude, longitude);
-      console.log(longlatad);
-      localStorage.setItem("longlat", JSON.stringify(longlat));
-      getMerchantData(latitude, longitude)
+    if (longlat.lat) {
+      getMerchantData(longlat.lat, longlat.lon)
     }
   });
 
@@ -116,9 +144,11 @@ const MerchantResto = (props) => {
   return <div></div>;
 };
 
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: false,
-  },
-  userDecisionTimeout: 5000,
-})(MerchantResto);
+// export default geolocated({
+//   positionOptions: {
+//     enableHighAccuracy: false,
+//   },
+//   userDecisionTimeout: 5000,
+// })(MerchantResto);
+
+export default MerchantResto
