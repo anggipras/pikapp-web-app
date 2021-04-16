@@ -332,7 +332,10 @@ class CartView extends React.Component {
         if (this.state.paymentType === 'PAY_BY_CASHIER') {
           this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
           setTimeout(() => {
-            localStorage.removeItem("cart")
+            let filterOtherCart = storageData.filter(valFilter=> {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             window.location.href = '/status'
@@ -341,7 +344,10 @@ class CartView extends React.Component {
         } else {
           this.setState({ successMessage: 'Transaksi OVO berhasil' })
           setTimeout(() => {
-            localStorage.removeItem("cart")
+            let filterOtherCart = storageData.filter(valFilter=> {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             window.location.href = '/status'
