@@ -526,6 +526,17 @@ class CartView extends React.Component {
   }
 
   render() {
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    let filterCart = allCart.filter(valCart => {
+      return valCart.mid === currentCartMerchant.mid
+    })
+    if (filterCart.length === 0) {
+      window.history.back()
+    } else {
+      this.setState({ changeUI: false })
+    }
+
     var auth = {
       isLogged: false,
       token: "",
