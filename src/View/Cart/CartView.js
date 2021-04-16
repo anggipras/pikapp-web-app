@@ -578,7 +578,6 @@ class CartView extends React.Component {
       }
     });
 
-    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let contentView = storeList.map((store) => {
       let storeFood
       if (store.mid === currentCartMerchant.mid) {
