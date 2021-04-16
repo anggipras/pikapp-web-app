@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import '../../Asset/scss/MenuDetail.scss'
-import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
+// import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
 import closeLogo from '../../Asset/Icon/close.png'
 import backLogo from '../../Asset/Icon/arrow-left.png'
 import StarIcon from '../../Asset/Icon/star.png'
@@ -59,6 +59,8 @@ const MenuDetail = (props) => {
             props.handleClick()
             dispatch({ type: 'DEFAULTSTATE' })
             props.onHide()
+        } else if(!AllRedu.buttonLoad) {
+            console.log('waitbro');
         } else {
             alert('cannot buy')
         }
@@ -104,6 +106,7 @@ const MenuDetail = (props) => {
             } else {
                 setmenuSelect(true)
                 dispatch({ type: 'FOODCATEG', payload: findCateg })
+                dispatch({ type: 'LOADING' })
             }
             // openPinDialog();
             
@@ -205,7 +208,7 @@ const MenuDetail = (props) => {
                             <div className='menuDetail-layout'>
                                 <div className='menuContain-left'>
                                     <div className='menuBanner'>
-                                        <img className='menuimg' src={prodPhoto} alt='' />
+                                        <img className='menuimg' src={props.datas.foodImage} alt='' />
                                     </div>
 
                                     <div className='menu-detail'>
@@ -292,7 +295,7 @@ const MenuDetail = (props) => {
                     >
                         <div className='mob-modal-content-menudetail' onClick={e => e.stopPropagation()} style={{ height: menuSelect ? '88vh' : 'auto' }}>
                             <div className='mob-menuBanner'>
-                                <img className='mob-menuimg' src={prodPhoto} alt='' />
+                                <img className='mob-menuimg' src={props.datas.foodImage} alt='' />
                                 {
                                     menuSelect ?
                                         <span className='mob-iconClose' onClick={backModal}>
@@ -329,7 +332,7 @@ const MenuDetail = (props) => {
 
                                 {
                                     menuSelect ?
-                                        <Scrollbars style={{ height: "calc(88vh - 355px)" }}>
+                                        <Scrollbars style={{ height: "calc(88vh - 375px)" }}>
                                             <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} />
                                         </Scrollbars>
                                         :
@@ -363,9 +366,9 @@ const MenuDetail = (props) => {
                                                 <h2 className='mob-add-words'>
                                                     {
                                                         AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                                                            'TAMBAH KERANJANG - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
+                                                            'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
                                                             :
-                                                            'TAMBAH KERANJANG - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
+                                                            'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
                                                     }
                                                 </h2>
                                             </div>

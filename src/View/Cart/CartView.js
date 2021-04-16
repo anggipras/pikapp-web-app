@@ -1,6 +1,4 @@
 import React from "react";
-// import { Row, Col, Button, ButtonGroup, Form } from "react-bootstrap";
-import PikappLogo from "../../Asset/Logo/logo4x.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
@@ -8,45 +6,19 @@ import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
-// import chevronImage from "../../Asset/Icon/chevron_right.png";
-// import removeIcon from "../../Asset/Icon/remove_icon.png";
-// import storeIcon from "../../Asset/Icon/store_icon.png";
-// import checklistIcon from "../../Asset/Icon/checklist_icon.png";
-// import frontIcon from "../../Asset/Icon/front_icon.png";
-// import cashierIcon from "../../Asset/Icon/cashier_icon.png";
-// import dineinIcon from "../../Asset/Icon/dinein_icon.png";
-// import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
-import { CartModal } from "../../Component/Modal/CartModal";
+import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
-import { Link } from "react-router-dom";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
-import Loader from 'react-loader'
 import MenuDetail from '../../Component/Menu/MenuDetail'
+import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
 import { EditMenuCart } from '../../Redux/Actions'
-
-var options = {
-  lines: 13,
-  length: 20,
-  width: 10,
-  radius: 30,
-  scale: 0.25,
-  corners: 1,
-  color: '#000',
-  opacity: 0.25,
-  rotate: 0,
-  direction: 1,
-  speed: 1,
-  trail: 60,
-  fps: 20,
-  shadow: false,
-  hwaccel: false,
-};
+import Loader from 'react-loader-spinner'
 
 var currentExt = {
   detailCategory: [
@@ -72,7 +44,7 @@ var finalProduct = [
 
 class CartView extends React.Component {
   state = {
-    notable: "",
+    changeUI: true,
     showModal: false,
     currentModalTitle: "",
     paymentOption: "Pembayaran Di Kasir",
@@ -87,14 +59,29 @@ class CartView extends React.Component {
         option: "",
       },
     ],
-    loadButton: true,
+    loadButton: false,
     showMenuDet: false,
     filteredCart: [],
     currentData: {},
     themid: '',
     indexEdit: 0,
-    updateData: ''
+    updateData: '',
+    successMessage: ''
   };
+
+  componentDidMount() {
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    let filterCart = allCart.filter(valCart => {
+      return valCart.mid === currentCartMerchant.mid
+    })
+    if (filterCart.length === 0) {
+      window.history.go(-1)
+    } else {
+      this.setState({ changeUI: false })
+    }
+
+  }
 
   handleDetail(data) {
     if (data === "eat-method") {
@@ -185,7 +172,6 @@ class CartView extends React.Component {
             let newFilter = store.food
             newFilter = []
             filteredStore.forEach((val) => {
-              console.log(val);
               newFilter.push(val)
             })
             store.food = newFilter
@@ -262,99 +248,126 @@ class CartView extends React.Component {
       if (data === 0) {
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
       } else {
-        this.setState({ paymentType: "PAY_BY_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
+        this.setState({ paymentType: "WALLET_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
       }
     }
   }
 
-  // handlePayment = () => {
-  //   this.setState({ loadButton: false })
-  //   var auth = {
-  //     isLogged: false,
-  //     token: "",
-  //     new_event: true,
-  //     recommendation_status: false,
-  //     email: "",
-  //   };
-  //   if (Cookies.get("auth") !== undefined) {
-  //     auth = JSON.parse(Cookies.get("auth"))
-  //   }
-  //   if (auth.isLogged === false) {
-  //     var lastLink = { value: window.location.href }
-  //     Cookies.set("lastLink", lastLink, { expires: 1 })
-  //     window.location.href = "/login"
-  //   }
-  //   let totalAmount = 0;
-  //   let data = cart;
-  //   data.forEach((store) => {
-  //     store.food.forEach((food) => {
-  //       totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-  //     });
-  //   });
+  handlePayment = () => {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+    if (auth.isLogged === false) {
+      window.history.back()
+    }
+    this.setState({ loadButton: true })
 
-  //   let merchantIds = JSON.parse(Cookies.get("addedMerchants"))
-  //   merchantIds = merchantIds.filter((merchant) => {
-  //     return merchant !== ""
-  //   })
-  //   let uuid = uuidV4();
-  //   uuid = uuid.replaceAll("-", "");
-  //   const date = new Date().toISOString();
-  //   let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let storageData = JSON.parse(localStorage.getItem('cart'))
+    let noTab = this.props.noTable ? this.props.noTable : 0
+    let allMenu = storageData.filter(filterCart => {
+      return filterCart.mid === currentCartMerchant.mid
+    })
+    let selectedProd = []
 
-  //   merchantIds.forEach((merchant) => {
-  //     var requestData = {
-  //       products: [{
-  //         product_id: "",
-  //         notes: "",
-  //         qty: 0
-  //       }],
-  //       payment_with: this.state.paymentType,
-  //       mid: merchant,
-  //       prices: totalAmount,
-  //       biz_type: this.state.biz_type,
-  //       table_no: "1"
-  //     }
-  //     requestData.products.pop()
-  //     cart.forEach((merchant) => {
-  //       let addedMerchants = Cookies.get("addedMerchants")
-  //       if (addedMerchants.includes(merchant.mid)) {
-  //         merchant.food.forEach((data) => {
-  //           if (data.productId !== "") {
-  //             requestData.products.push({
-  //               product_id: data.productId,
-  //               notes: data.foodNote,
-  //               qty: data.foodAmount,
-  //             })
-  //           }
-  //         })
-  //       }
-  //     })
+    allMenu[0].food.forEach(selectMenu => {
+      let newlistArr = ''
+      selectMenu.foodListCheckbox.forEach((val) => {
+        val.forEach((val2) => {
+          return newlistArr += `${val2.name}, `
+        })
+      })
 
-  //     Axios(address + "/txn/v1/txn-post/", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "x-request-id": uuid,
-  //         "x-request-timestamp": date,
-  //         "x-client-id": clientId,
-  //         "x-signature": signature,
-  //         "token": auth.token,
-  //       },
-  //       method: "POST",
-  //       data: requestData,
-  //     })
-  //       .then((res) => {
-  //         localStorage.removeItem("cart")
-  //         alert("Pembelian telah berhasil.")
-  //         window.location.href = "/status"
-  //       })
-  //       .catch((err) => {
-  //         if (err.response.data !== undefined) {
-  //           alert(err.response.data.err_message)
-  //           this.setState({ loadButton: true })
-  //         }
-  //       });
-  //   })
-  // };
+      selectMenu.foodListRadio.forEach((val) => {
+        val.forEach((val2) => {
+          return newlistArr += `${val2.name}, `
+        })
+      })
+
+      newlistArr += selectMenu.foodNote
+
+      selectedProd.push({
+        product_id: selectMenu.productId,
+        notes: newlistArr,
+        qty: selectMenu.foodAmount
+      })
+    })
+
+    var requestData = {
+      products: selectedProd,
+      payment_with: this.state.paymentType,
+      mid: currentCartMerchant.mid,
+      prices: finalProduct[0].totalPrice.toString(),
+      biz_type: this.state.biz_type,
+      table_no: noTab.toString()
+    }
+
+    // console.log(requestData);
+
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+
+    Axios(address + "/txn/v1/txn-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: requestData,
+    })
+      .then((res) => {
+        if (this.state.paymentType === 'PAY_BY_CASHIER') {
+          this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter=> {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("table")
+            localStorage.removeItem("lastTable")
+            window.location.href = '/status'
+            this.setState({ loadButton: false })
+          }, 1000);
+        } else {
+          this.setState({ successMessage: 'Transaksi OVO berhasil' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter=> {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("table")
+            localStorage.removeItem("lastTable")
+            window.location.href = '/status'
+            this.setState({ loadButton: false })
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        if (err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+          this.setState({ loadButton: false })
+        }
+      });
+  };
+
+  notifModal = () => {
+    if (this.state.loadButton) {
+      return <NotifModal isShowNotif={this.state.loadButton} responseMessage={this.state.successMessage} />
+    }
+  }
 
   newListAllChoices = (food) => {
     let newlistArr = ''
@@ -438,11 +451,14 @@ class CartView extends React.Component {
   handleSaveCart = () => {
     let filteredStore = []
     let allCart = JSON.parse(localStorage.getItem('cart'))
+    let getProductId
     allCart.forEach((store) => {
       if (store.mid === this.state.themid) {
         filteredStore = store.food.filter((data, index) => {
           return index === this.state.indexEdit
         })
+
+        getProductId = filteredStore[0].productId
 
         filteredStore[0].foodAmount = currentExt.detailCategory[0].amount
         filteredStore[0].foodListCheckbox = currentExt.listcheckbox
@@ -455,9 +471,68 @@ class CartView extends React.Component {
     });
     localStorage.setItem('cart', JSON.stringify(allCart))
     this.setState({ updateData: 'updated' })
+
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
+    let newNotes = ''
+    currentExt.listcheckbox.forEach(val => {
+      val.forEach(val2 => {
+        return newNotes += `${val2.name}, `
+      })
+    })
+
+    currentExt.listradio.forEach(val => {
+      val.forEach(val2 => {
+        return newNotes += `${val2.name}, `
+      })
+    })
+
+    if (currentExt.note) {
+      newNotes += currentExt.note
+    }
+
+    console.log(newNotes);
+
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replaceAll("-", "");
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    Axios(address + "txn/v1/cart-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: {
+        mid: this.state.themid,
+        pid: getProductId,
+        notes: newNotes,
+        qty: currentExt.detailCategory[0].amount,
+      }
+    })
+      .then(() => {
+        console.log('savetocart succeed');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     var auth = {
       isLogged: false,
       token: "",
@@ -474,30 +549,8 @@ class CartView extends React.Component {
       Cookies.set("lastLink", lastLink, { expires: 1 })
       // window.location.href = "/login"
     }
-    let modal;
-    // let paymentButton;
-    // if (auth.isLoggedIn === false) {
-    //   paymentButton = (
-    //     <Link to={"/login"} className={"iconButton"}>
-    //       <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-    //       <img src={frontIcon} alt={"checklist"} />
-    //     </Link>
-    //   );
-    // } else {
-    //   if (this.state.loadButton) {
-    //     paymentButton = (
-    //       <button className={"iconButton"} onClick={() => this.handlePayment()}>
-    //         <img src={checklistIcon} alt={"checklist"} /> Bayar{" "}
-    //         <img src={frontIcon} alt={"checklist"} />
-    //       </button>
-    //     );
-    //   } else {
-    //     paymentButton = (
-    //       <Loader loaded={this.state.loadButton} options={options} className="spinner" />
-    //     )
-    //   }
-    // }
 
+    let modal;
     if (this.state.showModal === true) {
       modal = (
         <CartModalDev
@@ -516,19 +569,12 @@ class CartView extends React.Component {
 
     let storageData = JSON.parse(localStorage.getItem('cart'))
     let data = storageData;
-    let totalAmount = 0;
-    data.forEach((store) => {
-      store.food.forEach((food) => {
-        totalAmount = totalAmount + food.foodPrice * food.foodAmount;
-      });
-    });
     let storeList = data.filter((store) => {
       if (store.mid !== "") {
         return store;
       }
     });
 
-    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let contentView = storeList.map((store) => {
       let storeFood
       if (store.mid === currentCartMerchant.mid) {
@@ -586,7 +632,7 @@ class CartView extends React.Component {
           <div key={index} className='cart-storeBox'>
             <div className='cart-storeBox-header'>
               <div className='cart-storeBox-title'>
-                Store Location
+                {store.storeName}
               </div>
 
               <div className='cart-storeBox-distance'>
@@ -616,7 +662,7 @@ class CartView extends React.Component {
 
     finalProduct = [
       {
-        totalPrice: Intl.NumberFormat("id-ID").format(totalPaymentShow),
+        totalPrice: totalPaymentShow[0],
         discountPrice: 0,
       },
     ]
@@ -630,8 +676,21 @@ class CartView extends React.Component {
     }
     if (this.state.paymentType === "PAY_BY_CASHIER") {
       paymentImage = CashierPayment
-    } else if (this.state.paymentType === "PAY_BY_OVO") {
+    } else if (this.state.paymentType === "WALLET_OVO") {
       paymentImage = OvoPayment
+    }
+
+    if (this.state.changeUI) {
+      return (
+        <div style={{ display: 'flex', position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Loader
+            type="TailSpin"
+            color="#4bb7ac"
+            height={100}
+            width={100}
+          />
+        </div>
+      )
     }
 
     return (
@@ -649,8 +708,8 @@ class CartView extends React.Component {
           <div></div>
           }
           <div className='cartTitle'>
-            <span className='logopikappCenter'>
-              <img className='LogoPikappCart' src={PikappLogo} alt='' />
+            <span className='logopikappCenter' onClick={() => window.history.back()} >
+              <img className='LogoPikappCart' src={ArrowBack} alt='' />
             </span>
 
             <h2 className='confirmationOrder'>Konfirmasi Pesanan Anda</h2>
@@ -732,7 +791,7 @@ class CartView extends React.Component {
                     </div>
                   </div>
 
-                  <div className='cart-OrderButton'>
+                  <div className='cart-OrderButton' onClick={() => this.handlePayment()}>
                     <div className='cart-OrderButton-content'>
                       <span className='cart-OrderButton-Frame'>
                         <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
@@ -767,7 +826,7 @@ class CartView extends React.Component {
               </div>
             </div>
 
-            <div className='cart-OrderButton-mob'>
+            <div className='cart-OrderButton-mob' onClick={() => this.handlePayment()}>
               <div className='cart-OrderButton-content-mob'>
                 <span className='cart-OrderButton-Frame-mob'>
                   <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
@@ -784,137 +843,7 @@ class CartView extends React.Component {
         </div>
         {modal}
         {this.menuDetail()}
-
-
-
-
-
-
-
-
-
-        {/* <Row>
-          <Col xs={0} md={3} />
-          <Col>
-            <Row>
-              <Col><p className={"cartTitle"}>Pilih cara makan anda</p></Col>
-            </Row>
-            <Row>
-              <Col xs={1} md={1}>
-                <img src={eatImage} class="cartModalImage" alt="icon" />
-              </Col>
-              <Col>{this.state.eat_type}</Col>
-            </Row>
-          </Col>
-          <Col xs={2} md={3}>
-            <button className={"iconButton"}>
-              <img
-                src={chevronImage}
-                onClick={() => this.handleDetail("eat-method")}
-                alt={"chevron right"}
-              />
-            </button>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={0} md={3} />
-          <Col>
-            <Row>
-              <Col>
-                <p className={"cartTitle"}>Bayar pakai apa?</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={1} md={1}>
-                <img src={paymentImage} class="cartModalImage" alt="icon" />
-              </Col>
-              <Col>
-                {this.state.paymentOption}
-              </Col>
-            </Row>
-          </Col>
-          <Col xs={2} md={3}>
-            <button className={"iconButton"}>
-              <img
-                src={chevronImage}
-                onClick={() => this.handleDetail("pay-method")}
-                alt={"chevron right"}
-              />
-            </button>
-          </Col>
-        </Row>
-        {contentView}
-        <Row>
-          <Col>
-            <Row>
-              <Col xs={0} md={3} />
-              <Col>
-                <p className={"cartTitle"}>Rincian Pembayaran</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={0} md={3} />
-              <Col>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>Total harga barang:</p>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>Diskon:</p>
-                  </Col>
-                </Row>
-              </Col>
-              <Col>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>
-                      {Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      }).format(totalAmount)}
-                    </p>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <p className={"cartContent"}>
-                      {Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      }).format(0)}
-                    </p>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col className={"cartPayment"}>
-            <Row>
-              <Col xs={1} md={3} />
-              <Col>
-                <p className={"cartTitle"}>Total Belanja Kamu</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={1} md={3} />
-              <Col>
-                <p className={"cartFinalPrice"}>
-                  {Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                  }).format(totalAmount)}
-                </p>
-              </Col>
-              <Col className={"cartFinalButton"}>{paymentButton}</Col>
-            </Row>
-          </Col>
-        </Row>
-        {modal}
-        {this.menuDetail()} */}
+        {this.notifModal()}
       </>
     );
   }

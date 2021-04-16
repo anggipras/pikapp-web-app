@@ -57,7 +57,6 @@ class StoreView extends React.Component {
     }
 
     const value = queryString.parse(window.location.search);
-    console.log(value);
     var longitude = "";
     var latitude = "";
     var merchant = "";
@@ -169,11 +168,15 @@ class StoreView extends React.Component {
             })
             this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
             document.addEventListener('scroll', this.loadMoreMerchant)
+            if (res.data.results.length < 6) {
+              document.removeEventListener('scroll', this.loadMoreMerchant)
+            }
           })
           .catch((err) => {
           });
           });
     }
+  }
 
 
     // const value = queryString.parse(window.location.search);
@@ -197,7 +200,6 @@ class StoreView extends React.Component {
     // }).catch((err) => {
     //   this.setState({location: "Tidak tersedia"})
     // })
-  }
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {
@@ -287,6 +289,7 @@ class StoreView extends React.Component {
       storeImage: "",
       storeAdress: "",
       storeRating: "",
+      storeLogo: "",
     };
     currentMerchant.mid = e.storeId;
     currentMerchant.storeName = e.storeName;
@@ -295,6 +298,7 @@ class StoreView extends React.Component {
     currentMerchant.storeImage = e.storeImage;
     currentMerchant.storeAdress = e.address;
     currentMerchant.storeRating = e.rating;
+    currentMerchant.storeLogo = e.logo;
 
     localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
     Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
