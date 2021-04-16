@@ -10,7 +10,6 @@ const INITIAL_STATE = {
     radiobutton: [],
     mandatRadioCond: false,
     mandatRadio: false,
-    totalAmountProd: 0,
     openMenuCart: false
 }
 
@@ -40,8 +39,6 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, mandatRadioCond: action.payload }
         case "MANDATRADIO":
             return { ...state, mandatRadio: action.payload }
-        case "COUNTTOTAL":
-            return { ...state, totalAmountProd: action.payload }
         case "EDITCART":
             return { ...state, openMenuCart: action.payload }
         case "DEFAULTSTATE":
