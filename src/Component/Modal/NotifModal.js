@@ -6,7 +6,7 @@ const NotifModal = (props) => {
 
     return (
         <div className='modalNotif' style={{
-            display: props.isShowNotif ? 'block' : 'none'
+            display: !props.isShowNotif ? 'block' : 'none'
         }}>
             <div className='modal-content-notif'>
                 {
