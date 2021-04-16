@@ -111,10 +111,13 @@ class ProductView extends React.Component {
     let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
     let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
+    let bannerMerchant = currentMerchant.storeImage
+    bannerMerchant = bannerMerchant.replace(/^https:\/\//i, 'http://')
+
     let stateData = { ...this.state.data };
     stateData.mid = mid;
     stateData.title = currentMerchant.storeName;
-    stateData.image = currentMerchant.storeImage;
+    stateData.image = bannerMerchant;
     stateData.logo = currentMerchant.storeLogo;
     stateData.desc = currentMerchant.storeDistance;
     stateData.address = currentMerchant.storeAdress;
@@ -197,6 +200,7 @@ class ProductView extends React.Component {
 
     let newImage = currentMerchant.storeImage
     newImage = newImage.replace(/^https:\/\//i, 'http://')
+    console.log(newImage);
 
     prominent(newImage, { amount: 3 }).then((color) => {
       // return RGB color for example [241, 221, 63]
