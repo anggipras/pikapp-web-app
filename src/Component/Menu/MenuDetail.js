@@ -53,6 +53,8 @@ const MenuDetail = (props) => {
             props.handleClick()
             dispatch({ type: 'DEFAULTSTATE' })
             props.onHide()
+        } else if(!AllRedu.buttonLoad) {
+            console.log('waitbro');
         } else {
             alert('cannot buy')
         }
@@ -86,6 +88,7 @@ const MenuDetail = (props) => {
     const openMenuSelect = () => {
         setmenuSelect(true)
         dispatch({ type: 'FOODCATEG', payload: findCateg })
+        dispatch({ type: 'LOADING' })
     }
 
     let findCateg

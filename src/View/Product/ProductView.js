@@ -10,7 +10,8 @@ import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
-// import Storeimg from '../../Asset/Illustration/storeimg2.jpeg'
+import Storeimg from '../../Asset/Illustration/storeimg2.jpeg'
+import Storeimg2 from '../../Asset/Illustration/storeimg1.png'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -111,6 +112,10 @@ class ProductView extends React.Component {
     let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
     let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
+    let bannerMerchant = currentMerchant.storeImage
+    bannerMerchant = bannerMerchant.replace(/^https:\/\//i, 'http://')
+    console.log(bannerMerchant);
+
     let stateData = { ...this.state.data };
     stateData.mid = mid;
     stateData.title = currentMerchant.storeName;
@@ -197,8 +202,9 @@ class ProductView extends React.Component {
 
     let newImage = currentMerchant.storeImage
     newImage = newImage.replace(/^https:\/\//i, 'http://')
+    console.log(newImage);
 
-    prominent(newImage, { amount: 3 }).then((color) => {
+    prominent(Storeimg2, { amount: 3 }).then((color) => {
       // return RGB color for example [241, 221, 63]
       var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
       var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
