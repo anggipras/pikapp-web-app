@@ -29,18 +29,12 @@ const MenuSelection = (props) => {
         },
     ])
     const [note, setnote] = useState('')
-    const [checkboxVal, setcheckboxVal] = useState([])
+    const [checkboxVal, setcheckboxVal] = useState([[], []])
     const [checkboxData, setcheckboxData] = useState([])
-    const [checkboxMatch, setcheckboxMatch] = useState([])
-    const [totalCheckMandat, settotalCheckMandat] = useState(0)
     const [indexCheckMandat, setindexCheckMandat] = useState(null)
 
-    const [radioVal, setradioVal] = useState([])
+    const [radioVal, setradioVal] = useState([[], []])
     const [radioData, setradioData] = useState([])
-    const [radioMatch, setradioMatch] = useState([])
-    const [totalRadioMandat, settotalRadioMandat] = useState(0)
-    const [indexGroupRadioMandat, setindexGroupRadioMandat] = useState(null)
-    const [indexEachRadioMandat, setindexEachRadioMandat] = useState(null)
 
     const [updateDataEdit, setupdateDataEdit] = useState(false)
     const [updateEditChoice, setupdateEditChoice] = useState(false)
@@ -49,85 +43,26 @@ const MenuSelection = (props) => {
 
     useEffect(() => {
         Autosize(document.getElementById('note'))
-
-        //hit API in order to get response of product detail v2
-        let uuid = uuidV4()
-        uuid = uuid.replaceAll("-", "");
-        const date = new Date().toISOString();
-        Axios(`${address}/home/v2/detail/product/`, {
-            headers: {
-                "Content-Type": "application/json",
-                "x-request-id": uuid,
-                "x-request-timestamp": date,
-                "x-client-id": clientId,
-                "token": "PUBLIC",
-                "pid": props.datas.productId,
-            },
-            method: 'GET'
-        }).then(productRes => {
-            // console.log(productRes.data.results);
-            let productDet = productRes.data.results.extra_menus.extra_menu
-            let radioResponse = []
-            let checkboxResponse = []
-            productDet.forEach(valProduct => {
-                if (valProduct.menu_type === 'RADIO') {
-                    radioResponse.push(valProduct)
-                } else {
-                    checkboxResponse.push(valProduct)
-                }
-            })
-
-            let radioData = []
-            let radioValData = []
-            radioResponse.forEach(valRadRes => {
-                let listadditionradio = []
-                valRadRes.menu_extra_item.forEach(valList => {
-                    listadditionradio.push({
-                        name: valList.item_name,
-                        price: valList.extra_fee,
-                        isChecked: false
-                    })
-                })
-                radioData.push({
-                    additionname: valRadRes.menu_name,
-                    isMandat: valRadRes.is_mandatory,
-                    listaddition: listadditionradio
-                })
-                radioValData.push([])
-            })
-
-            let checkboxData = []
-            let checkValData = []
-            checkboxResponse.forEach(valCheckRes => {
-                let listadditioncheckbox = []
-                valCheckRes.menu_extra_item.forEach(valList => {
-                    listadditioncheckbox.push({
-                        name: valList.item_name,
-                        price: valList.extra_fee,
-                        isChecked: false
-                    })
-                })
-                checkboxData.push({
-                    additionname: valCheckRes.menu_name,
-                    maxchoice: valCheckRes.max_choice,
-                    isMandat: valCheckRes.is_mandatory,
-                    listaddition: listadditioncheckbox
-                })
-                checkValData.push([])
-            })
+        if (!AllRedu.openMenuCart) {
+            var datas = props.datas
+            var list = []
+            if (datas.foodExt !== undefined) {
+                datas.foodExt.map((data) => {
+                    return list.push({
+                        name: data.name,
+                        amount: data.amount + 1,
+                    });
+                });
+                props.ValidQty(1)
+                setdetailCategory(list);
+            }
 
             //set mandatory for checkboxes
-            let mandatCheckAvailability = checkboxData.length
-            let mandatCheckLength = checkboxData.length
-            let checkboxMandat = []
-            let totalMandatforCheck = 0
-            checkboxData.forEach(valCheck => {
+            let mandatCheckAvailability = checkboxDummyData.length
+            let mandatCheckLength = checkboxDummyData.length
+            checkboxDummyData.forEach(valCheck => {
                 if (valCheck.isMandat) {
-                    checkboxMandat.push(false)
-                    totalMandatforCheck++
-                    mandatCheckAvailability = mandatCheckAvailability - 1
-                } else {
-                    checkboxMandat.push(false)
+                    mandatCheckAvailability = checkboxDummyData.length - 1
                 }
             })
             if (mandatCheckLength === mandatCheckAvailability) {
@@ -135,21 +70,13 @@ const MenuSelection = (props) => {
             } else {
                 dispatch({ type: 'MANDATCHECKCOND', payload: true })
             }
-            setcheckboxMatch(checkboxMandat)
-            settotalCheckMandat(totalMandatforCheck)
 
             //set mandatory for radio
-            let mandatRadioAvailability = radioData.length
-            let mandatRadioLength = radioData.length
-            let radioMandat = []
-            let totalMandatforRadio = 0
-            radioData.forEach(valCheck => {
+            let mandatRadioAvailability = radioDummyData.length
+            let mandatRadioLength = radioDummyData.length
+            radioDummyData.forEach(valCheck => {
                 if (valCheck.isMandat) {
-                    radioMandat.push(false)
-                    totalMandatforRadio++
-                    mandatRadioAvailability = mandatRadioAvailability - 1
-                } else {
-                    radioMandat.push(false)
+                    mandatRadioAvailability = radioDummyData.length - 1
                 }
             })
             if (mandatRadioLength === mandatRadioAvailability) {
@@ -157,43 +84,60 @@ const MenuSelection = (props) => {
             } else {
                 dispatch({ type: 'MANDATRADIOCOND', payload: true })
             }
-            setradioMatch(radioMandat)
-            settotalRadioMandat(totalMandatforRadio)
 
-            if (!AllRedu.openMenuCart) {
-                var datas = props.datas
-                var list = []
-                if (datas.foodExt !== undefined) {
-                    datas.foodExt.map((data) => {
-                        return list.push({
-                            name: data.name,
-                            amount: data.amount + 1,
-                        });
-                    });
-                    props.ValidQty(1)
-                    setdetailCategory(list);
-                    setradioData(radioData)
-                    setcheckboxData(checkboxData)
-                    setradioVal(radioValData)
-                    setcheckboxVal(checkValData)
+            setradioData(radioDummyData)
+            setcheckboxData(checkboxDummyData)
+
+            //hit API in order to get response of product detail v2
+            let uuid = uuidV4()
+            uuid = uuid.replaceAll("-", "");
+            const date = new Date().toISOString();
+            Axios(`${address}/home/v2/detail/product/`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-request-id": uuid,
+                    "x-request-timestamp": date,
+                    "x-client-id": clientId,
+                    "token": "PUBLIC",
+                    "pid": props.datas.productId,
+                },
+                method: 'GET'
+            }).then(productRes => {
+                // console.log(productRes.data.results);
+                let productDet = productRes.data.results.extra_menus
+                if (productDet.menu_type === 'RADIO') {
+                    let listadditioncheckbox = []
+                    let checkboxData = []
+                    productDet.menu_extra_item.forEach(valList => {
+                        listadditioncheckbox.push({
+                            name: valList.item_name,
+                            price: valList.extra_fee,
+                            isChecked: false
+                        })
+                    })
+                    checkboxData.push({
+                        additionname: productDet.menu_name,
+                        maxchoice: productDet.menu_extra_item[0].max_choice,
+                        isMandat: productDet.menu_extra_item[0].is_mandatory,
+                        listaddition: listadditioncheckbox
+                    })
                 }
-            } else {
-                let amountofProd = props.datas.foodExt
-                amountofProd.forEach((val) => {
-                    props.ValidQty(val.amount)
-                })
-                setdetailCategory(props.datas.foodExt)
-                setnote(props.datas.foodNote)
-                setradioData(radioData)
-                setcheckboxData(checkboxData)
-                dispatch({ type: 'CHECKBOXES', payload: props.datas.foodListCheckbox })
-                dispatch({ type: 'RADIOBUTTON', payload: props.datas.foodListRadio })
-                setupdateDataEdit(true)
-                setradioVal(props.datas.foodListRadio)
-                setcheckboxVal(props.datas.foodListCheckbox)
-            }
-        }).catch(err => console.log(err))
-
+            }).catch(err => console.log(err))
+        } else {
+            let amountofProd = props.datas.foodExt
+            amountofProd.forEach((val) => {
+                props.ValidQty(val.amount)
+            })
+            setdetailCategory(props.datas.foodExt)
+            setnote(props.datas.foodNote)
+            setcheckboxVal(props.datas.foodListCheckbox)
+            setradioVal(props.datas.foodListRadio)
+            setradioData(radioDummyData)
+            setcheckboxData(checkboxDummyData)
+            setupdateDataEdit(true)
+            dispatch({ type: 'CHECKBOXES', payload: props.datas.foodListCheckbox })
+            dispatch({ type: 'RADIOBUTTON', payload: props.datas.foodListRadio })
+        }
     }, [])
 
     useEffect(() => {
@@ -243,29 +187,10 @@ const MenuSelection = (props) => {
                 editCheckbox.push({
                     additionname: firstVal.additionname,
                     maxchoice: firstVal.maxchoice,
-                    isMandat: firstVal.isMandat,
                     listaddition: newlistcheckboxAddition
                 })
                 newlistcheckboxAddition = []
             })
-            let editTotalcheckMandat = 0
-            let editArraycheckMandat = []
-            editCheckbox.forEach(valEdit => {
-                editArraycheckMandat.push(valEdit.isMandat)
-                if (valEdit.isMandat) {
-                    editTotalcheckMandat++
-                }
-            })
-            if (editTotalcheckMandat === totalCheckMandat) {
-                if (totalCheckMandat === 0) {
-                    dispatch({ type: 'MANDATCHECK', payload: false })
-                } else {
-                    dispatch({ type: 'MANDATCHECK', payload: true })
-                }
-            } else {
-                dispatch({ type: 'MANDATCHECK', payload: false })
-            }
-            setcheckboxMatch(editArraycheckMandat)
 
             //this function is used for replace api data with edit data (RADIO)
             let editRadio = []
@@ -281,13 +206,11 @@ const MenuSelection = (props) => {
                                 if (secondVal.name === foodsecondVal.name) {
                                     newlistradioAddition.push({
                                         name: secondVal.name,
-                                        price: secondVal.price,
                                         isChecked: true
                                     })
                                 } else {
                                     newlistradioAddition.push({
                                         name: secondVal.name,
-                                        price: secondVal.price,
                                         isChecked: false
                                     })
                                 }
@@ -298,42 +221,20 @@ const MenuSelection = (props) => {
                     if (foodListRadio[indfirstVal].length === 0) {
                         newlistradioAddition.push({
                             name: secondVal.name,
-                            price: secondVal.price,
                             isChecked: false
                         })
                     }
                 })
                 editRadio.push({
                     additionname: firstVal.additionname,
-                    isMandat: firstVal.isMandat,
                     listaddition: newlistradioAddition
                 })
                 newlistradioAddition = []
             })
-            let editTotalradioMandat = 0
-            let editArrayradioMandat = []
-            editRadio.forEach(valEdit => {
-                editArrayradioMandat.push(valEdit.isMandat)
-                if (valEdit.isMandat) {
-                    editTotalradioMandat++
-                }
-            })
-            if (editTotalradioMandat === totalRadioMandat) {
-                if (totalRadioMandat === 0) {
-                    dispatch({ type: 'MANDATRADIO', payload: false })
-                } else {
-                    dispatch({ type: 'MANDATRADIO', payload: true })
-                }
-            } else {
-                dispatch({ type: 'MANDATRADIO', payload: false })
-            }
-            setradioMatch(editArrayradioMandat)
-
             setcheckboxData(editCheckbox)
             setradioData(editRadio)
             setupdateDataEdit(false)
             setupdateEditChoice(true)
-            dispatch({ type: 'DONELOAD' })
         }
     }, [radioVal, checkboxVal])
 
@@ -342,8 +243,8 @@ const MenuSelection = (props) => {
             return (
                 <div key={indlistname} className='checkbox-section'>
                     <div className='title-section'>
-                        <div className='titleSelection'>{listname.additionname.toUpperCase().toLowerCase()}</div>
-                        <div className='optionSelection'>{listname.isMandat ? 'Wajib' : 'Optional'}, Max {listname.maxchoice} items</div>
+                        <div className='titleSelection'>Tambah {listname.additionname.toUpperCase().toLowerCase()}</div>
+                        <div className='optionSelection'>Optional, Max {listname.maxchoice} items {listname.isMandat ? '*wajib' : null}</div>
                     </div>
 
                     <div className='boxContainer'>
@@ -353,7 +254,7 @@ const MenuSelection = (props) => {
                                     AllRedu.openMenuCart ?
                                         updateEditChoice ?
                                             <div key={indlistadd} className='box-section'>
-                                                <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
+                                                <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`${listname.additionname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `${listname.additionname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
                                                 <label htmlFor={listadd.name}>
                                                     <div className='checkBox-side'>
                                                         <div className='check-box' />
@@ -369,7 +270,7 @@ const MenuSelection = (props) => {
                                             null
                                         :
                                         <div key={indlistadd} className='box-section'>
-                                            <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
+                                            <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`${listname.additionname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `${listname.additionname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
                                             <label htmlFor={listadd.name}>
                                                 <div className='checkBox-side'>
                                                     <div className='check-box' />
@@ -396,7 +297,7 @@ const MenuSelection = (props) => {
                 <div key={indlistname} className='radio-section'>
                     <div className='title-section'>
                         <div className='titleSelection'>{listname.additionname}</div>
-                        <div className='optionSelection'>{listname.isMandat ? 'Wajib' : 'Optional'}, Pilih Salah Satu</div>
+                        <div className='optionSelection'>Pilih Salah Satu {listname.isMandat ? '*wajib' : null}</div>
                     </div>
 
                     <div className='boxContainer'>
@@ -406,15 +307,11 @@ const MenuSelection = (props) => {
                                     AllRedu.openMenuCart ?
                                         updateEditChoice ?
                                             <div key={indlistadd} className='radiobox-section'>
-                                                <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat, listadd.price, indlistadd)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
+                                                <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
                                                 <label htmlFor={listadd.name}>
                                                     <div className='radio-side'>
                                                         <div className='radio-circle' />
                                                         <div className='radio-circle-name'>{listadd.name.toUpperCase().toLowerCase()}</div>
-                                                    </div>
-
-                                                    <div className='additon-amount'>
-                                                        +{listadd.price}
                                                     </div>
                                                 </label>
                                             </div>
@@ -422,15 +319,11 @@ const MenuSelection = (props) => {
                                             null
                                         :
                                         <div key={indlistadd} className='radiobox-section'>
-                                            <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat, listadd.price, indlistadd)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
+                                            <input disabled={AllRedu.validQTY === 0} onChange={(e) => onRadioChange(e, indlistname, listname.isMandat)} id={listadd.name} type='radio' name={listname.additionname} value={listadd.name} defaultChecked={listadd.isChecked} />
                                             <label htmlFor={listadd.name}>
                                                 <div className='radio-side'>
                                                     <div className='radio-circle' />
                                                     <div className='radio-circle-name'>{listadd.name.toUpperCase().toLowerCase()}</div>
-                                                </div>
-
-                                                <div className='additon-amount'>
-                                                    +{listadd.price}
                                                 </div>
                                             </label>
                                         </div>
@@ -448,12 +341,10 @@ const MenuSelection = (props) => {
         if (checkedChecks.length > max) {
             e.target.checked = false
         } else {
-            let checkMandat = [...checkboxMatch]
             if (mandat) {
-                checkMandat[indexlistname] = mandat
+                dispatch({ type: 'MANDATCHECK', payload: mandat })
                 setindexCheckMandat(indexlistname)
             }
-
             let checkboxArr = [...checkboxVal]
             if (e.target.checked) {
                 checkboxArr[indexlistname].push({ name: e.target.value, price: listprice, isChecked: true })
@@ -472,78 +363,28 @@ const MenuSelection = (props) => {
                 })
                 if (sizeArr > 0) {
                     dispatch({ type: 'CHECKBOXES', payload: checkboxArr })
-                    if (checkboxArr[indexlistname].length === 0) {
-                        checkMandat[indexlistname] = false
-                        // dispatch({ type: 'MANDATCHECK', payload: false })
-
+                    if (indexCheckMandat === indexlistname) {
+                        if (checkboxArr[indexCheckMandat].length === 0) {
+                            dispatch({ type: 'MANDATCHECK', payload: false })
+                        }
                     }
                 } else {
-                    checkMandat[indexlistname] = false
                     dispatch({ type: 'CHECKBOXES', payload: [] })
-                    // dispatch({ type: 'MANDATCHECK', payload: false })
-                }
-            }
-
-            // console.log(checkMandat);
-            let totalMandatCheck = 0
-            checkMandat.forEach(valMandat => {
-                if (valMandat) {
-                    totalMandatCheck++
-                }
-            })
-            if (totalMandatCheck === totalCheckMandat) {
-                if (totalCheckMandat === 0) {
                     dispatch({ type: 'MANDATCHECK', payload: false })
-                } else {
-                    dispatch({ type: 'MANDATCHECK', payload: true })
                 }
-            } else {
-                dispatch({ type: 'MANDATCHECK', payload: false })
             }
-            setcheckboxMatch(checkMandat)
         }
     }
 
-    const onRadioChange = (e, indexlistname, mandat, listprice, indexlistadd) => {
-        let radioMandat = [...radioMatch]
+    const onRadioChange = (e, indexlistname, mandat) => {
         if (mandat) {
-            radioMandat[indexlistname] = mandat
+            dispatch({ type: 'MANDATRADIO', payload: mandat })
         }
-        // console.log(indexlistname, indexGroupRadioMandat, 'selectGroupRadio');
-        // console.log(indexlistadd, indexEachRadioMandat, 'selectEachRadio');
-        // if (indexlistname === indexGroupRadioMandat) {
-        //     if (indexlistadd === indexEachRadioMandat) {
-        //         console.log('yoo');
-        //         if (e.target.checked) {
-        //             e.target.checked = false
-        //         }
-        //     }
-        // }
         let radiobuttonArr = [...radioVal]
         radiobuttonArr[indexlistname].pop()
-        radiobuttonArr[indexlistname].push({ name: e.target.value, price: listprice, isChecked: true })
+        radiobuttonArr[indexlistname].push({ name: e.target.value, isChecked: true })
         setradioVal(radiobuttonArr)
         dispatch({ type: 'RADIOBUTTON', payload: radiobuttonArr })
-        
-        // console.log(radioMandat);
-        let totalMandatRadio = 0
-        radioMandat.forEach(valMandat => {
-            if (valMandat) {
-                totalMandatRadio++
-            }
-        })
-        if (totalMandatRadio === totalRadioMandat) {
-            if (totalRadioMandat === 0) {
-                dispatch({ type: 'MANDATRADIO', payload: false })
-            } else {
-                dispatch({ type: 'MANDATRADIO', payload: true })
-            }
-        } else {
-            dispatch({ type: 'MANDATRADIO', payload: false })
-        }
-        setradioMatch(radioMandat)
-        // setindexGroupRadioMandat(indexlistname)
-        // setindexEachRadioMandat(indexlistadd)
     }
 
     const handleDecrease = (e) => {
