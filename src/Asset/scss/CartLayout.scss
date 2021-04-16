@@ -1342,3 +1342,45 @@
 //     height: 20px;
 //   }
 // }
+.verificationMsg {
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 20px;
+  background-color: #DC6A84;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  text-transform: capitalize;
+  color: #ffffff;
+  line-height: 2;
+}
+
+.messageSend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #ffffff;
+}
+
+.txtUnderline {
+  text-decoration: underline;
+}
+
+.txtBold {
+  font-weight: bold;
+  text-transform: lowercase;
+}

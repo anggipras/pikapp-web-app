@@ -464,6 +464,7 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
+      is_email_verified : true
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
@@ -471,7 +472,7 @@ class CartView extends React.Component {
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
     let modal;
     // let paymentButton;
@@ -636,6 +637,17 @@ class CartView extends React.Component {
     return (
       <>
         <div className='cartLayout'>
+          {
+          !auth.is_email_verified ?
+          <div className='verificationMsg'>
+            <div className='message'>Verifikasi Email Anda</div>
+            <div className='messageSend'>
+              <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? <span className="txtUnderline">Kirim Ulang</span>
+            </div>
+          </div>
+          :
+          <div></div>
+          }
           <div className='cartTitle'>
             <span className='logopikappCenter'>
               <img className='LogoPikappCart' src={PikappLogo} alt='' />

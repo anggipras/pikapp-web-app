@@ -1,8 +1,8 @@
 import React from "react";
-import ConfirmationView from "../View/Authentication/ConfirmationView";
+import ResetPinView from "../View/ResetPin/ResetPinView";
 import queryString from "query-string"
 
-export default class ConfirmationLayout extends React.Component {
+export default class ResetPinLayout extends React.Component {
   componentDidMount() {
     document.body.style.backgroundColor = 'white';
   }
@@ -10,7 +10,7 @@ export default class ConfirmationLayout extends React.Component {
   render() {
     const value = queryString.parse(window.location.search);
     return (
-      <ConfirmationView noTable={value} />
+      <ResetPinView noTable={value} />
     );
   }
 }
