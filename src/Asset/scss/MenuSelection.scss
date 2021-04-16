@@ -175,7 +175,8 @@
     background-color: #ffffff;
 }
 
-.radiobox-section input[type="radio"]:checked + label .radio-circle-name {
+.radiobox-section input[type="radio"]:checked + label .radio-circle-name,
+.radiobox-section input[type="radio"]:checked + label .additon-amount {
     color: #ffffff;
 }
 

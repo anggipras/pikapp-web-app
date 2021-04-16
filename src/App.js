@@ -1,5 +1,6 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "./Asset/scss/App.scss";
 import AuthLayout from "./Master/AuthLayout";
 import ProductLayout from "./Master/ProductLayout";
@@ -8,6 +9,7 @@ import StatusLayout from "./Master/StatusLayout";
 import StoreLayout from "./Master/StoreLayout";
 import ProfileLayout from "./Master/ProfileLayout";
 import MerchantResto from "./Master/MerchantQR";
+import ResetPinLayout from  "./Master/ResetPinLayout";
 import { Route, Switch } from "react-router-dom";
 
 export var cart = [
@@ -28,8 +30,11 @@ export var cart = [
         ],
     },
 ];
+
 if (localStorage.getItem("cart")) {
     cart = JSON.parse(localStorage.getItem("cart"));
+} else {
+    localStorage.setItem('cart', JSON.stringify(cart))
 }
 
 function App() {
@@ -45,6 +50,7 @@ function App() {
             <Route path="/store" component={() => <ProductLayout />} />
             <Route path="/merchant/:mid/:notab" component={MerchantResto} />
             <Route path="/profile" component={() => <ProfileLayout />} />
+            <Route path="/resetpin" component={() => <ResetPinLayout />} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )
