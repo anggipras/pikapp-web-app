@@ -76,7 +76,7 @@ class CartView extends React.Component {
       return valCart.mid === currentCartMerchant.mid
     })
     if (filterCart.length === 0) {
-      window.history.back()
+      window.history.go(-1)
     } else {
       this.setState({ changeUI: false })
     }

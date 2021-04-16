@@ -333,6 +333,7 @@ const MenuSelection = (props) => {
             setradioData(editRadio)
             setupdateDataEdit(false)
             setupdateEditChoice(true)
+            dispatch({ type: 'DONELOAD' })
         }
     }, [radioVal, checkboxVal])
 
