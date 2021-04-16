@@ -5,7 +5,7 @@ import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-import { address, clientId } from "../../Asset/Constant/APIConstant";
+import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
@@ -21,6 +21,7 @@ import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import Skeleton from 'react-loading-skeleton'
+import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 
@@ -548,7 +549,14 @@ class ProductView extends React.Component {
       }
     }
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert('berhasil masuk cart')
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Berhasil masuk cart',
+      showConfirmButton: false,
+      timer: 1500
+    })
+    // alert('berhasil masuk cart')
     var auth = {
       isLogged: false,
       token: "",
@@ -561,29 +569,27 @@ class ProductView extends React.Component {
     }
 
     let newNotes = ''
-    let filterAddCart = cart.filter(matchMid => {
-      return matchMid.mid === mid
-    })
-
-    filterAddCart[0].food.foodListCheckbox.forEach(val => {
+    currentExt.listcheckbox.forEach(val => {
       val.forEach(val2 => {
         return newNotes += `${val2.name}, `
       })
     })
 
-    filterAddCart[0].food.foodListRadio.forEach(val => {
+    currentExt.listradio.forEach(val => {
       val.forEach(val2 => {
         return newNotes += `${val2.name}, `
       })
     })
 
-    newNotes += currentExt.note
+    if (currentExt.note) {
+      newNotes += currentExt.note
+    }
 
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replaceAll("-", "");
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "/txn/v1/cart-post/", {
+    Axios(address + "txn/v1/cart-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -596,8 +602,8 @@ class ProductView extends React.Component {
       data: {
         mid: this.state.data.mid,
         pid: this.state.currentData.productId,
-        qty: currentExt.detailCategory[0].amount,
         notes: newNotes,
+        qty: currentExt.detailCategory[0].amount,
       }
     })
       .then(() => {
