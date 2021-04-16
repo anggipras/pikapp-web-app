@@ -113,6 +113,7 @@ class ProductView extends React.Component {
 
     let bannerMerchant = currentMerchant.storeImage
     bannerMerchant = bannerMerchant.replace(/^https:\/\//i, 'http://')
+    console.log(bannerMerchant);
 
     let stateData = { ...this.state.data };
     stateData.mid = mid;
