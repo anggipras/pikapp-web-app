@@ -1,5 +1,4 @@
 import React from "react";
-// import PikappLogo from "../../Asset/Logo/logo4x.png";
 import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
 import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
@@ -8,10 +7,8 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
-// import { CartModal } from "../../Component/Modal/CartModal";
 import CartModalDev from "../../Component/Modal/CartModalDev";
 import { cart } from "../../App";
-import { Link } from "react-router-dom";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
@@ -312,72 +309,52 @@ class CartView extends React.Component {
       table_no: noTab.toString()
     }
 
-    console.log(requestData);
+    // console.log(requestData);
 
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
-    setTimeout(() => {
-      if (this.state.paymentType === 'PAY_BY_CASHIER') {
-        this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-        setTimeout(() => {
-          localStorage.removeItem("cart")
-          localStorage.removeItem("table")
-          localStorage.removeItem("lastTable")
-          window.location.href = '/status'
-        }, 1000);
-      } else {
-        this.setState({ successMessage: 'Transaksi OVO berhasil' })
-        console.log('berhasil broo');
-        setTimeout(() => {
-          localStorage.removeItem("cart")
-          localStorage.removeItem("table")
-          localStorage.removeItem("lastTable")
-          window.location.href = '/status'
-        }, 1000);
-      }
-    }, 20000);
-
-    // Axios(address + "/txn/v1/txn-post/", {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-request-id": uuid,
-    //     "x-request-timestamp": date,
-    //     "x-client-id": clientId,
-    //     "x-signature": signature,
-    //     "token": auth.token,
-    //   },
-    //   method: "POST",
-    //   data: requestData,
-    // })
-    //   .then((res) => {
-    //     if (this.state.paymentType === 'PAY_BY_CASHIER') {
-    //       this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-    //       setTimeout(() => {
-    //         localStorage.removeItem("cart")
-    //         localStorage.removeItem("table")
-    //         localStorage.removeItem("lastTable")
-    //         window.location.href = '/status'
-    //       }, 1000);
-    //     } else {
-    //       this.setState({ successMessage: 'Transaksi OVO berhasil' })
-    //       console.log('berhasil broo');
-    //       setTimeout(() => {
-    //         localStorage.removeItem("cart")
-    //         localStorage.removeItem("table")
-    //         localStorage.removeItem("lastTable")
-    //         window.location.href = '/status'
-    //       }, 1000);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     if (err.response.data !== undefined) {
-    //       alert(err.response.data.err_message)
-    //       this.setState({ loadButton: false })
-    //     }
-    //   });
+    Axios(address + "/txn/v1/txn-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: requestData,
+    })
+      .then((res) => {
+        if (this.state.paymentType === 'PAY_BY_CASHIER') {
+          this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+          setTimeout(() => {
+            localStorage.removeItem("cart")
+            localStorage.removeItem("table")
+            localStorage.removeItem("lastTable")
+            window.location.href = '/status'
+            this.setState({ loadButton: false })
+          }, 1000);
+        } else {
+          this.setState({ successMessage: 'Transaksi OVO berhasil' })
+          setTimeout(() => {
+            localStorage.removeItem("cart")
+            localStorage.removeItem("table")
+            localStorage.removeItem("lastTable")
+            window.location.href = '/status'
+            this.setState({ loadButton: false })
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        if (err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+          this.setState({ loadButton: false })
+        }
+      });
   };
 
   notifModal = () => {
@@ -468,11 +445,14 @@ class CartView extends React.Component {
   handleSaveCart = () => {
     let filteredStore = []
     let allCart = JSON.parse(localStorage.getItem('cart'))
+    let getProductId
     allCart.forEach((store) => {
       if (store.mid === this.state.themid) {
         filteredStore = store.food.filter((data, index) => {
           return index === this.state.indexEdit
         })
+
+        getProductId = filteredStore[0].productId
 
         filteredStore[0].foodAmount = currentExt.detailCategory[0].amount
         filteredStore[0].foodListCheckbox = currentExt.listcheckbox
@@ -485,6 +465,64 @@ class CartView extends React.Component {
     });
     localStorage.setItem('cart', JSON.stringify(allCart))
     this.setState({ updateData: 'updated' })
+
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
+    let newNotes = ''
+    currentExt.listcheckbox.forEach(val => {
+      val.forEach(val2 => {
+        return newNotes += `${val2.name}, `
+      })
+    })
+
+    currentExt.listradio.forEach(val => {
+      val.forEach(val2 => {
+        return newNotes += `${val2.name}, `
+      })
+    })
+
+    if (currentExt.note) {
+      newNotes += currentExt.note
+    }
+
+    console.log(newNotes);
+
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replaceAll("-", "");
+    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    Axios(address + "txn/v1/cart-post/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "x-signature": signature,
+        "token": auth.token,
+      },
+      method: "POST",
+      data: {
+        mid: this.state.themid,
+        pid: getProductId,
+        notes: newNotes,
+        qty: currentExt.detailCategory[0].amount,
+      }
+    })
+      .then(() => {
+        console.log('savetocart succeed');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
