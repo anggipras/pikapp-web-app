@@ -533,9 +533,7 @@ class CartView extends React.Component {
     })
     if (filterCart.length === 0) {
       window.history.back()
-    } else {
-      this.setState({ changeUI: false })
-    }
+    } 
 
     var auth = {
       isLogged: false,
