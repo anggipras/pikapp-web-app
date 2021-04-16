@@ -119,7 +119,7 @@ class ProductView extends React.Component {
     stateData.mid = mid;
     stateData.title = currentMerchant.storeName;
     stateData.image = bannerMerchant;
-    stateData.logo = currentMerchant.storeLogo;
+    stateData.logo = bannerMerchant;
     stateData.desc = currentMerchant.storeDistance;
     stateData.address = currentMerchant.storeAdress;
     stateData.rating = currentMerchant.storeRating;
