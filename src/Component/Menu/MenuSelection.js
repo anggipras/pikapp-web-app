@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
+import Loader from 'react-loader-spinner'
 
 const checkboxDummyData = [
     { additionname: 'topping', maxchoice: 3, isMandat: true, listaddition: [{ name: 'coklat', price: 5000, isChecked: false }, { name: 'keju', price: 6000, isChecked: false }, { name: 'pisang', price: 7000, isChecked: false }, { name: 'wijen', price: 8000, isChecked: false }] },
@@ -65,7 +66,6 @@ const MenuSelection = (props) => {
             },
             method: 'GET'
         }).then(productRes => {
-            // console.log(productRes.data.results);
             let productDet = productRes.data.results.extra_menus.extra_menu
             let radioResponse = []
             let checkboxResponse = []
@@ -192,6 +192,8 @@ const MenuSelection = (props) => {
                 setradioVal(props.datas.foodListRadio)
                 setcheckboxVal(props.datas.foodListCheckbox)
             }
+            dispatch({ type: 'DONELOAD' })
+            props.loadingButton()
         }).catch(err => console.log(err))
 
     }, [])
@@ -333,7 +335,6 @@ const MenuSelection = (props) => {
             setradioData(editRadio)
             setupdateDataEdit(false)
             setupdateEditChoice(true)
-            dispatch({ type: 'DONELOAD' })
         }
     }, [radioVal, checkboxVal])
 
@@ -524,7 +525,7 @@ const MenuSelection = (props) => {
         radiobuttonArr[indexlistname].push({ name: e.target.value, price: listprice, isChecked: true })
         setradioVal(radiobuttonArr)
         dispatch({ type: 'RADIOBUTTON', payload: radiobuttonArr })
-        
+
         // console.log(radioMandat);
         let totalMandatRadio = 0
         radioMandat.forEach(valMandat => {
@@ -610,63 +611,91 @@ const MenuSelection = (props) => {
             {
                 !isMobile ?
                     <div className='menuSelection-layout'>
-                        <div className='checkbox-layout'>
-                            {checkboxArrData()}
-                        </div>
+                        {
+                            !AllRedu.buttonLoad ?
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Loader
+                                        type="ThreeDots"
+                                        color="#4bb7ac"
+                                        height={70}
+                                        width={70}
+                                    />
+                                </div>
+                                :
+                                <>
+                                    <div className='checkbox-layout'>
+                                        {checkboxArrData()}
+                                    </div>
 
-                        <div className='radio-layout'>
-                            {radioArrData()}
-                        </div>
+                                    <div className='radio-layout'>
+                                        {radioArrData()}
+                                    </div>
 
-                        <div className='amount-section'>
-                            <div className='titleSelection'>
-                                Jumlah
-                            </div>
+                                    <div className='amount-section'>
+                                        <div className='titleSelection'>
+                                            Jumlah
+                                        </div>
 
-                            <div className='amount-box'>
-                                {handleAmount()}
-                            </div>
-                        </div>
+                                        <div className='amount-box'>
+                                            {handleAmount()}
+                                        </div>
+                                    </div>
 
-                        <div className='note-section'>
-                            <div className='titleSelection'>
-                                Catatan
-                            </div>
+                                    <div className='note-section'>
+                                        <div className='titleSelection'>
+                                            Catatan
+                                        </div>
 
-                            <div className='note-box'>
-                                <textarea id="note" placeholder={"Tambahkan Catatanmu"} defaultValue={props.datas.foodNote} className='note-area' onChange={handleNote} />
-                            </div>
-                        </div>
+                                        <div className='note-box'>
+                                            <textarea id="note" placeholder={"Tambahkan Catatanmu"} defaultValue={props.datas.foodNote} className='note-area' onChange={handleNote} />
+                                        </div>
+                                    </div>
+                                </>
+                        }
                     </div>
                     :
                     <div className='menuSelection-layout'>
-                        <div className='checkbox-layout'>
-                            {checkboxArrData()}
-                        </div>
+                        {
+                            !AllRedu.buttonLoad ?
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Loader
+                                        type="ThreeDots"
+                                        color="#4bb7ac"
+                                        height={70}
+                                        width={70}
+                                    />
+                                </div>
+                                :
+                                <>
+                                    <div className='checkbox-layout'>
+                                        {checkboxArrData()}
+                                    </div>
 
-                        <div className='radio-layout'>
-                            {radioArrData()}
-                        </div>
+                                    <div className='radio-layout'>
+                                        {radioArrData()}
+                                    </div>
 
-                        <div className='amount-section'>
-                            <div className='titleSelection'>
-                                Jumlah
-                            </div>
+                                    <div className='amount-section'>
+                                        <div className='titleSelection'>
+                                            Jumlah
+                                        </div>
 
-                            <div className='amount-box'>
-                                {handleAmount()}
-                            </div>
-                        </div>
+                                        <div className='amount-box'>
+                                            {handleAmount()}
+                                        </div>
+                                    </div>
 
-                        <div className='note-section'>
-                            <div className='titleSelection'>
-                                Catatan
-                            </div>
+                                    <div className='note-section'>
+                                        <div className='titleSelection'>
+                                            Catatan
+                                        </div>
 
-                            <div className='note-box'>
-                                <textarea id="note" placeholder={"Tambahkan Catatanmu"} defaultValue={props.datas.foodNote} className='note-area' onChange={handleNote} />
-                            </div>
-                        </div>
+                                        <div className='note-box'>
+                                            <textarea id="note" placeholder={"Tambahkan Catatanmu"} defaultValue={props.datas.foodNote} className='note-area' onChange={handleNote} />
+                                        </div>
+                                    </div>
+                                </>
+                        }
                     </div>
             }
         </>

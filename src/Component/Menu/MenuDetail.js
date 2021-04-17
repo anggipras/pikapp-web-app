@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import RegisterDialog from '../Authentication/RegisterDialog';
 import Cookies from "js-cookie"
 import PinDialog from "../Authentication/PinDialog";
+import Loader from 'react-loader-spinner'
 
 const MenuDetail = (props) => {
     const dispatch = useDispatch()
@@ -21,6 +22,7 @@ const MenuDetail = (props) => {
     const [registerDialog, setRegister] = useState(false)
     const [pinDialog, setPin] = useState(false)
     const [email, setEmail] = useState('');
+    const [loadingButton, setloadingButton] = useState(true)
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
 
@@ -43,26 +45,28 @@ const MenuDetail = (props) => {
     }
 
     const addtoCart = () => {
-        if (AllRedu.mandatCheck && AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond) {
-            props.handleClick()
-            dispatch({ type: 'DEFAULTSTATE' })
-            props.onHide()
-        } else if (!AllRedu.mandatCheck && !AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond) {
-            props.handleClick()
-            dispatch({ type: 'DEFAULTSTATE' })
-            props.onHide()
-        } else if (AllRedu.mandatCheck && AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond) {
-            props.handleClick()
-            dispatch({ type: 'DEFAULTSTATE' })
-            props.onHide()
-        } else if (!AllRedu.mandatCheck && !AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond) {
-            props.handleClick()
-            dispatch({ type: 'DEFAULTSTATE' })
-            props.onHide()
-        } else if(!AllRedu.buttonLoad) {
+        if (!loadingButton) {
             console.log('waitbro');
         } else {
-            alert('cannot buy')
+            if (AllRedu.mandatCheck && AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond) {
+                props.handleClick()
+                dispatch({ type: 'DEFAULTSTATE' })
+                props.onHide()
+            } else if (!AllRedu.mandatCheck && !AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond) {
+                props.handleClick()
+                dispatch({ type: 'DEFAULTSTATE' })
+                props.onHide()
+            } else if (AllRedu.mandatCheck && AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond) {
+                props.handleClick()
+                dispatch({ type: 'DEFAULTSTATE' })
+                props.onHide()
+            } else if (!AllRedu.mandatCheck && !AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond) {
+                props.handleClick()
+                dispatch({ type: 'DEFAULTSTATE' })
+                props.onHide()
+            } else {
+                alert('cannot buy')
+            }
         }
     }
 
@@ -104,9 +108,10 @@ const MenuDetail = (props) => {
             if(auth.isLogged === false) {
                 openPinDialog();
             } else {
+                setloadingButton(false)
+                dispatch({ type: 'LOADING' })
                 setmenuSelect(true)
                 dispatch({ type: 'FOODCATEG', payload: findCateg })
-                dispatch({ type: 'LOADING' })
             }
             // openPinDialog();
             
@@ -235,7 +240,7 @@ const MenuDetail = (props) => {
                                     {
                                         menuSelect ?
                                             <Scrollbars style={{ height: "calc(100% - 133px)" }}>
-                                                <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} />
+                                                <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} loadingButton={() => setloadingButton(true)} />
                                             </Scrollbars>
                                             :
                                             <div className='menuDesc'>
@@ -267,14 +272,24 @@ const MenuDetail = (props) => {
                                                                         :
                                                                         '#aaaaaa'
                                                 }} onClick={addtoCart}>
-                                                    <h2 className='add-words'>
-                                                        {
-                                                            AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                                                                'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
-                                                                :
-                                                                'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
-                                                        }
-                                                    </h2>
+                                                    {
+                                                        !loadingButton ?
+                                                            <Loader
+                                                                type="ThreeDots"
+                                                                color="#ffffff"
+                                                                height={70}
+                                                                width={70}
+                                                            />
+                                                            :
+                                                            <h2 className='add-words'>
+                                                                {
+                                                                    AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
+                                                                        'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
+                                                                        :
+                                                                        'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
+                                                                }
+                                                            </h2>
+                                                    }
                                                 </div>
                                                 :
                                                 <div onClick={openMenuSelect} className='openMenuSelection'>
@@ -333,7 +348,7 @@ const MenuDetail = (props) => {
                                 {
                                     menuSelect ?
                                         <Scrollbars style={{ height: "calc(88vh - 375px)" }}>
-                                            <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} />
+                                            <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} loadingButton={() => setloadingButton(true)} />
                                         </Scrollbars>
                                         :
                                         <div className='mob-menuDesc'>
@@ -363,14 +378,24 @@ const MenuDetail = (props) => {
                                                                     :
                                                                     '#aaaaaa'
                                             }} onClick={addtoCart}>
-                                                <h2 className='mob-add-words'>
-                                                    {
-                                                        AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                                                            'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
-                                                            :
-                                                            'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
-                                                    }
-                                                </h2>
+                                                {
+                                                    !loadingButton ?
+                                                        <Loader
+                                                            type="ThreeDots"
+                                                            color="#ffffff"
+                                                            height={70}
+                                                            width={70}
+                                                        />
+                                                        :
+                                                        <h2 className='mob-add-words'>
+                                                            {
+                                                                AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
+                                                                    'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
+                                                                    :
+                                                                    'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
+                                                            }
+                                                        </h2>
+                                                }
                                             </div>
                                             :
                                             <div onClick={openMenuSelect} className='mob-openMenuSelection' style={{ backgroundColor: '#4bb7ac' }}>
