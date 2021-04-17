@@ -38,7 +38,7 @@ const MerchantResto = (props) => {
   });
 
   const getMerchantData = (lat, lon) => {
-    let addressRoute = address + "/home/v2/detail/merchant/" + lon + "/" + lat + "/"
+    let addressRoute = address + "home/v2/detail/merchant/" + lon + "/" + lat + "/"
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -58,32 +58,32 @@ const MerchantResto = (props) => {
         console.log(res.data.results);
         let responseDatas = res.data.results;
 
-        // let stateData = []
-        // stateData.push(responseDatas)
-        // var currentMerchant = {
-        //   mid: "",
-        //   storeName: "",
-        //   storeDesc: "",
-        //   distance: "",
-        //   storeImage: "",
-        //   storeAdress: "",
-        //   storeRating: "",
-        // };
-        // currentMerchant.mid = responseDatas.mid;
-        // currentMerchant.storeName = responseDatas.merchant_name;
-        // currentMerchant.storeDesc = "Desc";
-        // currentMerchant.distance = responseDatas.merchant_distance;
-        // currentMerchant.storeImage = responseDatas.merchant_pict;
-        // currentMerchant.storeAdress = responseDatas.merchant_address;
-        // currentMerchant.storeRating = responseDatas.merchant_rating;
-        // Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
-        // localStorage.setItem('selectedMerchant', JSON.stringify(stateData))
-        // history.push(
-        //   "/store?mid=" +
-        //   responseDatas.mid +
-        //   "&table=" +
-        //   props.match.params.notab
-        // );
+        let stateData = []
+        stateData.push(responseDatas)
+        var currentMerchant = {
+          mid: "",
+          storeName: "",
+          storeDesc: "",
+          distance: "",
+          storeImage: "",
+          storeAdress: "",
+          storeRating: "",
+        };
+        currentMerchant.mid = responseDatas.mid;
+        currentMerchant.storeName = responseDatas.merchant_name;
+        currentMerchant.storeDesc = "Desc";
+        currentMerchant.distance = responseDatas.merchant_distance;
+        currentMerchant.storeImage = responseDatas.merchant_pict;
+        currentMerchant.storeAdress = responseDatas.merchant_address;
+        currentMerchant.storeRating = responseDatas.merchant_rating;
+        Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
+        localStorage.setItem('selectedMerchant', JSON.stringify(stateData))
+        history.push(
+          "/store?mid=" +
+          responseDatas.mid +
+          "&table=" +
+          props.match.params.notab
+        );
       })
       .catch((err) => console.log(err));
   }
