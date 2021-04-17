@@ -45,49 +45,55 @@ const MerchantResto = (props) => {
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
 
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "mid": props.match.params.mid,
-      },
-      method: "GET"
-    })
-      .then((res) => {
-        console.log(res.data.results);
-        let responseDatas = res.data.results;
+    console.log(addressRoute);
+    console.log(clientId);
+    console.log(uuid);
+    console.log(date);
+    console.log(props.match.params.mid);
 
-        let stateData = []
-        stateData.push(responseDatas)
-        var currentMerchant = {
-          mid: "",
-          storeName: "",
-          storeDesc: "",
-          distance: "",
-          storeImage: "",
-          storeAdress: "",
-          storeRating: "",
-        };
-        currentMerchant.mid = responseDatas.mid;
-        currentMerchant.storeName = responseDatas.merchant_name;
-        currentMerchant.storeDesc = "Desc";
-        currentMerchant.distance = responseDatas.merchant_distance;
-        currentMerchant.storeImage = responseDatas.merchant_pict;
-        currentMerchant.storeAdress = responseDatas.merchant_address;
-        currentMerchant.storeRating = responseDatas.merchant_rating;
-        Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
-        localStorage.setItem('selectedMerchant', JSON.stringify(stateData))
-        history.push(
-          "/store?mid=" +
-          responseDatas.mid +
-          "&table=" +
-          props.match.params.notab
-        );
-      })
-      .catch((err) => console.log(err));
+    // Axios(addressRoute, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //     "token": "PUBLIC",
+    //     "mid": props.match.params.mid,
+    //   },
+    //   method: "GET"
+    // })
+    //   .then((res) => {
+    //     console.log(res.data.results);
+    //     let responseDatas = res.data.results;
+
+    //     let stateData = []
+    //     stateData.push(responseDatas)
+    //     var currentMerchant = {
+    //       mid: "",
+    //       storeName: "",
+    //       storeDesc: "",
+    //       distance: "",
+    //       storeImage: "",
+    //       storeAdress: "",
+    //       storeRating: "",
+    //     };
+    //     currentMerchant.mid = responseDatas.mid;
+    //     currentMerchant.storeName = responseDatas.merchant_name;
+    //     currentMerchant.storeDesc = "Desc";
+    //     currentMerchant.distance = responseDatas.merchant_distance;
+    //     currentMerchant.storeImage = responseDatas.merchant_pict;
+    //     currentMerchant.storeAdress = responseDatas.merchant_address;
+    //     currentMerchant.storeRating = responseDatas.merchant_rating;
+    //     Cookies.set("currentMerchant", currentMerchant, { expires: 1 });
+    //     localStorage.setItem('selectedMerchant', JSON.stringify(stateData))
+    //     history.push(
+    //       "/store?mid=" +
+    //       responseDatas.mid +
+    //       "&table=" +
+    //       props.match.params.notab
+    //     );
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   return <div></div>;
