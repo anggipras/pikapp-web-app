@@ -13,7 +13,7 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
-.modalMenuDetail {
+.modalMenuDetail-auth {
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
     z-index: 3; /* Overlay effect: positioned over other containers */
@@ -26,7 +26,7 @@
     // padding-top: 0px; /* Location of the content container */
 }
 
-.modal-content-menudetail {
+.modal-content-menudetail-auth {
     background-color: white;
     position: relative;
     width: 80vw; /* Width in proportion to its parent container*/
@@ -44,11 +44,11 @@
     overflow: auto;
 }
 
-.modal-content-menudetail::-webkit-scrollbar {
+.modal-content-menudetail-auth::-webkit-scrollbar {
     display: none;
 }
 
-.iconClose {
+.iconClose-auth {
     display: block;
     position: absolute;
     top: 30px;
@@ -57,7 +57,7 @@
     cursor: pointer;
 }
 
-.closeLogo {
+.closeLogo-auth {
     height: 22px;
     width: 22px;
 }
@@ -76,7 +76,7 @@
     width: 36px;
 }
 
-.menuDetail-layout {
+.menuDetail-layout-auth {
     width: 100%;
     height: 100%;
     display: flex;
@@ -85,7 +85,7 @@
     padding: 0;
 }
 
-.menuContain-left {
+.menuContain-left-auth {
     //menu image and detail section
     width: 100%;
     height: 100%;
@@ -96,21 +96,21 @@
     box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.05);
 }
 
-.menuBanner {
+.menuBanner-auth {
     width: 250px;
     height: 80px;
     border-radius: 30px;
     overflow: hidden;
 }
 
-.menuimg {
+.menuimg-auth {
     width: 60%;
     height: 60%;
     object-fit: cover;
     border-radius: 30px;
 }
 
-.menu-detail {
+.menu-detail-auth {
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -118,7 +118,7 @@
     margin-top: 13px;
 }
 
-.menu-star {
+.menu-star-auth {
     display: flex;
     justify-content: center;
     height: 32px;
@@ -129,12 +129,12 @@
     margin-bottom: 12px;
 }
 
-.menu-star-img {
+.menu-star-img-auth {
     width: 20px;
     height: 20px;
 }
 
-.menu-star-rating {
+.menu-star-rating-auth {
     font-family: "SF-Compact-Rounded-Medium", sans-serif;
     font-weight: 600;
     font-style: normal;
@@ -144,7 +144,7 @@
     margin-left: 5px;
 }
 
-.menu-name {
+.menu-name-auth {
     max-width: 300px;
     font-family: "Montserrat", sans-serif;
     font-style: normal;
@@ -155,7 +155,7 @@
     line-height: 30px;
 }
 
-.menu-category {
+.menu-category-auth {
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -165,7 +165,7 @@
     text-transform: capitalize;
 }
 
-.menu-price {
+.menu-price-auth {
     min-width: 160px;
     width: auto;
     font-family: "SF-Compact-Rounded-Semibold", sans-serif;
@@ -179,21 +179,21 @@
     margin-top: 55px;
 }
 
-.menuContain-right {
+.menuContain-right-auth {
     width: 53%;
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-.menuDesc {
+.menuDesc-auth {
     //menu description section
     position: relative;
     height: calc(100% - 133px);
     padding: 48px 40px 0px 35px;
 }
 
-.menuDesc-title {
+.menuDesc-title-auth {
     width: 100%;
     font-family: "SF-Compact-Rounded-Semibold", sans-serif;
     font-style: normal;
@@ -205,7 +205,7 @@
     color: #111111;
 }
 
-.menuDesc-content {
+.menuDesc-content-auth {
     width: 100%;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
@@ -217,7 +217,7 @@
     margin-top: 8px;
 }
 
-.menuButton {
+.menuButton-auth {
     //menu button bottom section
     // position: sticky;
     // bottom: 0;
@@ -227,7 +227,7 @@
     box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.1);
 }
 
-.openMenuSelection {
+.openMenuSelection-auth {
     display: flex;
     position: relative;
     justify-content: center;
@@ -240,7 +240,7 @@
     cursor: pointer;
 }
 
-.add-words {
+.add-words-auth {
     font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
@@ -251,7 +251,7 @@
 }
 
 @media (max-width: 768px) {
-    .mob-modalMenuDetail {
+    .mob-modalMenuDetail-auth {
         background-color: rgb(0, 0, 0); /* Fallback color */
         background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
         z-index: 3; /* Overlay effect: positioned over other containers */
@@ -264,7 +264,7 @@
         padding-top: 25px; /* Location of the content container */
     }
     /* Modal content */
-    .mob-modal-content-menudetail {
+    .mob-modal-content-menudetail-auth {
         background-color: white;
         width: 88vw; /* Width in proportion to its parent container*/
         // height: auto; /* Height in proportion to its parent container */
@@ -278,7 +278,7 @@
         overflow: auto;
     }
 
-    .mob-menuBanner {
+    .mob-menuBanner-auth {
         display: block;
         position: relative;
         width: 100%;
@@ -286,44 +286,44 @@
         border-radius: 20px;
     }
 
-    .mob-menuimg {
+    .mob-menuimg-auth {
         width: 100%;
         height: 100%;
         object-fit: cover;
         border-radius: 20px 20px 0px 0px;
     }
 
-    .mob-iconClose {
+    .mob-iconClose-auth {
         display: flex;
         position: absolute;
         top: 20px;
         right: 19px;
     }
 
-    .mob-closeLogo {
+    .mob-closeLogo-auth {
         height: 15px;
         width: 15px;
     }
 
-    .mob-menuContain {
+    .mob-menuContain-auth {
         display: flex;
         flex-direction: column;
         position: relative;
         height: auto;
     }
 
-    .mob-inside-menuContain {
+    .mob-inside-menuContain-auth {
         display: flex;
         justify-content: space-between;
         padding: 15px 19px 14px 18px;
     }
 
-    .mob-menu-detail {
+    .mob-menu-detail-auth {
         margin: 0;
         padding: 0;
     }
 
-    .mob-menu-star {
+    .mob-menu-star-auth {
         display: flex;
         justify-content: center;
         height: auto;
@@ -335,12 +335,12 @@
         margin-bottom: 16px;
     }
 
-    .mob-menu-star-img {
+    .mob-menu-star-img-auth {
         width: 12px;
         height: 12px;
     }
 
-    .mob-menu-star-rating {
+    .mob-menu-star-rating-auth {
         font-family: "SF-Compact-Rounded", sans-serif;
         font-weight: 600;
         font-style: normal;
@@ -350,7 +350,7 @@
         margin-left: 4.5px;
     }
 
-    .mob-menu-name {
+    .mob-menu-name-auth {
         font-family: "Montserrat", sans-serif;
         font-style: normal;
         font-weight: bold;
@@ -361,7 +361,7 @@
         line-height: 20px;
     }
 
-    .mob-menu-category {
+    .mob-menu-category-auth {
         font-family: "SF-Compact-Rounded", sans-serif;
         font-weight: 500;
         font-style: normal;
@@ -371,12 +371,12 @@
         font-size: 14px;
     }
 
-    .mob-menuDesc {
+    .mob-menuDesc-auth {
         height: auto;
         padding: 0px 19px 21px 18px;
     }
 
-    .mob-menu-desc {
+    .mob-menu-desc-auth {
         font-family: "SF-Compact-Rounded", sans-serif;
         font-style: normal;
         font-weight: normal;
@@ -387,7 +387,7 @@
         line-height: 17px;
     }
 
-    .mob-menu-price {
+    .mob-menu-price-auth {
         width: auto;
         font-family: "SF-Compact-Rounded", sans-serif;
         font-style: normal;
@@ -401,11 +401,11 @@
         margin-top: 45px;
     }
 
-    .mob-menuButton {
+    .mob-menuButton-auth {
         padding: 9px 19px 15px 17px;
     }
 
-    .mob-openMenuSelection {
+    .mob-openMenuSelection-auth {
         display: flex;
         position: relative;
         justify-content: center;
@@ -416,7 +416,7 @@
         border-radius: 10px;
     }
 
-    .mob-add-words {
+    .mob-add-words-auth {
         font-family: "Montserrat", sans-serif;
         font-style: normal;
         font-weight: bold;

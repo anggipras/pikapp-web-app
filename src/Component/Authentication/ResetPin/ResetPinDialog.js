@@ -84,29 +84,29 @@ const ResetPinDialog = (props) => {
     return (
         <div>
             {
-                <div className='modalMenuDetail' style={{
+                <div className='modalMenuDetail-auth' style={{
                     display: props.isShowResetPin ? 'block' : 'none'
                 }} onClick={closeModal}
                 >
-                    <div className='modal-content-menudetail' onClick={e => e.stopPropagation()}>
+                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
                         {
-                            <span className='iconClose' onClick={closeModal}>
-                                <img src={closeLogo} className='closeLogo' alt='' />
+                            <span className='iconClose-auth' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo-auth' alt='' />
                             </span>
                         }
 
-                        <div className='menuDetail-layout'>
-                            <div className='menuContain-left'>
-                                <div className='menuBanner'>
-                                    <img src={pikappLogo} className='menuimg' alt='' />
+                        <div className='menuDetail-layout-auth'>
+                            <div className='menuContain-left-auth'>
+                                <div className='menuBanner-auth'>
+                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
                                 </div>
 
-                                <div className='menu-detail'>
-                                    <div className='menu-name'>
+                                <div className='menu-detail-auth'>
+                                    <div className='menu-name-auth'>
                                         Perbarui PIN Anda 
                                     </div>
 
-                                    <div className='mob-menu-category'>
+                                    <div className='mob-menu-category-auth'>
                                         Ketik 6 digit nomor PIN baru Anda
                                     </div>
 
