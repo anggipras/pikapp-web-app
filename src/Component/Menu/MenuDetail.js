@@ -8,6 +8,9 @@ import { useMediaQuery } from 'react-responsive'
 import { Scrollbars } from 'react-custom-scrollbars'
 import MenuSelection from './MenuSelection'
 import { useDispatch, useSelector } from 'react-redux'
+import RegisterDialog from '../Authentication/RegisterDialog';
+import Cookies from "js-cookie"
+import PinDialog from "../Authentication/PinDialog";
 import Loader from 'react-loader-spinner'
 
 const MenuDetail = (props) => {
@@ -16,6 +19,9 @@ const MenuDetail = (props) => {
     const menuCateg = props.handleCateg
     const [menuSelect, setmenuSelect] = useState(false)
     const [menuCondition, setmenuCondition] = useState(false)
+    const [registerDialog, setRegister] = useState(false)
+    const [pinDialog, setPin] = useState(false)
+    const [email, setEmail] = useState('');
     const [loadingButton, setloadingButton] = useState(true)
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
@@ -89,11 +95,27 @@ const MenuDetail = (props) => {
         return totalPrice
     }
 
+    let auth;
+
     const openMenuSelect = () => {
-        setloadingButton(false)
-        dispatch({ type: 'LOADING' })
-        setmenuSelect(true)
-        dispatch({ type: 'FOODCATEG', payload: findCateg })
+        
+        if (Cookies.get("auth") === undefined) {
+            // props.onHide();
+            setRegister(true);
+            // showRegisterDialog();
+        } else {
+            auth = JSON.parse(Cookies.get("auth"));
+            if(auth.isLogged === false) {
+                openPinDialog();
+            } else {
+                setloadingButton(false)
+                dispatch({ type: 'LOADING' })
+                setmenuSelect(true)
+                dispatch({ type: 'FOODCATEG', payload: findCateg })
+            }
+            // openPinDialog();
+            
+        }
     }
 
     let findCateg
@@ -133,10 +155,40 @@ const MenuDetail = (props) => {
     totalPrice += AllRedu.validQTY * props.datas.foodPrice
     props.handleAmount(totalPrice)
 
-    // console.log(AllRedu.mandatCheckCond, 'mandatCheckCond');
-    // console.log(AllRedu.mandatCheck, 'mandatCheck');
-    // console.log(AllRedu.mandatRadioCond, 'mandatRadioCond');
-    // console.log(AllRedu.mandatRadio, 'mandatRadio');
+    const showRegisterDialog = () => {
+        if(registerDialog) {
+            return (
+                <RegisterDialog 
+                    isShowRegister={registerDialog}
+                    onHideRegister={() =>setRegister(false)}
+                />
+            )
+        }
+    }
+
+    const openPinDialog = () => {
+        setEmail(auth.email);
+
+        const data = {
+            email: email
+        };
+
+        dispatch({ type: 'LOGIN', payload: data });
+        dispatch({ type: 'LOGINSTEP', payload: true });
+
+        setPin(true);
+    }
+
+    const showPinDialog = () => {
+        if(pinDialog) {
+            return (
+                <PinDialog 
+                    isShowPin={pinDialog}
+                    onHidePin={() =>setPin(false)}
+                />
+            )
+        }
+    }
 
     return (
         <div>
@@ -358,7 +410,10 @@ const MenuDetail = (props) => {
 
                     </div>
             }
+            {showRegisterDialog()}
+            {showPinDialog()}
         </div>
+        
     );
 }
 

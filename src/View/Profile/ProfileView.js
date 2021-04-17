@@ -34,7 +34,7 @@ class ProfileView extends React.Component {
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
     console.log(auth)
     let uuid = uuidV4();
@@ -82,7 +82,7 @@ class ProfileView extends React.Component {
       if(auth.isLogged === false) {
         var lastLink = { value: window.location.href}
         Cookies.set("lastLink", lastLink,{ expires: 1})
-        window.location.href = "/login"
+        // window.location.href = "/login"
       }
       try {
         var decodedJWT = jwt.verify(auth.token, Buffer.from(jwtSecret,'base64')
@@ -111,7 +111,7 @@ class ProfileView extends React.Component {
           Cookies.remove("auth")
           auth = null;
           this.props.DoneLoad()
-          window.location.href = "/login"
+          window.location.href = "/"
         })
         .catch((err) => {
           if(err.response.data !== undefined) {

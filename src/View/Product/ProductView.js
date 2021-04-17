@@ -103,7 +103,7 @@ class ProductView extends React.Component {
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
