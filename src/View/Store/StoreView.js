@@ -37,7 +37,9 @@ class StoreView extends React.Component {
     totalPage: 0,
     boolpage: false,
     loadView: true,
-    allMerchantAPI: []
+    allMerchantAPI: [],
+    lat: "",
+    lon: "",
   };
 
   componentDidMount() {
@@ -53,53 +55,136 @@ class StoreView extends React.Component {
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
+
     const value = queryString.parse(window.location.search);
     var longitude = "";
     var latitude = "";
     var merchant = "";
 
-    if (localStorage.getItem("longlat")) {
-      var getLocation = JSON.parse(localStorage.getItem("longlat"))
-      latitude = getLocation.lat
-      longitude = getLocation.lon
-    } else {
-      window.location.href = "/login"
-    }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
 
-    if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href }
-      Cookies.set("lastLink", lastLink, { expires: 1 })
-      window.location.href = "/login"
-    }
-    else {
-      longitude = value.longitude || longitude
-      latitude = value.latitude || latitude
-      if (window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
+        let latitude = position.coords.latitude
+        let longitude = position.coords.longitude
+        let longlat = { lat: latitude, lon: longitude }
+        console.log(latitude, longitude);
+        this.setState({ lat: latitude, lon: longitude })
+        localStorage.setItem("longlat", JSON.stringify(longlat))
+        // Show a map centered at latitude / longitude.
 
-      } else {
-        window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
-      }
-    }
-    longitude = value.longitude || longitude
-    latitude = value.latitude || latitude
-    merchant = value.merchant;
+        if (localStorage.getItem("longlat")) {
+          var getLocation = JSON.parse(localStorage.getItem("longlat"))
+          latitude = getLocation.lat
+          longitude = getLocation.lon
+        } else {
+          // window.location.href = "/login"
+        }
+    
+        if (auth.isLogged === false) {
+          var lastLink = { value: window.location.href }
+          Cookies.set("lastLink", lastLink, { expires: 1 })
+          // window.location.href = "/login"
+        }
+        else {
+          longitude = value.longitude || longitude
+          latitude = value.latitude || latitude
+          if (window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
+    
+          } else {
+            window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
+          }
+        }
+        longitude = value.longitude || longitude
+        latitude = value.latitude || latitude
+        merchant = value.merchant;
+    
+        // GOOGLE GEOCODE
+        if (localStorage.getItem("address")) {
+          var getAdress = JSON.parse(localStorage.getItem("address"))
+          this.setState({ location: getAdress })
+        } else {
+          Geocode.setApiKey(googleKey)
+          Geocode.fromLatLng(latitude, longitude)
+            .then((res) => {
+              console.log(res.results[0].formatted_address);
+              this.setState({ location: res.results[0].formatted_address })
+              localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
+            })
+            .catch((err) => {
+              this.setState({ location: "Tidak tersedia" })
+            })
+        }
 
-    // GOOGLE GEOCODE
-    if (localStorage.getItem("address")) {
-      var getAdress = JSON.parse(localStorage.getItem("address"))
-      this.setState({ location: getAdress })
-    } else {
-      Geocode.setApiKey(googleKey)
-      Geocode.fromLatLng(latitude, longitude)
-        .then((res) => {
-          console.log(res.results[0].formatted_address);
-          this.setState({ location: res.results[0].formatted_address })
-          localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
+        let addressRoute;
+        if (merchant === undefined) {
+          addressRoute =
+            address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
+        } else {
+          addressRoute =
+            address +
+            "home/v1/merchant/" +
+            longitude +
+            "/" +
+            latitude +
+            "/" +
+            merchant
+            + "/"
+        }
+        var stateData;
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
+        Axios(addressRoute, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token": "PUBLIC",
+            "category": "1",
+          },
+          method: "GET",
+          params: {
+            page: this.state.page,
+            size: this.state.size
+          }
         })
-        .catch((err) => {
-          this.setState({ location: "Tidak tersedia" })
-        })
+          .then((res) => {
+            console.log(res.data.results);
+            stateData = { ...this.state.data };
+            let responseDatas = res.data;
+            stateData.data.pop();
+            responseDatas.results.forEach((data) => {
+              stateData.data.push({
+                address: data.merchant_address,
+                rating: data.merchant_rating,
+                logo: data.merchant_logo,
+                distance: data.merchant_distance,
+                storeId: data.mid,
+                storeName: data.merchant_name,
+                storeDesc: "",
+                storeImage: data.merchant_pict,
+              })
+            })
+            this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+            document.addEventListener('scroll', this.loadMoreMerchant)
+            if (res.data.results.length < 6) {
+              document.removeEventListener('scroll', this.loadMoreMerchant)
+            }
+          })
+          .catch((err) => {
+          });
+          });
     }
+  }
+
+
+    // const value = queryString.parse(window.location.search);
+    // console.log(value);
+    // var longitude = "";
+    // var latitude = "";
+    // var merchant = "";
+
 
 
     //OPENCAGE API
@@ -115,67 +200,6 @@ class StoreView extends React.Component {
     // }).catch((err) => {
     //   this.setState({location: "Tidak tersedia"})
     // })
-
-    let addressRoute;
-    if (merchant === undefined) {
-      addressRoute =
-        address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
-    } else {
-      addressRoute =
-        address +
-        "home/v1/merchant/" +
-        longitude +
-        "/" +
-        latitude +
-        "/" +
-        merchant
-        + "/"
-    }
-    var stateData;
-    let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
-    const date = new Date().toISOString();
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "category": "1",
-      },
-      method: "GET",
-      params: {
-        page: this.state.page,
-        size: this.state.size
-      }
-    })
-      .then((res) => {
-        console.log(res.data.results);
-        stateData = { ...this.state.data };
-        let responseDatas = res.data;
-        stateData.data.pop();
-        responseDatas.results.forEach((data) => {
-          stateData.data.push({
-            address: data.merchant_address,
-            rating: data.merchant_rating,
-            logo: data.merchant_logo,
-            distance: data.merchant_distance,
-            storeId: data.mid,
-            storeName: data.merchant_name,
-            storeDesc: "",
-            storeImage: data.merchant_pict,
-          })
-        })
-        this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
-        document.addEventListener('scroll', this.loadMoreMerchant)
-        if (res.data.results.length < 6) {
-          document.removeEventListener('scroll', this.loadMoreMerchant)
-        }
-      })
-      .catch((err) => {
-      });
-  }
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {

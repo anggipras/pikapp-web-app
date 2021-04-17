@@ -19,6 +19,8 @@ import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
 import { EditMenuCart } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
+import { Redirect } from "react-router-dom";
+import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 
 var currentExt = {
   detailCategory: [
@@ -69,19 +71,19 @@ class CartView extends React.Component {
     successMessage: ''
   };
 
-  componentDidMount() {
-    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    let allCart = JSON.parse(localStorage.getItem('cart'))
-    let filterCart = allCart.filter(valCart => {
-      return valCart.mid === currentCartMerchant.mid
-    })
-    if (filterCart.length === 0) {
-      window.history.go(-1)
-    } else {
-      this.setState({ changeUI: false })
-    }
+  // componentDidMount() {
+  //   const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+  //   let allCart = JSON.parse(localStorage.getItem('cart'))
+  //   let filterCart = allCart.filter(valCart => {
+  //     return valCart.mid === currentCartMerchant.mid
+  //   })
+  //   if (filterCart.length === 0) {
+  //     window.history.go(-1)
+  //   } else {
+  //     this.setState({ changeUI: false })
+  //   }
 
-  }
+  // }
 
   handleDetail(data) {
     if (data === "eat-method") {
@@ -267,7 +269,7 @@ class CartView extends React.Component {
     if (auth.isLogged === false) {
       window.history.back()
     }
-    this.setState({ loadButton: true })
+    this.props.LoadingButton()
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let storageData = JSON.parse(localStorage.getItem('cart'))
@@ -332,40 +334,44 @@ class CartView extends React.Component {
         if (this.state.paymentType === 'PAY_BY_CASHIER') {
           this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
           setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter=> {
+            let filterOtherCart = storageData.filter(valFilter => {
               return valFilter.mid !== currentCartMerchant.mid
             })
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            // localStorage.setItem('page', JSON.stringify(2))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
-            window.location.href = '/status'
-            this.setState({ loadButton: false })
+            // window.location.href = '/status'
+            this.setState({ loadButton: true })
+            this.props.DoneLoad()
           }, 1000);
         } else {
           this.setState({ successMessage: 'Transaksi OVO berhasil' })
           setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter=> {
+            let filterOtherCart = storageData.filter(valFilter => {
               return valFilter.mid !== currentCartMerchant.mid
             })
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            // localStorage.setItem('page', JSON.stringify(2))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
-            window.location.href = '/status'
-            this.setState({ loadButton: false })
+            // window.location.href = '/status'
+            this.setState({ loadButton: true })
+            this.props.DoneLoad()
           }, 1000);
         }
       })
       .catch((err) => {
         if (err.response.data !== undefined) {
           alert(err.response.data.err_message)
-          this.setState({ loadButton: false })
+          this.props.DoneLoad()
         }
       });
   };
 
   notifModal = () => {
-    if (this.state.loadButton) {
-      return <NotifModal isShowNotif={this.state.loadButton} responseMessage={this.state.successMessage} />
+    if (this.props.AllRedu.buttonLoad === false) {
+      return <NotifModal isShowNotif={this.props.AllRedu.buttonLoad} responseMessage={this.state.successMessage} />
     }
   }
 
@@ -532,13 +538,39 @@ class CartView extends React.Component {
   }
 
   render() {
+    console.log(this.state.loadButton, 'PERHATIKAN!!');
+    if (this.state.loadButton) {
+      return <Redirect to='/status' />
+    }
+    
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let allCart = JSON.parse(localStorage.getItem('cart'))
+    let filterCart = allCart.filter(valCart => {
+      return valCart.mid === currentCartMerchant.mid
+    })
+    if (filterCart.length === 0) {
+      window.history.go(-1)
+    } else {
+      if (this.state.changeUI) {
+        this.setState({ changeUI: false })
+      }
+    }
+
+    // if (localStorage.getItem('page')) {
+    //   let currentPage = JSON.parse(localStorage.getItem('page'))
+    //   if (currentPage === 2) {
+    //     localStorage.setItem('page', JSON.stringify(1))
+    //     window.location.reload()
+    //   }
+    // }
+
     var auth = {
       isLogged: false,
       token: "",
       new_event: true,
       recommendation_status: false,
       email: "",
+      is_email_verified : true
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
@@ -546,7 +578,7 @@ class CartView extends React.Component {
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
 
     let modal;
@@ -695,6 +727,17 @@ class CartView extends React.Component {
     return (
       <>
         <div className='cartLayout'>
+          {
+          !auth.is_email_verified ?
+          <div className='verificationMsg'>
+            <div className='message'>Verifikasi Email Anda</div>
+            <div className='messageSend'>
+              <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? <span className="txtUnderline">Kirim Ulang</span>
+            </div>
+          </div>
+          :
+          <div></div>
+          }
           <div className='cartTitle'>
             <span className='logopikappCenter' onClick={() => window.history.back()} >
               <img className='LogoPikappCart' src={ArrowBack} alt='' />
@@ -843,4 +886,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { EditMenuCart })(CartView)
+export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad })(CartView)
