@@ -613,12 +613,14 @@ const MenuSelection = (props) => {
                     <div className='menuSelection-layout'>
                         {
                             !AllRedu.buttonLoad ?
-                                <Loader
-                                    type="ThreeDots"
-                                    color="#4bb7ac"
-                                    height={70}
-                                    width={70}
-                                />
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Loader
+                                        type="ThreeDots"
+                                        color="#4bb7ac"
+                                        height={70}
+                                        width={70}
+                                    />
+                                </div>
                                 :
                                 <>
                                     <div className='checkbox-layout'>
