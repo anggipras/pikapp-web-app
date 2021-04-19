@@ -107,6 +107,7 @@ const LoginDialog = (props) => {
 
                                     <div className='textfield-auth'>
                                         <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+                                        
                                         <Form>
                                             <Row>
                                                 <Col xs={11}>
@@ -114,27 +115,27 @@ const LoginDialog = (props) => {
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
                                                     </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={4}>
-                                                    <p className="linkWords">
-                                                        <div onClick={closeModal}>DAFTAR SAJA</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col xs={3}/>
+                                                <Col />
+                                            </Row>
+                                            
+                                        </Form>
 
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="SUBMIT"
-                                                        buttonStyle="greenPika"
-                                                        handleClick={openPinDialog}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
+                                        <div className='buttonSide-auth'>
+                                            <p className="linkWords" onClick={closeModal}>DAFTAR SAJA</p>
+                                            <div className="submitButton-auth" onClick={openPinDialog}>
+                                                <div className="wordsButton-auth">
+                                                    SUBMIT
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className='bottomSide-auth'>
+                                            <h4 className='countrySide-auth'>Indonesia</h4>
+                                            <div className='reqSide-auth'>
+                                                <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -154,77 +155,46 @@ const LoginDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
                                         Selangkah Lagi Sebelum Memesan!
                                     </div>
 
-                                    <div>
-                                        {
-                                            <Form>
-                                                <Row className="btm50 top30">
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="email"
-                                                        placeholder="Alamat Email"
-                                                        handleChange={handleEmail}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-
-                                                <Row>
-                                                    <Col xs={11}>
+                                    <div className='textfield-auth'>
+                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+                                        
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
                                                     {isValid || (
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
                                                     </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={3}>
-                                                    <p className="linkWords">
-                                                        <div onClick={closeModal}>DAFTAR SAJA</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col xs={2} md={2}/>
+                                                <Col />
+                                            </Row>
+                                            
+                                        </Form>
 
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="SUBMIT"
-                                                        buttonStyle="greenPika"
-                                                        handleClick={openPinDialog}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
-                                        }
-                                                
-                                    </div>
+                                        <div className='buttonSide-auth'>
+                                            <p className="linkWords" onClick={closeModal}>DAFTAR SAJA</p>
+                                            <div className="submitButton-auth" onClick={openPinDialog}>
+                                                <div className="wordsButton-auth">
+                                                    SUBMIT
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    {/* <div className='buttonSide-auth'>
-                                        <p className="linkWords" onClick={closeModal}>DAFTAR SAJA</p>
-                                        <div className="submitButton-auth" onClick={openPinDialog}>
-                                            <div className="wordsButton-auth">
-                                                SUBMIT
+                                        <div className='bottomSide-auth'>
+                                            <h4 className='countrySide-auth'>Indonesia</h4>
+                                            <div className='reqSide-auth'>
+                                                <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                <h4 className='reqSideWord-auth'>Persyaratan</h4>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className='bottomSide-auth'>
-                                        <h4 className='countrySide-auth'>Indonesia</h4>
-                                        <div className='reqSide-auth'>
-                                            <h4 className='reqSideWord-auth'>Privasi</h4>
-                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                        </div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -234,6 +204,161 @@ const LoginDialog = (props) => {
             {showPinDialog()}
         </div>
     );
+
+    // return (
+    //     <div>
+    //         {
+    //             !isMobile ?
+    //             <div className='modalMenuDetail-auth' style={{
+    //                 display: props.isShowLogin ? 'block' : 'none'
+    //             }} onClick={closeModal}
+    //             >
+    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+    //                     {
+    //                         <span className='iconClose-auth' onClick={closeModal}>
+    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
+    //                         </span>
+    //                     }
+
+    //                     <div className='menuDetail-layout-auth'>
+    //                         <div className='menuContain-all-auth'>
+    //                             <img src={pikappLogo} className='menuimg-auth' alt='' />
+
+    //                             <div className='menu-detail-auth'>
+    //                                 <div className='menu-name-auth'>
+    //                                     Selangkah Lagi Sebelum Memesan!
+    //                                 </div>
+
+    //                                 <div className='textfield-auth'>
+    //                                     <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+                                        
+    //                                     <Form>
+    //                                         <Row>
+    //                                             <Col xs={11}>
+    //                                                 {isValid || (
+    //                                                     <Alert variant="danger">{errorMsg}</Alert>
+    //                                                 )}
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+                                                
+    //                                             <Row>
+    //                                                 <Col xs={4}>
+    //                                                 <p className="linkWords">
+    //                                                     <div onClick={closeModal}>DAFTAR SAJA</div>
+    //                                                 </p>
+    //                                                 </Col>
+    //                                                 <Col xs={3}/>
+
+    //                                                 <Col xs={4}>
+    //                                                 <PikaButton
+    //                                                     title="SUBMIT"
+    //                                                     buttonStyle="greenPika"
+    //                                                     handleClick={openPinDialog}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                         </Form>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //             :
+    //             <div className='modalMenuDetail-auth' style={{
+    //                 display: props.isShowLogin ? 'block' : 'none'
+    //             }} onClick={closeModal}
+    //             >
+    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+    //                     {
+    //                         <span className='iconClose-auth' onClick={closeModal}>
+    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
+    //                         </span>
+    //                     }
+
+    //                     <div className='menuDetail-layout-auth'>
+    //                         <div className='menuContain-left-auth'>
+    //                             <div className='menuBanner-auth'>
+    //                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
+    //                             </div>
+
+    //                             <div className='menu-detail-auth'>
+    //                                 <div className='menu-name-auth'>
+    //                                     Selangkah Lagi Sebelum Memesan!
+    //                                 </div>
+
+    //                                 <div>
+    //                                     {
+    //                                         <Form>
+    //                                             <Row className="btm50 top30">
+    //                                                 <Col xs={11}>
+    //                                                 <PikaTextField
+    //                                                     type="email"
+    //                                                     placeholder="Alamat Email"
+    //                                                     handleChange={handleEmail}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                 {isValid || (
+    //                                                     <Alert variant="danger">{errorMsg}</Alert>
+    //                                                 )}
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+                                                
+    //                                             <Row>
+    //                                                 <Col xs={3}>
+    //                                                 <p className="linkWords">
+    //                                                     <div onClick={closeModal}>DAFTAR SAJA</div>
+    //                                                 </p>
+    //                                                 </Col>
+    //                                                 <Col xs={2} md={2}/>
+
+    //                                                 <Col xs={4}>
+    //                                                 <PikaButton
+    //                                                     title="SUBMIT"
+    //                                                     buttonStyle="greenPika"
+    //                                                     handleClick={openPinDialog}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                         </Form>
+    //                                     }
+                                                
+    //                                 </div>
+
+    //                                 {/* <div className='buttonSide-auth'>
+    //                                     <p className="linkWords" onClick={closeModal}>DAFTAR SAJA</p>
+    //                                     <div className="submitButton-auth" onClick={openPinDialog}>
+    //                                         <div className="wordsButton-auth">
+    //                                             SUBMIT
+    //                                         </div>
+    //                                     </div>
+    //                                 </div>
+
+    //                                 <div className='bottomSide-auth'>
+    //                                     <h4 className='countrySide-auth'>Indonesia</h4>
+    //                                     <div className='reqSide-auth'>
+    //                                         <h4 className='reqSideWord-auth'>Privasi</h4>
+    //                                         <h4 className='reqSideWord-auth'>Persyaratan</h4>
+    //                                     </div>
+    //                                 </div> */}
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         }
+    //         {showPinDialog()}
+    //     </div>
+    // );
 }
 
 export default LoginDialog

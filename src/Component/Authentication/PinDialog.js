@@ -116,52 +116,28 @@ const PinDialog = (props) => {
             var getLocation = JSON.parse(localStorage.getItem("longlat"))
             var latitude = getLocation.lat
             var longitude = getLocation.lon
-            props.onHidePin()
-            // if (Cookies.get("lastLink") !== undefined) {
-            //     var lastlink = JSON.parse(Cookies.get("lastLink")).value
+            // props.onHidePin()
+            if (Cookies.get("lastLink") !== undefined) {
+                var lastlink = JSON.parse(Cookies.get("lastLink")).value
             // }
             // window.location.reload();
-            // if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
-            //     window.location.href = JSON.parse(Cookies.get("lastLink")).value
-            // } else {
-            //     window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
-            // }
-            // } else {
-            // window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
-            // }
-        })
-            .then((res) => {
-                auth.isLogged = true;
-                auth.token = res.data.token;
-                auth.new_event = res.data.new_event;
-                auth.recommendation_status = res.data.recommendation_status;
-                auth.is_email_verified = res.data.is_email_verified;
-                auth.email = AuthRedu.dataLogin.email;
-                Cookies.set("auth", auth, { expires: 1 });
-                var getLocation = JSON.parse(localStorage.getItem("longlat"))
-                var latitude = getLocation.lat
-                var longitude = getLocation.lon
-                if (Cookies.get("lastLink") !== undefined) {
-                    var lastlink = JSON.parse(Cookies.get("lastLink")).value
-                    // }
-                    // window.location.reload();
-                    if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
-                        window.location.href = JSON.parse(Cookies.get("lastLink")).value
-                    } else {
-                        window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
-                    }
-                } else {
-                    window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
-                }
-            })
-            .catch((err) => {
-                if (err.response.data !== undefined) {
-                    alert(err.response.data.err_message)
-                    // props.DoneLoad()
-                    dispatch({ type: 'DONELOAD' });
-                }
-                setCaptchaCounter(captchaCounter + 1);
-            });
+            if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
+                window.location.href = JSON.parse(Cookies.get("lastLink")).value
+            } else {
+                window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
+            }
+            } else {
+            window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
+            }
+        })  
+        .catch((err) => {
+            if (err.response.data !== undefined) {
+                alert(err.response.data.err_message)
+                // props.DoneLoad()
+                dispatch({ type: 'DONELOAD' });
+            }
+            setCaptchaCounter(captchaCounter + 1);
+        });
     }
 
     const showConfirmPinDialog = () => {
@@ -232,95 +208,79 @@ const PinDialog = (props) => {
                                     </div>
 
                                     <div>
-                                        {
-                                            <Form>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                        <PinInput
-                                                        length={6}
-                                                        focus
-                                                        // disabled
-                                                        secret
-                                                        ref={p => (pin => p)}
-                                                        type="numeric"
-                                                        inputMode="number"
-                                                        // onChange={handlePin}
-                                                        onComplete={handlePin}
-                                                        />
-                                                        <div></div>
-                                                    </Col>
-                                                </Row>
-                                    {/* <Form>
-                                        <Row>
-                                            <Col xs={11}>
-                                                <PinInput
-                                                    className='pinInput'
+                                        
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
+                                                    <PinInput
                                                     length={6}
                                                     focus
                                                     // disabled
                                                     secret
                                                     ref={p => (pin => p)}
                                                     type="numeric"
+                                                    inputMode="number"
                                                     // onChange={handlePin}
                                                     onComplete={handlePin}
-                                                />
-                                                <div></div>
-                                            </Col>
-                                        </Row> */}
+                                                    />
+                                                    <div></div>
+                                                </Col>
+                                            </Row>
+                                        
 
-                                        <Row>
-                                            <Col xs={11}>
-                                                {isValid || (
-                                                    <Alert variant="danger">{errorMsg}</Alert>
-                                                )}
-                                            </Col>
-                                            <Col />
-                                        </Row>
+                                            <Row>
+                                                <Col xs={11}>
+                                                    {isValid || (
+                                                        <Alert variant="danger">{errorMsg}</Alert>
+                                                    )}
+                                                </Col>
+                                                <Col />
+                                            </Row>
 
-                                        <Row>
-                                            <Col xs={11}>
-                                                {
+                                            <Row>
+                                                <Col xs={11}>
+                                                    {
                                                     !AuthRedu.isLoginStep ?
+                                                    
+                                                    <div className='menu-category-auth btm30'>
+                                                        
+                                                    </div>
+                                                    :
+                                                    <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
+                                                        LUPA PIN ?
+                                                    </div>
+                                                    }
+                                                </Col>
+                                            </Row>
 
-                                                        <div className='menu-category-auth btm30'>
+                                        </Form>
 
+                                        <div className='buttonSide-auth'>
+                                            <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+                                            {
+                                                !AuthRedu.isLoginStep ?
+                                                    <div className="submitButton-auth" onClick={openConfirmPinDialog}>
+                                                        <div className="wordsButton-auth">
+                                                            NEXT
                                                         </div>
-                                                        :
-                                                        <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
-                                                            LUPA PIN ?
+                                                    </div>
+                                                    :
+                                                    <div className="submitButton-auth" onClick={handleLogin}>
+                                                        <div className="wordsButton-auth">
+                                                            SUBMIT
                                                         </div>
-                                                        }
-                                                    </Col>
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={4}>
-                                                    <p className="linkWords">
-                                                        <div onClick={closeModal}>KEMBALI</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col xs={3}/>
+                                                    </div>
+                                            }
+                                        </div>
 
-                                                    <Col xs={4}>
-                                                        {
-                                                        !AuthRedu.isLoginStep ? 
-                                                        <PikaButton
-                                                            title="NEXT"
-                                                            buttonStyle="greenPika"
-                                                            handleClick={openConfirmPinDialog}
-                                                        />
-                                                        :
-                                                        <PikaButton
-                                                            title="SUBMIT"
-                                                            buttonStyle="greenPika"
-                                                            handleClick={handleLogin}
-                                                        />
-                                                        }
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
-                                        }
+                                        <div className='bottomSide-auth'>
+                                            <h4 className='countrySide-auth'>Indonesia</h4>
+                                            <div className='reqSide-auth'>
+                                                <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                            </div>
+                                        </div>
+                                            
                                     </div>
                                 </div>
                             </div>
@@ -340,10 +300,8 @@ const PinDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
@@ -355,107 +313,80 @@ const PinDialog = (props) => {
                                     </div>
 
                                     <div>
-                                        {
-                                            <Form>
-                                                <Row className="mobile">
-                                                    <Col xs={11}>
-                                                        <PinInput
-                                                        // style={{width: "40px !important", height: "40px !important"}}
-                                                        length={6}
-                                                        focus
-                                                        // disabled
-                                                        secret
-                                                        ref={p => (pin => p)}
-                                                        type="numeric"
-                                                        inputMode="number"
-                                                        // onChange={handlePin}
-                                                        onComplete={handlePin}
-                                                        />
-                                                        <div></div>
-                                                    </Col>
-                                                </Row>
+                                        
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
+                                                    <PinInput
+                                                    length={6}
+                                                    focus
+                                                    // disabled
+                                                    secret
+                                                    ref={p => (pin => p)}
+                                                    type="numeric"
+                                                    inputMode="number"
+                                                    // onChange={handlePin}
+                                                    onComplete={handlePin}
+                                                    />
+                                                    <div></div>
+                                                </Col>
+                                            </Row>
+                                        
 
-                                                <Row>
-                                                    <Col xs={11}>
+                                            <Row>
+                                                <Col xs={11}>
                                                     {isValid || (
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
+                                                </Col>
+                                                <Col />
+                                            </Row>
 
-                                                <Row>
-                                                    <Col xs={11}>
-                                                        {
-                                                        !AuthRedu.isLoginStep ?
+                                            <Row>
+                                                <Col xs={11}>
+                                                    {
+                                                    !AuthRedu.isLoginStep ?
+                                                    
+                                                    <div className='menu-category-auth btm30'>
                                                         
-                                                        <div className='menu-category-auth btm30'>
-                                                            
-                                                        </div>
-                                                        :
-                                                        <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
-                                                            LUPA PIN ?
-                                                        </div>
-                                                        }
-                                                    </Col>
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={3}>
-                                                    <p className="linkWords">
-                                                        <div onClick={closeModal}>KEMBALI</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col xs={2} md={2}/>
+                                                    </div>
+                                                    :
+                                                    <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
+                                                        LUPA PIN ?
+                                                    </div>
+                                                    }
+                                                </Col>
+                                            </Row>
 
-                                                    <Col xs={4}>
-                                                        {
-                                                        !AuthRedu.isLoginStep ? 
-                                                        <PikaButton
-                                                            title="NEXT"
-                                                            buttonStyle="greenPika"
-                                                            handleClick={openConfirmPinDialog}
-                                                        />
-                                                        :
-                                                        <PikaButton
-                                                            title="SUBMIT"
-                                                            buttonStyle="greenPika"
-                                                            handleClick={handleLogin}
-                                                        />
-                                                        }
-                                                    </Col>
-                                                    <Col />
-                                                
-                                                    </Row>
-                                                </Form>
+                                        </Form>
+
+                                        <div className='buttonSide-auth'>
+                                            <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+                                            {
+                                                !AuthRedu.isLoginStep ?
+                                                    <div className="submitButton-auth" onClick={openConfirmPinDialog}>
+                                                        <div className="wordsButton-auth">
+                                                            NEXT
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className="submitButton-auth" onClick={handleLogin}>
+                                                        <div className="wordsButton-auth">
+                                                            SUBMIT
+                                                        </div>
+                                                    </div>
                                             }
                                         </div>
 
-                                    {/* <div className='buttonSide-auth'>
-                                        <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                                        {
-                                            !AuthRedu.isLoginStep ?
-                                                <div className="submitButton-auth" onClick={openConfirmPinDialog}>
-                                                    <div className="wordsButton-auth">
-                                                        NEXT
-                                                    </div>
-                                                </div>
-                                                :
-                                                <div className="submitButton-auth" onClick={handleLogin}>
-                                                    <div className="wordsButton-auth">
-                                                        SUBMIT
-                                                    </div>
-                                                </div>
-                                        }
-                                    </div>
-
-                                    <div className='bottomSide-auth'>
-                                        <h4 className='countrySide-auth'>Indonesia</h4>
-                                        <div className='reqSide-auth'>
-                                            <h4 className='reqSideWord-auth'>Privasi</h4>
-                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        <div className='bottomSide-auth'>
+                                            <h4 className='countrySide-auth'>Indonesia</h4>
+                                            <div className='reqSide-auth'>
+                                                <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                            </div>
                                         </div>
-                                    </div> */}
+                                            
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -466,6 +397,270 @@ const PinDialog = (props) => {
             {showForgotPinDialog()}
         </div>
     );
+
+    // return (
+    //     <div>
+    //         {
+    //             !isMobile ?
+    //             <div className='modalMenuDetail-auth' style={{
+    //                 display: props.isShowPin ? 'block' : 'none'
+    //             }} onClick={closeModal}
+    //             >
+    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+    //                     {
+    //                         <span className='iconClose-auth' onClick={closeModal}>
+    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
+    //                         </span>
+    //                     }
+
+    //                     <div className='menuDetail-layout-auth'>
+    //                         <div className='menuContain-all-auth'>
+    //                             <img src={pikappLogo} className='menuimg-auth' alt='' />
+
+    //                             <div className='menu-detail-auth'>
+    //                                 <div className='menu-name-auth'>
+    //                                     Ketik PIN Anda
+    //                                 </div>
+
+    //                                 <div className='mob-menu-category-auth'>
+    //                                     Ketik 6 digit nomor PIN Anda
+    //                                 </div>
+
+    //                                 <div>
+    //                                     {
+    //                                         <Form>
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                     <PinInput
+    //                                                     length={6}
+    //                                                     focus
+    //                                                     // disabled
+    //                                                     secret
+    //                                                     ref={p => (pin => p)}
+    //                                                     type="numeric"
+    //                                                     inputMode="number"
+    //                                                     // onChange={handlePin}
+    //                                                     onComplete={handlePin}
+    //                                                     />
+    //                                                     <div></div>
+    //                                                 </Col>
+    //                                             </Row>
+    //                                 {/* <Form>
+    //                                     <Row>
+    //                                         <Col xs={11}>
+    //                                             <PinInput
+    //                                                 className='pinInput'
+    //                                                 length={6}
+    //                                                 focus
+    //                                                 // disabled
+    //                                                 secret
+    //                                                 ref={p => (pin => p)}
+    //                                                 type="numeric"
+    //                                                 // onChange={handlePin}
+    //                                                 onComplete={handlePin}
+    //                                             />
+    //                                             <div></div>
+    //                                         </Col>
+    //                                     </Row> */}
+
+    //                                     <Row>
+    //                                         <Col xs={11}>
+    //                                             {isValid || (
+    //                                                 <Alert variant="danger">{errorMsg}</Alert>
+    //                                             )}
+    //                                         </Col>
+    //                                         <Col />
+    //                                     </Row>
+
+    //                                     <Row>
+    //                                         <Col xs={11}>
+    //                                             {
+    //                                                 !AuthRedu.isLoginStep ?
+
+    //                                                     <div className='menu-category-auth btm30'>
+
+    //                                                     </div>
+    //                                                     :
+    //                                                     <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
+    //                                                         LUPA PIN ?
+    //                                                     </div>
+    //                                                     }
+    //                                                 </Col>
+    //                                             </Row>
+                                                
+    //                                             <Row>
+    //                                                 <Col xs={4}>
+    //                                                 <p className="linkWords">
+    //                                                     <div onClick={closeModal}>KEMBALI</div>
+    //                                                 </p>
+    //                                                 </Col>
+    //                                                 <Col xs={3}/>
+
+    //                                                 <Col xs={4}>
+    //                                                     {
+    //                                                     !AuthRedu.isLoginStep ? 
+    //                                                     <PikaButton
+    //                                                         title="NEXT"
+    //                                                         buttonStyle="greenPika"
+    //                                                         handleClick={openConfirmPinDialog}
+    //                                                     />
+    //                                                     :
+    //                                                     <PikaButton
+    //                                                         title="SUBMIT"
+    //                                                         buttonStyle="greenPika"
+    //                                                         handleClick={handleLogin}
+    //                                                     />
+    //                                                     }
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                         </Form>
+    //                                     }
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //             :
+    //             <div className='modalMenuDetail-auth' style={{
+    //                 display: props.isShowPin ? 'block' : 'none'
+    //             }} onClick={closeModal}
+    //             >
+    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+    //                     {
+    //                         <span className='iconClose-auth' onClick={closeModal}>
+    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
+    //                         </span>
+    //                     }
+
+    //                     <div className='menuDetail-layout-auth'>
+    //                         <div className='menuContain-left-auth'>
+    //                             <div className='menuBanner-auth'>
+    //                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
+    //                             </div>
+
+    //                             <div className='menu-detail-auth'>
+    //                                 <div className='menu-name-auth'>
+    //                                     Ketik PIN Anda
+    //                                 </div>
+
+    //                                 <div className='mob-menu-category-auth'>
+    //                                     Ketik 6 digit nomor PIN Anda
+    //                                 </div>
+
+    //                                 <div>
+    //                                     {
+    //                                         <Form>
+    //                                             <Row className="mobile">
+    //                                                 <Col xs={11}>
+    //                                                     <PinInput
+    //                                                     // style={{width: "40px !important", height: "40px !important"}}
+    //                                                     length={6}
+    //                                                     focus
+    //                                                     // disabled
+    //                                                     secret
+    //                                                     ref={p => (pin => p)}
+    //                                                     type="numeric"
+    //                                                     inputMode="number"
+    //                                                     // onChange={handlePin}
+    //                                                     onComplete={handlePin}
+    //                                                     />
+    //                                                     <div></div>
+    //                                                 </Col>
+    //                                             </Row>
+
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                 {isValid || (
+    //                                                     <Alert variant="danger">{errorMsg}</Alert>
+    //                                                 )}
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                     {
+    //                                                     !AuthRedu.isLoginStep ?
+                                                        
+    //                                                     <div className='menu-category-auth btm30'>
+                                                            
+    //                                                     </div>
+    //                                                     :
+    //                                                     <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
+    //                                                         LUPA PIN ?
+    //                                                     </div>
+    //                                                     }
+    //                                                 </Col>
+    //                                             </Row>
+                                                
+    //                                             <Row>
+    //                                                 <Col xs={3}>
+    //                                                 <p className="linkWords">
+    //                                                     <div onClick={closeModal}>KEMBALI</div>
+    //                                                 </p>
+    //                                                 </Col>
+    //                                                 <Col xs={2} md={2}/>
+
+    //                                                 <Col xs={4}>
+    //                                                     {
+    //                                                     !AuthRedu.isLoginStep ? 
+    //                                                     <PikaButton
+    //                                                         title="NEXT"
+    //                                                         buttonStyle="greenPika"
+    //                                                         handleClick={openConfirmPinDialog}
+    //                                                     />
+    //                                                     :
+    //                                                     <PikaButton
+    //                                                         title="SUBMIT"
+    //                                                         buttonStyle="greenPika"
+    //                                                         handleClick={handleLogin}
+    //                                                     />
+    //                                                     }
+    //                                                 </Col>
+    //                                                 <Col />
+                                                
+    //                                                 </Row>
+    //                                             </Form>
+    //                                         }
+    //                                     </div>
+
+    //                                 {/* <div className='buttonSide-auth'>
+    //                                     <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+    //                                     {
+    //                                         !AuthRedu.isLoginStep ?
+    //                                             <div className="submitButton-auth" onClick={openConfirmPinDialog}>
+    //                                                 <div className="wordsButton-auth">
+    //                                                     NEXT
+    //                                                 </div>
+    //                                             </div>
+    //                                             :
+    //                                             <div className="submitButton-auth" onClick={handleLogin}>
+    //                                                 <div className="wordsButton-auth">
+    //                                                     SUBMIT
+    //                                                 </div>
+    //                                             </div>
+    //                                     }
+    //                                 </div>
+
+    //                                 <div className='bottomSide-auth'>
+    //                                     <h4 className='countrySide-auth'>Indonesia</h4>
+    //                                     <div className='reqSide-auth'>
+    //                                         <h4 className='reqSideWord-auth'>Privasi</h4>
+    //                                         <h4 className='reqSideWord-auth'>Persyaratan</h4>
+    //                                     </div>
+    //                                 </div> */}
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         }
+    //         {showConfirmPinDialog()}
+    //         {showForgotPinDialog()}
+    //     </div>
+    // );
 }
 
 export default PinDialog

@@ -137,7 +137,7 @@ const RegisterDialog = (props) => {
         if (phone.startsWith("08")) {
             return true;
         } else {
-            setErrorMsg("Name cannot be empty.");
+            setErrorMsg("Phone not valid.");
             return false;
         }
     };
@@ -210,29 +210,26 @@ const RegisterDialog = (props) => {
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
                                                     </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={4}>
-                                                    <p className="linkWords">
-                                                        {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
-                                                        <div onClick={openLoginDialog}>LOGIN SAJA</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col xs={3}/>
-                                                    
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="SUBMIT"
-                                                        buttonStyle="greenPika"
-                                                        handleClick={openPinDialog}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
+                                                <Col />
+                                            </Row>
                                         
+                                            <div className='buttonSide-auth'>
+                                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+                                                <div className="submitButton-auth" onClick={openPinDialog}>
+                                                    <div className="wordsButton-auth">
+                                                        NEXT
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className='bottomSide-auth'>
+                                                <h4 className='countrySide-auth'>Indonesia</h4>
+                                                <div className='reqSide-auth'>
+                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                                </div>
+                                            </div>
+                                        </Form>
                                     </div>
                                 </div>
                             </div>
@@ -252,106 +249,56 @@ const RegisterDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
                                         Selangkah Lagi Sebelum Memesan!
                                     </div>
 
-                                    <div>
-                                        {
-                                            <Form>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="text"
-                                                        placeholder="Nama Lengkap"
-                                                        handleChange={handleName}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="tel"
-                                                        placeholder="Nomor Handphone (Whatsapp)"
-                                                        handleChange={handlePhone}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="email"
-                                                        placeholder="Alamat Email"
-                                                        handleChange={handleEmail}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
+                                    <div className='textfield-auth'>
+                                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
+                                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
+                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
 
-                                                <Row>
-                                                    <Col xs={11}>
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
                                                     {!isCaptcha || (
                                                         <ReCAPTCHA sitekey="asd" onChange={onChange} />
                                                     )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
+                                                </Col>
+                                                <Col />
+                                            </Row>
 
-                                                <Row>
-                                                    <Col xs={6}>
+                                            <Row>
+                                                <Col xs={6}>
                                                     {isValid || (
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
                                                     </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={3}>
-                                                    <p className="linkWords">
-                                                        {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
-                                                        <div onClick={openLoginDialog}>LOGIN SAJA</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col xs={2} md={2}/>
-
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="SUBMIT"
-                                                        buttonStyle="greenPika"
-                                                        handleClick={openPinDialog}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
-                                        }
-                                    </div>
-
-                                    {/* <div className='buttonSide-auth'>
-                                        <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
-                                        <div className="submitButton-auth" onClick={openPinDialog}>
-                                            <div className="wordsButton-auth">
-                                                NEXT
+                                                <Col />
+                                            </Row>
+                                        
+                                            <div className='buttonSide-auth'>
+                                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+                                                <div className="submitButton-auth" onClick={openPinDialog}>
+                                                    <div className="wordsButton-auth">
+                                                        NEXT
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <div className='bottomSide-auth'>
-                                        <h4 className='countrySide-auth'>Indonesia</h4>
-                                        <div className='reqSide-auth'>
-                                            <h4 className='reqSideWord-auth'>Privasi</h4>
-                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                        </div>
-                                    </div> */}
+                                            <div className='bottomSide-auth'>
+                                                <h4 className='countrySide-auth'>Indonesia</h4>
+                                                <div className='reqSide-auth'>
+                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                                </div>
+                                            </div>
+                                        </Form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -362,6 +309,204 @@ const RegisterDialog = (props) => {
             {showPinDialog()}
         </div>
     );
+
+    // return (
+    //     <div>
+    //         {
+    //             !isMobile ?
+    //             <div className='modalMenuDetail-auth' style={{
+    //                 display: props.isShowRegister ? 'block' : 'none'
+    //             }} onClick={closeModal}
+    //             >
+    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+    //                     {
+    //                         <span className='iconClose-auth' onClick={closeModal}>
+    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
+    //                         </span>
+    //                     }
+
+    //                     <div className='menuDetail-layout-auth'>
+    //                         <div className='menuContain-all-auth'>
+    //                             <img src={pikappLogo} className='menuimg-auth' alt='' />
+
+    //                             <div className='menu-detail-auth'>
+    //                                 <div className='menu-name-auth'>
+    //                                     Selangkah Lagi Sebelum Memesan!
+    //                                 </div>
+
+    //                                 <div className='textfield-auth'>
+    //                                     <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
+    //                                     <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
+    //                                     <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+
+    //                                     <Form>
+    //                                         <Row>
+    //                                             <Col xs={11}>
+    //                                                 {!isCaptcha || (
+    //                                                     <ReCAPTCHA sitekey="asd" onChange={onChange} />
+    //                                                 )}
+    //                                             </Col>
+    //                                             <Col />
+    //                                         </Row>
+
+    //                                         <Row>
+    //                                             <Col xs={6}>
+    //                                                 {isValid || (
+    //                                                     <Alert variant="danger">{errorMsg}</Alert>
+    //                                                 )}
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+                                                
+    //                                             <Row>
+    //                                                 <Col xs={4}>
+    //                                                 <p className="linkWords">
+    //                                                     {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
+    //                                                     <div onClick={openLoginDialog}>LOGIN SAJA</div>
+    //                                                 </p>
+    //                                                 </Col>
+    //                                                 <Col xs={3}/>
+                                                    
+    //                                                 <Col xs={4}>
+    //                                                 <PikaButton
+    //                                                     title="SUBMIT"
+    //                                                     buttonStyle="greenPika"
+    //                                                     handleClick={openPinDialog}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                         </Form>
+                                        
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //             :
+    //             <div className='modalMenuDetail-auth' style={{
+    //                 display: props.isShowRegister ? 'block' : 'none'
+    //             }} onClick={closeModal}
+    //             >
+    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+    //                     {
+    //                         <span className='iconClose-auth' onClick={closeModal}>
+    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
+    //                         </span>
+    //                     }
+
+    //                     <div className='menuDetail-layout-auth'>
+    //                         <div className='menuContain-all-auth'>
+    //                             <div className='menuBanner-auth'>
+    //                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
+    //                             </div>
+
+    //                             <div className='menu-detail-auth'>
+    //                                 <div className='menu-name-auth'>
+    //                                     Selangkah Lagi Sebelum Memesan!
+    //                                 </div>
+
+    //                                 <div>
+    //                                     {
+    //                                         <Form>
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                 <PikaTextField
+    //                                                     type="text"
+    //                                                     placeholder="Nama Lengkap"
+    //                                                     handleChange={handleName}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                 <PikaTextField
+    //                                                     type="tel"
+    //                                                     placeholder="Nomor Handphone (Whatsapp)"
+    //                                                     handleChange={handlePhone}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                 <PikaTextField
+    //                                                     type="email"
+    //                                                     placeholder="Alamat Email"
+    //                                                     handleChange={handleEmail}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+
+    //                                             <Row>
+    //                                                 <Col xs={11}>
+    //                                                 {!isCaptcha || (
+    //                                                     <ReCAPTCHA sitekey="asd" onChange={onChange} />
+    //                                                 )}
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+
+    //                                             <Row>
+    //                                                 <Col xs={6}>
+    //                                                 {isValid || (
+    //                                                     <Alert variant="danger">{errorMsg}</Alert>
+    //                                                 )}
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+                                                
+    //                                             <Row>
+    //                                                 <Col xs={3}>
+    //                                                 <p className="linkWords">
+    //                                                     {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
+    //                                                     <div onClick={openLoginDialog}>LOGIN SAJA</div>
+    //                                                 </p>
+    //                                                 </Col>
+    //                                                 <Col xs={2} md={2}/>
+
+    //                                                 <Col xs={4}>
+    //                                                 <PikaButton
+    //                                                     title="SUBMIT"
+    //                                                     buttonStyle="greenPika"
+    //                                                     handleClick={openPinDialog}
+    //                                                 />
+    //                                                 </Col>
+    //                                                 <Col />
+    //                                             </Row>
+    //                                         </Form>
+    //                                     }
+    //                                 </div>
+
+    //                                 {/* <div className='buttonSide-auth'>
+    //                                     <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+    //                                     <div className="submitButton-auth" onClick={openPinDialog}>
+    //                                         <div className="wordsButton-auth">
+    //                                             NEXT
+    //                                         </div>
+    //                                     </div>
+    //                                 </div> */}
+
+    //                                 <div className='bottomSide-auth'>
+    //                                     <h4 className='countrySide-auth'>Indonesia</h4>
+    //                                     <div className='reqSide-auth'>
+    //                                         <h4 className='reqSideWord-auth'>Privasi</h4>
+    //                                         <h4 className='reqSideWord-auth'>Persyaratan</h4>
+    //                                     </div>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         }
+    //         {showLoginDialog()}
+    //         {showPinDialog()}
+    //     </div>
+    // );
 }
 
 export default RegisterDialog
