@@ -57,11 +57,11 @@ const LoginDialog = (props) => {
     }
 
     const showPinDialog = () => {
-        if(pinDialog) {
+        if (pinDialog) {
             return (
-                <PinDialog 
+                <PinDialog
                     isShowPin={pinDialog}
-                    onHidePin={() =>setPin(false)}
+                    onHidePin={() => setPin(false)}
                 />
             )
         }
@@ -96,58 +96,43 @@ const LoginDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
                                         Selangkah Lagi Sebelum Memesan!
                                     </div>
 
-                                    <div>
-                                        {
-                                            <Form>
-                                                <Row className="btm50 top30">
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="email"
-                                                        placeholder="Alamat Email"
-                                                        handleChange={handleEmail}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-
-                                                <Row>
-                                                    <Col xs={11}>
+                                    <div className='textfield-auth'>
+                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
                                                     {isValid || (
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={5}>
-                                                    <p className="linkWords">
-                                                        <div onClick={closeModal}>DAFTAR SAJA</div>
-                                                    </p>
-                                                    </Col>
-                                                    <Col />
+                                                </Col>
+                                                <Col />
+                                            </Row>
+                                        </Form>
+                                    </div>
 
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="SUBMIT"
-                                                        buttonStyle="greenPika"
-                                                        handleClick={openPinDialog}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
-                                        }
+                                    <div className='buttonSide-auth'>
+                                        <p className="linkWords" onClick={closeModal}>DAFTAR SAJA</p>
+                                        <div className="submitButton-auth" onClick={openPinDialog}>
+                                            <div className="wordsButton-auth">
+                                                SUBMIT
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='bottomSide-auth'>
+                                        <h4 className='countrySide-auth'>Indonesia</h4>
+                                        <div className='reqSide-auth'>
+                                            <h4 className='reqSideWord-auth'>Privasi</h4>
+                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

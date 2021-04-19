@@ -29,14 +29,15 @@
 .modal-content-menudetail-auth {
     background-color: white;
     position: relative;
-    width: 80vw; /* Width in proportion to its parent container*/
-    max-width: 968px; /* Max width where it stops expanding */
+    max-width: 588px; /* Max width where it stops expanding */
+    width: auto; /* Width in proportion to its parent container*/
+    min-height: 474px;
+    max-height: 573px; /* Max Height where it stops expanding */
     height: 90vh; /* Height in proportion to its parent container*/
-    max-height: 655px; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */
     margin-top: 5vh;
     border: none;
-    border-radius: 50px; /* Optional. Rounds container corners */
+    border-radius: 20px; /* Optional. Rounds container corners */
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
     animation-name: animatetop;
@@ -51,15 +52,16 @@
 .iconClose-auth {
     display: block;
     position: absolute;
-    top: 30px;
-    left: 41px;
+    top: 0;
+    right: 0;
+    padding: 30px;
     z-index: 1;
     cursor: pointer;
 }
 
 .closeLogo-auth {
-    height: 22px;
-    width: 22px;
+    height: 21px;
+    width: 21px;
 }
 
 .iconBack {
@@ -85,29 +87,17 @@
     padding: 0;
 }
 
-.menuContain-left-auth {
-    //menu image and detail section
+.menuContain-all-auth {
     width: 100%;
     height: 100%;
     display: flex;
-    // justify-content: space-between;
     flex-direction: column;
-    padding: 61px 25px 52px 39px;
-    box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.05);
-}
-
-.menuBanner-auth {
-    width: 250px;
-    height: 80px;
-    border-radius: 30px;
-    overflow: hidden;
+    padding: 18px 31px 37px 33px;
 }
 
 .menuimg-auth {
-    width: 60%;
-    height: 60%;
-    object-fit: cover;
-    border-radius: 30px;
+    width: 126px;
+    height: 50px;
 }
 
 .menu-detail-auth {
@@ -115,44 +105,96 @@
     flex-direction: column;
     margin: 0;
     padding: 0;
-    margin-top: 13px;
-}
-
-.menu-star-auth {
-    display: flex;
-    justify-content: center;
-    height: 32px;
-    padding-top: 5px;
-    max-width: 71px;
-    background-color: #eeeeee;
-    border-radius: 20px;
-    margin-bottom: 12px;
-}
-
-.menu-star-img-auth {
-    width: 20px;
-    height: 20px;
-}
-
-.menu-star-rating-auth {
-    font-family: "SF-Compact-Rounded-Medium", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    font-size: 20px;
-    color: #000000;
-    text-transform: capitalize;
-    margin-left: 5px;
+    margin-top: 23px;
 }
 
 .menu-name-auth {
-    max-width: 300px;
+    max-width: 600px;
     font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
     text-transform: capitalize;
     color: #000000;
-    line-height: 30px;
+    line-height: 20px;
+}
+
+.textfield-auth {
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+}
+
+.textfieldinput-auth {
+    border: 1px solid #c4c4c4;
+    height: 54px;
+    border-radius: 8px;
+    margin-bottom: 21px;
+    padding-left: 15px;
+    outline: none;
+}
+
+.buttonSide-auth {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.submitButton-auth {
+    display: flex;
+    width: 176px;
+    background-color: #4bb7ac;
+    color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
+    cursor: pointer;
+}
+
+.wordsButton-auth {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    text-transform: capitalize;
+    color: #ffffff;
+    text-align: center;
+}
+
+.bottomSide-auth {
+    display: flex;
+    max-width: 524px;
+    width: 100%;
+    position: absolute;
+    justify-content: space-between;
+    bottom: 37px;
+    // margin-top: 58px;
+}
+
+.countrySide-auth {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    text-transform: capitalize;
+    color: #111111;
+}
+
+.reqSide-auth {
+    display: flex;
+    justify-content: space-between;
+    width: 176px;
+}
+
+.reqSideWord-auth {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    text-transform: capitalize;
+    color: #767676;
 }
 
 .menu-category-auth {
@@ -177,77 +219,6 @@
     text-transform: capitalize;
     color: #000000;
     margin-top: 55px;
-}
-
-.menuContain-right-auth {
-    width: 53%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.menuDesc-auth {
-    //menu description section
-    position: relative;
-    height: calc(100% - 133px);
-    padding: 48px 40px 0px 35px;
-}
-
-.menuDesc-title-auth {
-    width: 100%;
-    font-family: "SF-Compact-Rounded-Semibold", sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 28px;
-    line-height: 20px;
-    letter-spacing: 0.05em;
-    text-transform: capitalize;
-    color: #111111;
-}
-
-.menuDesc-content-auth {
-    width: 100%;
-    font-family: "SF-Compact-Rounded", sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 23px;
-    line-height: 30px;
-    text-transform: capitalize;
-    color: #767676;
-    margin-top: 8px;
-}
-
-.menuButton-auth {
-    //menu button bottom section
-    // position: sticky;
-    // bottom: 0;
-    // right: 0;
-    height: 133px;
-    padding: 17px 23px 19px 18px;
-    box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.1);
-}
-
-.openMenuSelection-auth {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 97px;
-    background-color: #4bb7ac;
-    width: auto;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-.add-words-auth {
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 28px;
-    line-height: 20px;
-    text-transform: capitalize;
-    color: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -459,7 +430,7 @@
 }
 
 .pincode-input-text {
-    // background-color: #ffff !important; 
+    // background-color: #ffff !important;
     border: 1.5px solid !important;
     border-radius: 10px;
     border-color: #9e9e9e !important;
@@ -511,6 +482,7 @@
     text-transform: capitalize;
     color: #4bb7ac;
     margin-top: 10px;
+    cursor: pointer;
 }
 
 .menu-pin {
