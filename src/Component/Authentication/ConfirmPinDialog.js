@@ -49,11 +49,11 @@ const ConfirmPinDialog = (props) => {
     }
 
     const showLoginDialog = () => {
-        if(loginDialog) {
+        if (loginDialog) {
             return (
-                <LoginDialog 
+                <LoginDialog
                     isShowLogin={loginDialog}
-                    onHideLogin={() =>setLogin(false)}
+                    onHideLogin={() => setLogin(false)}
                 />
             )
         }
@@ -65,10 +65,10 @@ const ConfirmPinDialog = (props) => {
 
     const checkConfirmPin = () => {
         if (AuthRedu.dataRegister.pin === confirmPin) {
-          return true;
+            return true;
         } else {
-          setErrorMsg("PIN does not match.");
-          return false;
+            setErrorMsg("PIN does not match.");
+            return false;
         }
     };
 
@@ -83,7 +83,7 @@ const ConfirmPinDialog = (props) => {
 
         const data = {
             full_name: AuthRedu.dataRegister.full_name,
-            password : confirmPin,
+            password: confirmPin,
             phone_number: AuthRedu.dataRegister.phone_number,
             email: AuthRedu.dataRegister.email,
             gender: "MALE",
@@ -95,31 +95,31 @@ const ConfirmPinDialog = (props) => {
         uuid = uuid.replaceAll("-", "");
         const date = new Date().toISOString();
         axios(address + "auth/register", {
-        headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-        },
-        method: "POST",
-        data: data,
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId,
+            },
+            method: "POST",
+            data: data,
         })
-        .then((res) => {
-            alert("Register berhasil.");
-            handleLogin();
-            // window.location.reload();
-            // this.handleLogin()
-            // openLoginDialog();
-        })
-        .catch((err) => {
-            if (err.response.data !== undefined) {
-            alert(err.response.data.err_message)
-                // props.DoneLoad()
-                dispatch({ type: 'DONELOAD' });
-            }
-            // this.setState({ captchaCounter: this.state.captchaCounter + 1 });
-            setCaptchaCounter(captchaCounter + 1);
-        });
+            .then((res) => {
+                alert("Register berhasil.");
+                handleLogin();
+                // window.location.reload();
+                // this.handleLogin()
+                // openLoginDialog();
+            })
+            .catch((err) => {
+                if (err.response.data !== undefined) {
+                    alert(err.response.data.err_message)
+                    // props.DoneLoad()
+                    dispatch({ type: 'DONELOAD' });
+                }
+                // this.setState({ captchaCounter: this.state.captchaCounter + 1 });
+                setCaptchaCounter(captchaCounter + 1);
+            });
 
     }
 
@@ -129,16 +129,16 @@ const ConfirmPinDialog = (props) => {
             pin: confirmPin,
             fcm_token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
         };
-        
+
         const auth = {
             isLogged: false,
             token: "",
             new_event: true,
             recommendation_status: false,
             email: "",
-            is_email_verified : true
+            is_email_verified: true
         };
-        
+
         let uuid = uuidV4();
         uuid = uuid.replaceAll("-", "");
         const date = new Date().toISOString();
@@ -177,16 +177,40 @@ const ConfirmPinDialog = (props) => {
             //     window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
             // }
         })
-        .catch((err) => {
-            if (err.response.data !== undefined) {
-                alert(err.response.data.err_message)
-                // props.DoneLoad()
-                dispatch({ type: 'DONELOAD' });
-            }
-            setCaptchaCounter(captchaCounter + 1);
-        });
+            .then((res) => {
+                auth.isLogged = true;
+                auth.token = res.data.token;
+                auth.new_event = res.data.new_event;
+                auth.recommendation_status = res.data.recommendation_status;
+                auth.is_email_verified = res.data.is_email_verified;
+                auth.email = AuthRedu.dataRegister.email;
+                Cookies.set("auth", auth, { expires: 1 });
+                var getLocation = JSON.parse(localStorage.getItem("longlat"))
+                var latitude = getLocation.lat
+                var longitude = getLocation.lon
+                if (Cookies.get("lastLink") !== undefined) {
+                    var lastlink = JSON.parse(Cookies.get("lastLink")).value;
+                    // }
+                    // window.location.reload();
+                    if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
+                        window.location.href = JSON.parse(Cookies.get("lastLink")).value
+                    } else {
+                        window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
+                    }
+                } else {
+                    window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
+                }
+            })
+            .catch((err) => {
+                if (err.response.data !== undefined) {
+                    alert(err.response.data.err_message)
+                    // props.DoneLoad()
+                    dispatch({ type: 'DONELOAD' });
+                }
+                setCaptchaCounter(captchaCounter + 1);
+            });
 
-    } 
+    }
 
 
     return (
@@ -205,10 +229,8 @@ const ConfirmPinDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
@@ -343,9 +365,53 @@ const ConfirmPinDialog = (props) => {
                                                     />
                                                     </Col>
                                                     <Col />
+
                                                 </Row>
                                             </Form>
                                         }
+                                    {/* <Form>
+                                        <Row>
+                                            <Col xs={11}>
+                                                <PinInput
+                                                    className='pinInput'
+                                                    length={6}
+                                                    focus
+                                                    // disabled
+                                                    secret
+                                                    ref={p => (pin => p)}
+                                                    type="numeric"
+                                                    onChange={handleConfirmPin}
+                                                />
+                                                <div></div>
+                                            </Col>
+                                        </Row>
+
+                                        <Row>
+                                            <Col xs={11}>
+                                                {isValid || (
+                                                    <Alert variant="danger">{errorMsg}</Alert>
+                                                )}
+                                            </Col>
+                                            <Col />
+                                        </Row>
+                                    </Form>
+
+                                    <div className='buttonSide-auth'>
+                                        <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+                                        <div className="submitButton-auth" onClick={handleRegister}>
+                                            <div className="wordsButton-auth">
+                                                SUBMIT
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='bottomSide-auth'>
+                                        <h4 className='countrySide-auth'>Indonesia</h4>
+                                        <div className='reqSide-auth'>
+                                            <h4 className='reqSideWord-auth'>Privasi</h4>
+                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        </div>
+                                    </div> */}
                                     </div>
                                 </div>
                             </div>

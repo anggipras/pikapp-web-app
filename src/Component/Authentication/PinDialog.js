@@ -60,7 +60,7 @@ const PinDialog = (props) => {
             full_name: AuthRedu.dataRegister.full_name,
             phone_number: AuthRedu.dataRegister.phone_number,
             email: AuthRedu.dataRegister.email,
-            pin : pin
+            pin: pin
         };
 
         dispatch({ type: 'REGISTER', payload: data });
@@ -89,9 +89,9 @@ const PinDialog = (props) => {
             new_event: true,
             recommendation_status: false,
             email: "",
-            is_email_verified : true
+            is_email_verified: true
         };
-        
+
         let uuid = uuidV4();
         uuid = uuid.replaceAll("-", "");
         const date = new Date().toISOString();
@@ -130,22 +130,46 @@ const PinDialog = (props) => {
             // window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
             // }
         })
-        .catch((err) => {
-            if (err.response.data !== undefined) {
-                alert(err.response.data.err_message)
-                // props.DoneLoad()
-                dispatch({ type: 'DONELOAD' });
-            }
-            setCaptchaCounter(captchaCounter + 1);
-        });
+            .then((res) => {
+                auth.isLogged = true;
+                auth.token = res.data.token;
+                auth.new_event = res.data.new_event;
+                auth.recommendation_status = res.data.recommendation_status;
+                auth.is_email_verified = res.data.is_email_verified;
+                auth.email = AuthRedu.dataLogin.email;
+                Cookies.set("auth", auth, { expires: 1 });
+                var getLocation = JSON.parse(localStorage.getItem("longlat"))
+                var latitude = getLocation.lat
+                var longitude = getLocation.lon
+                if (Cookies.get("lastLink") !== undefined) {
+                    var lastlink = JSON.parse(Cookies.get("lastLink")).value
+                    // }
+                    // window.location.reload();
+                    if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
+                        window.location.href = JSON.parse(Cookies.get("lastLink")).value
+                    } else {
+                        window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
+                    }
+                } else {
+                    window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
+                }
+            })
+            .catch((err) => {
+                if (err.response.data !== undefined) {
+                    alert(err.response.data.err_message)
+                    // props.DoneLoad()
+                    dispatch({ type: 'DONELOAD' });
+                }
+                setCaptchaCounter(captchaCounter + 1);
+            });
     }
 
     const showConfirmPinDialog = () => {
-        if(confirmPinDialog) {
+        if (confirmPinDialog) {
             return (
-                <ConfirmPinDialog 
+                <ConfirmPinDialog
                     isShowConfirmPin={confirmPinDialog}
-                    onHideConfirmPin={() =>setConfirmPin(false)}
+                    onHideConfirmPin={() => setConfirmPin(false)}
                 />
             )
         }
@@ -156,11 +180,11 @@ const PinDialog = (props) => {
     }
 
     const showForgotPinDialog = () => {
-        if(forgotPinDialog) {
+        if (forgotPinDialog) {
             return (
-                <ForgotPin 
+                <ForgotPin
                     isShowForgotPin={forgotPinDialog}
-                    onHideForgotPin={() =>setForgotPin(false)}
+                    onHideForgotPin={() => setForgotPin(false)}
                 />
             )
         }
@@ -172,10 +196,10 @@ const PinDialog = (props) => {
 
     const checkPin = () => {
         if (pin.length < 6) {
-          setErrorMsg("PIN must be within 6 digit numeric.");
-          return false;
+            setErrorMsg("PIN must be within 6 digit numeric.");
+            return false;
         } else {
-          return true;
+            return true;
         }
     };
 
@@ -195,10 +219,8 @@ const PinDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
@@ -228,23 +250,40 @@ const PinDialog = (props) => {
                                                         <div></div>
                                                     </Col>
                                                 </Row>
+                                    {/* <Form>
+                                        <Row>
+                                            <Col xs={11}>
+                                                <PinInput
+                                                    className='pinInput'
+                                                    length={6}
+                                                    focus
+                                                    // disabled
+                                                    secret
+                                                    ref={p => (pin => p)}
+                                                    type="numeric"
+                                                    // onChange={handlePin}
+                                                    onComplete={handlePin}
+                                                />
+                                                <div></div>
+                                            </Col>
+                                        </Row> */}
 
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
+                                        <Row>
+                                            <Col xs={11}>
+                                                {isValid || (
+                                                    <Alert variant="danger">{errorMsg}</Alert>
+                                                )}
+                                            </Col>
+                                            <Col />
+                                        </Row>
 
-                                                <Row>
-                                                    <Col xs={11}>
-                                                        {
-                                                        !AuthRedu.isLoginStep ?
-                                                        
+                                        <Row>
+                                            <Col xs={11}>
+                                                {
+                                                    !AuthRedu.isLoginStep ?
+
                                                         <div className='menu-category-auth btm30'>
-                                                            
+
                                                         </div>
                                                         :
                                                         <div className='menu-category-auth btm30' onClick={openForgotPinDialog}>
@@ -386,10 +425,37 @@ const PinDialog = (props) => {
                                                         }
                                                     </Col>
                                                     <Col />
-                                                </Row>
-                                            </Form>
+                                                
+                                                    </Row>
+                                                </Form>
+                                            }
+                                        </div>
+
+                                    {/* <div className='buttonSide-auth'>
+                                        <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+                                        {
+                                            !AuthRedu.isLoginStep ?
+                                                <div className="submitButton-auth" onClick={openConfirmPinDialog}>
+                                                    <div className="wordsButton-auth">
+                                                        NEXT
+                                                    </div>
+                                                </div>
+                                                :
+                                                <div className="submitButton-auth" onClick={handleLogin}>
+                                                    <div className="wordsButton-auth">
+                                                        SUBMIT
+                                                    </div>
+                                                </div>
                                         }
                                     </div>
+
+                                    <div className='bottomSide-auth'>
+                                        <h4 className='countrySide-auth'>Indonesia</h4>
+                                        <div className='reqSide-auth'>
+                                            <h4 className='reqSideWord-auth'>Privasi</h4>
+                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

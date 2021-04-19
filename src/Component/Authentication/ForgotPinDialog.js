@@ -60,16 +60,14 @@ const ForgotPinDialog = (props) => {
                 >
                     <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
                         {
-                            <span className='iconClose' onClick={closeModal}>
-                                <img src={closeLogo} className='closeLogo' alt='' />
+                            <span className='iconClose-auth' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo-auth' alt='' />
                             </span>
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>

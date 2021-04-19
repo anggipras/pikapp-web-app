@@ -52,11 +52,11 @@ const RegisterDialog = (props) => {
     }
 
     const showLoginDialog = () => {
-        if(loginDialog) {
+        if (loginDialog) {
             return (
-                <LoginDialog 
+                <LoginDialog
                     isShowLogin={loginDialog}
-                    onHideLogin={() =>setLogin(false)}
+                    onHideLogin={() => setLogin(false)}
                 />
             )
         }
@@ -75,7 +75,7 @@ const RegisterDialog = (props) => {
             setIsValid(false);
             return;
         }
-    
+
         // this.props.LoadingButton()
         setIsValid(true);
 
@@ -92,11 +92,11 @@ const RegisterDialog = (props) => {
     }
 
     const showPinDialog = () => {
-        if(pinDialog) {
+        if (pinDialog) {
             return (
-                <PinDialog 
+                <PinDialog
                     isShowPin={pinDialog}
-                    onHidePin={() =>setPin(false)}
+                    onHidePin={() => setPin(false)}
                 />
             )
         }
@@ -126,44 +126,44 @@ const RegisterDialog = (props) => {
 
     const checkName = () => {
         if (name.length > 0) {
-          return true;
+            return true;
         } else {
-          setErrorMsg("Name cannot be empty.");
-          return false;
+            setErrorMsg("Name cannot be empty.");
+            return false;
         }
     };
 
     const checkPhone = () => {
         if (phone.startsWith("08")) {
-          return true;
+            return true;
         } else {
-          setErrorMsg("Name cannot be empty.");
-          return false;
+            setErrorMsg("Name cannot be empty.");
+            return false;
         }
     };
 
     const handleRegister = (e) => {
         if (checkEmail() === false) {
-          setIsValid(false);
-          return;
+            setIsValid(false);
+            return;
         }
         if (checkName === false) {
-          setIsValid(false);
-          return;
+            setIsValid(false);
+            return;
         }
         if (checkPhone === false) {
-          setIsValid(false);
-          return;
+            setIsValid(false);
+            return;
         }
-    
+
         // this.props.LoadingButton()
         setIsValid(true);
-        
+
     };
 
     const onChange = (value) => {
         console.log(value);
-      }
+    }
 
     return (
         <div>
@@ -181,61 +181,31 @@ const RegisterDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
                                         Selangkah Lagi Sebelum Memesan!
                                     </div>
 
-                                    <div>
-                                        {
-                                            <Form>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="text"
-                                                        placeholder="Nama Lengkap"
-                                                        handleChange={handleName}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="tel"
-                                                        placeholder="Nomor Handphone (Whatsapp)"
-                                                        handleChange={handlePhone}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    <PikaTextField
-                                                        type="email"
-                                                        placeholder="Alamat Email"
-                                                        handleChange={handleEmail}
-                                                    />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
+                                    <div className='textfield-auth'>
+                                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
+                                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
+                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
 
-                                                <Row>
-                                                    <Col xs={11}>
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
                                                     {!isCaptcha || (
                                                         <ReCAPTCHA sitekey="asd" onChange={onChange} />
                                                     )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
+                                                </Col>
+                                                <Col />
+                                            </Row>
 
-                                                <Row>
-                                                    <Col xs={6}>
+                                            <Row>
+                                                <Col xs={6}>
                                                     {isValid || (
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
@@ -251,7 +221,6 @@ const RegisterDialog = (props) => {
                                                     </p>
                                                     </Col>
                                                     <Col xs={3}/>
-
                                                     
                                                     <Col xs={4}>
                                                     <PikaButton
@@ -263,7 +232,7 @@ const RegisterDialog = (props) => {
                                                     <Col />
                                                 </Row>
                                             </Form>
-                                        }
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +323,6 @@ const RegisterDialog = (props) => {
                                                     </Col>
                                                     <Col xs={2} md={2}/>
 
-                                                    
                                                     <Col xs={4}>
                                                     <PikaButton
                                                         title="SUBMIT"
@@ -367,6 +335,23 @@ const RegisterDialog = (props) => {
                                             </Form>
                                         }
                                     </div>
+
+                                    {/* <div className='buttonSide-auth'>
+                                        <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+                                        <div className="submitButton-auth" onClick={openPinDialog}>
+                                            <div className="wordsButton-auth">
+                                                NEXT
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='bottomSide-auth'>
+                                        <h4 className='countrySide-auth'>Indonesia</h4>
+                                        <div className='reqSide-auth'>
+                                            <h4 className='reqSideWord-auth'>Privasi</h4>
+                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
