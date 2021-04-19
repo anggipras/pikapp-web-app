@@ -84,6 +84,7 @@ const LoginDialog = (props) => {
     return (
         <div>
             {
+                !isMobile ?
                 <div className='modalMenuDetail-auth' style={{
                     display: props.isShowLogin ? 'block' : 'none'
                 }} onClick={closeModal}
@@ -130,12 +131,83 @@ const LoginDialog = (props) => {
                                                 </Row>
                                                 
                                                 <Row>
-                                                    <Col xs={5}>
+                                                    <Col xs={4}>
                                                     <p className="linkWords">
                                                         <div onClick={closeModal}>DAFTAR SAJA</div>
                                                     </p>
                                                     </Col>
+                                                    <Col xs={3}/>
+
+                                                    <Col xs={4}>
+                                                    <PikaButton
+                                                        title="SUBMIT"
+                                                        buttonStyle="greenPika"
+                                                        handleClick={openPinDialog}
+                                                    />
+                                                    </Col>
                                                     <Col />
+                                                </Row>
+                                            </Form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                :
+                <div className='modalMenuDetail-auth' style={{
+                    display: props.isShowLogin ? 'block' : 'none'
+                }} onClick={closeModal}
+                >
+                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                        {
+                            <span className='iconClose-auth' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo-auth' alt='' />
+                            </span>
+                        }
+
+                        <div className='menuDetail-layout-auth'>
+                            <div className='menuContain-left-auth'>
+                                <div className='menuBanner-auth'>
+                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
+                                </div>
+
+                                <div className='menu-detail-auth'>
+                                    <div className='menu-name-auth'>
+                                        Selangkah Lagi Sebelum Memesan!
+                                    </div>
+
+                                    <div>
+                                        {
+                                            <Form>
+                                                <Row className="btm50 top30">
+                                                    <Col xs={11}>
+                                                    <PikaTextField
+                                                        type="email"
+                                                        placeholder="Alamat Email"
+                                                        handleChange={handleEmail}
+                                                    />
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    {isValid || (
+                                                        <Alert variant="danger">{errorMsg}</Alert>
+                                                    )}
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+                                                
+                                                <Row>
+                                                    <Col xs={3}>
+                                                    <p className="linkWords">
+                                                        <div onClick={closeModal}>DAFTAR SAJA</div>
+                                                    </p>
+                                                    </Col>
+                                                    <Col xs={2} md={2}/>
 
                                                     <Col xs={4}>
                                                     <PikaButton

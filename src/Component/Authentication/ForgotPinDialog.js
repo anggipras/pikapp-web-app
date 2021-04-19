@@ -53,6 +53,7 @@ const ForgotPinDialog = (props) => {
     return (
         <div>
             {
+                !isMobile ?
                 <div className='modalMenuDetail-auth' style={{
                     display: props.isShowForgotPin ? 'block' : 'none'
                 }} onClick={closeModal}
@@ -103,12 +104,12 @@ const ForgotPinDialog = (props) => {
                                                 </Row>
                                                 
                                                 <Row>
-                                                    <Col xs={5}>
+                                                    <Col xs={4}>
                                                     <p className="linkWords">
                                                         <div>KEMBALI</div>
                                                     </p>
                                                     </Col>
-                                                    <Col />
+                                                    <Col xs={3}/>
 
                                                     <Col xs={4}>
                                                     <PikaButton
@@ -118,16 +119,80 @@ const ForgotPinDialog = (props) => {
                                                     </Col>
                                                     <Col />
                                                 </Row>
-                                                {/* <Row>
-                                                    <Col xs={1} md={4} />
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="Submit"
-                                                        buttonStyle="primaryPika"
+                                            </Form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                :
+                <div className='modalMenuDetail-auth' style={{
+                    display: props.isShowForgotPin ? 'block' : 'none'
+                }} onClick={closeModal}
+                >
+                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                        {
+                            <span className='iconClose' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo' alt='' />
+                            </span>
+                        }
+
+                        <div className='menuDetail-layout-auth'>
+                            <div className='menuContain-left-auth'>
+                                <div className='menuBanner-auth'>
+                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
+                                </div>
+
+                                <div className='menu-detail-auth'>
+                                    <div className='menu-name-auth'>
+                                        Lupa PIN ?
+                                    </div>
+
+                                    <div className='mob-menu-category-auth'>
+                                        Silahkan masukkan emeil Anda yang terdaftar.
+                                    </div>
+
+                                    <div>
+                                        {
+                                            <Form>
+                                                <Row className="btm50 top30">
+                                                    <Col xs={11}>
+                                                    <PikaTextField
+                                                        type="email"
+                                                        placeholder="Alamat Email"
+                                                        handleChange={handleEmail}
                                                     />
                                                     </Col>
                                                     <Col />
-                                                </Row> */}
+                                                </Row>
+
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    {isValid || (
+                                                        <Alert variant="danger">{errorMsg}</Alert>
+                                                    )}
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+                                                
+                                                <Row>
+                                                    <Col xs={3}>
+                                                    <p className="linkWords">
+                                                        <div>KEMBALI</div>
+                                                    </p>
+                                                    </Col>
+                                                    <Col xs={2} md={2}/>
+
+                                                    <Col xs={4}>
+                                                    <PikaButton
+                                                        title="SUBMIT"
+                                                        buttonStyle="greenPika"
+                                                    />
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
                                             </Form>
                                         }
                                     </div>

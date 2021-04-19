@@ -163,18 +163,19 @@ const ConfirmPinDialog = (props) => {
             var getLocation = JSON.parse(localStorage.getItem("longlat"))
             var latitude = getLocation.lat
             var longitude = getLocation.lon
-            if (Cookies.get("lastLink") !== undefined) {
-                var lastlink = JSON.parse(Cookies.get("lastLink")).value;
+            props.onHideConfirmPin()
+            // if (Cookies.get("lastLink") !== undefined) {
+            //     var lastlink = JSON.parse(Cookies.get("lastLink")).value;
             // }
             // window.location.reload();
-            if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
-                window.location.href = JSON.parse(Cookies.get("lastLink")).value
-            } else {
-                window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
-            }
-            } else {
-                window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
-            }
+            // if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
+            //     window.location.href = JSON.parse(Cookies.get("lastLink")).value
+            // } else {
+            //     window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
+            // }
+            // } else {
+            //     window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
+            // }
         })
         .catch((err) => {
             if (err.response.data !== undefined) {
@@ -191,6 +192,7 @@ const ConfirmPinDialog = (props) => {
     return (
         <div>
             {
+                !isMobile ?
                 <div className='modalMenuDetail-auth' style={{
                     display: props.isShowConfirmPin ? 'block' : 'none'
                 }} onClick={closeModal}
@@ -223,13 +225,13 @@ const ConfirmPinDialog = (props) => {
                                                 <Row>
                                                     <Col xs={11}>
                                                         <PinInput
-                                                        className='pinInput'
                                                         length={6}
                                                         focus
                                                         // disabled
                                                         secret
                                                         ref={p => (pin => p)}
                                                         type="numeric"
+                                                        inputMode="number"
                                                         onChange={handleConfirmPin}
                                                         />
                                                         <div></div>
@@ -246,12 +248,92 @@ const ConfirmPinDialog = (props) => {
                                                 </Row>
                                                 
                                                 <Row>
-                                                    <Col xs={5}>
+                                                    <Col xs={4}>
                                                     <p className="linkWords">
                                                         <div onClick={closeModal}>KEMBALI</div>
                                                     </p>
                                                     </Col>
+                                                    <Col xs={3}/>
+
+                                                    <Col xs={4}>
+                                                    <PikaButton
+                                                        title="SUBMIT"
+                                                        buttonStyle="greenPika"
+                                                        handleClick={handleRegister}
+                                                    />
+                                                    </Col>
                                                     <Col />
+                                                </Row>
+                                            </Form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                :
+                <div className='modalMenuDetail-auth' style={{
+                    display: props.isShowConfirmPin ? 'block' : 'none'
+                }} onClick={closeModal}
+                >
+                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                        {
+                            <span className='iconClose-auth' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo-auth' alt='' />
+                            </span>
+                        }
+
+                        <div className='menuDetail-layout-auth'>
+                            <div className='menuContain-left-auth'>
+                                <div className='menuBanner-auth'>
+                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
+                                </div>
+
+                                <div className='menu-detail-auth'>
+                                    <div className='menu-name-auth'>
+                                        Konfirmasi PIN Anda
+                                    </div>
+
+                                    <div className='mob-menu-category-auth'>
+                                        Konfirmasi 6 digit nomor PIN Anda
+                                    </div>
+
+                                    <div>
+                                        {
+                                            <Form>
+                                                <Row>
+                                                    <Col xs={11}>
+                                                        <PinInput
+                                                        length={6}
+                                                        focus
+                                                        // disabled
+                                                        secret
+                                                        ref={p => (pin => p)}
+                                                        type="numeric"
+                                                        inputMode="number"
+                                                        onChange={handleConfirmPin}
+                                                        />
+                                                        <div></div>
+                                                    </Col>
+                                                </Row>
+
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    {isValid || (
+                                                        <Alert variant="danger">{errorMsg}</Alert>
+                                                    )}
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+                                                
+                                                <Row>
+                                                    <Col xs={3}>
+                                                    <p className="linkWords">
+                                                        <div onClick={closeModal}>KEMBALI</div>
+                                                    </p>
+                                                    </Col>
+                                                    <Col xs={2} md={2}/>
 
                                                     <Col xs={4}>
                                                     <PikaButton

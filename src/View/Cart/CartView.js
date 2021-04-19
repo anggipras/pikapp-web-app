@@ -537,6 +537,45 @@ class CartView extends React.Component {
       });
   }
 
+  handleReloadEmail = () => {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+      is_email_verified : true
+    };
+
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
+    if(auth.is_email_verified === false) {
+      console.log(auth)
+      let uuid = uuidV4();
+      uuid = uuid.replaceAll("-", "");
+      const date = new Date().toISOString();
+      let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+      Axios(address + "home/v2/customer-info", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "x-signature": signature,
+          "token": auth.token,
+        },
+        method: "GET",
+      })
+        .then((res) => {
+          let data = res.data.results
+        })
+        .catch((err) => {
+        });
+    }
+  }
+
   render() {
     console.log(this.state.loadButton, 'PERHATIKAN!!');
     if (this.state.loadButton) {

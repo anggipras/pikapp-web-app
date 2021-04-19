@@ -14,6 +14,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 const RegisterDialog = (props) => {
     const dispatch = useDispatch()
     const AllRedu = useSelector(state => state.AllRedu)
+    const [registerDialog, setRegister] = useState(false)
     const [loginDialog, setLogin] = useState(false)
     const [pinDialog, setPin] = useState(false)
     const [name, setName] = useState('');
@@ -167,6 +168,7 @@ const RegisterDialog = (props) => {
     return (
         <div>
             {
+                !isMobile ?
                 <div className='modalMenuDetail-auth' style={{
                     display: props.isShowRegister ? 'block' : 'none'
                 }} onClick={closeModal}
@@ -248,7 +250,109 @@ const RegisterDialog = (props) => {
                                                         <div onClick={openLoginDialog}>LOGIN SAJA</div>
                                                     </p>
                                                     </Col>
+                                                    <Col xs={3}/>
+
+                                                    
+                                                    <Col xs={4}>
+                                                    <PikaButton
+                                                        title="SUBMIT"
+                                                        buttonStyle="greenPika"
+                                                        handleClick={openPinDialog}
+                                                    />
+                                                    </Col>
                                                     <Col />
+                                                </Row>
+                                            </Form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                :
+                <div className='modalMenuDetail-auth' style={{
+                    display: props.isShowRegister ? 'block' : 'none'
+                }} onClick={closeModal}
+                >
+                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                        {
+                            <span className='iconClose-auth' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo-auth' alt='' />
+                            </span>
+                        }
+
+                        <div className='menuDetail-layout-auth'>
+                            <div className='menuContain-left-auth'>
+                                <div className='menuBanner-auth'>
+                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
+                                </div>
+
+                                <div className='menu-detail-auth'>
+                                    <div className='menu-name-auth'>
+                                        Selangkah Lagi Sebelum Memesan!
+                                    </div>
+
+                                    <div>
+                                        {
+                                            <Form>
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    <PikaTextField
+                                                        type="text"
+                                                        placeholder="Nama Lengkap"
+                                                        handleChange={handleName}
+                                                    />
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    <PikaTextField
+                                                        type="tel"
+                                                        placeholder="Nomor Handphone (Whatsapp)"
+                                                        handleChange={handlePhone}
+                                                    />
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    <PikaTextField
+                                                        type="email"
+                                                        placeholder="Alamat Email"
+                                                        handleChange={handleEmail}
+                                                    />
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+
+                                                <Row>
+                                                    <Col xs={11}>
+                                                    {!isCaptcha || (
+                                                        <ReCAPTCHA sitekey="asd" onChange={onChange} />
+                                                    )}
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+
+                                                <Row>
+                                                    <Col xs={6}>
+                                                    {isValid || (
+                                                        <Alert variant="danger">{errorMsg}</Alert>
+                                                    )}
+                                                    </Col>
+                                                    <Col />
+                                                </Row>
+                                                
+                                                <Row>
+                                                    <Col xs={3}>
+                                                    <p className="linkWords">
+                                                        {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
+                                                        <div onClick={openLoginDialog}>LOGIN SAJA</div>
+                                                    </p>
+                                                    </Col>
+                                                    <Col xs={2} md={2}/>
 
                                                     
                                                     <Col xs={4}>

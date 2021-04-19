@@ -2,7 +2,8 @@ const INITIAL_STATE = {
     dataRegister : {},
     dataLogin : {},
     isLoginStep : false,
-    dataResetPin : {}
+    dataResetPin : {},
+    dataPin : ''
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -15,6 +16,8 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, isLoginStep: action.payload}
         case "RESETPIN" :
             return {...state, dataResetPin: action.payload}
+        case "PIN" :
+            return {...state, dataPin: action.payload}
         default:
             return state
     }

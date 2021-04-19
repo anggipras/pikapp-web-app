@@ -184,10 +184,16 @@ const MenuDetail = (props) => {
             return (
                 <PinDialog 
                     isShowPin={pinDialog}
-                    onHidePin={() =>setPin(false)}
+                    onHidePin={closeAuthDialog}
+                    // onHidePin={() => setPin(false)}
                 />
             )
         }
+    }
+
+    const closeAuthDialog = () => {
+        setPin(false);
+        setRegister(false);
     }
 
     return (
