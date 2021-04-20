@@ -112,10 +112,6 @@ class ProductView extends React.Component {
     let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
     let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
-    let bannerMerchant = currentMerchant.storeImage
-    bannerMerchant = bannerMerchant.replace(/^https:\/\//i, 'http://')
-    console.log(bannerMerchant);
-
     let stateData = { ...this.state.data };
     stateData.mid = mid;
     stateData.title = currentMerchant.storeName;
@@ -200,18 +196,36 @@ class ProductView extends React.Component {
       firstShownProduct[indexcategProd].category_products = newFilter
     })
 
-    let newImage = currentMerchant.storeImage
-    newImage = newImage.replace(/^https:\/\//i, 'http://')
-    console.log(newImage);
+    // let newImage = currentMerchant.storeImage
+    // newImage = newImage.replace(/^https:\/\//i, 'http://')
+    // console.log(newImage);
+    let newImage = Storeimg
+    Axios.get(currentMerchant.storeImage)
+    .then(()=> {
+      console.log('berhasil ambil image');
+      newImage = currentMerchant.storeImage
+      prominent(newImage, { amount: 3 }).then((color) => {
+        // return RGB color for example [241, 221, 63]
+        var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+        this.brightenColor(merchantColor, 70, productColor, 60)
+        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        document.addEventListener('scroll', this.loadMoreMerchant)
+      });
+    }).catch(err=> {
+      console.log(err)
+      newImage = Storeimg
+      prominent(newImage, { amount: 3 }).then((color) => {
+        // return RGB color for example [241, 221, 63]
+        var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+        this.brightenColor(merchantColor, 70, productColor, 60)
+        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        document.addEventListener('scroll', this.loadMoreMerchant)
+      });
+    })
 
-    prominent(Storeimg, { amount: 3 }).then((color) => {
-      // return RGB color for example [241, 221, 63]
-      var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-      var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-      this.brightenColor(merchantColor, 70, productColor, 60)
-      this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-      document.addEventListener('scroll', this.loadMoreMerchant)
-    });
+    
   }
 
   componentDidUpdate() {
