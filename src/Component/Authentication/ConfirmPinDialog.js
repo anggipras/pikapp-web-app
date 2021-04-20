@@ -226,8 +226,8 @@ const ConfirmPinDialog = (props) => {
                                                     // disabled
                                                     secret
                                                     ref={p => (pin => p)}
-                                                    type="numeric"
-                                                    inputMode="number"
+                                                    type="number"
+                                                    inputMode="numeric"
                                                     onChange={handleConfirmPin}
                                                     />
                                                     <div></div>
@@ -303,8 +303,8 @@ const ConfirmPinDialog = (props) => {
                                                     // disabled
                                                     secret
                                                     ref={p => (pin => p)}
-                                                    type="numeric"
-                                                    inputMode="number"
+                                                    type="number"
+                                                    inputMode="numeric"
                                                     onChange={handleConfirmPin}
                                                     />
                                                     <div></div>
