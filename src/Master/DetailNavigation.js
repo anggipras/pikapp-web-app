@@ -7,7 +7,7 @@ export default class DetailNavigation extends React.Component {
   goBack = () => {
     // let homePage = Cookies.get("lastProduct")
     // window.location.href = homePage
-    window.history.back()
+    window.history.go(-1)
   }
 
   render() {

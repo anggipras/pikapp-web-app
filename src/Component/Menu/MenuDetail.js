@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import '../../Asset/scss/MenuDetail.scss'
-import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
+// import prodPhoto from '../../Asset/Illustration/samplefood.jpg'
 import closeLogo from '../../Asset/Icon/close.png'
 import backLogo from '../../Asset/Icon/arrow-left.png'
 import StarIcon from '../../Asset/Icon/star.png'
@@ -71,26 +71,41 @@ const MenuDetail = (props) => {
     }
 
     const countTotalPrice = () => {
+        let totalCheckPrice = 0
+        let totalRadioPrice = 0
         let totalPrice = 0
-        let sumAllPrice = AllRedu.checkboxes
-        sumAllPrice.forEach(firstVal => {
+        let sumCheckPrice = AllRedu.checkboxes
+        sumCheckPrice.forEach(firstVal => {
             firstVal.forEach(nestedVal => {
-                totalPrice += nestedVal.price
+                totalCheckPrice += nestedVal.price
             })
         });
+
+        let sumRadioPrice = AllRedu.radiobutton
+        sumRadioPrice.forEach(firstVal => {
+            firstVal.forEach(nestedVal => {
+                totalRadioPrice += nestedVal.price
+            })
+        });
+
+        totalCheckPrice = totalCheckPrice * AllRedu.validQTY
+        totalRadioPrice = totalRadioPrice * AllRedu.validQTY
+        totalPrice += totalCheckPrice + totalRadioPrice
         totalPrice += AllRedu.validQTY * props.datas.foodPrice
         return totalPrice
     }
 
+    let auth;
+
     const openMenuSelect = () => {
-        
+
         if (Cookies.get("auth") === undefined) {
             // props.onHide();
             setRegister(true);
             // showRegisterDialog();
         } else {
             auth = JSON.parse(Cookies.get("auth"));
-            if(auth.isLogged === false) {
+            if (auth.isLogged === false) {
                 openPinDialog();
             } else {
                 setloadingButton(false)
@@ -99,7 +114,7 @@ const MenuDetail = (props) => {
                 dispatch({ type: 'FOODCATEG', payload: findCateg })
             }
             // openPinDialog();
-            
+
         }
     }
 
@@ -115,6 +130,70 @@ const MenuDetail = (props) => {
             return props.datas.category === parseInt(val.category_id)
         })
         findCateg = findCateg[0].category_name.toLowerCase()
+    }
+
+    let totalCheckPrice = 0
+    let totalRadioPrice = 0
+    let totalPrice = 0
+    let sumCheckPrice = AllRedu.checkboxes
+    sumCheckPrice.forEach(firstVal => {
+        firstVal.forEach(nestedVal => {
+            totalCheckPrice += nestedVal.price
+        })
+    });
+
+    let sumRadioPrice = AllRedu.radiobutton
+    sumRadioPrice.forEach(firstVal => {
+        firstVal.forEach(nestedVal => {
+            totalRadioPrice += nestedVal.price
+        })
+    });
+
+    totalCheckPrice = totalCheckPrice * AllRedu.validQTY
+    totalRadioPrice = totalRadioPrice * AllRedu.validQTY
+    totalPrice += totalCheckPrice + totalRadioPrice
+    totalPrice += AllRedu.validQTY * props.datas.foodPrice
+    props.handleAmount(totalPrice)
+
+    const showRegisterDialog = () => {
+        if (registerDialog) {
+            return (
+                <RegisterDialog
+                    isShowRegister={registerDialog}
+                    onHideRegister={() => setRegister(false)}
+                />
+            )
+        }
+    }
+
+    const openPinDialog = () => {
+        setEmail(auth.email);
+
+        const data = {
+            email: email
+        };
+
+        dispatch({ type: 'LOGIN', payload: data });
+        dispatch({ type: 'LOGINSTEP', payload: true });
+
+        setPin(true);
+    }
+
+    const showPinDialog = () => {
+        if (pinDialog) {
+            return (
+                <PinDialog
+                    isShowPin={pinDialog}
+                    // onHidePin={closeAuthDialog}
+                    onHidePin={() => setPin(false)}
+                />
+            )
+        }
+    }
+
+    const closeAuthDialog = () => {
+        setPin(false);
+        setRegister(false);
     }
 
     return (
@@ -140,7 +219,7 @@ const MenuDetail = (props) => {
                             <div className='menuDetail-layout'>
                                 <div className='menuContain-left'>
                                     <div className='menuBanner'>
-                                        <img className='menuimg' src={prodPhoto} alt='' />
+                                        <img className='menuimg' src={props.datas.foodImage} alt='' />
                                     </div>
 
                                     <div className='menu-detail'>
@@ -175,7 +254,7 @@ const MenuDetail = (props) => {
                                                     Description
                                                 </div>
                                                 <div className='menuDesc-content'>
-                                                    Description Row 1 Description Row 2 Row 3 Description Row 1 Description Row 2 Row 3
+                                                    {props.datas.foodDesc}
                                                 </div>
                                             </div>
                                     }
@@ -237,7 +316,7 @@ const MenuDetail = (props) => {
                     >
                         <div className='mob-modal-content-menudetail' onClick={e => e.stopPropagation()} style={{ height: menuSelect ? '88vh' : 'auto' }}>
                             <div className='mob-menuBanner'>
-                                <img className='mob-menuimg' src={prodPhoto} alt='' />
+                                <img className='mob-menuimg' src={props.datas.foodImage} alt='' />
                                 {
                                     menuSelect ?
                                         <span className='mob-iconClose' onClick={backModal}>
@@ -255,7 +334,7 @@ const MenuDetail = (props) => {
                                     <div className='mob-menu-detail'>
                                         <div className='mob-menu-star'>
                                             <img className='mob-menu-star-img' src={StarIcon} alt='' />
-                                            <h6 className='mob-menu-star-rating'>5.0</h6>
+                                            <h6 className='mob-menu-star-rating'>{props.datas.foodRating}</h6>
                                         </div>
 
                                         <div className='mob-menu-name'>
@@ -280,7 +359,7 @@ const MenuDetail = (props) => {
                                         :
                                         <div className='mob-menuDesc'>
                                             <div className='mob-menu-desc'>
-                                                Description Row 1 Description Row 2 Row 3
+                                                {props.datas.foodDesc}
                                             </div>
                                         </div>
                                 }
@@ -337,7 +416,10 @@ const MenuDetail = (props) => {
 
                     </div>
             }
+            {showRegisterDialog()}
+            {showPinDialog()}
         </div>
+
     );
 }
 
