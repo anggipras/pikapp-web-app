@@ -72,16 +72,17 @@ class CartView extends React.Component {
   };
 
   // componentDidMount() {
-  //   const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-  //   let allCart = JSON.parse(localStorage.getItem('cart'))
-  //   let filterCart = allCart.filter(valCart => {
-  //     return valCart.mid === currentCartMerchant.mid
-  //   })
-  //   if (filterCart.length === 0) {
-  //     window.history.go(-1)
-  //   } else {
-  //     this.setState({ changeUI: false })
-  //   }
+  //   this.handleReloadEmail();
+    // const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    // let allCart = JSON.parse(localStorage.getItem('cart'))
+    // let filterCart = allCart.filter(valCart => {
+    //   return valCart.mid === currentCartMerchant.mid
+    // })
+    // if (filterCart.length === 0) {
+    //   window.history.go(-1)
+    // } else {
+    //   this.setState({ changeUI: false })
+    // }
 
   // }
 
@@ -570,6 +571,16 @@ class CartView extends React.Component {
       })
         .then((res) => {
           let data = res.data.results
+          // auth.isLogged = true;
+          // auth.token = data.token;
+          // auth.new_event = data.new_event;
+          // auth.recommendation_status = data.recommendation_status;
+          auth.is_email_verified = data.is_email_verified;
+          // auth.email = AuthRedu.dataLogin.email;
+          Cookies.set("auth", auth, { expires: 1 });
+
+          auth = JSON.parse(Cookies.get("auth"));
+          console.log(auth);
         })
         .catch((err) => {
         });

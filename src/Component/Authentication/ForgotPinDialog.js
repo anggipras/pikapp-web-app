@@ -75,7 +75,7 @@ const ForgotPinDialog = (props) => {
                                     </div>
 
                                     <div className='mob-menu-category-auth'>
-                                        Silahkan masukkan emeil Anda yang terdaftar.
+                                        Silahkan masukkan email Anda yang terdaftar.
                                     </div>
 
                                     <div className='textfield-auth'>
@@ -137,7 +137,7 @@ const ForgotPinDialog = (props) => {
                                     </div>
 
                                     <div className='mob-menu-category-auth'>
-                                        Silahkan masukkan emeil Anda yang terdaftar.
+                                        Silahkan masukkan email Anda yang terdaftar.
                                     </div>
 
                                     <div className='textfield-auth'>

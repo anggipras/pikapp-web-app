@@ -89,6 +89,7 @@ const RegisterDialog = (props) => {
         dispatch({ type: 'LOGINSTEP', payload: false });
 
         setPin(true);
+        // props.onHideRegister();
     }
 
     const showPinDialog = () => {
