@@ -93,6 +93,7 @@
     display: flex;
     flex-direction: column;
     padding: 18px 31px 37px 33px;
+    justify-content: space-between;
 }
 
 .menuimg-auth {
@@ -165,11 +166,11 @@
 
 .bottomSide-auth {
     display: flex;
-    max-width: 524px;
-    width: 100%;
-    position: absolute;
+    // max-width: 524px;
+    // width: 100%;
+    // position: absolute;
     justify-content: space-between;
-    bottom: 37px;
+    // bottom: 37px;
     // margin-top: 58px;
 }
 

@@ -169,141 +169,146 @@ const RegisterDialog = (props) => {
         <div>
             {
                 !isMobile ?
-                <div className='modalMenuDetail-auth' style={{
-                    display: props.isShowRegister ? 'block' : 'none'
-                }} onClick={closeModal}
-                >
-                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-                        {
-                            <span className='iconClose-auth' onClick={closeModal}>
-                                <img src={closeLogo} className='closeLogo-auth' alt='' />
-                            </span>
-                        }
+                    <div className='modalMenuDetail-auth' style={{
+                        display: props.isShowRegister ? 'block' : 'none'
+                    }} onClick={closeModal}
+                    >
+                        <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                            {
+                                <span className='iconClose-auth' onClick={closeModal}>
+                                    <img src={closeLogo} className='closeLogo-auth' alt='' />
+                                </span>
+                            }
 
-                        <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-all-auth'>
-                                <img src={pikappLogo} className='menuimg-auth' alt='' />
+                            <div className='menuDetail-layout-auth'>
+                                <div className='menuContain-all-auth'>
+                                    <div className='topSide-auth'>
+                                        <img src={pikappLogo} className='menuimg-auth' alt='' />
 
-                                <div className='menu-detail-auth'>
-                                    <div className='menu-name-auth'>
-                                        Selangkah Lagi Sebelum Memesan!
+                                        <div className='menu-detail-auth'>
+                                            <div className='menu-name-auth'>
+                                                Selangkah Lagi Sebelum Memesan!
+                                            </div>
+
+                                            <div className='textfield-auth'>
+                                                <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
+                                                <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
+                                                <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+
+                                                <Form>
+                                                    <Row>
+                                                        <Col xs={11}>
+                                                            {!isCaptcha || (
+                                                                <ReCAPTCHA sitekey="asd" onChange={onChange} />
+                                                            )}
+                                                        </Col>
+                                                        <Col />
+                                                    </Row>
+
+                                                    <Row>
+                                                        <Col xs={6}>
+                                                            {isValid || (
+                                                                <Alert variant="danger">{errorMsg}</Alert>
+                                                            )}
+                                                        </Col>
+                                                        <Col />
+                                                    </Row>
+
+                                                    <div className='buttonSide-auth'>
+                                                        <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+                                                        <div className="submitButton-auth" onClick={openPinDialog}>
+                                                            <div className="wordsButton-auth">
+                                                                NEXT
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Form>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className='textfield-auth'>
-                                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
-                                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
-                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
-
-                                        <Form>
-                                            <Row>
-                                                <Col xs={11}>
-                                                    {!isCaptcha || (
-                                                        <ReCAPTCHA sitekey="asd" onChange={onChange} />
-                                                    )}
-                                                </Col>
-                                                <Col />
-                                            </Row>
-
-                                            <Row>
-                                                <Col xs={6}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                <Col />
-                                            </Row>
-                                        
-                                            <div className='buttonSide-auth'>
-                                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
-                                                <div className="submitButton-auth" onClick={openPinDialog}>
-                                                    <div className="wordsButton-auth">
-                                                        NEXT
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className='bottomSide-auth'>
-                                                <h4 className='countrySide-auth'>Indonesia</h4>
-                                                <div className='reqSide-auth'>
-                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
-                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                                </div>
-                                            </div>
-                                        </Form>
+                                    <div className='bottomSide-auth'>
+                                        <h4 className='countrySide-auth'>Indonesia</h4>
+                                        <div className='reqSide-auth'>
+                                            <h4 className='reqSideWord-auth'>Privasi</h4>
+                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                :
-                <div className='modalMenuDetail-auth' style={{
-                    display: props.isShowRegister ? 'block' : 'none'
-                }} onClick={closeModal}
-                >
-                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-                        {
-                            <span className='iconClose-auth' onClick={closeModal}>
-                                <img src={closeLogo} className='closeLogo-auth' alt='' />
-                            </span>
-                        }
+                    :
+                    <div className='modalMenuDetail-auth' style={{
+                        display: props.isShowRegister ? 'block' : 'none'
+                    }} onClick={closeModal}
+                    >
+                        <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                            {
+                                <span className='iconClose-auth' onClick={closeModal}>
+                                    <img src={closeLogo} className='closeLogo-auth' alt='' />
+                                </span>
+                            }
 
-                        <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-all-auth'>
-                                <img src={pikappLogo} className='menuimg-auth' alt='' />
+                            <div className='menuDetail-layout-auth'>
+                                <div className='menuContain-all-auth'>
+                                    <div className='topSide-auth'>
+                                        <img src={pikappLogo} className='menuimg-auth' alt='' />
 
-                                <div className='menu-detail-auth'>
-                                    <div className='menu-name-auth'>
-                                        Selangkah Lagi Sebelum Memesan!
+                                        <div className='menu-detail-auth'>
+                                            <div className='menu-name-auth'>
+                                                Selangkah Lagi Sebelum Memesan!
+                                        </div>
+
+                                            <div className='textfield-auth'>
+                                                <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
+                                                <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
+                                                <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+
+                                                <Form>
+                                                    <Row>
+                                                        <Col xs={11}>
+                                                            {!isCaptcha || (
+                                                                <ReCAPTCHA sitekey="asd" onChange={onChange} />
+                                                            )}
+                                                        </Col>
+                                                        <Col />
+                                                    </Row>
+
+                                                    <Row>
+                                                        <Col xs={6}>
+                                                            {isValid || (
+                                                                <Alert variant="danger">{errorMsg}</Alert>
+                                                            )}
+                                                        </Col>
+                                                        <Col />
+                                                    </Row>
+
+                                                    <div className='buttonSide-auth'>
+                                                        <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+                                                        <div className="submitButton-auth" onClick={openPinDialog}>
+                                                            <div className="wordsButton-auth">
+                                                                NEXT
+                                                        </div>
+                                                        </div>
+                                                    </div>
+
+                                                </Form>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className='textfield-auth'>
-                                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
-                                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
-                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
-
-                                        <Form>
-                                            <Row>
-                                                <Col xs={11}>
-                                                    {!isCaptcha || (
-                                                        <ReCAPTCHA sitekey="asd" onChange={onChange} />
-                                                    )}
-                                                </Col>
-                                                <Col />
-                                            </Row>
-
-                                            <Row>
-                                                <Col xs={6}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                <Col />
-                                            </Row>
-                                        
-                                            <div className='buttonSide-auth'>
-                                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
-                                                <div className="submitButton-auth" onClick={openPinDialog}>
-                                                    <div className="wordsButton-auth">
-                                                        NEXT
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className='bottomSide-auth'>
-                                                <h4 className='countrySide-auth'>Indonesia</h4>
-                                                <div className='reqSide-auth'>
-                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
-                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                                </div>
-                                            </div>
-                                        </Form>
+                                    <div className='bottomSide-auth'>
+                                        <h4 className='countrySide-auth'>Indonesia</h4>
+                                        <div className='reqSide-auth'>
+                                            <h4 className='reqSideWord-auth'>Privasi</h4>
+                                            <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             }
             {showLoginDialog()}
             {showPinDialog()}
@@ -357,7 +362,7 @@ const RegisterDialog = (props) => {
     //                                                 </Col>
     //                                                 <Col />
     //                                             </Row>
-                                                
+
     //                                             <Row>
     //                                                 <Col xs={4}>
     //                                                 <p className="linkWords">
@@ -366,7 +371,7 @@ const RegisterDialog = (props) => {
     //                                                 </p>
     //                                                 </Col>
     //                                                 <Col xs={3}/>
-                                                    
+
     //                                                 <Col xs={4}>
     //                                                 <PikaButton
     //                                                     title="SUBMIT"
@@ -377,7 +382,7 @@ const RegisterDialog = (props) => {
     //                                                 <Col />
     //                                             </Row>
     //                                         </Form>
-                                        
+
     //                                 </div>
     //                             </div>
     //                         </div>
@@ -458,7 +463,7 @@ const RegisterDialog = (props) => {
     //                                                 </Col>
     //                                                 <Col />
     //                                             </Row>
-                                                
+
     //                                             <Row>
     //                                                 <Col xs={3}>
     //                                                 <p className="linkWords">
