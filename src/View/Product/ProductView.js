@@ -1,17 +1,25 @@
 import React from "react";
 import { prominent } from "color.js";
 import rgbHex from 'rgb-hex'
+// import PikaModal from "../../Component/Modal/PikaModal";
 import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
+import { cart } from "../../App";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
+// import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
+<<<<<<< HEAD
 import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
 import Storeimg2 from '../../Asset/Illustration/storeimg1.png'
+=======
+import Storeimg2 from '../../Asset/Illustration/storeimg.jpg'
+import Storeimg from '../../Asset/Illustration/storeimg2.png'
+// import Productimg from '../../Asset/Illustration/productimg.png'
+>>>>>>> 73349e22c2f6772bce49ba16a2d074a8c4ba0626
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -22,7 +30,6 @@ import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import Skeleton from 'react-loading-skeleton'
-import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 
@@ -36,16 +43,13 @@ var currentExt = {
   note: "",
   foodCategory: '',
   listcheckbox: [],
-  listradio: [],
-  foodTotal: 0,
+  listradio: []
 };
-
-var currentTotal = 0
 
 class ProductView extends React.Component {
   state = {
     page: 0, //products pagination
-    size: 3, //set amount of products to be shown in frontend
+    size: 10, //set amount of products to be shown in frontend
     boolpage: false,
     productPage: [], //set how many page of product merchant from backend server
     idCateg: [], //set current product page of specific size of loaded products
@@ -57,7 +61,6 @@ class ProductView extends React.Component {
       mid: "",
       title: "",
       image: "",
-      logo: "",
       desc: "",
       address: "",
       rating: "",
@@ -80,8 +83,7 @@ class ProductView extends React.Component {
     backColor1: "", //merchant info background color
     backColor2: "", //products info background color
     categName: "All Categories", //initial for dropdown select
-    allProductsandCategories: [{ category_id: "", category_name: "", order: null, category_products: [] }], //mapping from API
-    productCategpersize: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
+    allProductsandCategories: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     choosenIndCateg: null, //index of category selected when load more products in selected category
     counterLoad: 0,
   };
@@ -103,103 +105,97 @@ class ProductView extends React.Component {
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
-      // window.location.href = "/login"
+      window.location.href = "/login"
     }
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    var getLocation = JSON.parse(localStorage.getItem("longlat"))
+    var latitude = getLocation.lat
+    var longitude = getLocation.lon
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     const notab = value.table || ""
-    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-    let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-
-    let bannerMerchant = currentMerchant.storeImage
-    bannerMerchant = bannerMerchant.replace(/^https:\/\//i, 'http://')
-    console.log(bannerMerchant);
-
-    let stateData = { ...this.state.data };
-    stateData.mid = mid;
-    stateData.title = currentMerchant.storeName;
-    stateData.image = currentMerchant.storeImage;
-    stateData.logo = currentMerchant.storeLogo;
-    stateData.desc = currentMerchant.storeDistance;
-    stateData.address = currentMerchant.storeAdress;
-    stateData.rating = currentMerchant.storeRating;
-    stateData.phone = "081296000823";
-    stateData.notable = notab
-    var productCateg = []
-    var idCateg = []
-    var productPage = []
-    productCateg = selectedMerchant[0].categories.map((categ) => {
-      idCateg.push(0)
-      productPage.push(this.state.size)
-      return categ
+    let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/${currentMerchant.storeName}/`
+    var stateData;
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "category": "1",
+      },
+      method: "GET",
+      params: {
+        page: 0,
+        size: this.state.size
+      }
     })
+      .then((res) => {
+        stateData = { ...this.state.data };
+        let responseDatas = res.data.results;
+        stateData.mid = mid;
+        stateData.title = currentMerchant.storeName;
+        stateData.image = currentMerchant.storeImage;
+        stateData.desc = currentMerchant.storeDistance;
+        stateData.address = currentMerchant.storeAdress;
+        stateData.rating = currentMerchant.storeRating;
+        stateData.phone = "081296000823";
+        stateData.notable = notab
+        var productCateg = []
+        var idCateg = []
+        var pageProduct = []
+        responseDatas.forEach((data) => {
+          if (data.mid === mid) {
+            productCateg = data.categories.map((categ) => {
+              idCateg.push(1)
+              pageProduct.push(res.data.total_pages - 1)
+              return categ
+            })
 
-    productCateg.forEach((val) => {
-      val.category_products = []
-    })
+            productCateg.forEach((val) => {
+              val.category_products = []
+            })
 
-    productCateg.forEach((categProd) => {
-      selectedMerchant[0].products.forEach((allproducts) => {
-        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-          categProd.category_products.push({
-            productId: allproducts.product_id,
-            category: allproducts.product_category,
-            foodName: allproducts.product_name,
-            foodDesc: "",
-            foodPrice: allproducts.product_price,
-            foodImage: allproducts.product_picture1,
-            foodExt: [
-              {
-                name: "",
-                amount: 0,
-              },
-            ],
-          })
-        }
+            productCateg.forEach((categProd) => {
+              data.products.forEach((allproducts) => {
+                if (categProd.category_id == allproducts.product_category) {
+                  categProd.category_products.push({
+                    productId: allproducts.product_id,
+                    category: allproducts.product_category,
+                    foodName: allproducts.product_name,
+                    foodDesc: "",
+                    foodPrice: allproducts.product_price,
+                    foodImage: allproducts.product_picture1,
+                    foodExt: [
+                      {
+                        name: "",
+                        amount: 0,
+                      },
+                    ],
+                  })
+                }
+              })
+            })
+          }
+        })
+        prominent(Storeimg, { amount: 3 }).then((color) => {
+          // return RGB color for example [241, 221, 63]
+          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+          this.brightenColor(merchantColor, 70, productColor, 60)
+          this.setState({ data: stateData, allProductsandCategories: productCateg, idCateg, productPage: pageProduct });
+          document.addEventListener('scroll', this.loadMoreMerchant)
+        });
       })
-    })
+      .catch((err) => {
+      });
+  }
 
-    let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
-      return categ
-    })
-
-    productPerSize.forEach((val) => {
-      val.category_products = []
-    })
-
-    productPerSize.forEach((categProd) => {
-      filtersizeMerchant[0].products.forEach((allproducts) => {
-        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-          categProd.category_products.push({
-            productId: allproducts.product_id,
-            category: allproducts.product_category,
-            foodName: allproducts.product_name,
-            foodDesc: "",
-            foodPrice: allproducts.product_price,
-            foodImage: allproducts.product_picture1,
-            foodExt: [
-              {
-                name: "",
-                amount: 0,
-              },
-            ],
-          })
-        }
-      })
-    })
-
-    let firstShownProduct = []
-    productPerSize.forEach((categProd, indexcategProd) => {
-      firstShownProduct.push(categProd)
-      let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
-        return indexvalProd < this.state.size
-      })
-      categProd.category_products = newFilter
-      firstShownProduct[indexcategProd].category_products = []
-      firstShownProduct[indexcategProd].category_products = newFilter
-    })
-
+<<<<<<< HEAD
     let newImage = currentMerchant.storeImage
     newImage = newImage.replace(/^https:\/\//i, 'http://')
     console.log(newImage);
@@ -212,18 +208,45 @@ class ProductView extends React.Component {
       this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
       document.addEventListener('scroll', this.loadMoreMerchant)
     });
+=======
+  //testing changebackground
+  changeBackground = () => {
+    this.setState({ testingchange: !this.state.testingchange, testColor: true })
+>>>>>>> 73349e22c2f6772bce49ba16a2d074a8c4ba0626
   }
 
   componentDidUpdate() {
-    if (this.state.idCateg[this.state.choosenIndCateg] > 0) { //load more products with selected index of category
-      if (this.state.boolpage === true) {
-        this.loadProducts(this.state.choosenIndCateg)
+    if (this.state.testColor === true) {
+      if (this.state.testingchange === false) {
+        prominent(Storeimg, { amount: 3 }).then((color) => {
+          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+          this.brightenColor(merchantColor, 70, productColor, 60)
+        });
       } else {
-        document.addEventListener('scroll', this.loadMoreMerchant)
+        prominent(Storeimg2, { amount: 3 }).then((color) => {
+          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+          this.brightenColor(merchantColor, 70, productColor, 60)
+        });
       }
     }
 
+    if (this.state.idCateg) { //load more products with selected index of category
+      this.state.idCateg.forEach((val, index) => {
+        if (index === this.state.choosenIndCateg) {
+          if (val > 1) {
+            if (this.state.boolpage === true) {
+              this.loadProducts(index)
+            } else {
+              document.addEventListener('scroll', this.loadMoreMerchant)
+            }
+          }
+        }
+      })
+    }
   }
+  //testing changebackground
 
   brightenColor = (hex, percent, hex2, percent2) => {
     // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
@@ -260,22 +283,67 @@ class ProductView extends React.Component {
   }
 
   loadProducts = (indexOfCateg) => {
-    let getindexProd = this.state.allProductsandCategories[indexOfCateg].category_products
-    let loadtheProd = getindexProd.filter((valProd, indvalProd) => {
-      return indvalProd >= this.state.idCateg[indexOfCateg] && indvalProd < this.state.productPage[indexOfCateg]
-    })
-
-    let updatedProduct = this.state.productCategpersize
-    updatedProduct.forEach((value, index) => {
-      if (index === indexOfCateg) {
-        loadtheProd.forEach((valLoadProd) => {
-          value.category_products.push(valLoadProd)
-        })
+    const value = queryString.parse(window.location.search);
+    const mid = value.mid;
+    var getLocation = JSON.parse(localStorage.getItem("longlat"))
+    var latitude = getLocation.lat
+    var longitude = getLocation.lon
+    let addressRoute = `${address}home/v2/merchant/${longitude}/${latitude}/ALL/`
+    var stateData;
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    var inputPage = this.state.idCateg
+    inputPage[indexOfCateg] -= 1
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "category": "1",
+      },
+      method: "GET",
+      params: {
+        page: inputPage[indexOfCateg],
+        size: this.state.size
       }
     })
-
-    this.setState({ boolpage: false, productCategpersize: updatedProduct })
-    document.addEventListener('scroll', this.loadMoreMerchant)
+      .then((res) => {
+        stateData = { ...this.state.data };
+        let responseDatas = res.data.results;
+        responseDatas.forEach((data) => {
+          if (data.mid === mid) {
+            this.state.allProductsandCategories.forEach((categProd, indexAllCateg) => {
+              data.products.forEach((allproducts) => {
+                if (categProd.category_id == allproducts.product_category) {
+                  if (indexAllCateg == indexOfCateg) {
+                    categProd.category_products.push({
+                      productId: allproducts.product_id,
+                      category: allproducts.product_category,
+                      foodName: allproducts.product_name,
+                      foodDesc: "",
+                      foodPrice: allproducts.product_price,
+                      foodImage: allproducts.product_picture1,
+                      foodExt: [
+                        {
+                          name: "",
+                          amount: 0,
+                        },
+                      ],
+                    })
+                  }
+                }
+              })
+            })
+          }
+        })
+        this.setState({ boolpage: false })
+        document.addEventListener('scroll', this.loadMoreMerchant)
+      })
+      .catch((err) => {
+      });
   }
 
   handlePhone = (phone) => { //go to Whatsapp chat
@@ -309,7 +377,6 @@ class ProductView extends React.Component {
     const mid = value.mid;
     this.setModal(false);
     var isStorePresent = false;
-    let cart = JSON.parse(localStorage.getItem('cart'))
     cart.forEach((data) => {
       if (data.mid === this.state.data.mid) {
         isStorePresent = true;
@@ -451,7 +518,6 @@ class ProductView extends React.Component {
                   if (duplicateProduct[indexOfspesificCart].foodNote === currentExt.note) {
                     isFound = true
                     duplicateProduct[indexOfspesificCart].foodAmount += currentExt.detailCategory[0].amount
-                    duplicateProduct[indexOfspesificCart].foodTotalPrice += currentTotal
                   }
                 }
               }
@@ -474,7 +540,6 @@ class ProductView extends React.Component {
                       foodNote: currentExt.note,
                       foodListCheckbox: currentExt.listcheckbox,
                       foodListRadio: currentExt.listradio,
-                      foodTotalPrice: currentTotal
                     });
                   }
                 });
@@ -495,7 +560,6 @@ class ProductView extends React.Component {
                 foodNote: currentExt.note,
                 foodListCheckbox: currentExt.listcheckbox,
                 foodListRadio: currentExt.listradio,
-                foodTotalPrice: currentTotal
               });
             }
           })
@@ -514,7 +578,6 @@ class ProductView extends React.Component {
               foodNote: currentExt.note,
               foodListCheckbox: currentExt.listcheckbox,
               foodListRadio: currentExt.listradio,
-              foodTotalPrice: currentTotal
             });
           }
         });
@@ -536,7 +599,6 @@ class ProductView extends React.Component {
             foodNote: currentExt.note,
             foodListCheckbox: currentExt.listcheckbox,
             foodListRadio: currentExt.listradio,
-            foodTotalPrice: currentTotal
           },
         ],
       });
@@ -555,6 +617,7 @@ class ProductView extends React.Component {
       }
     }
     localStorage.setItem("cart", JSON.stringify(cart));
+<<<<<<< HEAD
     Swal.fire({
       position: 'top',
       icon: 'success',
@@ -618,6 +681,49 @@ class ProductView extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+=======
+    alert('berhasil masuk cart')
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
+    // if (auth.isLogged === false) {
+    //   var lastLink = { value: window.location.href }
+    //   Cookies.set("lastLink", lastLink, { expires: 1 })
+    //   window.location.href = "/login"
+    // }
+    // let uuid = uuidV4();
+    // const date = new Date().toISOString();
+    // uuid = uuid.replaceAll("-", "");
+    // let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    // Axios(address + "/txn/v1/cart-post/", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //     "x-signature": signature,
+    //     "token": auth.token,
+    //   },
+    //   method: "POST",
+    //   data: {
+    //     mid: this.state.data.mid,
+    //     pid: this.state.currentData.productId,
+    //     qty: currentExt.detailCategory[0].amount,
+    //     notes: currentExt.note,
+    //   }
+    // })
+    //   .then((res) => {
+    //   })
+    //   .catch((err) => {
+    //   });
+>>>>>>> 73349e22c2f6772bce49ba16a2d074a8c4ba0626
   };
 
   changeMenu = () => {
@@ -638,15 +744,11 @@ class ProductView extends React.Component {
     // console.log(ind);
     // console.log(this.state.idCateg[ind]);
     // console.log(this.state.productPage[ind]);
-    if (this.state.productCategpersize[ind].category_products.length < this.state.allProductsandCategories[ind].category_products.length) {
-      // console.log('testloadmore');
+    if (this.state.idCateg[ind] <= this.state.productPage[ind]) {
+      console.log('testloadmore');
       var openidCateg = [...this.state.idCateg]
-      openidCateg[ind] += this.state.size
-
-      var openproductPage = [...this.state.productPage]
-      openproductPage[ind] += this.state.size
-
-      this.setState({ idCateg: openidCateg, productPage: openproductPage, boolpage: true, choosenIndCateg: ind })
+      openidCateg[ind] += 1
+      this.setState({ idCateg: openidCateg, boolpage: true, choosenIndCateg: ind })
     } else {
       // console.log('nambah');
       var num = this.state.counterLoad
@@ -656,13 +758,11 @@ class ProductView extends React.Component {
   }
 
   loadMoreMerchant = () => {
-    this.state.productCategpersize.forEach((val, ind) => {
+    this.state.allProductsandCategories.forEach((val, ind) => {
       var wrappedElement = document.getElementById(ind)
       if (this.isBottom(wrappedElement)) {
-        // console.log(this.state.counterLoad, 'counterLoad');
-        // console.log(wrappedElement.id, 'wrap');
+        // console.log(this.state.counterLoad);
         if (wrappedElement.id == this.state.counterLoad) {
-          // console.log(ind, 'selected index');
           document.removeEventListener('scroll', this.loadMoreMerchant)
           this.stopAndLoadMore(ind)
         }
@@ -675,7 +775,7 @@ class ProductView extends React.Component {
   }
 
   contentView = () => {
-    return this.state.productCategpersize.map((categ, indcateg) => {
+    return this.state.allProductsandCategories.map((categ, indcateg) => {
       return (
         <div key={indcateg} className='product-section'>
           <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={30} width={100} />}</h2>
@@ -723,7 +823,7 @@ class ProductView extends React.Component {
             }
           </div>
           {
-            this.state.productCategpersize[indcateg].category_products.length < this.state.allProductsandCategories[indcateg].category_products.length ?
+            this.state.idCateg[indcateg] <= this.state.productPage[indcateg] ?
               <div id={indcateg}>
                 <Skeleton style={{ paddingTop: 100, borderRadius: 30 }} />
               </div>
@@ -737,10 +837,6 @@ class ProductView extends React.Component {
     })
   }
 
-  handleCartAmount = (price) => {
-    currentTotal = price
-  }
-
   menuDetail = () => {
     if (this.state.showMenuDet === true) {
       return (
@@ -748,8 +844,7 @@ class ProductView extends React.Component {
           isShow={this.state.showMenuDet}
           onHide={() => this.setMenuDetail(false)}
           datas={this.state.currentData}
-          handleCateg={this.state.productCategpersize}
-          handleAmount={this.handleCartAmount}
+          handleCateg={this.state.allProductsandCategories}
           handleClick={this.handleAddCart}
           handleData={this.handleCart}
         />
@@ -758,36 +853,37 @@ class ProductView extends React.Component {
   }
 
   render() {
+    // let modal;
+    // if (this.state.showModal === true) {
+    //   modal = (
+    //     <PikaModal
+    //       isShow={() => this.setModal(true)}
+    //       onHide={() => this.setModal(false)}
+    //       datas={this.state.currentData}
+    //       handleClick={this.handleAddCart}
+    //       handleData={this.handleCart}
+    //     />
+    //   );
+    // } else {
+    //   modal = <></>;
+    // }
+
     let cartButton;
-    const value = queryString.parse(window.location.search);
-    const notab = value.table || ""
     if (JSON.parse(localStorage.getItem('cart'))) {
       let allCart = JSON.parse(localStorage.getItem('cart'))
-      let filterMerchantCart = allCart.filter(cartVal => {
-        return this.state.data.mid === cartVal.mid
-      })
-      if (filterMerchantCart.length) {
-        localStorage.setItem('table', notab)
-        localStorage.setItem('lastTable', notab)
-        if (filterMerchantCart[0].mid) {
-          cartButton = (
-            <Link to={"/cart"} className={"btn-productCart"}>
-              <img src={cartIcon} alt='' />
-            </Link>
-          );
-        } else {
-          cartButton = <></>;
-        }
+      if (allCart.length > 1) {
+        cartButton = (
+          <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
+            <img src={cartIcon} alt={"cart"} alt='' />
+          </Link>
+        );
       } else {
         cartButton = <></>;
       }
     } else {
-      let cart = JSON.parse(localStorage.getItem('cart'))
       if (cart.length > 1) {
-        localStorage.setItem('table', notab)
-        localStorage.setItem('lastTable', notab)
         cartButton = (
-          <Link to={"/cart"} className={"btn-productCart"}>
+          <Link to={"/cart?table=" + this.state.data.notable} className={"btn-productCart"}>
             <img src={cartIcon} alt={"cart"} />
           </Link>
         );
@@ -807,8 +903,13 @@ class ProductView extends React.Component {
 
     return (
       <>
-        <div className='storeBanner'>
-          <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+        <div className='storeBanner' onClick={() => this.changeBackground()}>
+          {//only for testing, would be remove
+            this.state.testingchange === false ?
+              <img src={Storeimg} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+              :
+              <img src={Storeimg2} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+          }
           <div className='iconBanner'>
             <Link to={"/profile"}>
               <div className='profileIcon-sec'>
@@ -838,7 +939,7 @@ class ProductView extends React.Component {
                 <div className='inside-topMerchantInfo'>
                   <div className='merchant-title'>
                     <div className='merchant-logo'>
-                      <img src={this.state.data.logo || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+                      <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                     </div>
 
                     <div className='merchant-name'>
@@ -922,7 +1023,7 @@ class ProductView extends React.Component {
                     <div className='custom-options'>
                       <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
                       {
-                        this.state.productCategpersize.map((menuCategory, index) => (
+                        this.state.allProductsandCategories.map((menuCategory, index) => (
                           <span key={index} className='custom-option' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
                         ))
                       }
@@ -944,6 +1045,7 @@ class ProductView extends React.Component {
             </div>
           </div>
         </div>
+        {/* {modal} */}
         {cartButton}
         {this.menuDetail()}
       </>
