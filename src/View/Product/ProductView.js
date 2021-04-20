@@ -109,6 +109,30 @@ class ProductView extends React.Component {
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     const notab = value.table || ""
+
+    let longlatAddress = JSON.parse(localStorage.getItem('longlat'))
+    let addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "mid": mid,
+      },
+      method: "GET"
+    })
+      .then((res) => {
+        console.log(res.data.results);
+      })
+      .catch((err) => console.log(err));
+
+
     let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
     let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
@@ -201,31 +225,31 @@ class ProductView extends React.Component {
     // console.log(newImage);
     let newImage = Storeimg
     Axios.get(currentMerchant.storeImage)
-    .then(()=> {
-      console.log('berhasil ambil image');
-      newImage = currentMerchant.storeImage
-      prominent(newImage, { amount: 3 }).then((color) => {
-        // return RGB color for example [241, 221, 63]
-        var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-        this.brightenColor(merchantColor, 70, productColor, 60)
-        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-        document.addEventListener('scroll', this.loadMoreMerchant)
-      });
-    }).catch(err=> {
-      console.log(err)
-      newImage = Storeimg
-      prominent(newImage, { amount: 3 }).then((color) => {
-        // return RGB color for example [241, 221, 63]
-        var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-        this.brightenColor(merchantColor, 70, productColor, 60)
-        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-        document.addEventListener('scroll', this.loadMoreMerchant)
-      });
-    })
+      .then(() => {
+        console.log('berhasil ambil image');
+        newImage = currentMerchant.storeImage
+        prominent(newImage, { amount: 3 }).then((color) => {
+          // return RGB color for example [241, 221, 63]
+          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+          this.brightenColor(merchantColor, 70, productColor, 60)
+          this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+          document.addEventListener('scroll', this.loadMoreMerchant)
+        });
+      }).catch(err => {
+        console.log(err)
+        newImage = Storeimg
+        prominent(newImage, { amount: 3 }).then((color) => {
+          // return RGB color for example [241, 221, 63]
+          var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+          var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+          this.brightenColor(merchantColor, 70, productColor, 60)
+          this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+          document.addEventListener('scroll', this.loadMoreMerchant)
+        });
+      })
 
-    
+
   }
 
   componentDidUpdate() {
