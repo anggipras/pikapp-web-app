@@ -9,8 +9,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 // import {geolocated} from 'react-geolocated'
-import {connect} from 'react-redux'
-import {LoadingButton, DoneLoad} from '../../Redux/Actions'
+import { connect } from 'react-redux'
+import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 
 class FormView extends React.Component {
   state = {
@@ -55,11 +55,11 @@ class FormView extends React.Component {
   // }
 
   handleEmail = (e) => {
-    this.setState({ email: e.target.value});
+    this.setState({ email: e.target.value });
   };
 
   handlePassword = (e) => {
-    this.setState({ password: e.target.value});
+    this.setState({ password: e.target.value });
   };
 
   handleName = (e) => {
@@ -135,14 +135,14 @@ class FormView extends React.Component {
   showPosition = (position) => {
     let latitude = position.coords.latitude
     let longitude = position.coords.longitude
-    let longlat = {lat: latitude, lon: longitude}
+    let longlat = { lat: latitude, lon: longitude }
     console.log(latitude, longitude);
-    this.setState({lat: latitude, lon: longitude})
+    this.setState({ lat: latitude, lon: longitude })
     localStorage.setItem("longlat", JSON.stringify(longlat))
   }
 
   geoLocation = () => {
-    if(navigator.geolocation) {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this.showPosition)
     } else {
       alert('Geolocation is not supported by this browser.')
@@ -159,7 +159,7 @@ class FormView extends React.Component {
     //   this.setState({ isValid: false });
     //   return;
     // }
-  
+
     this.props.LoadingButton()
     this.setState({ isValid: true });
     const data = {
@@ -193,21 +193,23 @@ class FormView extends React.Component {
         auth.new_event = res.data.new_event;
         auth.recommendation_status = res.data.recommendation_status;
         auth.email = this.state.email;
-        Cookies.set("auth", auth, { expires: 1});
-        if(Cookies.get("lastLink") !== undefined) {
+        Cookies.set("auth", auth, { expires: 1 });
+        var getLocation = JSON.parse(localStorage.getItem("longlat"))
+        var latitude = getLocation.lat
+        var longitude = getLocation.lon
+        if (Cookies.get("lastLink") !== undefined) {
           var lastlink = JSON.parse(Cookies.get("lastLink")).value
-          var getLocation = JSON.parse(localStorage.getItem("longlat"))
-          var latitude = getLocation.lat
-          var longitude = getLocation.lon
-          if(lastlink.includes("?latitude") || lastlink.includes("store?")) {
+          if (lastlink.includes("?latitude") || lastlink.includes("store?")) {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value
           } else {
             window.location.href = JSON.parse(Cookies.get("lastLink")).value + `?latitude=${latitude}&longitude=${longitude}`
           }
+        } else {
+          window.location.href = window.location.origin + `?latitude=${latitude}&longitude=${longitude}`
         }
       })
       .catch((err) => {
-        if(err.response.data !== undefined) {
+        if (err.response.data !== undefined) {
           alert(err.response.data.err_message)
           this.props.DoneLoad()
         }
@@ -237,6 +239,7 @@ class FormView extends React.Component {
       return;
     }
 
+    this.props.LoadingButton()
     this.setState({ isValid: true });
     const data = {
       full_name: this.state.name,
@@ -266,8 +269,9 @@ class FormView extends React.Component {
         this.handleLogin()
       })
       .catch((err) => {
-        if(err.response.data !== undefined) {
+        if (err.response.data !== undefined) {
           alert(err.response.data.err_message)
+          this.props.DoneLoad()
         }
         this.setState({ captchaCounter: this.state.captchaCounter + 1 });
       });
@@ -454,4 +458,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops,{LoadingButton, DoneLoad})(FormView)
+export default connect(Mapstatetoprops, { LoadingButton, DoneLoad })(FormView)
