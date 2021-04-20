@@ -218,8 +218,8 @@ const PinDialog = (props) => {
                                                     // disabled
                                                     secret
                                                     ref={p => (pin => p)}
-                                                    type="numeric"
-                                                    inputMode="number"
+                                                    type="number"
+                                                    inputMode="numeric"
                                                     // onChange={handlePin}
                                                     onComplete={handlePin}
                                                     />
@@ -323,8 +323,8 @@ const PinDialog = (props) => {
                                                     // disabled
                                                     secret
                                                     ref={p => (pin => p)}
-                                                    type="numeric"
-                                                    inputMode="number"
+                                                    type="number"
+                                                    inputMode="numeric"
                                                     // onChange={handlePin}
                                                     onComplete={handlePin}
                                                     />
