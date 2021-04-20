@@ -278,30 +278,30 @@ class StoreView extends React.Component {
   }
 
   storeClick = (e) => {
-    let selectedStore = this.state.allMerchantAPI.filter(value => {
-      return value.mid === e.storeId
-    })
-    var currentMerchant = {
-      mid: "",
-      storeName: "",
-      storeDesc: "",
-      distance: "",
-      storeImage: "",
-      storeAdress: "",
-      storeRating: "",
-      storeLogo: "",
-    };
-    currentMerchant.mid = e.storeId;
-    currentMerchant.storeName = e.storeName;
-    currentMerchant.storeDesc = "Desc";
-    currentMerchant.distance = e.distance;
-    currentMerchant.storeImage = e.storeImage;
-    currentMerchant.storeAdress = e.address;
-    currentMerchant.storeRating = e.rating;
-    currentMerchant.storeLogo = e.logo;
+    // let selectedStore = this.state.allMerchantAPI.filter(value => {
+    //   return value.mid === e.storeId
+    // })
+    // var currentMerchant = {
+    //   mid: "",
+    //   storeName: "",
+    //   storeDesc: "",
+    //   distance: "",
+    //   storeImage: "",
+    //   storeAdress: "",
+    //   storeRating: "",
+    //   storeLogo: "",
+    // };
+    // currentMerchant.mid = e.storeId;
+    // currentMerchant.storeName = e.storeName;
+    // currentMerchant.storeDesc = "Desc";
+    // currentMerchant.distance = e.distance;
+    // currentMerchant.storeImage = e.storeImage;
+    // currentMerchant.storeAdress = e.address;
+    // currentMerchant.storeRating = e.rating;
+    // currentMerchant.storeLogo = e.logo;
 
-    localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
-    Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
+    // localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
+    // Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
     localStorage.setItem('page', JSON.stringify(1))
   }
   handleDetail(data) {
