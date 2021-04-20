@@ -166,10 +166,15 @@
 .bottomSide-auth {
     display: flex;
     max-width: 524px;
-    width: 100%;
     position: absolute;
     justify-content: space-between;
     bottom: 37px;
+    @media (max-width: 1280px) {
+        width: 100%;
+    }
+    @media (max-width: 768px) {
+        width: 80%;
+    }
     // margin-top: 58px;
 }
 
