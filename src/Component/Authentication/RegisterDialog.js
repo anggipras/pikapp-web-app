@@ -210,7 +210,7 @@ const RegisterDialog = (props) => {
                                                     {isValid || (
                                                         <Alert variant="danger">{errorMsg}</Alert>
                                                     )}
-                                                    </Col>
+                                                </Col>
                                                 <Col />
                                             </Row>
                                         
