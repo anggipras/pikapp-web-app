@@ -103,115 +103,175 @@ class ProductView extends React.Component {
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
-      // window.location.href = "/login"
     }
-    var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
     const mid = value.mid;
     const notab = value.table || ""
-    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-    let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
-    let bannerMerchant = currentMerchant.storeImage
-    bannerMerchant = bannerMerchant.replace(/^https:\/\//i, 'http://')
-    console.log(bannerMerchant);
+    let longlatAddress = JSON.parse(localStorage.getItem('longlat'))
+    let addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
 
-    let stateData = { ...this.state.data };
-    stateData.mid = mid;
-    stateData.title = currentMerchant.storeName;
-    stateData.image = currentMerchant.storeImage;
-    stateData.logo = currentMerchant.storeLogo;
-    stateData.desc = currentMerchant.storeDistance;
-    stateData.address = currentMerchant.storeAdress;
-    stateData.rating = currentMerchant.storeRating;
-    stateData.phone = "081296000823";
-    stateData.notable = notab
-    var productCateg = []
-    var idCateg = []
-    var productPage = []
-    productCateg = selectedMerchant[0].categories.map((categ) => {
-      idCateg.push(0)
-      productPage.push(this.state.size)
-      return categ
+    Axios(addressRoute, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "mid": mid,
+      },
+      method: "GET"
     })
+      .then((res) => {
+        console.log(res.data.results);
+        var currentMerchant = {
+          mid: "",
+          storeName: "",
+          storeDesc: "",
+          distance: "",
+          storeImage: "",
+          storeAdress: "",
+          storeRating: "",
+          storeLogo: "",
+        };
+        currentMerchant.mid = res.data.results.mid;
+        currentMerchant.storeName = res.data.results.merchant_name;
+        currentMerchant.storeDesc = "Desc";
+        currentMerchant.distance = res.data.results.merchant_distance;
+        currentMerchant.storeImage = res.data.results.merchant_pict;
+        currentMerchant.storeAdress = res.data.results.merchant_address;
+        currentMerchant.storeRating = res.data.results.merchant_rating;
+        currentMerchant.storeLogo = res.data.results.merchant_logo;
 
-    productCateg.forEach((val) => {
-      val.category_products = []
-    })
+        let selectedStore = []
+        selectedStore.push(res.data.results)
+        localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
+        Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
 
-    productCateg.forEach((categProd) => {
-      selectedMerchant[0].products.forEach((allproducts) => {
-        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-          categProd.category_products.push({
-            productId: allproducts.product_id,
-            category: allproducts.product_category,
-            foodName: allproducts.product_name,
-            foodDesc: "",
-            foodPrice: allproducts.product_price,
-            foodImage: allproducts.product_picture1,
-            foodExt: [
-              {
-                name: "",
-                amount: 0,
-              },
-            ],
+        // let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+        // let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+
+        let selectedMerchant = selectedStore
+        let filtersizeMerchant = selectedStore
+
+        let stateData = { ...this.state.data };
+        stateData.mid = mid;
+        stateData.title = currentMerchant.storeName;
+        stateData.image = currentMerchant.storeImage;
+        stateData.logo = currentMerchant.storeLogo;
+        stateData.desc = currentMerchant.storeDistance;
+        stateData.address = currentMerchant.storeAdress;
+        stateData.rating = currentMerchant.storeRating;
+        stateData.phone = "081296000823";
+        stateData.notable = notab
+        var productCateg = []
+        var idCateg = []
+        var productPage = []
+        productCateg = selectedMerchant[0].categories.map((categ) => {
+          idCateg.push(0)
+          productPage.push(this.state.size)
+          return categ
+        })
+
+        productCateg.forEach((val) => {
+          val.category_products = []
+        })
+
+        productCateg.forEach((categProd) => {
+          selectedMerchant[0].products.forEach((allproducts) => {
+            if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+              categProd.category_products.push({
+                productId: allproducts.product_id,
+                category: allproducts.product_category,
+                foodName: allproducts.product_name,
+                foodDesc: allproducts.product_desc,
+                foodPrice: allproducts.product_price,
+                foodRating: allproducts.rating,
+                foodImage: allproducts.product_picture1,
+                foodExt: [
+                  {
+                    name: "",
+                    amount: 0,
+                  },
+                ],
+              })
+            }
           })
-        }
-      })
-    })
+        })
 
-    let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
-      return categ
-    })
+        let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
+          return categ
+        })
 
-    productPerSize.forEach((val) => {
-      val.category_products = []
-    })
+        productPerSize.forEach((val) => {
+          val.category_products = []
+        })
 
-    productPerSize.forEach((categProd) => {
-      filtersizeMerchant[0].products.forEach((allproducts) => {
-        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-          categProd.category_products.push({
-            productId: allproducts.product_id,
-            category: allproducts.product_category,
-            foodName: allproducts.product_name,
-            foodDesc: "",
-            foodPrice: allproducts.product_price,
-            foodImage: allproducts.product_picture1,
-            foodExt: [
-              {
-                name: "",
-                amount: 0,
-              },
-            ],
+        productPerSize.forEach((categProd) => {
+          filtersizeMerchant[0].products.forEach((allproducts) => {
+            if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+              categProd.category_products.push({
+                productId: allproducts.product_id,
+                category: allproducts.product_category,
+                foodName: allproducts.product_name,
+                foodDesc: allproducts.product_desc,
+                foodPrice: allproducts.product_price,
+                foodRating: allproducts.rating,
+                foodImage: allproducts.product_picture1,
+                foodExt: [
+                  {
+                    name: "",
+                    amount: 0,
+                  },
+                ],
+              })
+            }
           })
-        }
+        })
+
+        let firstShownProduct = []
+        productPerSize.forEach((categProd, indexcategProd) => {
+          firstShownProduct.push(categProd)
+          let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
+            return indexvalProd < this.state.size
+          })
+          categProd.category_products = newFilter
+          firstShownProduct[indexcategProd].category_products = []
+          firstShownProduct[indexcategProd].category_products = newFilter
+        })
+
+        // let newImage = currentMerchant.storeImage
+        // newImage = newImage.replace(/^https:\/\//i, 'http://')
+        // console.log(newImage);
+        let newImage = Storeimg
+        Axios.get(currentMerchant.storeImage)
+          .then(() => {
+            newImage = currentMerchant.storeImage
+            prominent(newImage, { amount: 3 }).then((color) => {
+              // return RGB color for example [241, 221, 63]
+              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              this.brightenColor(merchantColor, 70, productColor, 60)
+              this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+              document.addEventListener('scroll', this.loadMoreMerchant)
+            });
+          }).catch(err => {
+            console.log(err)
+            newImage = Storeimg
+            prominent(newImage, { amount: 3 }).then((color) => {
+              // return RGB color for example [241, 221, 63]
+              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              this.brightenColor(merchantColor, 70, productColor, 60)
+              this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+              document.addEventListener('scroll', this.loadMoreMerchant)
+            });
+          })
       })
-    })
-
-    let firstShownProduct = []
-    productPerSize.forEach((categProd, indexcategProd) => {
-      firstShownProduct.push(categProd)
-      let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
-        return indexvalProd < this.state.size
-      })
-      categProd.category_products = newFilter
-      firstShownProduct[indexcategProd].category_products = []
-      firstShownProduct[indexcategProd].category_products = newFilter
-    })
-
-    let newImage = currentMerchant.storeImage
-    newImage = newImage.replace(/^https:\/\//i, 'http://')
-    console.log(newImage);
-
-    prominent(Storeimg, { amount: 3 }).then((color) => {
-      // return RGB color for example [241, 221, 63]
-      var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-      var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-      this.brightenColor(merchantColor, 70, productColor, 60)
-      this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-      document.addEventListener('scroll', this.loadMoreMerchant)
-    });
+      .catch((err) => console.log(err));
   }
 
   componentDidUpdate() {
@@ -698,7 +758,7 @@ class ProductView extends React.Component {
                       <div className='product-detail'>
                         <div className='product-star'>
                           <img className='product-star-img' src={StarIcon} alt='' />
-                          <h6 className='product-star-rating'>5.0</h6>
+                          <h6 className='product-star-rating'>{product.foodRating}</h6>
                         </div>
 
                         <div className='product-name'>
@@ -706,7 +766,7 @@ class ProductView extends React.Component {
                         </div>
 
                         <div className='product-desc'>
-                          {product.foodDesc ? product.foodDesc : "Product Description"}
+                          {product.foodDesc || <Skeleton style={{ paddingTop: 10 }} />}
                         </div>
 
                         <div className='product-price'>
@@ -808,7 +868,12 @@ class ProductView extends React.Component {
     return (
       <>
         <div className='storeBanner'>
-          <img src={this.state.data.image || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+          {
+            this.state.data.image ?
+              <img src={this.state.data.image} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+              :
+              <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
+          }
           <div className='iconBanner'>
             <Link to={"/profile"}>
               <div className='profileIcon-sec'>
@@ -838,7 +903,12 @@ class ProductView extends React.Component {
                 <div className='inside-topMerchantInfo'>
                   <div className='merchant-title'>
                     <div className='merchant-logo'>
-                      <img src={this.state.data.logo || <Skeleton />} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+                      {
+                        this.state.data.logo ?
+                          <img src={this.state.data.logo} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+                          :
+                          <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
+                      }
                     </div>
 
                     <div className='merchant-name'>
@@ -856,7 +926,8 @@ class ProductView extends React.Component {
                                 <div className='merchant-star'>{this.state.data.rating}</div>
                               </>
                               :
-                              <Skeleton width={50} />
+                              null
+                            // <Skeleton width={50} />
                           }
                           {/* <div className='star-votes'>(50+ Upvotes)</div> */}
                         </div>

@@ -98,14 +98,14 @@ const MenuDetail = (props) => {
     let auth;
 
     const openMenuSelect = () => {
-        
+
         if (Cookies.get("auth") === undefined) {
             // props.onHide();
             setRegister(true);
             // showRegisterDialog();
         } else {
             auth = JSON.parse(Cookies.get("auth"));
-            if(auth.isLogged === false) {
+            if (auth.isLogged === false) {
                 openPinDialog();
             } else {
                 setloadingButton(false)
@@ -114,7 +114,7 @@ const MenuDetail = (props) => {
                 dispatch({ type: 'FOODCATEG', payload: findCateg })
             }
             // openPinDialog();
-            
+
         }
     }
 
@@ -156,11 +156,11 @@ const MenuDetail = (props) => {
     props.handleAmount(totalPrice)
 
     const showRegisterDialog = () => {
-        if(registerDialog) {
+        if (registerDialog) {
             return (
-                <RegisterDialog 
+                <RegisterDialog
                     isShowRegister={registerDialog}
-                    onHideRegister={() =>setRegister(false)}
+                    onHideRegister={() => setRegister(false)}
                 />
             )
         }
@@ -180,9 +180,9 @@ const MenuDetail = (props) => {
     }
 
     const showPinDialog = () => {
-        if(pinDialog) {
+        if (pinDialog) {
             return (
-                <PinDialog 
+                <PinDialog
                     isShowPin={pinDialog}
                     // onHidePin={closeAuthDialog}
                     onHidePin={() => setPin(false)}
@@ -254,7 +254,7 @@ const MenuDetail = (props) => {
                                                     Description
                                                 </div>
                                                 <div className='menuDesc-content'>
-                                                    Description Row 1 Description Row 2 Row 3 Description Row 1 Description Row 2 Row 3
+                                                    {props.datas.foodDesc}
                                                 </div>
                                             </div>
                                     }
@@ -334,7 +334,7 @@ const MenuDetail = (props) => {
                                     <div className='mob-menu-detail'>
                                         <div className='mob-menu-star'>
                                             <img className='mob-menu-star-img' src={StarIcon} alt='' />
-                                            <h6 className='mob-menu-star-rating'>5.0</h6>
+                                            <h6 className='mob-menu-star-rating'>{props.datas.foodRating}</h6>
                                         </div>
 
                                         <div className='mob-menu-name'>
@@ -359,7 +359,7 @@ const MenuDetail = (props) => {
                                         :
                                         <div className='mob-menuDesc'>
                                             <div className='mob-menu-desc'>
-                                                Description Row 1 Description Row 2 Row 3
+                                                {props.datas.foodDesc}
                                             </div>
                                         </div>
                                 }
@@ -419,7 +419,7 @@ const MenuDetail = (props) => {
             {showRegisterDialog()}
             {showPinDialog()}
         </div>
-        
+
     );
 }
 
