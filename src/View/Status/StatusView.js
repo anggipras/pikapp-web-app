@@ -77,7 +77,7 @@ export class StatusView extends React.Component {
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
@@ -143,7 +143,7 @@ export class StatusView extends React.Component {
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
