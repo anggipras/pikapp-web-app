@@ -79,7 +79,7 @@ class StoreView extends React.Component {
         } else {
           // window.location.href = "/login"
         }
-    
+
         if (auth.isLogged === false) {
           var lastLink = { value: window.location.href }
           Cookies.set("lastLink", lastLink, { expires: 1 })
@@ -89,7 +89,7 @@ class StoreView extends React.Component {
           longitude = value.longitude || longitude
           latitude = value.latitude || latitude
           if (window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
-    
+
           } else {
             window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
           }
@@ -97,7 +97,7 @@ class StoreView extends React.Component {
         longitude = value.longitude || longitude
         latitude = value.latitude || latitude
         merchant = value.merchant;
-    
+
         // GOOGLE GEOCODE
         if (localStorage.getItem("address")) {
           var getAdress = JSON.parse(localStorage.getItem("address"))
@@ -174,59 +174,27 @@ class StoreView extends React.Component {
           })
           .catch((err) => {
           });
-          });
+      });
     }
   }
-
-
-    // const value = queryString.parse(window.location.search);
-    // console.log(value);
-    // var longitude = "";
-    // var latitude = "";
-    // var merchant = "";
-
-
-
-    //OPENCAGE API
-    // let opencagelonglat = latitude + "," + longitude
-    // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-    //     params:{
-    //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
-    //         q: opencagelonglat
-    //     }
-    // }).then((res)=> {
-    //   console.log(res.data.results[0].formatted);
-    //   this.setState({location: res.data.results[0].formatted})
-    // }).catch((err) => {
-    //   this.setState({location: "Tidak tersedia"})
-    // })
+  //OPENCAGE API
+  // let opencagelonglat = latitude + "," + longitude
+  // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+  //     params:{
+  //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
+  //         q: opencagelonglat
+  //     }
+  // }).then((res)=> {
+  //   console.log(res.data.results[0].formatted);
+  //   this.setState({location: res.data.results[0].formatted})
+  // }).catch((err) => {
+  //   this.setState({location: "Tidak tersedia"})
+  // })
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {
       if (this.state.boolpage === true) {
-        const value = queryString.parse(window.location.search);
-        var longitude = "";
-        var latitude = "";
-        var merchant = "";
-        longitude = value.longitude
-        latitude = value.latitude
-        merchant = value.merchant;
-
-        let addressRoute;
-        if (merchant === undefined) {
-          addressRoute =
-            address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
-        } else {
-          addressRoute =
-            address +
-            "home/v1/merchant/" +
-            longitude +
-            "/" +
-            latitude +
-            "/" +
-            merchant
-            + "/"
-        }
+        let addressRoute = address + "home/v2/merchant/" + this.state.lon + "/" + this.state.lat + "/ALL/";
         var stateData;
         let uuid = uuidV4();
         uuid = uuid.replaceAll("-", "");
@@ -430,7 +398,7 @@ class StoreView extends React.Component {
             {
               !this.state.loadView ?
                 this.state.idCol <= this.state.page ?
-                  this.state.totalPage-1 === this.state.page ?
+                  this.state.totalPage - 1 === this.state.page ?
                     null
                     :
                     <div id={"idCol"}>
