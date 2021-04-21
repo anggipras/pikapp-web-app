@@ -48,7 +48,7 @@ const CartModal = (props) => {
                             <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption, props.title)} name={'EATMETHOD'} defaultChecked={radioNumEat === keyOption ? true : false} />
                             <label htmlFor={optionVal.image}>
                                 <div className='modalCart-radioSide'>
-                                    <img className='modalCartradio-image' src={imageOption} />
+                                    <img className='modalCartradio-image' src={imageOption} alt='' />
                                     <div className='modalCart-radioTitle'>{optionVal.option}</div>
                                 </div>
                             </label>
@@ -62,7 +62,7 @@ const CartModal = (props) => {
                             <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption, props.title)} name={'PAYMETHOD'} defaultChecked={radioNumPay === keyOption ? true : false} />
                             <label htmlFor={optionVal.image}>
                                 <div className='modalCart-radioSide'>
-                                    <img className='modalCartradio-image' src={imageOption} />
+                                    <img className='modalCartradio-image' src={imageOption} alt='' />
                                     <div className='modalCart-radioTitle'>{optionVal.option}</div>
                                 </div>
                             </label>

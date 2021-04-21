@@ -13,16 +13,12 @@ export default class StoreLayout extends React.Component {
 
   render() {
     return (
-      <html>
-        <header>
-          <MainNavigation />
-        </header>
-        <body>
-          <Container>
-            <StoreView />
-          </Container>
-        </body>
-      </html>
+      <>
+        <MainNavigation />
+        <Container>
+          <StoreView />
+        </Container>
+      </>
     );
   }
 }
