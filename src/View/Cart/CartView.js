@@ -68,11 +68,11 @@ class CartView extends React.Component {
     themid: '',
     indexEdit: 0,
     updateData: '',
-    successMessage: ''
+    successMessage: '',
+    isEmailVerified : false,
   };
 
-  // componentDidMount() {
-  //   this.handleReloadEmail();
+  componentDidMount() {
     // const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     // let allCart = JSON.parse(localStorage.getItem('cart'))
     // let filterCart = allCart.filter(valCart => {
@@ -84,7 +84,45 @@ class CartView extends React.Component {
     //   this.setState({ changeUI: false })
     // }
 
-  // }
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+      is_email_verified : true
+    };
+
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
+    this.setState({ isEmailVerified: auth.is_email_verified });
+
+    if(this.state.isEmailVerified === false) {
+        this.handleReloadEmail();
+    }
+
+  }
+
+  componentDidUpdate() {
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    //   is_email_verified : true
+    // };
+
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
+
+    // if(this.state.isEmailVerified === false) {
+    //     this.handleReloadEmail();
+    // }
+  }
 
   handleDetail(data) {
     if (data === "eat-method") {
@@ -571,16 +609,9 @@ class CartView extends React.Component {
       })
         .then((res) => {
           let data = res.data.results
-          // auth.isLogged = true;
-          // auth.token = data.token;
-          // auth.new_event = data.new_event;
-          // auth.recommendation_status = data.recommendation_status;
           auth.is_email_verified = data.is_email_verified;
-          // auth.email = AuthRedu.dataLogin.email;
           Cookies.set("auth", auth, { expires: 1 });
-
-          auth = JSON.parse(Cookies.get("auth"));
-          console.log(auth);
+          this.setState({ isEmailVerified: auth.is_email_verified });
         })
         .catch((err) => {
         });
@@ -778,7 +809,7 @@ class CartView extends React.Component {
       <>
         <div className='cartLayout'>
           {
-          !auth.is_email_verified ?
+          !this.state.isEmailVerified ?
           <div className='verificationMsg'>
             <div className='message'>Verifikasi Email Anda</div>
             <div className='messageSend'>
