@@ -11,7 +11,6 @@ import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
-import Storeimg2 from '../../Asset/Illustration/storeimg1.png'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -151,11 +150,8 @@ class ProductView extends React.Component {
         localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
         Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
 
-        // let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-        // let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-
-        let selectedMerchant = selectedStore
-        let filtersizeMerchant = selectedStore
+        let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+        let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
         let stateData = { ...this.state.data };
         stateData.mid = mid;
@@ -243,9 +239,6 @@ class ProductView extends React.Component {
           firstShownProduct[indexcategProd].category_products = newFilter
         })
 
-        // let newImage = currentMerchant.storeImage
-        // newImage = newImage.replace(/^https:\/\//i, 'http://')
-        // console.log(newImage);
         let newImage = Storeimg
         Axios.get(currentMerchant.storeImage)
           .then(() => {
@@ -496,17 +489,6 @@ class ProductView extends React.Component {
             if (isFound === false) {
               if (data.mid === this.state.data.mid) {
                 console.log('same mid');
-                // data.food.forEach((food) => {
-                //   if (isFound === false) {
-                //     if (food.foodNote === currentExt.note) {
-                //       if (food.productId === this.state.currentData.productId) {
-                //         isFound = true
-                //         food.foodAmount += currentExt.detailCategory[0].amount;
-                //       }
-                //     }
-                //   }
-                // });
-
                 if (isFound === false) {
                   if (duplicateProduct[indexOfspesificCart].foodNote === currentExt.note) {
                     isFound = true
@@ -622,7 +604,6 @@ class ProductView extends React.Component {
       showConfirmButton: false,
       timer: 1500
     })
-    // alert('berhasil masuk cart')
     var auth = {
       isLogged: false,
       token: "",
