@@ -125,7 +125,7 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        console.log(res.data.results);
+        // console.log(res.data.results);
         var currentMerchant = {
           mid: "",
           storeName: "",
@@ -810,10 +810,22 @@ class ProductView extends React.Component {
       if (filterMerchantCart.length) {
         localStorage.setItem('table', notab)
         localStorage.setItem('lastTable', notab)
+        let totalCartIcon = 0
+        filterMerchantCart[0].food.forEach(valCart=> {
+          totalCartIcon += valCart.foodTotalPrice
+        })
         if (filterMerchantCart[0].mid) {
           cartButton = (
-            <Link to={"/cart"} className={"btn-productCart"}>
-              <img src={cartIcon} alt='' />
+            // <Link to={"/cart"} className={"btn-productCart"}>
+            //   <img src={cartIcon} alt='' />
+            // </Link>
+            <Link to={"/cart"}>
+              <div className='cartIcon-layout'>
+                <div className='cartIcon-content'>
+                  <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+                  <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                </div>
+              </div>
             </Link>
           );
         } else {
@@ -822,20 +834,29 @@ class ProductView extends React.Component {
       } else {
         cartButton = <></>;
       }
-    } else {
-      let cart = JSON.parse(localStorage.getItem('cart'))
-      if (cart.length > 1) {
-        localStorage.setItem('table', notab)
-        localStorage.setItem('lastTable', notab)
-        cartButton = (
-          <Link to={"/cart"} className={"btn-productCart"}>
-            <img src={cartIcon} alt={"cart"} />
-          </Link>
-        );
-      } else {
-        cartButton = <></>;
-      }
-    }
+    } 
+    // else {
+    //   let cart = JSON.parse(localStorage.getItem('cart'))
+    //   if (cart.length > 1) {
+    //     localStorage.setItem('table', notab)
+    //     localStorage.setItem('lastTable', notab)
+    //     cartButton = (
+    //       // <Link to={"/cart"} className={"btn-productCart"}>
+    //       //   <img src={cartIcon} alt={"cart"} />
+    //       // </Link>
+    //       <Link to={"/cart"}>
+    //         <div className='cartIcon-layout'>
+    //           <div className='cartIcon-content'>
+    //             <div className='cartItem-total'>Checkout 1000 Items</div>
+    //             <div className='cartItem-price'>50.000</div>
+    //           </div>
+    //         </div>
+    //       </Link>
+    //     );
+    //   } else {
+    //     cartButton = <></>;
+    //   }
+    // }
 
     if (this.state.categName !== "All Categories") {
       if (this.props.AllRedu.openSelect === false) {
