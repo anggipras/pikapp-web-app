@@ -671,31 +671,31 @@
   //   border-radius: 36px;
   // }
 
-  // .btn-productCart {
-  //   border-radius: 180px;
-  //   background-color: $primary-color;
-  //   border-color: transparent;
-  //   position: fixed;
-  //   bottom: 32px;
-  //   right: 32px;
-  //   width: 100px;
-  //   height: 100px;
-  // }
-  // .btn-productCart > img {
-  //   width: 36px;
-  //   margin-left: 30%;
-  //   margin-top: 30%;
-  // }
-  // .btn-productCart:active {
-  //   border-radius: 180px;
-  //   background-color: $secondary-color;
-  //   border-color: transparent;
-  //   position: fixed;
-  //   bottom: 32px;
-  //   right: 32px;
-  //   width: 100px;
-  //   height: 100px;
-  // }
+  .btn-productCart {
+    border-radius: 180px;
+    background-color: $primary-color;
+    border-color: transparent;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 100px;
+    height: 100px;
+  }
+  .btn-productCart > img {
+    width: 36px;
+    margin-left: 30%;
+    margin-top: 30%;
+  }
+  .btn-productCart:active {
+    border-radius: 180px;
+    background-color: $secondary-color;
+    border-color: transparent;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 100px;
+    height: 100px;
+  }
 
   .cartIcon-layout {
     display: flex;
@@ -1412,33 +1412,33 @@
   // .modalNote {
   //   border-radius: 36px;
   // }
-  // .btn-productCart {
-  //   border-radius: 180px;
-  //   background-color: $primary-color;
-  //   border-color: $secondary-color;
-  //   border-width: 2px;
-  //   position: fixed;
-  //   bottom: 32px;
-  //   right: 32px;
-  //   width: 64px;
-  //   height: 64px;
-  // }
-  // .btn-productCart > img {
-  //   width: 24px;
-  //   margin-left: 30%;
-  //   margin-top: 30%;
-  // }
-  // .btn-productCart:active {
-  //   border-radius: 180px;
-  //   background-color: $primary-color;
-  //   border-color: $secondary-color;
-  //   border-width: 2px;
-  //   position: fixed;
-  //   bottom: 32px;
-  //   right: 32px;
-  //   width: 64px;
-  //   height: 64px;
-  // }
+  .btn-productCart {
+    border-radius: 180px;
+    background-color: $primary-color;
+    border-color: $secondary-color;
+    border-width: 2px;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+  }
+  .btn-productCart > img {
+    width: 24px;
+    margin-left: 30%;
+    margin-top: 30%;
+  }
+  .btn-productCart:active {
+    border-radius: 180px;
+    background-color: $primary-color;
+    border-color: $secondary-color;
+    border-width: 2px;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+  }
 
   .cartIcon-layout {
     display: flex;
