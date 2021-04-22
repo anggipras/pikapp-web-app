@@ -11,7 +11,7 @@ import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
-import Storeimg2 from '../../Asset/Illustration/storeimg1.png'
+import Productimage from '../../Asset/Illustration/storeimg.jpg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -126,7 +126,7 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        console.log(res.data.results);
+        // console.log(res.data.results);
         var currentMerchant = {
           mid: "",
           storeName: "",
@@ -151,11 +151,8 @@ class ProductView extends React.Component {
         localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
         Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
 
-        // let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-        // let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-
-        let selectedMerchant = selectedStore
-        let filtersizeMerchant = selectedStore
+        let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+        let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
         let stateData = { ...this.state.data };
         stateData.mid = mid;
@@ -243,9 +240,6 @@ class ProductView extends React.Component {
           firstShownProduct[indexcategProd].category_products = newFilter
         })
 
-        // let newImage = currentMerchant.storeImage
-        // newImage = newImage.replace(/^https:\/\//i, 'http://')
-        // console.log(newImage);
         let newImage = Storeimg
         Axios.get(currentMerchant.storeImage)
           .then(() => {
@@ -496,17 +490,6 @@ class ProductView extends React.Component {
             if (isFound === false) {
               if (data.mid === this.state.data.mid) {
                 console.log('same mid');
-                // data.food.forEach((food) => {
-                //   if (isFound === false) {
-                //     if (food.foodNote === currentExt.note) {
-                //       if (food.productId === this.state.currentData.productId) {
-                //         isFound = true
-                //         food.foodAmount += currentExt.detailCategory[0].amount;
-                //       }
-                //     }
-                //   }
-                // });
-
                 if (isFound === false) {
                   if (duplicateProduct[indexOfspesificCart].foodNote === currentExt.note) {
                     isFound = true
@@ -622,7 +605,6 @@ class ProductView extends React.Component {
       showConfirmButton: false,
       timer: 1500
     })
-    // alert('berhasil masuk cart')
     var auth = {
       isLogged: false,
       token: "",
@@ -738,7 +720,7 @@ class ProductView extends React.Component {
     return this.state.productCategpersize.map((categ, indcateg) => {
       return (
         <div key={indcateg} className='product-section'>
-          <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={30} width={100} />}</h2>
+          <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={50} width={200} />}</h2>
 
           <div className='list-product'>
             {
@@ -746,12 +728,7 @@ class ProductView extends React.Component {
                 return (
                   <div key={indprod} className='product-merchant' onClick={() => this.handleDetail(product)}>
                     <div className='product-img'>
-                      {
-                        product.foodImage ?
-                          <img src={product.foodImage} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
-                          :
-                          <Skeleton height={120} style={{ paddingTop: 50 }} />
-                      }
+                      <img src={product.foodImage} className='product-imgContent' alt='' />
                     </div>
 
                     <div className='product-detail-mob'>
@@ -762,11 +739,11 @@ class ProductView extends React.Component {
                         </div>
 
                         <div className='product-name'>
-                          {product.foodName || <Skeleton style={{ paddingTop: 10 }} />}
+                          {product.foodName}
                         </div>
 
                         <div className='product-desc'>
-                          {product.foodDesc || <Skeleton style={{ paddingTop: 10 }} />}
+                          {product.foodDesc}
                         </div>
 
                         <div className='product-price'>
@@ -829,11 +806,23 @@ class ProductView extends React.Component {
       if (filterMerchantCart.length) {
         localStorage.setItem('table', notab)
         localStorage.setItem('lastTable', notab)
+        let totalCartIcon = 0
+        filterMerchantCart[0].food.forEach(valCart => {
+          totalCartIcon += valCart.foodTotalPrice
+        })
         if (filterMerchantCart[0].mid) {
           cartButton = (
             <Link to={"/cart"} className={"btn-productCart"}>
               <img src={cartIcon} alt='' />
             </Link>
+            // <Link to={"/cart"}>
+            //   <div className='cartIcon-layout'>
+            //     <div className='cartIcon-content'>
+            //       <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+            //       <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+            //     </div>
+            //   </div>
+            // </Link>
           );
         } else {
           cartButton = <></>;
@@ -841,20 +830,29 @@ class ProductView extends React.Component {
       } else {
         cartButton = <></>;
       }
-    } else {
-      let cart = JSON.parse(localStorage.getItem('cart'))
-      if (cart.length > 1) {
-        localStorage.setItem('table', notab)
-        localStorage.setItem('lastTable', notab)
-        cartButton = (
-          <Link to={"/cart"} className={"btn-productCart"}>
-            <img src={cartIcon} alt={"cart"} />
-          </Link>
-        );
-      } else {
-        cartButton = <></>;
-      }
     }
+    // else {
+    //   let cart = JSON.parse(localStorage.getItem('cart'))
+    //   if (cart.length > 1) {
+    //     localStorage.setItem('table', notab)
+    //     localStorage.setItem('lastTable', notab)
+    //     cartButton = (
+    //       // <Link to={"/cart"} className={"btn-productCart"}>
+    //       //   <img src={cartIcon} alt={"cart"} />
+    //       // </Link>
+    //       <Link to={"/cart"}>
+    //         <div className='cartIcon-layout'>
+    //           <div className='cartIcon-content'>
+    //             <div className='cartItem-total'>Checkout 1000 Items</div>
+    //             <div className='cartItem-price'>50.000</div>
+    //           </div>
+    //         </div>
+    //       </Link>
+    //     );
+    //   } else {
+    //     cartButton = <></>;
+    //   }
+    // }
 
     if (this.state.categName !== "All Categories") {
       if (this.props.AllRedu.openSelect === false) {

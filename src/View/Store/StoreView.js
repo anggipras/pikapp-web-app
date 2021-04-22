@@ -177,56 +177,24 @@ class StoreView extends React.Component {
       }
     }
   }
-
-
-    // const value = queryString.parse(window.location.search);
-    // console.log(value);
-    // var longitude = "";
-    // var latitude = "";
-    // var merchant = "";
-
-
-
-    //OPENCAGE API
-    // let opencagelonglat = latitude + "," + longitude
-    // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-    //     params:{
-    //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
-    //         q: opencagelonglat
-    //     }
-    // }).then((res)=> {
-    //   console.log(res.data.results[0].formatted);
-    //   this.setState({location: res.data.results[0].formatted})
-    // }).catch((err) => {
-    //   this.setState({location: "Tidak tersedia"})
-    // })
+  //OPENCAGE API
+  // let opencagelonglat = latitude + "," + longitude
+  // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
+  //     params:{
+  //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
+  //         q: opencagelonglat
+  //     }
+  // }).then((res)=> {
+  //   console.log(res.data.results[0].formatted);
+  //   this.setState({location: res.data.results[0].formatted})
+  // }).catch((err) => {
+  //   this.setState({location: "Tidak tersedia"})
+  // })
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {
       if (this.state.boolpage === true) {
-        const value = queryString.parse(window.location.search);
-        var longitude = "";
-        var latitude = "";
-        var merchant = "";
-        longitude = value.longitude
-        latitude = value.latitude
-        merchant = value.merchant;
-
-        let addressRoute;
-        if (merchant === undefined) {
-          addressRoute =
-            address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
-        } else {
-          addressRoute =
-            address +
-            "home/v1/merchant/" +
-            longitude +
-            "/" +
-            latitude +
-            "/" +
-            merchant
-            + "/"
-        }
+        let addressRoute = address + "home/v2/merchant/" + this.state.lon + "/" + this.state.lat + "/ALL/";
         var stateData;
         let uuid = uuidV4();
         uuid = uuid.replaceAll("-", "");
@@ -357,9 +325,9 @@ class StoreView extends React.Component {
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });
-    var allCards = storeDatas.map((cardData) => {
+    var allCards = storeDatas.map((cardData, indexCard) => {
       return (
-        <Row>
+        <Row key={indexCard}>
           <Col xs={3} md={3}>
             {
               this.state.loadView ?
@@ -375,7 +343,7 @@ class StoreView extends React.Component {
           </Col>
           <Col xs={9} md={6}>
             <Row>
-              <Col xs={7} md={9}>
+              <Col xs={7} md={9} className="storeInfo">
                 {
                   this.state.loadView ?
                     <Skeleton style={{ width: 100, height: 30, marginLeft: 20 }} />
@@ -430,7 +398,7 @@ class StoreView extends React.Component {
             {
               !this.state.loadView ?
                 this.state.idCol <= this.state.page ?
-                  this.state.totalPage-1 === this.state.page ?
+                  this.state.totalPage - 1 === this.state.page ?
                     null
                     :
                     <div id={"idCol"}>

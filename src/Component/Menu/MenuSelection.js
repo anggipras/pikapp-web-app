@@ -10,15 +10,15 @@ import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Loader from 'react-loader-spinner'
 
-const checkboxDummyData = [
-    { additionname: 'topping', maxchoice: 3, isMandat: true, listaddition: [{ name: 'coklat', price: 5000, isChecked: false }, { name: 'keju', price: 6000, isChecked: false }, { name: 'pisang', price: 7000, isChecked: false }, { name: 'wijen', price: 8000, isChecked: false }] },
-    { additionname: 'boba', maxchoice: 2, isMandat: false, listaddition: [{ name: 'rainbow', price: 1000, isChecked: false }, { name: 'jelly', price: 2000, isChecked: false }, { name: 'pudding', price: 3000, isChecked: false }, { name: 'pearl', price: 4000, isChecked: false }] },
-]
+// const checkboxDummyData = [
+//     { additionname: 'topping', maxchoice: 3, isMandat: true, listaddition: [{ name: 'coklat', price: 5000, isChecked: false }, { name: 'keju', price: 6000, isChecked: false }, { name: 'pisang', price: 7000, isChecked: false }, { name: 'wijen', price: 8000, isChecked: false }] },
+//     { additionname: 'boba', maxchoice: 2, isMandat: false, listaddition: [{ name: 'rainbow', price: 1000, isChecked: false }, { name: 'jelly', price: 2000, isChecked: false }, { name: 'pudding', price: 3000, isChecked: false }, { name: 'pearl', price: 4000, isChecked: false }] },
+// ]
 
-const radioDummyData = [
-    { additionname: 'level pedas', isMandat: true, listaddition: [{ name: 'tidak pedas', isChecked: false }, { name: 'pedas', isChecked: false }, { name: 'pedas mampus', isChecked: false }] },
-    { additionname: 'level dingin', isMandat: false, listaddition: [{ name: 'tidak dingin', isChecked: false }, { name: 'dingin', isChecked: false }, { name: 'dingin mampus', isChecked: false }] },
-]
+// const radioDummyData = [
+//     { additionname: 'level pedas', isMandat: true, listaddition: [{ name: 'tidak pedas', isChecked: false }, { name: 'pedas', isChecked: false }, { name: 'pedas mampus', isChecked: false }] },
+//     { additionname: 'level dingin', isMandat: false, listaddition: [{ name: 'tidak dingin', isChecked: false }, { name: 'dingin', isChecked: false }, { name: 'dingin mampus', isChecked: false }] },
+// ]
 
 const MenuSelection = (props) => {
     const dispatch = useDispatch()
@@ -40,8 +40,8 @@ const MenuSelection = (props) => {
     const [radioData, setradioData] = useState([])
     const [radioMatch, setradioMatch] = useState([])
     const [totalRadioMandat, settotalRadioMandat] = useState(0)
-    const [indexGroupRadioMandat, setindexGroupRadioMandat] = useState(null)
-    const [indexEachRadioMandat, setindexEachRadioMandat] = useState(null)
+    // const [indexGroupRadioMandat, setindexGroupRadioMandat] = useState(null)
+    // const [indexEachRadioMandat, setindexEachRadioMandat] = useState(null)
 
     const [updateDataEdit, setupdateDataEdit] = useState(false)
     const [updateEditChoice, setupdateEditChoice] = useState(false)
@@ -354,7 +354,7 @@ const MenuSelection = (props) => {
                                     AllRedu.openMenuCart ?
                                         updateEditChoice ?
                                             <div key={indlistadd} className='box-section'>
-                                                <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
+                                                <input disabled={AllRedu.validQTY === 0} id={listadd.name} type='checkbox' name={`${listname.additionname}${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
                                                 <label htmlFor={listadd.name}>
                                                     <div className='checkBox-side'>
                                                         <div className='check-box' />
@@ -370,7 +370,7 @@ const MenuSelection = (props) => {
                                             null
                                         :
                                         <div key={indlistadd} className='box-section'>
-                                            <input disabled={AllRedu.validQTY === 0} defaultChecked={listadd.isChecked} id={listadd.name} type='checkbox' name={`${listname.additionname}` + `${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
+                                            <input disabled={AllRedu.validQTY === 0} id={listadd.name} type='checkbox' name={`${listname.additionname}${indlistadd}`} className={`CHECKDOT${indlistname}`} value={listadd.name} onChange={(e) => onCheckboxChange(e, indlistname, listadd.price, `CHECKDOT${indlistname}`, listname.maxchoice, listname.isMandat)} defaultChecked={listadd.isChecked} />
                                             <label htmlFor={listadd.name}>
                                                 <div className='checkBox-side'>
                                                     <div className='check-box' />
