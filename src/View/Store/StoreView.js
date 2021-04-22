@@ -54,7 +54,8 @@ class StoreView extends React.Component {
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
-    } else {
+    } 
+    // else {
       const value = queryString.parse(window.location.search);
       var longitude = "";
       var latitude = "";
@@ -175,7 +176,7 @@ class StoreView extends React.Component {
             });
             });
       }
-    }
+    // }
   }
   //OPENCAGE API
   // let opencagelonglat = latitude + "," + longitude
