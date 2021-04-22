@@ -402,7 +402,6 @@
   .product-merchant {
     max-width: 386px;
     width: auto;
-    min-height: 173px;
     height: auto;
     border-radius: 50px;
     background-color: #ffffff;
@@ -416,8 +415,6 @@
 
   .product-img {
     width: 173px;
-    min-height: 173px;
-    height: 100%;
     border-radius: 50px;
     overflow: hidden;
   }
@@ -1142,7 +1139,6 @@
   .product-merchant {
     max-width: 382px;
     width: 100%;
-    // min-height: 113px;
     height: auto;
     border-radius: 30px;
     background-color: #ffffff;
@@ -1154,8 +1150,6 @@
 
   .product-img {
     width: 113px;
-    // min-height: 113px;
-    // height: 100%;
     border-radius: 30px;
     overflow: hidden;
   }
