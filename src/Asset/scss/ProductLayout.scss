@@ -395,9 +395,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     padding-left: 8px;
-    padding-right: 8px;
     padding-top: 54px;
   }
+
 
   .product-merchant {
     max-width: 386px;
@@ -410,23 +410,21 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 28px;
-    cursor: pointer;
-  }
-
-  .product-merchant:nth-child(3n + 2) {
-    margin-left: 14px;
     margin-right: 14px;
+    cursor: pointer;
   }
 
   .product-img {
     width: 173px;
+    min-height: 173px;
     height: 100%;
     border-radius: 50px;
     overflow: hidden;
   }
 
   .product-detail {
-    margin-left: 20px;
+    padding-left: 20px;
+    padding-right: 15px;
   }
 
   .product-star {
