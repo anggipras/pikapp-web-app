@@ -11,6 +11,7 @@ import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
+import Productimage from '../../Asset/Illustration/storeimg.jpg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
 import NotifIcon from '../../Asset/Icon/bell.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
@@ -719,7 +720,7 @@ class ProductView extends React.Component {
     return this.state.productCategpersize.map((categ, indcateg) => {
       return (
         <div key={indcateg} className='product-section'>
-          <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={30} width={100} />}</h2>
+          <h2 id={categ.category_name.toLocaleLowerCase()} className='product-categ'>{categ.category_name.toLocaleLowerCase() || <Skeleton height={50} width={200} />}</h2>
 
           <div className='list-product'>
             {
@@ -727,12 +728,7 @@ class ProductView extends React.Component {
                 return (
                   <div key={indprod} className='product-merchant' onClick={() => this.handleDetail(product)}>
                     <div className='product-img'>
-                      {
-                        product.foodImage ?
-                          <img src={product.foodImage} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
-                          :
-                          <Skeleton height={120} style={{ paddingTop: 50 }} />
-                      }
+                      <img src={product.foodImage} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                     </div>
 
                     <div className='product-detail-mob'>
@@ -743,11 +739,11 @@ class ProductView extends React.Component {
                         </div>
 
                         <div className='product-name'>
-                          {product.foodName || <Skeleton style={{ paddingTop: 10 }} />}
+                          {product.foodName}
                         </div>
 
                         <div className='product-desc'>
-                          {product.foodDesc || <Skeleton style={{ paddingTop: 10 }} />}
+                          {product.foodDesc}
                         </div>
 
                         <div className='product-price'>
@@ -811,7 +807,7 @@ class ProductView extends React.Component {
         localStorage.setItem('table', notab)
         localStorage.setItem('lastTable', notab)
         let totalCartIcon = 0
-        filterMerchantCart[0].food.forEach(valCart=> {
+        filterMerchantCart[0].food.forEach(valCart => {
           totalCartIcon += valCart.foodTotalPrice
         })
         if (filterMerchantCart[0].mid) {
@@ -834,7 +830,7 @@ class ProductView extends React.Component {
       } else {
         cartButton = <></>;
       }
-    } 
+    }
     // else {
     //   let cart = JSON.parse(localStorage.getItem('cart'))
     //   if (cart.length > 1) {
