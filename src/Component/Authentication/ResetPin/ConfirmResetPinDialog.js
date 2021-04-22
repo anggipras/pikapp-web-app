@@ -75,7 +75,7 @@ const ConfirmResetPinDialog = (props) => {
         let uuid = uuidV4();
         uuid = uuid.replaceAll("-", "");
         const date = new Date().toISOString();
-        axios(address + "auth/reset-pin/" + AuthRedu.dataPinToken, {
+        axios(address + "auth/reset-pin/" + AuthRedu.dataPinToken + "/", {
             headers: {
                 "Content-Type": "application/json",
                 "x-request-id": uuid,
@@ -91,7 +91,7 @@ const ConfirmResetPinDialog = (props) => {
                 Cookies.set("lastLink", lastLink,{ expires: 1});
                 localStorage.clear();
                 Cookies.remove("auth");
-                props.DoneLoad();
+                // props.DoneLoad();
                 // window.location.reload();
             })
             .catch((err) => {
