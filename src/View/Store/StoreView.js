@@ -57,8 +57,6 @@ class StoreView extends React.Component {
     }
 
     const value = queryString.parse(window.location.search);
-    var longitude = "";
-    var latitude = "";
     var merchant = "";
 
     if (navigator.geolocation) {
@@ -325,9 +323,9 @@ class StoreView extends React.Component {
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });
-    var allCards = storeDatas.map((cardData) => {
+    var allCards = storeDatas.map((cardData, indexCard) => {
       return (
-        <Row>
+        <Row key={indexCard}>
           <Col xs={3} md={3}>
             {
               this.state.loadView ?
@@ -343,7 +341,7 @@ class StoreView extends React.Component {
           </Col>
           <Col xs={9} md={6}>
             <Row>
-              <Col xs={7} md={9}>
+              <Col xs={7} md={9} className="storeInfo">
                 {
                   this.state.loadView ?
                     <Skeleton style={{ width: 100, height: 30, marginLeft: 20 }} />

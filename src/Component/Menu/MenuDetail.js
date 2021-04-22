@@ -290,9 +290,9 @@ const MenuDetail = (props) => {
                                                             <h2 className='add-words'>
                                                                 {
                                                                     AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                                                                        'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
+                                                                        `TAMBAH - ${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
                                                                         :
-                                                                        'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
+                                                                        `TAMBAH - ${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
                                                                 }
                                                             </h2>
                                                     }
@@ -396,9 +396,9 @@ const MenuDetail = (props) => {
                                                         <h2 className='mob-add-words'>
                                                             {
                                                                 AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                                                                    'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
+                                                                    `TAMBAH - ${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
                                                                     :
-                                                                    'TAMBAH - ' + `${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
+                                                                    `TAMBAH - ${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
                                                             }
                                                         </h2>
                                                 }
