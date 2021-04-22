@@ -9,14 +9,18 @@ import PikaButton from "../../Component/Button/PikaButton";
 import PikaTextField from "../../Component/TextField/PikaTextField";
 import LoginDialog from "../Authentication/LoginDialog";
 import PinDialog from "./PinDialog";
+import ConfirmPinDialog from "./ConfirmPinDialog";
 import ReCAPTCHA from "react-google-recaptcha";
+import ForgotPin from "./ForgotPinDialog";
 
 const RegisterDialog = (props) => {
     const dispatch = useDispatch()
     const AllRedu = useSelector(state => state.AllRedu)
-    const [registerDialog, setRegister] = useState(false)
-    const [loginDialog, setLogin] = useState(false)
-    const [pinDialog, setPin] = useState(false)
+    const AuthRedu = useSelector(state => state.AuthRedu);
+    const [loginDialog, setLogin] = useState(false);
+    const [pinDialog, setPin] = useState(false);
+    const [confirmPinDialog, setConfirmPin] = useState(false);
+    const [forgotPinDialog, setForgotPin] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -28,6 +32,12 @@ const RegisterDialog = (props) => {
     const [lon, setLon] = useState('');
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
+
+    // if(AuthRedu.dataRegister) {
+    //     setName(AuthRedu.dataRegister.full_name);
+    //     setEmail(AuthRedu.dataRegister.email);
+    //     setPhone(AuthRedu.dataRegister.phone_number);
+    // }
 
     const closeModal = (e) => {
         e.stopPropagation()
@@ -89,6 +99,8 @@ const RegisterDialog = (props) => {
         dispatch({ type: 'LOGINSTEP', payload: false });
 
         setPin(true);
+        // setConfirmPin(true);
+        // setForgotPin(true);
         // props.onHideRegister();
     }
 
@@ -143,27 +155,115 @@ const RegisterDialog = (props) => {
         }
     };
 
-    const handleRegister = (e) => {
-        if (checkEmail() === false) {
-            setIsValid(false);
-            return;
-        }
-        if (checkName === false) {
-            setIsValid(false);
-            return;
-        }
-        if (checkPhone === false) {
-            setIsValid(false);
-            return;
-        }
-
-        // this.props.LoadingButton()
-        setIsValid(true);
-
-    };
-
     const onChange = (value) => {
         console.log(value);
+    }
+
+    const closeRegisterFlowDialog = () => {
+        setConfirmPin(false);
+        props.onHideRegister();
+    }
+
+    const closeLoginFlowDialog = () => {
+        setPin(false);
+        props.onHideRegister();
+    }
+
+    const closeForgotFlowDialog = () => {
+        setForgotPin(false);
+        props.onHideRegister();
+    }
+
+    const showDialog = (value) => {
+        if(pinDialog) {
+            return (
+                <PinDialog
+                    isShowPin={pinDialog}
+                    onHidePin={() => setPin(false)}
+                    onShowConfirm={() => setConfirmPin(true)}
+                    onShowForgotPin={() => setForgotPin(true)}
+                    onHideLoginFlow={closeLoginFlowDialog}
+                />
+            )
+        } else if(loginDialog){
+            return (
+                <LoginDialog
+                    isShowLogin={loginDialog}
+                    onHideLogin={() => setLogin(false)}
+                    onShowPin={() => setPin(true)}
+                />
+            )
+        } 
+        else if(confirmPinDialog) {
+            return (
+                <ConfirmPinDialog
+                    isShowConfirmPin={confirmPinDialog}
+                    onHideConfirmPin={() => setConfirmPin(false)}
+                    onHideRegisterFlow={closeRegisterFlowDialog}
+                />
+            )
+        }
+        else if (forgotPinDialog) {
+            return (
+                <ForgotPin
+                    isShowForgotPin={forgotPinDialog}
+                    onHideForgotPin={() => setForgotPin(false)}
+                    onHideForgotFlow={closeForgotFlowDialog}
+                />
+            )
+        }
+        else {
+            return (
+                <div className='menu-detail-auth'>
+                    <div className='menu-name-auth'>
+                        Selangkah Lagi Sebelum Memesan!
+                    </div>
+
+                    <div className='textfield-auth'>
+                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
+                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
+                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+
+                        <Form>
+                            <Row>
+                                <Col xs={11}>
+                                    {!isCaptcha || (
+                                        <ReCAPTCHA sitekey="asd" onChange={onChange} />
+                                    )}
+                                </Col>
+                                <Col />
+                            </Row>
+
+                            <Row>
+                                <Col xs={6}>
+                                    {isValid || (
+                                        <Alert variant="danger">{errorMsg}</Alert>
+                                    )}
+                                </Col>
+                                <Col />
+                            </Row>
+                        
+                            <div className='buttonSide-auth'>
+                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
+                                <div className="submitButton-auth" onClick={openPinDialog}>
+                                    <div className="wordsButton-auth">
+                                        NEXT
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='bottomSide-auth'>
+                                <h4 className='countrySide-auth'>Indonesia</h4>
+                                <div className='reqSide-auth'>
+                                    <h4 className='reqSideWord-auth'>Privasi</h4>
+                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                </div>
+                            </div>
+                        </Form>
+                    </div>
+                </div>
+            )
+        }
     }
 
     return (
@@ -185,54 +285,8 @@ const RegisterDialog = (props) => {
                             <div className='menuContain-all-auth'>
                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
 
-                                <div className='menu-detail-auth'>
-                                    <div className='menu-name-auth'>
-                                        Selangkah Lagi Sebelum Memesan!
-                                    </div>
+                                {showDialog()}
 
-                                    <div className='textfield-auth'>
-                                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
-                                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
-                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
-
-                                        <Form>
-                                            <Row>
-                                                <Col xs={11}>
-                                                    {!isCaptcha || (
-                                                        <ReCAPTCHA sitekey="asd" onChange={onChange} />
-                                                    )}
-                                                </Col>
-                                                <Col />
-                                            </Row>
-
-                                            <Row>
-                                                <Col xs={6}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                </Col>
-                                                <Col />
-                                            </Row>
-                                        
-                                            <div className='buttonSide-auth'>
-                                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
-                                                <div className="submitButton-auth" onClick={openPinDialog}>
-                                                    <div className="wordsButton-auth">
-                                                        NEXT
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className='bottomSide-auth'>
-                                                <h4 className='countrySide-auth'>Indonesia</h4>
-                                                <div className='reqSide-auth'>
-                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
-                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                                </div>
-                                            </div>
-                                        </Form>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -253,261 +307,15 @@ const RegisterDialog = (props) => {
                             <div className='menuContain-all-auth'>
                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
 
-                                <div className='menu-detail-auth'>
-                                    <div className='menu-name-auth'>
-                                        Selangkah Lagi Sebelum Memesan!
-                                    </div>
+                                {showDialog()}
 
-                                    <div className='textfield-auth'>
-                                        <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
-                                        <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
-                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
-
-                                        <Form>
-                                            <Row>
-                                                <Col xs={11}>
-                                                    {!isCaptcha || (
-                                                        <ReCAPTCHA sitekey="asd" onChange={onChange} />
-                                                    )}
-                                                </Col>
-                                                <Col />
-                                            </Row>
-
-                                            <Row>
-                                                <Col xs={6}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                <Col />
-                                            </Row>
-                                        
-                                            <div className='buttonSide-auth'>
-                                                <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
-                                                <div className="submitButton-auth" onClick={openPinDialog}>
-                                                    <div className="wordsButton-auth">
-                                                        NEXT
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className='bottomSide-auth'>
-                                                <h4 className='countrySide-auth'>Indonesia</h4>
-                                                <div className='reqSide-auth'>
-                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
-                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                                </div>
-                                            </div>
-                                        </Form>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             }
-            {showLoginDialog()}
-            {showPinDialog()}
         </div>
     );
-
-    // return (
-    //     <div>
-    //         {
-    //             !isMobile ?
-    //             <div className='modalMenuDetail-auth' style={{
-    //                 display: props.isShowRegister ? 'block' : 'none'
-    //             }} onClick={closeModal}
-    //             >
-    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-    //                     {
-    //                         <span className='iconClose-auth' onClick={closeModal}>
-    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
-    //                         </span>
-    //                     }
-
-    //                     <div className='menuDetail-layout-auth'>
-    //                         <div className='menuContain-all-auth'>
-    //                             <img src={pikappLogo} className='menuimg-auth' alt='' />
-
-    //                             <div className='menu-detail-auth'>
-    //                                 <div className='menu-name-auth'>
-    //                                     Selangkah Lagi Sebelum Memesan!
-    //                                 </div>
-
-    //                                 <div className='textfield-auth'>
-    //                                     <input type='text' className='textfieldinput-auth' placeholder="Nama Lengkap" onChange={handleName} />
-    //                                     <input type='tel' className='textfieldinput-auth' placeholder="Nomor Handphone (Whatsapp)" onChange={handlePhone} />
-    //                                     <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
-
-    //                                     <Form>
-    //                                         <Row>
-    //                                             <Col xs={11}>
-    //                                                 {!isCaptcha || (
-    //                                                     <ReCAPTCHA sitekey="asd" onChange={onChange} />
-    //                                                 )}
-    //                                             </Col>
-    //                                             <Col />
-    //                                         </Row>
-
-    //                                         <Row>
-    //                                             <Col xs={6}>
-    //                                                 {isValid || (
-    //                                                     <Alert variant="danger">{errorMsg}</Alert>
-    //                                                 )}
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-                                                
-    //                                             <Row>
-    //                                                 <Col xs={4}>
-    //                                                 <p className="linkWords">
-    //                                                     {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
-    //                                                     <div onClick={openLoginDialog}>LOGIN SAJA</div>
-    //                                                 </p>
-    //                                                 </Col>
-    //                                                 <Col xs={3}/>
-                                                    
-    //                                                 <Col xs={4}>
-    //                                                 <PikaButton
-    //                                                     title="SUBMIT"
-    //                                                     buttonStyle="greenPika"
-    //                                                     handleClick={openPinDialog}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-    //                                         </Form>
-                                        
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //             :
-    //             <div className='modalMenuDetail-auth' style={{
-    //                 display: props.isShowRegister ? 'block' : 'none'
-    //             }} onClick={closeModal}
-    //             >
-    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-    //                     {
-    //                         <span className='iconClose-auth' onClick={closeModal}>
-    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
-    //                         </span>
-    //                     }
-
-    //                     <div className='menuDetail-layout-auth'>
-    //                         <div className='menuContain-all-auth'>
-    //                             <div className='menuBanner-auth'>
-    //                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
-    //                             </div>
-
-    //                             <div className='menu-detail-auth'>
-    //                                 <div className='menu-name-auth'>
-    //                                     Selangkah Lagi Sebelum Memesan!
-    //                                 </div>
-
-    //                                 <div>
-    //                                     {
-    //                                         <Form>
-    //                                             <Row>
-    //                                                 <Col xs={11}>
-    //                                                 <PikaTextField
-    //                                                     type="text"
-    //                                                     placeholder="Nama Lengkap"
-    //                                                     handleChange={handleName}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-    //                                             <Row>
-    //                                                 <Col xs={11}>
-    //                                                 <PikaTextField
-    //                                                     type="tel"
-    //                                                     placeholder="Nomor Handphone (Whatsapp)"
-    //                                                     handleChange={handlePhone}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-    //                                             <Row>
-    //                                                 <Col xs={11}>
-    //                                                 <PikaTextField
-    //                                                     type="email"
-    //                                                     placeholder="Alamat Email"
-    //                                                     handleChange={handleEmail}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-
-    //                                             <Row>
-    //                                                 <Col xs={11}>
-    //                                                 {!isCaptcha || (
-    //                                                     <ReCAPTCHA sitekey="asd" onChange={onChange} />
-    //                                                 )}
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-
-    //                                             <Row>
-    //                                                 <Col xs={6}>
-    //                                                 {isValid || (
-    //                                                     <Alert variant="danger">{errorMsg}</Alert>
-    //                                                 )}
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-                                                
-    //                                             <Row>
-    //                                                 <Col xs={3}>
-    //                                                 <p className="linkWords">
-    //                                                     {/* <Link onClick={openLoginDialog}>Login Saja</Link> */}
-    //                                                     <div onClick={openLoginDialog}>LOGIN SAJA</div>
-    //                                                 </p>
-    //                                                 </Col>
-    //                                                 <Col xs={2} md={2}/>
-
-    //                                                 <Col xs={4}>
-    //                                                 <PikaButton
-    //                                                     title="SUBMIT"
-    //                                                     buttonStyle="greenPika"
-    //                                                     handleClick={openPinDialog}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-    //                                         </Form>
-    //                                     }
-    //                                 </div>
-
-    //                                 {/* <div className='buttonSide-auth'>
-    //                                     <p className="linkWords" onClick={openLoginDialog}>LOGIN SAJA</p>
-    //                                     <div className="submitButton-auth" onClick={openPinDialog}>
-    //                                         <div className="wordsButton-auth">
-    //                                             NEXT
-    //                                         </div>
-    //                                     </div>
-    //                                 </div> */}
-
-    //                                 <div className='bottomSide-auth'>
-    //                                     <h4 className='countrySide-auth'>Indonesia</h4>
-    //                                     <div className='reqSide-auth'>
-    //                                         <h4 className='reqSideWord-auth'>Privasi</h4>
-    //                                         <h4 className='reqSideWord-auth'>Persyaratan</h4>
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         }
-    //         {showLoginDialog()}
-    //         {showPinDialog()}
-    //     </div>
-    // );
 }
 
 export default RegisterDialog
