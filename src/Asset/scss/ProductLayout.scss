@@ -422,6 +422,13 @@
     overflow: hidden;
   }
 
+  .product-imgContent {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50px;
+  }
+
   .product-detail {
     padding-left: 20px;
     padding-right: 15px;
@@ -1135,7 +1142,7 @@
   .product-merchant {
     max-width: 382px;
     width: 100%;
-    min-height: 113px;
+    // min-height: 113px;
     height: auto;
     border-radius: 30px;
     background-color: #ffffff;
@@ -1147,10 +1154,17 @@
 
   .product-img {
     width: 113px;
-    min-height: 113px;
-    height: 100%;
+    // min-height: 113px;
+    // height: 100%;
     border-radius: 30px;
     overflow: hidden;
+  }
+
+  .product-imgContent {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px;
   }
 
   .product-detail {
