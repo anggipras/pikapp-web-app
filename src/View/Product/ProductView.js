@@ -728,7 +728,7 @@ class ProductView extends React.Component {
                 return (
                   <div key={indprod} className='product-merchant' onClick={() => this.handleDetail(product)}>
                     <div className='product-img'>
-                      <img src={product.foodImage} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+                      <img src={Productimage} className='product-imgContent' alt='' />
                     </div>
 
                     <div className='product-detail-mob'>
