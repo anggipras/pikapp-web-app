@@ -9,6 +9,7 @@ import axios from "axios";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Swal from 'sweetalert2';
+import PikaButton from "../../Component/Button/PikaButton";
 
 const ForgotPinDialog = (props) => {
     const dispatch = useDispatch()
@@ -90,6 +91,7 @@ const ForgotPinDialog = (props) => {
                     // timer: 3000
                 }).then(() => {
                     props.onHideForgotFlow();
+                    dispatch({ type: 'DONELOAD' });
                 })
                 // window.location.reload();
             })
@@ -132,11 +134,22 @@ const ForgotPinDialog = (props) => {
 
                             <div className='buttonSide-auth'>
                                 <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                                <div className="submitButton-auth">
+
+                                {/* <div className="submitButton-auth">
                                     <div className="wordsButton-auth" onClick={handleSubmit}>
                                         SUBMIT
                                     </div>
+                                </div> */}
+
+                                <div className="submitButton-auth">
+                                    <PikaButton 
+                                        title="SUBMIT" 
+                                        buttonStyle="submitButton-auth wordsButton-auth"
+                                        handleClick={handleSubmit}
+                                        >
+                                    </PikaButton>
                                 </div>
+
                             </div>
 
                             <div className='bottomSide-auth'>
@@ -176,11 +189,22 @@ const ForgotPinDialog = (props) => {
 
                             <div className='buttonSide-auth'>
                                 <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                                <div className="submitButton-auth">
+
+                                {/* <div className="submitButton-auth">
                                     <div className="wordsButton-auth" onClick={handleSubmit}>
                                         SUBMIT
                                     </div>
+                                </div> */}
+
+                                <div className="submitButton-auth">
+                                    <PikaButton 
+                                        title="SUBMIT" 
+                                        buttonStyle="submitButton-auth wordsButton-auth"
+                                        handleClick={handleSubmit}
+                                        >
+                                    </PikaButton>
                                 </div>
+
                             </div>
 
                             <div className='bottomSide-auth'>
