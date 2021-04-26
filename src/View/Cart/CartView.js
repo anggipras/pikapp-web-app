@@ -69,7 +69,7 @@ class CartView extends React.Component {
     indexEdit: 0,
     updateData: '',
     successMessage: '',
-    isEmailVerified : false,
+    isEmailVerified: false,
   };
 
   componentDidMount() {
@@ -90,7 +90,7 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
-      is_email_verified : true
+      is_email_verified: true
     };
 
     if (Cookies.get("auth") !== undefined) {
@@ -99,8 +99,8 @@ class CartView extends React.Component {
 
     this.setState({ isEmailVerified: auth.is_email_verified });
 
-    if(this.state.isEmailVerified === false) {
-        this.handleReloadEmail();
+    if (this.state.isEmailVerified === false) {
+      this.handleReloadEmail();
     }
 
   }
@@ -385,7 +385,7 @@ class CartView extends React.Component {
             this.props.DoneLoad()
           }, 1000);
         } else {
-          this.setState({ successMessage: 'Transaksi OVO berhasil' })
+          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
           setTimeout(() => {
             let filterOtherCart = storageData.filter(valFilter => {
               return valFilter.mid !== currentCartMerchant.mid
@@ -583,14 +583,14 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
-      is_email_verified : true
+      is_email_verified: true
     };
 
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
 
-    if(auth.is_email_verified === false) {
+    if (auth.is_email_verified === false) {
       console.log(auth)
       let uuid = uuidV4();
       uuid = uuid.replaceAll("-", "");
@@ -623,7 +623,7 @@ class CartView extends React.Component {
     if (this.state.loadButton) {
       return <Redirect to='/status' />
     }
-    
+
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let allCart = JSON.parse(localStorage.getItem('cart'))
     let filterCart = allCart.filter(valCart => {
@@ -651,7 +651,7 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
-      is_email_verified : true
+      is_email_verified: true
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
@@ -762,19 +762,20 @@ class CartView extends React.Component {
       }
     });
 
-    let totalPaymentShow = storeList.map(store => {
+    let totalPaymentShow = 0
+    let selectedMerch = storeList.map(store => {
       if (store.mid === currentCartMerchant.mid) {
-        let countAllProduct = 0
-        store.food.forEach(food => {
-          countAllProduct += food.foodTotalPrice
-        })
-        return countAllProduct
+        return store
       }
     });
 
+    selectedMerch[0].food.forEach(thefood => {
+      totalPaymentShow += thefood.foodTotalPrice
+    })
+
     finalProduct = [
       {
-        totalPrice: totalPaymentShow[0],
+        totalPrice: totalPaymentShow,
         discountPrice: 0,
       },
     ]
@@ -809,15 +810,15 @@ class CartView extends React.Component {
       <>
         <div className='cartLayout'>
           {
-          !this.state.isEmailVerified ?
-          <div className='verificationMsg'>
-            <div className='message'>Verifikasi Email Anda</div>
-            <div className='messageSend'>
-              <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? <span className="txtUnderline">Kirim Ulang</span>
-            </div>
-          </div>
-          :
-          <div></div>
+            !this.state.isEmailVerified ?
+              <div className='verificationMsg'>
+                <div className='message'>Verifikasi Email Anda</div>
+                <div className='messageSend'>
+                  <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? <span className="txtUnderline">Kirim Ulang</span>
+                </div>
+              </div>
+              :
+              <div></div>
           }
           <div className='cartTitle'>
             <span className='logopikappCenter' onClick={() => window.history.back()} >
