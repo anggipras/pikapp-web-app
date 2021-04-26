@@ -7,7 +7,7 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
-import CartModalDev from "../../Component/Modal/CartModalDev";
+import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
@@ -665,7 +665,7 @@ class CartView extends React.Component {
     let modal;
     if (this.state.showModal === true) {
       modal = (
-        <CartModalDev
+        <CartModal
           isShow={this.state.showModal}
           onHide={() => this.setModal(false)}
           title={this.state.currentModalTitle}
