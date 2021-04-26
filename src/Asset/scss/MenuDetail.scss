@@ -37,9 +37,9 @@
     margin-top: 5vh;
     border: none;
     border-radius: 50px; /* Optional. Rounds container corners */
-    -webkit-animation-name: animatetop;
+    -webkit-animation-name: animamenumove;
     -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
+    animation-name: animamenumove;
     animation-duration: 0.4s;
     overflow: auto;
 }
@@ -271,9 +271,9 @@
         margin: auto; /* Auto margin according to the element width */
         border: none;
         border-radius: 20px; /* Optional. Rounds container corners */
-        -webkit-animation-name: animatetop;
+        -webkit-animation-name: animamenumove;
         -webkit-animation-duration: 0.4s;
-        animation-name: animatetop;
+        animation-name: animamenumove;
         animation-duration: 0.4s;
         overflow: auto;
     }
@@ -430,7 +430,7 @@
 }
 
 /* Add Animation */
-@-webkit-keyframes animatetop {
+@-webkit-keyframes animamenumove {
     from {
         top: -300px;
         opacity: 0;
@@ -441,7 +441,7 @@
     }
 }
 
-@keyframes animatetop {
+@keyframes animamenumove {
     from {
         top: -300px;
         opacity: 0;
