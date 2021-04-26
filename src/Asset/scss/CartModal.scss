@@ -36,9 +36,9 @@
     margin-top: 181px;
     border: none;
     border-radius: 20px; /* Optional. Rounds container corners */
-    -webkit-animation-name: animatetop;
+    -webkit-animation-name: animacartmove;
     -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
+    animation-name: animacartmove;
     animation-duration: 0.4s;
     overflow: auto;
 }
@@ -254,7 +254,7 @@
 }
 
 /* Add Animation */
-@-webkit-keyframes animatetop {
+@-webkit-keyframes animacartmove {
     from {
         top: -300px;
         opacity: 0;
@@ -265,7 +265,7 @@
     }
 }
 
-@keyframes animatetop {
+@keyframes animacartmove {
     from {
         top: -300px;
         opacity: 0;

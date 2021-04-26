@@ -532,3 +532,26 @@
 .left30 {
     margin-left: 30px;
 }
+
+.colorWhite {
+    color: #ffffff;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+.top270 {
+    margin-top: 270px;
+}
+
+.wordsButton-auth:hover {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.btn-wordsButton-auth:active {
+    color: #ffffff !important;
+}
+
+.btn-wordsButton-auth:focus {
+    color: #ffffff !important;
+}

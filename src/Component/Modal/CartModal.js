@@ -1,73 +1,113 @@
-import React from "react";
-import { Row, Col, Form } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
-import dineinIcon from "../../Asset/Icon/dinein_icon.png";
-import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
-import cashierIcon from "../../Asset/Icon/cashier_icon.png";
+import React, { useState } from 'react'
+import closeNarrow from '../../Asset/Icon/closeNarrow.png'
+import diningTableColor from '../../Asset/Icon/diningTableColor.png'
+import takeawayColor from '../../Asset/Icon/takeawayColor.png'
+import CashierPayment from '../../Asset/Icon/CashierPayment.png'
+import OvoPayment from '../../Asset/Icon/ovo_icon.png'
+import '../../Asset/scss/CartModal.scss'
 
-export class CartModal extends React.Component {
-  state = {
-    radio: this.props.notable.table !== ""? this.props.notable.table > 0 ? 0 : 1 : 0,
-  };
+const CartModal = (props) => {
+    const [radioNumEat, setradioNumEat] = useState(props.indexOptionEat)
+    const [radioNumPay, setradioNumPay] = useState(props.indexOptionPay)
 
-  onClick = (num) => () => {
-    this.setState({ radio: num });
-    localStorage.setItem("option", num)
-    this.props.handleData(num);
-  };
-  render() {
-    let optionList = [];
-    optionList = this.props.detailOptions;
-    let optionListView = optionList.map((data) => {
-      let image;
-      if (data.image === "dineIn") {
-        image = dineinIcon;
-      } else if (data.image === "takeaway") {
-        image = takeawayIcon;
-      } else if (data.image === "cashier") {
-        image = cashierIcon;
-      }
-      return (
-        <>
-          <Row>
-            <Col xs={8} md={5}>
-              <img src={image} class="cartModalImage" alt="icon" />
+    const closeModal = (e) => {
+        e.stopPropagation()
+        props.onHide()
+    }
 
-              <span class="cartModalOption">{data.option}</span>
-            </Col>
-            <Col xs={1} md={3} />
-            <Col xs={2} md={4}>
-              <Form>
-                <Form.Check
-                  name="option"
-                  type={"radio"}
-                  id={data.option}
-                  onClick={this.onClick(optionList.indexOf(data))}
-                  checked={
-                    this.state.radio === optionList.indexOf(data) ? true : false
-                  }
-                />
-              </Form>
-            </Col>
-          </Row>
-        </>
-      );
-    });
+    const onChangeRadio = (num, title) => {
+        if (title === 'Pilih Cara Makan Anda') {
+            setradioNumEat(num)
+            props.handleData(num)
+            props.onHide()
+        } else if(title === 'Bayar Pakai Apa') {
+            setradioNumPay(num)
+            props.handleData(num)
+            props.onHide()
+        }
+    }
+
+    const choicesCartModal = () => {
+        let optionList = props.detailOptions
+        let choicesModal = optionList.map((optionVal, keyOption) => {
+            let imageOption;
+            if (optionVal.image === "dineIn") {
+                imageOption = diningTableColor;
+            } else if (optionVal.image === "takeaway") {
+                imageOption = takeawayColor;
+            } else if (optionVal.image === "cashier") {
+                imageOption = CashierPayment;
+            } else if (optionVal.image === "ovo") {
+                imageOption = OvoPayment;
+            }
+
+            if (props.title === 'Pilih Cara Makan Anda') {
+                return (
+                    <div key={keyOption} className='modalCart-detailContent'>
+                        <div className='modalCart-radioSection'>
+                            <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption, props.title)} name={'EATMETHOD'} defaultChecked={radioNumEat === keyOption ? true : false} />
+                            <label htmlFor={optionVal.image}>
+                                <div className='modalCart-radioSide'>
+                                    <img className='modalCartradio-image' src={imageOption} alt='' />
+                                    <div className='modalCart-radioTitle'>{optionVal.option}</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                )
+            } else if (props.title === 'Bayar Pakai Apa') {
+                return (
+                    <div key={keyOption} className='modalCart-detailContent'>
+                        <div className='modalCart-radioSection'>
+                            <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption, props.title)} name={'PAYMETHOD'} defaultChecked={radioNumPay === keyOption ? true : false} />
+                            <label htmlFor={optionVal.image}>
+                                <div className='modalCart-radioSide'>
+                                    <img className='modalCartradio-image' src={imageOption} alt='' />
+                                    <div className='modalCart-radioTitle'>{optionVal.option}</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                )
+            } else if (props.title === 'Rincian Pembayaran') {
+                return (
+                    <div key={keyOption} className='modalCart-detailTotalPrice'>
+                        <div className='modalCart-totalPrice'>
+                            <h2 className='modalCart-totalPrice-left'>Total Harga Barang</h2>
+                            <h2 className='modalCart-totalPrice-right'>{Intl.NumberFormat("id-ID").format(optionVal.totalPrice)}</h2>
+                        </div>
+
+                        <div className='modalCart-discount'>
+                            <h2 className='modalCart-discount-left'>Diskon</h2>
+                            <h2 className='modalCart-discount-right'>{optionVal.discountPrice}</h2>
+                        </div>
+                    </div>
+                )
+            }
+        })
+        return choicesModal
+    }
 
     return (
-      <Modal
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={this.props.isShow}
-        onHide={this.props.onHide}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>{this.props.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{optionListView}</Modal.Body>
-        <Modal.Footer />
-      </Modal>
-    );
-  }
+        <>
+            <div className='modalCartPage' style={{
+                display: props.isShow ? 'block' : 'none'
+            }} onClick={closeModal}>
+                <div className='modalCartContent' onClick={e => e.stopPropagation()}>
+                    <span className='iconCloseNarrow' onClick={closeModal}>
+                        <img src={closeNarrow} className='closeLogoNarrow' alt='' />
+                    </span>
+
+                    <div className='modalCart-detail'>
+                        <h1 className='modalCart-title'>{props.title}</h1>
+
+                        {choicesCartModal()}
+                    </div>
+                </div>
+
+            </div>
+        </>
+    )
 }
+
+export default CartModal
