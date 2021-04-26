@@ -431,6 +431,10 @@
     padding-right: 15px;
   }
 
+  .product-detail-mob {
+    display: none;
+  }
+
   .product-star {
     width: 45.5px;
     height: 23.5px;
@@ -1138,7 +1142,7 @@
 
   .product-merchant {
     max-width: 382px;
-    width: 100%;
+    // width: 100%;
     height: auto;
     border-radius: 30px;
     background-color: #ffffff;
@@ -1162,17 +1166,22 @@
   }
 
   .product-detail {
-    max-width: 179px;
-    width: auto;
+    display: none;
   }
 
   .product-detail-mob {
     display: flex;
+    width: 245px;
     justify-content: space-between;
     margin-left: 23px;
   }
 
-  .product-star {
+  .product-detailInfo-mob {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-star-mob {
     width: 38.7px;
     height: 20px;
     background-color: #f5f6f7;
@@ -1184,12 +1193,12 @@
     margin-bottom: 3px;
   }
 
-  .product-star-img {
+  .product-star-img-mob {
     width: 9.35px;
     height: 9.35px;
   }
 
-  .product-star-rating {
+  .product-star-rating-mob {
     font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 10px;
     font-weight: 500;
@@ -1199,7 +1208,7 @@
     margin-left: 3.3px;
   }
 
-  .product-name {
+  .product-name-mob {
     width: 179px;
     font-family: "Montserrat", sans-serif;
     font-style: normal;
@@ -1210,7 +1219,7 @@
     line-height: 20px;
   }
 
-  .product-desc {
+  .product-desc-mob {
     width: 179px;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
@@ -1220,10 +1229,6 @@
     text-transform: capitalize;
     color: #767676;
     margin-bottom: 14px;
-  }
-
-  .product-price {
-    display: none;
   }
 
   .product-price-mob {
@@ -1236,8 +1241,8 @@
     text-transform: capitalize;
     letter-spacing: 0.05em;
     color: #111111;
-    margin-top: 34px;
-    margin-right: 10px;
+    padding-top: 32px;
+    padding-right: 10px;
   }
 
   .pikapp-info {
@@ -1485,16 +1490,17 @@
   }
 
   //Product Start
-  .product-price-mob {
-    margin-left: 5px;
+  .product-detail-mob {
+    width: 200px;
+    margin-left: 20px;
   }
 
-  .product-name {
+  .product-name-mob {
     max-width: 140px;
     width: auto;
   }
 
-  .product-desc {
+  .product-desc-mob {
     max-width: 140px;
     width: auto;
   }
@@ -1507,12 +1513,10 @@
 }
 
 @media (max-width: 320px) {
-  //Product Start
-  .product-price-mob {
-    margin-left: 10px;
-    margin-right: 5px;
+  .product-detail-mob {
+    width: 160px;
+    margin-left: 15px;
   }
-  //Product End
 
   .cartIcon-content {
     min-width: 300px;

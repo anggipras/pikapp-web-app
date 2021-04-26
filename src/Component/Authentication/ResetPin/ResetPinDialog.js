@@ -61,8 +61,7 @@ const ResetPinDialog = (props) => {
         setIsValid(true);
 
         const data = {
-            // email : email,
-            // currentPin : resetPin
+            currentPin : resetPin
         };
 
         dispatch({ type: 'RESETPIN', payload: data });
@@ -84,6 +83,7 @@ const ResetPinDialog = (props) => {
     return (
         <div>
             {
+                !isMobile ?
                 <div className='modalMenuDetail-auth' style={{
                     display: props.isShowResetPin ? 'block' : 'none'
                 }} onClick={closeModal}
@@ -96,10 +96,8 @@ const ResetPinDialog = (props) => {
                         }
 
                         <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-left-auth'>
-                                <div className='menuBanner-auth'>
-                                    <img src={pikappLogo} className='menuimg-auth' alt='' />
-                                </div>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
 
                                 <div className='menu-detail-auth'>
                                     <div className='menu-name-auth'>
@@ -111,52 +109,128 @@ const ResetPinDialog = (props) => {
                                     </div>
 
                                     <div>
-                                        {
-                                            <Form>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                        <PinInput
-                                                        className='pinInput'
-                                                        length={6}
-                                                        focus
-                                                        // disabled
-                                                        secret
-                                                        ref={p => (pin => p)}
-                                                        type="numeric"
-                                                        onComplete={handleResetPin}
-                                                        />
-                                                        <div></div>
-                                                    </Col>
-                                                </Row>
-
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                                <Row>
-                                                    <Col xs={5}>
-                                                    <p className="linkWords">
-                                                        {/* <div onClick={closeModal}>KEMBALI</div> */}
-                                                    </p>
-                                                    </Col>
-                                                    <Col />
-
-                                                    <Col xs={4}>
-                                                    <PikaButton
-                                                        title="NEXT"
-                                                        buttonStyle="greenPika"
-                                                        handleClick={openConfirmPinDialog}
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
+                                                    <PinInput
+                                                    length={6}
+                                                    focus
+                                                    // disabled
+                                                    secret
+                                                    ref={p => (pin => p)}
+                                                    type="number"
+                                                    inputMode="numeric"
+                                                    onChange={handleResetPin}
                                                     />
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                            </Form>
-                                        }
+                                                    <div></div>
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col xs={11}>
+                                                {isValid || (
+                                                    <Alert variant="danger">{errorMsg}</Alert>
+                                                )}
+                                                </Col>
+                                                <Col />
+                                            </Row>
+                                            
+                                        </Form>
+                                        
+                                        <div className='buttonSide-auth'>
+                                            <p className="linkWords colorWhite">KEMBALI</p>
+                                            <div className="submitButton-auth" onClick={openConfirmPinDialog}>
+                                                <div className="wordsButton-auth txtLine">
+                                                    NEXT
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div className='bottomSide-auth'>
+                                            <h4 className='countrySide-auth'>Indonesia</h4>
+                                            <div className='reqSide-auth'>
+                                                <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                :
+                <div className='modalMenuDetail-auth' style={{
+                    display: props.isShowResetPin ? 'block' : 'none'
+                }} onClick={closeModal}
+                >
+                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
+                        {
+                            <span className='iconClose-auth' onClick={closeModal}>
+                                <img src={closeLogo} className='closeLogo-auth' alt='' />
+                            </span>
+                        }
+
+                        <div className='menuDetail-layout-auth'>
+                            <div className='menuContain-all-auth'>
+                                <img src={pikappLogo} className='menuimg-auth' alt='' />
+
+                                <div className='menu-detail-auth'>
+                                    <div className='menu-name-auth'>
+                                        Perbarui PIN Anda 
+                                    </div>
+
+                                    <div className='mob-menu-category-auth'>
+                                        Ketik 6 digit nomor PIN baru Anda
+                                    </div>
+
+                                    <div>
+                                        <Form>
+                                            <Row>
+                                                <Col xs={11}>
+                                                    <PinInput
+                                                    length={6}
+                                                    focus
+                                                    // disabled
+                                                    secret
+                                                    ref={p => (pin => p)}
+                                                    type="number"
+                                                    inputMode="numeric"
+                                                    onChange={handleResetPin}
+                                                    />
+                                                    <div></div>
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col xs={11}>
+                                                {isValid || (
+                                                    <Alert variant="danger">{errorMsg}</Alert>
+                                                )}
+                                                </Col>
+                                                <Col />
+                                            </Row>
+                                            
+                                        </Form>
+                                        
+                                        <div className='buttonSide-auth'>
+                                            <p className="linkWords colorWhite">KEMBALI</p>
+                                            <div className="submitButton-auth" onClick={openConfirmPinDialog}>
+                                                <div className="wordsButton-auth txtLine">
+                                                    NEXT
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div className='bottomSide-auth'>
+                                            <h4 className='countrySide-auth'>Indonesia</h4>
+                                            <div className='reqSide-auth'>
+                                                <h4 className='reqSideWord-auth'>Privasi</h4>
+                                                <h4 className='reqSideWord-auth'>Persyaratan</h4>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -164,6 +238,7 @@ const ResetPinDialog = (props) => {
                     </div>
                 </div>
             }
+
             {showConfirmPinDialog()}
         </div>
     );

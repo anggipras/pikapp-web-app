@@ -9,7 +9,7 @@ import StatusLayout from "./Master/StatusLayout";
 import StoreLayout from "./Master/StoreLayout";
 import ProfileLayout from "./Master/ProfileLayout";
 import MerchantResto from "./Master/MerchantQR";
-import ResetPinLayout from  "./Master/ResetPinLayout";
+import ResetPin from "./View/ResetPin/ResetPinView";
 import { Route, Switch } from "react-router-dom";
 
 export var cart = [
@@ -50,7 +50,7 @@ function App() {
             <Route path="/store" component={() => <ProductLayout />} />
             <Route path="/merchant/:mid/:notab" component={MerchantResto} />
             <Route path="/profile" component={() => <ProfileLayout />} />
-            <Route path="/resetpin" component={() => <ResetPinLayout />} />
+            <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )
