@@ -158,6 +158,7 @@ const ConfirmPinDialog = (props) => {
             var longitude = getLocation.lon
             // props.onHideConfirmPin()
             props.onHideRegisterFlow();
+            dispatch({ type: 'DONELOAD' });
             // if (Cookies.get("lastLink") !== undefined) {
             //     var lastlink = JSON.parse(Cookies.get("lastLink")).value;
             // }
@@ -226,11 +227,22 @@ const ConfirmPinDialog = (props) => {
                         
                         <div className='buttonSide-auth'>
                             <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                            <div className="submitButton-auth" onClick={handleRegister}>
+
+                            {/* <div className="submitButton-auth" onClick={handleRegister}>
                                 <div className="wordsButton-auth">
                                     SUBMIT
                                 </div>
+                            </div> */}
+
+                            <div className="submitButton-auth">
+                                <PikaButton 
+                                    title="SUBMIT" 
+                                    buttonStyle="submitButton-auth wordsButton-auth"
+                                    handleClick={handleRegister}
+                                    >
+                                </PikaButton>
                             </div>
+
                         </div>
 
                         <div className='bottomSide-auth'>
@@ -284,11 +296,22 @@ const ConfirmPinDialog = (props) => {
                         
                         <div className='buttonSide-auth'>
                             <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                            <div className="submitButton-auth" onClick={handleRegister}>
+
+                            {/* <div className="submitButton-auth" onClick={handleRegister}>
                                 <div className="wordsButton-auth">
                                     SUBMIT
                                 </div>
+                            </div> */}
+
+                            <div className="submitButton-auth">
+                                <PikaButton 
+                                    title="SUBMIT" 
+                                    buttonStyle="submitButton-auth wordsButton-auth"
+                                    handleClick={handleRegister}
+                                    >
+                                </PikaButton>
                             </div>
+
                         </div>
 
                         <div className='bottomSide-auth'>

@@ -20,12 +20,14 @@ import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
+import RegisterDialog from '../../Component/Authentication/RegisterDialog';
 
 export class StatusView extends React.Component {
   state = {
     showModal: false,
     activeTab: 1,
+    showRegisterDialog : false,
     data: [
       {
         title: "",
@@ -63,6 +65,7 @@ export class StatusView extends React.Component {
   setModal(isShow) {
     this.setState({ showModal: isShow });
   }
+
   handleDetail(transId) {
     var auth = {
       isLogged: false,
@@ -143,6 +146,7 @@ export class StatusView extends React.Component {
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
+      this.setRegisterDialog(true);
       // window.location.href = "/login"
     }
     let uuid = uuidV4();
@@ -207,6 +211,22 @@ export class StatusView extends React.Component {
     //   status: "send",
     // });
     // this.setState({ data: state.data });
+  }
+
+  setRegisterDialog(isShow) {
+    this.setState({ showRegisterDialog: isShow })
+    document.body.style.overflowY = ''
+  }
+
+  showRegisterDialog = () => {
+    if (this.state.showRegisterDialog === true) {
+      return (
+        <RegisterDialog
+            isShowRegister={this.state.showRegisterDialog}
+            onHideRegister={() => this.setRegisterDialog(false)}
+        />
+      )
+    }
   }
 
   render() {
@@ -720,6 +740,7 @@ export class StatusView extends React.Component {
         </Nav>
         {contentView}
         {modal}
+        {this.showRegisterDialog()}
       </>
     );
   }

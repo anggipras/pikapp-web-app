@@ -11,6 +11,7 @@ import { address, clientId } from "../../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Swal from 'sweetalert2';
 import Cookies from "js-cookie";
+import PikaButton from "../../../Component/Button/PikaButton";
 
 const ConfirmResetPinDialog = (props) => {
     const dispatch = useDispatch()
@@ -75,7 +76,7 @@ const ConfirmResetPinDialog = (props) => {
         let uuid = uuidV4();
         uuid = uuid.replaceAll("-", "");
         const date = new Date().toISOString();
-        axios(address + "auth/reset-pin/" + AuthRedu.dataPinToken, {
+        axios(address + "auth/reset-pin/" + AuthRedu.dataPinToken + "/", {
             headers: {
                 "Content-Type": "application/json",
                 "x-request-id": uuid,
@@ -91,7 +92,8 @@ const ConfirmResetPinDialog = (props) => {
                 Cookies.set("lastLink", lastLink,{ expires: 1});
                 localStorage.clear();
                 Cookies.remove("auth");
-                props.DoneLoad();
+                dispatch({ type: 'DONELOAD' });
+                // props.DoneLoad();
                 // window.location.reload();
             })
             .catch((err) => {
@@ -181,11 +183,22 @@ const ConfirmResetPinDialog = (props) => {
                                             
                                             <div className='buttonSide-auth'>
                                                 <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                                                <div className="submitButton-auth" onClick={handleResetPin}>
+
+                                                {/* <div className="submitButton-auth" onClick={handleResetPin}>
                                                     <div className="wordsButton-auth">
-                                                        NEXT
+                                                        SUBMIT
                                                     </div>
+                                                </div> */}
+
+                                                <div className="submitButton-auth" onClick={handleResetPin}>
+                                                    <PikaButton 
+                                                        title="SUBMIT" 
+                                                        buttonStyle="submitButton-auth wordsButton-auth"
+                                                        handleClick={handleResetPin}
+                                                        >
+                                                    </PikaButton>
                                                 </div>
+
                                             </div>
         
                                             <div className='bottomSide-auth'>
@@ -297,11 +310,22 @@ const ConfirmResetPinDialog = (props) => {
                                             
                                             <div className='buttonSide-auth'>
                                                 <p className="linkWords" onClick={closeModal}>KEMBALI</p>
-                                                <div className="submitButton-auth" onClick={handleResetPin}>
+
+                                                {/* <div className="submitButton-auth" onClick={handleResetPin}>
                                                     <div className="wordsButton-auth">
-                                                        NEXT
+                                                        SUBMIT
                                                     </div>
+                                                </div> */}
+
+                                                <div className="submitButton-auth" onClick={handleResetPin}>
+                                                    <PikaButton 
+                                                        title="SUBMIT" 
+                                                        buttonStyle="submitButton-auth wordsButton-auth"
+                                                        handleClick={handleResetPin}
+                                                        >
+                                                    </PikaButton>
                                                 </div>
+
                                             </div>
         
                                             <div className='bottomSide-auth'>

@@ -13,6 +13,7 @@ import axios from "axios";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ForgotPin from "./ForgotPinDialog";
+import Button from "react-bootstrap/Button";
 
 const PinDialog = (props) => {
     const dispatch = useDispatch()
@@ -120,6 +121,7 @@ const PinDialog = (props) => {
             var longitude = getLocation.lon
             // props.onHidePin()
             props.onHideLoginFlow()
+            dispatch({ type: 'DONELOAD' });
             // if (Cookies.get("lastLink") !== undefined) {
             //     var lastlink = JSON.parse(Cookies.get("lastLink")).value
             // }
@@ -255,10 +257,19 @@ const PinDialog = (props) => {
                                         </div>
                                     </div>
                                     :
-                                    <div className="submitButton-auth" onClick={handleLogin}>
-                                        <div className="wordsButton-auth">
-                                            SUBMIT
-                                        </div>
+                                    // <div className="submitButton-auth" onClick={handleLogin}>
+                                    //     <div className="wordsButton-auth">
+                                    //         SUBMIT
+                                    //     </div>
+                                    // </div>
+
+                                    <div className="submitButton-auth">
+                                        <PikaButton 
+                                            title="SUBMIT" 
+                                            buttonStyle="submitButton-auth wordsButton-auth"
+                                            handleClick={handleLogin}
+                                            >
+                                        </PikaButton>
                                     </div>
                             }
                         </div>
@@ -342,10 +353,19 @@ const PinDialog = (props) => {
                                         </div>
                                     </div>
                                     :
-                                    <div className="submitButton-auth" onClick={handleLogin}>
-                                        <div className="wordsButton-auth">
-                                            SUBMIT
-                                        </div>
+                                    // <div className="submitButton-auth" onClick={handleLogin}>
+                                    //     <div className="wordsButton-auth">
+                                    //         SUBMIT
+                                    //     </div>
+                                    // </div>
+
+                                    <div className="submitButton-auth">
+                                        <PikaButton 
+                                            title="SUBMIT" 
+                                            buttonStyle="submitButton-auth wordsButton-auth"
+                                            handleClick={handleLogin}
+                                            >
+                                        </PikaButton>
                                     </div>
                             }
                         </div>
