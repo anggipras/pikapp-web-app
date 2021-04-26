@@ -21,6 +21,7 @@ import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import Cookies from "js-cookie"
+import Rating from 'react-rating'
 
 export class StatusView extends React.Component {
   state = {
@@ -40,7 +41,7 @@ export class StatusView extends React.Component {
     ],
     currentModal: {
       transactionId: "",
-      transactionTime:"",
+      transactionTime: "",
       storeName: "Store",
       storeLocation: "Location",
       storeDistance: "Distance",
@@ -58,6 +59,21 @@ export class StatusView extends React.Component {
         },
       ],
     },
+    ratingScore: 0,
+    openRating: false,
+    ratingNote: "",
+    dummyData: [
+      {
+        title: "goldlands",
+        distance: "7km",
+        quantity: "1",
+        status: "FINALIZE",
+        biz_type: "DINE_IN",
+        payment: "WALLET_OVO",
+        transactionId: "7777777",
+        transactionTime: "30 Januari 1994",
+      },
+    ],
   };
 
   setModal(isShow) {
@@ -71,12 +87,12 @@ export class StatusView extends React.Component {
       recommendation_status: false,
       email: "",
     };
-    if(Cookies.get("auth") !== undefined) {
+    if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
-    if(auth.isLogged === false) {
-      var lastLink = { value: window.location.href}
-      Cookies.set("lastLink", lastLink,{ expires: 1})
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
       // window.location.href = "/login"
     }
     let uuid = uuidV4();
@@ -96,7 +112,7 @@ export class StatusView extends React.Component {
     })
       .then((res) => {
         var results = res.data.results;
-        var resultModal = {...this.currentModal}
+        var resultModal = { ...this.currentModal }
         resultModal.transactionId = results.transaction_id
         resultModal.transactionTime = results.transaction_time
         resultModal.storeName = results.merchant_name
@@ -121,7 +137,7 @@ export class StatusView extends React.Component {
       })
       .catch((err) => {
       });
-      
+
     this.setModal(true);
   }
 
@@ -137,12 +153,12 @@ export class StatusView extends React.Component {
       recommendation_status: false,
       email: "",
     };
-    if(Cookies.get("auth") !== undefined) {
+    if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
-    if(auth.isLogged === false) {
-      var lastLink = { value: window.location.href}
-      Cookies.set("lastLink", lastLink,{ expires: 1})
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
       // window.location.href = "/login"
     }
     let uuid = uuidV4();
@@ -162,7 +178,7 @@ export class StatusView extends React.Component {
     })
       .then((res) => {
         var results = res.data.results;
-        var stateData = {...this.state}
+        var stateData = { ...this.state }
         stateData.data.pop()
         results.forEach((result) => {
           stateData.data.push({
@@ -176,7 +192,7 @@ export class StatusView extends React.Component {
             transactionTime: result.transaction_time,
           })
         })
-        this.setState({data: stateData.data});
+        this.setState({ data: stateData.data });
       })
       .catch((err) => {
       });
@@ -209,6 +225,15 @@ export class StatusView extends React.Component {
     // this.setState({ data: state.data });
   }
 
+  onRating = (value) => {
+    this.setState({ ratingScore: value })
+    this.setState({ openRating: true })
+  }
+
+  notesRating = (e) => {
+    this.setState({ ratingNote: e.target.value })
+  }
+
   render() {
     let modal;
     let modalList = this.state.currentModal.food;
@@ -219,7 +244,7 @@ export class StatusView extends React.Component {
           <Col>
             <Row>
               <Col xs={2} md={1}>
-                <img src={placeholderIcon} class="statusFoodIcon" alt="food icon"/>
+                <img src={placeholderIcon} class="statusFoodIcon" alt="food icon" />
               </Col>
               <Col>
                 <p class="statusFoodname">{data.name}</p>
@@ -248,22 +273,22 @@ export class StatusView extends React.Component {
     if (this.state.showModal === true) {
       let payImage;
       let payLabel;
-      if(this.state.currentModal.payment === "PAY_BY_CASHIER") {
+      if (this.state.currentModal.payment === "PAY_BY_CASHIER") {
         payImage = cashierStatusIcon;
         payLabel = "Cashier"
-      } else if(this.state.currentModal.payment === "WALLET") {
+      } else if (this.state.currentModal.payment === "WALLET") {
         payImage = placeholderIcon;
         payLabel = "Cash"
-      } else if(this.state.currentModal.payment === "VA") {
+      } else if (this.state.currentModal.payment === "VA") {
         payImage = placeholderIcon;
         payLabel = "Virtual"
-      } else if(this.state.currentModal.payment === "WALLET_OVO") {
+      } else if (this.state.currentModal.payment === "WALLET_OVO") {
         payImage = ovoIcon;
         payLabel = "OVO"
-      } else if(this.state.currentModal.payment === "WALLET_DANA") {
+      } else if (this.state.currentModal.payment === "WALLET_DANA") {
         payImage = placeholderIcon;
         payLabel = "DANA"
-      } 
+      }
       modal = (
         <Modal
           size="lg"
@@ -282,7 +307,7 @@ export class StatusView extends React.Component {
           <Modal.Body>
             <Row>
               <Col xs={2} md={1}>
-                <img src={categoryFoodIcon} class="statusStoreIcon" alt="category icon"/>
+                <img src={categoryFoodIcon} class="statusStoreIcon" alt="category icon" />
               </Col>
               <Col>
                 <p class="statusStoreName">
@@ -296,7 +321,7 @@ export class StatusView extends React.Component {
             </Row>
             <Row>
               <Col xs={2} md={1}>
-                <img src={pickupStatusIcon} class="statusStoreStatusIcon"  alt="pickup status"/>
+                <img src={pickupStatusIcon} class="statusStoreStatusIcon" alt="pickup status" />
               </Col>
               <Col>
                 <span class="statusStoreLabel">status: </span>
@@ -313,8 +338,8 @@ export class StatusView extends React.Component {
                 <p class="statusStorePaymentLabel">Metode Pembayaran</p>
                 <img src={payImage} class="statusFoodIcon" alt="status icon"></img>
                 <span class="statusStorePayment">
-                      {payLabel}
-                    </span>
+                  {payLabel}
+                </span>
               </Col>
             </Row>
             {modalListView}
@@ -347,26 +372,26 @@ export class StatusView extends React.Component {
         let bizLabel;
         let payImage;
         let payLabel;
-        if(value.payment === "PAY_BY_CASHIER") {
+        if (value.payment === "PAY_BY_CASHIER") {
           payImage = cashierStatusIcon;
           payLabel = "Cashier"
-        } else if(value.payment === "WALLET") {
+        } else if (value.payment === "WALLET") {
           payImage = placeholderIcon;
           payLabel = "Cash"
-        } else if(value.payment === "VA") {
+        } else if (value.payment === "VA") {
           payImage = placeholderIcon;
           payLabel = "Virtual"
-        } else if(value.payment === "WALLET_OVO") {
+        } else if (value.payment === "WALLET_OVO") {
           payImage = ovoIcon;
           payLabel = "OVO"
-        } else if(value.payment === "WALLET_DANA") {
+        } else if (value.payment === "WALLET_DANA") {
           payImage = placeholderIcon;
           payLabel = "DANA"
-        } 
-        if(value.biz_type === "DINE_IN") {
+        }
+        if (value.biz_type === "DINE_IN") {
           bizImage = dineinIcon
           bizLabel = "Dine in"
-        } else if(value.biz_type === "TAKE_AWAY") {
+        } else if (value.biz_type === "TAKE_AWAY") {
           bizImage = takeawayIcon;
           bizLabel = "Take away"
         }
@@ -425,33 +450,33 @@ export class StatusView extends React.Component {
         let bizLabel;
         let payImage;
         let payLabel;
-        if(value.payment === "PAY_BY_CASHIER") {
+        if (value.payment === "PAY_BY_CASHIER") {
           payImage = placeholderIcon;
           payLabel = "Cashier"
-        } else if(value.payment === "WALLET") {
+        } else if (value.payment === "WALLET") {
           payImage = placeholderIcon;
           payLabel = "Cash"
-        } else if(value.payment === "VA") {
+        } else if (value.payment === "VA") {
           payImage = placeholderIcon;
           payLabel = "Virtual"
-        } else if(value.payment === "WALLET_OVO") {
+        } else if (value.payment === "WALLET_OVO") {
           payImage = ovoIcon;
           payLabel = "OVO"
-        } else if(value.payment === "WALLET_DANA") {
+        } else if (value.payment === "WALLET_DANA") {
           payImage = placeholderIcon;
           payLabel = "DANA"
-        } 
-        if(value.biz_type === "DINE_IN") {
+        }
+        if (value.biz_type === "DINE_IN") {
           bizImage = dineinIcon
           bizLabel = "Dine in"
-        } else if(value.biz_type === "TAKE_AWAY") {
+        } else if (value.biz_type === "TAKE_AWAY") {
           bizImage = takeawayIcon;
           bizLabel = "Take away"
         }
-        if(value.biz_type === "DINE_IN") {
+        if (value.biz_type === "DINE_IN") {
           bizImage = dineinIcon
           bizLabel = "Dine in"
-        } else if(value.biz_type === "TAKE_AWAY") {
+        } else if (value.biz_type === "TAKE_AWAY") {
           bizImage = takeawayIcon;
           bizLabel = "Take away"
         }
@@ -510,33 +535,33 @@ export class StatusView extends React.Component {
         let bizLabel;
         let payImage;
         let payLabel;
-        if(value.payment === "PAY_BY_CASHIER") {
+        if (value.payment === "PAY_BY_CASHIER") {
           payImage = placeholderIcon;
           payLabel = "Cashier"
-        } else if(value.payment === "WALLET") {
+        } else if (value.payment === "WALLET") {
           payImage = placeholderIcon;
           payLabel = "Cash"
-        } else if(value.payment === "VA") {
+        } else if (value.payment === "VA") {
           payImage = placeholderIcon;
           payLabel = "Virtual"
-        } else if(value.payment === "WALLET_OVO") {
+        } else if (value.payment === "WALLET_OVO") {
           payImage = ovoIcon;
           payLabel = "OVO"
-        } else if(value.payment === "WALLET_DANA") {
+        } else if (value.payment === "WALLET_DANA") {
           payImage = placeholderIcon;
           payLabel = "DANA"
-        } 
-        if(value.biz_type === "DINE_IN") {
+        }
+        if (value.biz_type === "DINE_IN") {
           bizImage = dineinIcon
           bizLabel = "Dine in"
-        } else if(value.biz_type === "TAKE_AWAY") {
+        } else if (value.biz_type === "TAKE_AWAY") {
           bizImage = takeawayIcon;
           bizLabel = "Take away"
         }
-        if(value.biz_type === "DINE_IN") {
+        if (value.biz_type === "DINE_IN") {
           bizImage = dineinIcon
           bizLabel = "Dine in"
-        } else if(value.biz_type === "TAKE_AWAY") {
+        } else if (value.biz_type === "TAKE_AWAY") {
           bizImage = takeawayIcon;
           bizLabel = "Take away"
         }
@@ -571,7 +596,7 @@ export class StatusView extends React.Component {
                       <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={payImage} alt ="pay icon"></img>
+                      <img src={payImage} alt="pay icon"></img>
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
@@ -589,40 +614,40 @@ export class StatusView extends React.Component {
     let reviewImage;
     if (currentState === 4) {
       reviewImage = reviewActiveIcon;
-      let data = this.state.data;
+      let data = this.state.dummyData;
       contentView = data.map((value) => {
         if (value.status === "CLOSE" || value.status === "FINALIZE") {
           let bizImage;
           let bizLabel;
           let payImage;
           let payLabel;
-          if(value.payment === "PAY_BY_CASHIER") {
+          if (value.payment === "PAY_BY_CASHIER") {
             payImage = placeholderIcon;
             payLabel = "Cashier"
-          } else if(value.payment === "WALLET") {
+          } else if (value.payment === "WALLET") {
             payImage = placeholderIcon;
             payLabel = "Cash"
-          } else if(value.payment === "VA") {
+          } else if (value.payment === "VA") {
             payImage = placeholderIcon;
             payLabel = "Virtual"
-          } else if(value.payment === "WALLET_OVO") {
+          } else if (value.payment === "WALLET_OVO") {
             payImage = ovoIcon;
             payLabel = "OVO"
-          } else if(value.payment === "WALLET_DANA") {
+          } else if (value.payment === "WALLET_DANA") {
             payImage = placeholderIcon;
             payLabel = "DANA"
-          } 
-          if(value.biz_type === "DINE_IN") {
+          }
+          if (value.biz_type === "DINE_IN") {
             bizImage = dineinIcon
             bizLabel = "Dine in"
-          } else if(value.biz_type === "TAKE_AWAY") {
+          } else if (value.biz_type === "TAKE_AWAY") {
             bizImage = takeawayIcon;
             bizLabel = "Take away"
           }
-          if(value.biz_type === "DINE_IN") {
+          if (value.biz_type === "DINE_IN") {
             bizImage = dineinIcon
             bizLabel = "Dine in"
-          } else if(value.biz_type === "TAKE_AWAY") {
+          } else if (value.biz_type === "TAKE_AWAY") {
             bizImage = takeawayIcon;
             bizLabel = "Take away"
           }
@@ -652,14 +677,21 @@ export class StatusView extends React.Component {
                   </Row>
                   <Row>
                     <Col className={"statusLeftImg"}>
-                      <img src={bizImage} alt ="biz icon"></img>
+                      <img src={bizImage} alt="biz icon"></img>
                       <span class="statusLeftText">{bizLabel}</span>
                     </Col>
                     <Col className={"statusRightImg"}>
-                      <img src={payImage} alt = "pay icon"></img>
+                      <img src={payImage} alt="pay icon"></img>
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
+                  <Rating onChange={this.onRating} initialRating={this.state.ratingScore} />
+                  {
+                    this.state.openRating ?
+                      <textarea rows='5' id="ratingnote" placeholder={"Berikan rating untuk produk ini"} onChange={this.notesRating} />
+                      :
+                      null
+                  }
                 </Card>
               </Col>
               <Col xs={1} md={1} />
