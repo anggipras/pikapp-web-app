@@ -8,8 +8,6 @@ import store from './Redux/Store'
 
 var hist = createBrowserHistory();
 
-document.title = "Pikapp"
-
 ReactDOM.render(
   <Provider store={store}>
     <Router history={hist}>
