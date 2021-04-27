@@ -21,6 +21,7 @@ import { EditMenuCart } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
+import Swal from 'sweetalert2';
 
 var currentExt = {
   detailCategory: [
@@ -70,6 +71,9 @@ class CartView extends React.Component {
     updateData: '',
     successMessage: '',
     isEmailVerified : false,
+    isShowCounterTime : false,
+    countHit : 0,
+    counterTime : 120,
   };
 
   componentDidMount() {
@@ -106,6 +110,11 @@ class CartView extends React.Component {
   }
 
   componentDidUpdate() {
+    if(this.state.counterTime === 0) {
+      clearInterval(this.interval);
+      // this.setState({ isShowCounterTime : false });
+      console.log("clear");
+    }
     // var auth = {
     //   isLogged: false,
     //   token: "",
@@ -618,6 +627,82 @@ class CartView extends React.Component {
     }
   }
 
+  handleResendEmail = () => {
+    this.setState({ countHit: this.state.countHit + 1 });
+
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+      is_email_verified : true
+    };
+
+    if (Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
+    console.log(auth)
+    let uuid = uuidV4();
+    uuid = uuid.replaceAll("-", "");
+    const date = new Date().toISOString();
+    Axios(address + "auth/resend-email/" + auth.email + "/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId
+      },
+      method: "GET",
+    })
+      .then((res) => {
+        Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: 'Email telah terkirim. Silahkan periksa email Anda.',
+            showConfirmButton: true,
+            confirmButtonColor: "#4bb7ac",
+            confirmButtonText: "OK",
+            closeOnConfirm: false,
+            // timer: 3000
+        }).then(() => {
+            if(this.state.countHit > 1) {
+              this.setState({ counterTime : 300});
+            } else {
+              this.setState({ counterTime : 120});
+            }
+            
+            this.setState({ isShowCounterTime : true });
+            this.countDownTime();
+        })
+      })
+      .catch((err) => {
+      });
+
+  }
+
+  countDownTime = () => {
+    // this.setState({ counterTime : this.state.counter2Mins - 1});
+
+    // this.interval = setInterval(
+    //   () => this.setState((state)=> ({ counter2Mins: this.state.counter2Mins - 1 })),
+    //   1000
+    // );
+
+    this.interval = setInterval(
+      () => this.setState((state)=> ({ counterTime: this.state.counterTime - 1 })),
+      1000
+    );
+
+    // const down = (minus) =>
+    // {
+    //     this.setState({ counter2Mins: minus });
+    // }
+
+    // setInterval(() => down(this.state.counter2Mins - 1), 1000);
+  }
+
   render() {
     console.log(this.state.loadButton, 'PERHATIKAN!!');
     if (this.state.loadButton) {
@@ -813,7 +898,9 @@ class CartView extends React.Component {
           <div className='verificationMsg'>
             <div className='message'>Verifikasi Email Anda</div>
             <div className='messageSend'>
-              <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? <span className="txtUnderline">Kirim Ulang</span>
+              <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? 
+              { this.state.counterTime !== 0 && this.state.countHit > 0 ? <span className="txtIndent" disabled={true}>Kirim Ulang</span> : <span className="txtUnderline" onClick={() => this.handleResendEmail()}>Kirim Ulang</span> }
+              { this.state.isShowCounterTime ? <span className="txtIndent"> {this.state.counterTime} sec </span> : <span> </span>}
             </div>
           </div>
           :
