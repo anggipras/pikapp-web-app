@@ -11,10 +11,13 @@ import Axios from "axios";
 import jwt from "jsonwebtoken"
 import {connect} from 'react-redux'
 import {LoadingButton, DoneLoad} from '../../Redux/Actions'
+import RegisterDialog from '../../Component/Authentication/RegisterDialog';
 
 class ProfileView extends React.Component {
   state = {
       showModal: false,
+      showRegisterDialog : false,
+      isLogin : false,
       name: "Name",
       phone: "080808",
       email: "",
@@ -30,13 +33,47 @@ class ProfileView extends React.Component {
     };
     if(Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
+      this.setState({ isLogin: auth.isLogged });
     }
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
+      this.setRegisterDialog(true);
       // window.location.href = "/login"
+    } else {
+      this.getCustomerInfo();
     }
     console.log(auth)
+  }
+
+  componentDidUpdate() {
+    if(this.state.isLogin === false) {
+      var auth = {
+        isLogged: false,
+        token: "",
+        new_event: true,
+        recommendation_status: false,
+        email: "",
+      };
+      if(Cookies.get("auth") !== undefined) {
+        auth = JSON.parse(Cookies.get("auth"))
+        this.getCustomerInfo();
+        this.setState({ isLogin: auth.isLogged });
+      }
+    }
+  }
+
+  getCustomerInfo() {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -123,6 +160,22 @@ class ProfileView extends React.Component {
       }
   }
 
+  setRegisterDialog(isShow) {
+    this.setState({ showRegisterDialog: isShow })
+    document.body.style.overflowY = ''
+  }
+
+  showRegisterDialog = () => {
+    if (this.state.showRegisterDialog === true) {
+      return (
+        <RegisterDialog
+            isShowRegister={this.state.showRegisterDialog}
+            onHideRegister={() => this.setRegisterDialog(false)}
+        />
+      )
+    }
+  }
+
   render() {
     var modal;
     if(this.state.showModal === true) {
@@ -189,6 +242,7 @@ class ProfileView extends React.Component {
                 <Col xs={3} md={4}/>
             </Row>
             {modal}
+            {this.showRegisterDialog()}
         </>
     )
   }

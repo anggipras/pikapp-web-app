@@ -1408,9 +1408,19 @@
 .txtUnderline {
   text-decoration: underline;
   cursor: pointer;
+  text-indent: 0.5em;
+}
+
+.txtDisabled {
+  cursor: none;
+  text-indent: 0.5em;
 }
 
 .txtBold {
   font-weight: bold;
   text-transform: lowercase;
+}
+
+.txtIndent {
+  text-indent: 0.5em;
 }

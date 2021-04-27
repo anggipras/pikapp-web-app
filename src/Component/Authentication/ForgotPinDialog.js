@@ -5,8 +5,11 @@ import { useMediaQuery } from 'react-responsive'
 import { useDispatch, useSelector } from 'react-redux'
 import pikappLogo from '../../Asset/Logo/logo4x.png';
 import { Alert, Col, Form, Row } from "react-bootstrap";
+import axios from "axios";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import Swal from 'sweetalert2';
 import PikaButton from "../../Component/Button/PikaButton";
-import PikaTextField from "../../Component/TextField/PikaTextField";
 
 const ForgotPinDialog = (props) => {
     const dispatch = useDispatch()
@@ -50,289 +53,173 @@ const ForgotPinDialog = (props) => {
         }
     }
 
+    const handleSubmit = () => {
+        if (checkEmail() === false) {
+            setIsValid(false);
+            return;
+        }
+
+        setIsValid(true);
+        dispatch({ type: 'LOADING' });
+
+        const data = {
+            email: email
+        };
+
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
+        axios(address + "auth/forget-pin", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId,
+            },
+            method: "POST",
+            data: data,
+        })
+            .then((res) => {
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    text: 'Link verifikasi telah dikirim ke alamat email Anda. Segera lakukan reset PIN untuk melanjutkan proses ini.',
+                    showConfirmButton: true,
+                    confirmButtonColor: "#4bb7ac",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: false,
+                    // timer: 3000
+                }).then(() => {
+                    props.onHideForgotFlow();
+                    dispatch({ type: 'DONELOAD' });
+                })
+                // window.location.reload();
+            })
+            .catch((err) => {
+                if (err.response.data !== undefined) {
+                    alert(err.response.data.err_message)
+                    // props.DoneLoad()
+                    dispatch({ type: 'DONELOAD' });
+                }
+            });
+    }
+
     return (
         <div>
             {
                 !isMobile ?
-                <div className='modalMenuDetail-auth' style={{
-                    display: props.isShowForgotPin ? 'block' : 'none'
-                }} onClick={closeModal}
-                >
-                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-                        {
-                            <span className='iconClose-auth' onClick={closeModal}>
-                                <img src={closeLogo} className='closeLogo-auth' alt='' />
-                            </span>
-                        }
+                <div className='menu-detail-auth'>
+                    <div className='menu-name-auth'>
+                        Lupa PIN ?
+                    </div>
 
-                        <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-all-auth'>
-                                <img src={pikappLogo} className='menuimg-auth' alt='' />
+                    <div className='mob-menu-category-auth'>
+                        Silahkan masukkan email Anda yang terdaftar.
+                    </div>
 
-                                <div className='menu-detail-auth'>
-                                    <div className='menu-name-auth'>
-                                        Lupa PIN ?
+                    <div className='textfield-auth'>
+                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+
+                            <Form>
+                                <Row>
+                                    <Col xs={11}>
+                                    {isValid || (
+                                        <Alert variant="danger">{errorMsg}</Alert>
+                                    )}
+                                    </Col>
+                                    <Col />
+                                </Row>
+                                
+                            </Form>
+
+                            <div className='buttonSide-auth'>
+                                <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+
+                                {/* <div className="submitButton-auth">
+                                    <div className="wordsButton-auth" onClick={handleSubmit}>
+                                        SUBMIT
                                     </div>
+                                </div> */}
 
-                                    <div className='mob-menu-category-auth'>
-                                        Silahkan masukkan email Anda yang terdaftar.
-                                    </div>
+                                <div className="submitButton-auth">
+                                    <PikaButton 
+                                        title="SUBMIT" 
+                                        buttonStyle="submitButton-auth wordsButton-auth"
+                                        handleClick={handleSubmit}
+                                        >
+                                    </PikaButton>
+                                </div>
 
-                                    <div className='textfield-auth'>
-                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+                            </div>
 
-                                            <Form>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                            </Form>
-
-                                            <div className='buttonSide-auth'>
-                                                <p className="linkWords">KEMBALI</p>
-                                                <div className="submitButton-auth">
-                                                    <div className="wordsButton-auth">
-                                                        SUBMIT
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className='bottomSide-auth'>
-                                                <h4 className='countrySide-auth'>Indonesia</h4>
-                                                <div className='reqSide-auth'>
-                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
-                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                                </div>
-                                            </div>
-                                    </div>
+                            <div className='bottomSide-auth'>
+                                <h4 className='countrySide-auth'>Indonesia</h4>
+                                <div className='reqSide-auth'>
+                                    <h4 className='reqSideWord-auth'>Privasi</h4>
+                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
+                            
                 :
-                <div className='modalMenuDetail-auth' style={{
-                    display: props.isShowForgotPin ? 'block' : 'none'
-                }} onClick={closeModal}
-                >
-                    <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-                        {
-                            <span className='iconClose-auth' onClick={closeModal}>
-                                <img src={closeLogo} className='closeLogo-auth' alt='' />
-                            </span>
-                        }
+                <div className='menu-detail-auth'>
+                    <div className='menu-name-auth'>
+                        Lupa PIN ?
+                    </div>
 
-                        <div className='menuDetail-layout-auth'>
-                            <div className='menuContain-all-auth'>
-                                <img src={pikappLogo} className='menuimg-auth' alt='' />
+                    <div className='mob-menu-category-auth'>
+                        Silahkan masukkan email Anda yang terdaftar.
+                    </div>
 
-                                <div className='menu-detail-auth'>
-                                    <div className='menu-name-auth'>
-                                        Lupa PIN ?
+                    <div className='textfield-auth'>
+                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+
+                            <Form>
+                                <Row>
+                                    <Col xs={11}>
+                                    {isValid || (
+                                        <Alert variant="danger">{errorMsg}</Alert>
+                                    )}
+                                    </Col>
+                                    <Col />
+                                </Row>
+                                
+                            </Form>
+
+                            <div className='buttonSide-auth'>
+                                <p className="linkWords" onClick={closeModal}>KEMBALI</p>
+
+                                {/* <div className="submitButton-auth">
+                                    <div className="wordsButton-auth" onClick={handleSubmit}>
+                                        SUBMIT
                                     </div>
+                                </div> */}
 
-                                    <div className='mob-menu-category-auth'>
-                                        Silahkan masukkan email Anda yang terdaftar.
-                                    </div>
+                                <div className="submitButton-auth">
+                                    <PikaButton 
+                                        title="SUBMIT" 
+                                        buttonStyle="submitButton-auth wordsButton-auth"
+                                        handleClick={handleSubmit}
+                                        >
+                                    </PikaButton>
+                                </div>
 
-                                    <div className='textfield-auth'>
-                                        <input type='email' className='textfieldinput-auth' placeholder="Alamat Email" onChange={handleEmail} />
+                            </div>
 
-                                            <Form>
-                                                <Row>
-                                                    <Col xs={11}>
-                                                    {isValid || (
-                                                        <Alert variant="danger">{errorMsg}</Alert>
-                                                    )}
-                                                    </Col>
-                                                    <Col />
-                                                </Row>
-                                                
-                                            </Form>
-
-                                            <div className='buttonSide-auth'>
-                                                <p className="linkWords">KEMBALI</p>
-                                                <div className="submitButton-auth">
-                                                    <div className="wordsButton-auth">
-                                                        SUBMIT
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className='bottomSide-auth'>
-                                                <h4 className='countrySide-auth'>Indonesia</h4>
-                                                <div className='reqSide-auth'>
-                                                    <h4 className='reqSideWord-auth'>Privasi</h4>
-                                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
-                                                </div>
-                                            </div>
-                                    </div>
+                            <div className='bottomSide-auth'>
+                                <h4 className='countrySide-auth'>Indonesia</h4>
+                                <div className='reqSide-auth'>
+                                    <h4 className='reqSideWord-auth'>Privasi</h4>
+                                    <h4 className='reqSideWord-auth'>Persyaratan</h4>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             }
         </div>
     );
 
-    // return (
-    //     <div>
-    //         {
-    //             !isMobile ?
-    //             <div className='modalMenuDetail-auth' style={{
-    //                 display: props.isShowForgotPin ? 'block' : 'none'
-    //             }} onClick={closeModal}
-    //             >
-    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-    //                     {
-    //                         <span className='iconClose-auth' onClick={closeModal}>
-    //                             <img src={closeLogo} className='closeLogo-auth' alt='' />
-    //                         </span>
-    //                     }
-
-    //                     <div className='menuDetail-layout-auth'>
-    //                         <div className='menuContain-all-auth'>
-    //                             <img src={pikappLogo} className='menuimg-auth' alt='' />
-
-    //                             <div className='menu-detail-auth'>
-    //                                 <div className='menu-name-auth'>
-    //                                     Lupa PIN ?
-    //                                 </div>
-
-    //                                 <div className='mob-menu-category-auth'>
-    //                                     Silahkan masukkan emeil Anda yang terdaftar.
-    //                                 </div>
-
-    //                                 <div>
-    //                                     {
-    //                                         <Form>
-    //                                             <Row className="btm50 top30">
-    //                                                 <Col xs={11}>
-    //                                                 <PikaTextField
-    //                                                     type="email"
-    //                                                     placeholder="Alamat Email"
-    //                                                     handleChange={handleEmail}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-
-    //                                             <Row>
-    //                                                 <Col xs={11}>
-    //                                                 {isValid || (
-    //                                                     <Alert variant="danger">{errorMsg}</Alert>
-    //                                                 )}
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-                                                
-    //                                             <Row>
-    //                                                 <Col xs={4}>
-    //                                                 <p className="linkWords">
-    //                                                     <div>KEMBALI</div>
-    //                                                 </p>
-    //                                                 </Col>
-    //                                                 <Col xs={3}/>
-
-    //                                                 <Col xs={4}>
-    //                                                 <PikaButton
-    //                                                     title="SUBMIT"
-    //                                                     buttonStyle="greenPika"
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-    //                                         </Form>
-    //                                     }
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //             :
-    //             <div className='modalMenuDetail-auth' style={{
-    //                 display: props.isShowForgotPin ? 'block' : 'none'
-    //             }} onClick={closeModal}
-    //             >
-    //                 <div className='modal-content-menudetail-auth' onClick={e => e.stopPropagation()}>
-    //                     {
-    //                         <span className='iconClose' onClick={closeModal}>
-    //                             <img src={closeLogo} className='closeLogo' alt='' />
-    //                         </span>
-    //                     }
-
-    //                     <div className='menuDetail-layout-auth'>
-    //                         <div className='menuContain-left-auth'>
-    //                             <div className='menuBanner-auth'>
-    //                                 <img src={pikappLogo} className='menuimg-auth' alt='' />
-    //                             </div>
-
-    //                             <div className='menu-detail-auth'>
-    //                                 <div className='menu-name-auth'>
-    //                                     Lupa PIN ?
-    //                                 </div>
-
-    //                                 <div className='mob-menu-category-auth'>
-    //                                     Silahkan masukkan emeil Anda yang terdaftar.
-    //                                 </div>
-
-    //                                 <div>
-    //                                     {
-    //                                         <Form>
-    //                                             <Row className="btm50 top30">
-    //                                                 <Col xs={11}>
-    //                                                 <PikaTextField
-    //                                                     type="email"
-    //                                                     placeholder="Alamat Email"
-    //                                                     handleChange={handleEmail}
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-
-    //                                             <Row>
-    //                                                 <Col xs={11}>
-    //                                                 {isValid || (
-    //                                                     <Alert variant="danger">{errorMsg}</Alert>
-    //                                                 )}
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-                                                
-    //                                             <Row>
-    //                                                 <Col xs={3}>
-    //                                                 <p className="linkWords">
-    //                                                     <div>KEMBALI</div>
-    //                                                 </p>
-    //                                                 </Col>
-    //                                                 <Col xs={2} md={2}/>
-
-    //                                                 <Col xs={4}>
-    //                                                 <PikaButton
-    //                                                     title="SUBMIT"
-    //                                                     buttonStyle="greenPika"
-    //                                                 />
-    //                                                 </Col>
-    //                                                 <Col />
-    //                                             </Row>
-    //                                         </Form>
-    //                                     }
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         }
-    //     </div>
-    // );
 }
 
 export default ForgotPinDialog

@@ -53,6 +53,7 @@ class ProductView extends React.Component {
     testingchange: false, //only for testing, would be remove
     showModal: false, // show customization of selected menu such as qty, notes and more advance choice
     showMenuDet: false, //show menu detail
+    isLogin : false,
     data: {
       mid: "",
       title: "",
@@ -98,7 +99,8 @@ class ProductView extends React.Component {
       email: "",
     };
     if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
+      auth = JSON.parse(Cookies.get("auth"));
+      this.setState({ isLogin: auth.isLogged });
     }
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
@@ -274,6 +276,20 @@ class ProductView extends React.Component {
         this.loadProducts(this.state.choosenIndCateg)
       } else {
         document.addEventListener('scroll', this.loadMoreMerchant)
+      }
+    }
+
+    if(this.state.isLogin === false) {
+      var auth = {
+        isLogged: false,
+        token: "",
+        new_event: true,
+        recommendation_status: false,
+        email: "",
+      };
+      if (Cookies.get("auth") !== undefined) {
+        auth = JSON.parse(Cookies.get("auth"));
+        this.setState({ isLogin: auth.isLogged });
       }
     }
 
@@ -728,7 +744,7 @@ class ProductView extends React.Component {
                 return (
                   <div key={indprod} className='product-merchant' onClick={() => this.handleDetail(product)}>
                     <div className='product-img'>
-                      <img src={Productimage} className='product-imgContent' alt='' />
+                      <img src={product.foodImage} className='product-imgContent' alt='' />
                     </div>
 
                     <div className='product-detail-mob'>
@@ -872,27 +888,33 @@ class ProductView extends React.Component {
               :
               <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
           }
-          <div className='iconBanner'>
-            <Link to={"/profile"}>
-              <div className='profileIcon-sec'>
-                <div className='profileIcon'>
-                  <span className='reactProfIcons'>
-                    <img className='profileicon-img' src={ProfileIcon} alt='' />
-                  </span>
+          
+          {
+            this.state.isLogin ?
+            <div className='iconBanner'>
+              <Link to={"/profile"}>
+                <div className='profileIcon-sec'>
+                  <div className='profileIcon'>
+                    <span className='reactProfIcons'>
+                      <img className='profileicon-img' src={ProfileIcon} alt='' />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
 
-            <Link to={"/status"}>
-              <div className='notifIcon-sec'>
-                <div className='notifIcon'>
-                  <span className='reactNotifIcons'>
-                    <img className='notificon-img' src={NotifIcon} alt='' />
-                  </span>
+              <Link to={"/status"}>
+                <div className='notifIcon-sec'>
+                  <div className='notifIcon'>
+                    <span className='reactNotifIcons'>
+                      <img className='notificon-img' src={NotifIcon} alt='' />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
+              </Link>
+            </div>
+            :
+            <div></div>
+          }
         </div>
         <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>
           <div className='inside-merchantSection'>
