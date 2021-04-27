@@ -828,17 +828,17 @@ class ProductView extends React.Component {
         })
         if (filterMerchantCart[0].mid) {
           cartButton = (
-            <Link to={"/cart"} className={"btn-productCart"}>
-              <img src={cartIcon} alt='' />
-            </Link>
-            // <Link to={"/cart"}>
-            //   <div className='cartIcon-layout'>
-            //     <div className='cartIcon-content'>
-            //       <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
-            //       <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
-            //     </div>
-            //   </div>
+            // <Link to={"/cart"} className={"btn-productCart"}>
+            //   <img src={cartIcon} alt='' />
             // </Link>
+            <Link to={"/cart"}>
+              <div className='cartIcon-layout'>
+                <div className='cartIcon-content'>
+                  <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+                  <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                </div>
+              </div>
+            </Link>
           );
         } else {
           cartButton = <></>;
