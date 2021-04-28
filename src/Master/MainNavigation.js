@@ -36,9 +36,7 @@ export default class MainNavigation extends React.Component {
                 <img src={bellIcon} class="icon" alt={"status"}></img>
               </Link>
               :
-              <Link to={"/status"} style={{display: "none"}}>
-                <img src={bellIcon} class="icon" alt={"status"}></img>
-              </Link>
+              <div></div>
             }
           </Navbar>
           {
@@ -58,9 +56,7 @@ export default class MainNavigation extends React.Component {
                 <img src={profileIcon} class="icon" alt={"profile"}></img>
               </Link>
               :
-              <Link to={"/profile"} style={{display: "none"}}>
-                <img src={profileIcon} class="icon" alt={"profile"}></img>
-              </Link>
+              <div></div>
             }
           </Navbar.Collapse>
         </Navbar>
