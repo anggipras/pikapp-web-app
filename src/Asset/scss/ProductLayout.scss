@@ -431,6 +431,10 @@
     padding-right: 15px;
   }
 
+  .product-detail-mob {
+    display: none;
+  }
+
   .product-star {
     width: 45.5px;
     height: 23.5px;
@@ -524,178 +528,90 @@
   //Product End
 
   //merchant list start
-  .storeImage {
-    margin-left: 16px;
+  .merchantList-layout {
+    width: 500px;
+    height: calc(500px * 0.75);
+    margin-left: 90px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .merchantList-banner {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: calc(500px * 0.5625);
+  }
+
+  .merchantList-image {
     width: 100%;
     height: 100%;
-    max-width: 150px;
-    min-width: 150px;
-    max-height: 150px;
-    min-height: 150px;
-    object-fit: fill;
+    object-fit: cover;
   }
-  .storeInfo {
-    margin-left: 70px;
+
+  .merchantList-content {
+    padding: 5px 20px 5px 20px;
   }
-  .foodTitle {
-    margin-top: 16px;
-    font-weight: bold;
-    font-size: 18px;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
+
+  .merchantList-contentLocStar {
+    display: flex;
   }
-  .foodPrice {
-    margin-top: 50%;
-    font-weight: bold;
-    font-size: 16px;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-  }
-  .foodDesc {
-    font-size: 12px;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-  }
-  .storeLabel {
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-    margin-top: 16px;
-  }
-  .storeColumn {
+
+  .merchantList-ratingArea, .merchantList-locArea {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
   }
-  .foodHeader {
-    margin-top: 1%;
-    margin-left: 1%;
+
+  .merchantList-locArea {
+    margin-left: 12px;
   }
-  .foodImage {
-    margin-top: 16px;
-    margin-left: 16px;
-    object-fit: fill;
-    max-height: 200px;
-    min-height: 200px;
-    max-width: 200px;
-    min-width: 200px;
+
+  .merchantList-ratingIcon, .merchantList-locIcon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .merchantList-ratingScore, .merchantList-location {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 17px;
+    text-transform: capitalize;
+    color: #111111;
+    margin-left: 7px;
+  }
+
+  .merchantList-distance {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    text-transform: capitalize;
+    color: #767676;
+  }
+
+  .merchantList-storeName {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    color: #111111;
+  }
+
+  .merchantList-storeCategory {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    text-transform: capitalize;
+    color: #767676;
   }
   //merchant list end
-
-  // .nav-tabs {
-  //   overflow-x: auto;
-  //   overflow-y: hidden;
-  //   display: -webkit-box;
-  //   display: -moz-box;
-  //   -ms-overflow-style: none;
-  //   scrollbar-width: none;
-  //   flex-wrap: nowrap;
-  // }
-  // .nav-tabs::-webkit-scrollbar {
-  //   display: none;
-  // }
-  // .nav-tabs > li {
-  //   float: none;
-  // }
-
-  // .modalField {
-  //   text-align: center;
-  //   max-width: 70px;
-  // }
-  // .modalField:disabled {
-  //   background-color: white;
-  // }
-  // .btn-modalMiniButton {
-  //   border-radius: 36px;
-  //   background-color: #4bb7ac;
-  //   font-weight: bolder;
-  //   font-size: 24px;
-  //   line-height: 0px;
-  //   color: white;
-  //   max-width: 50px;
-  // }
-  // .btn-modalMiniButton:hover {
-  //   background-color: #5bc7bc;
-  //   font-weight: bolder;
-  //   font-size: 24px;
-  //   line-height: 0px;
-  //   color: white;
-  // }
-  // .modalNoteLabel {
-  //   font-size: 24px;
-  //   font-weight: normal;
-  //   margin-left: 16px;
-  //   -moz-hyphens: auto;
-  //   -ms-hyphens: auto;
-  //   -webkit-hyphens: auto;
-  //   hyphens: auto;
-  //   word-wrap: break-word;
-  // }
-  // .modalFoodName {
-  //   margin-left: 16px;
-  //   -moz-hyphens: auto;
-  //   -ms-hyphens: auto;
-  //   -webkit-hyphens: auto;
-  //   hyphens: auto;
-  //   word-wrap: break-word;
-  // }
-  // .btn-modalPika {
-  //   background-color: #4bb7ac;
-  //   font-weight: bold;
-  //   border-radius: 36px;
-  //   text-decoration: none;
-  //   width: 100%;
-  //   color: white;
-  //   height: 50px;
-  // }
-  // .btn-modalPika:hover {
-  //   background-color: #5bc7bc;
-  //   font-weight: bold;
-  //   border-radius: 36px;
-  //   text-decoration: none;
-  //   width: 100%;
-  //   color: white;
-  //   height: 50px;
-  // }
-  // .modalNote {
-  //   border-radius: 36px;
-  // }
-
-  .btn-productCart {
-    border-radius: 180px;
-    background-color: $primary-color;
-    border-color: transparent;
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 100px;
-    height: 100px;
-  }
-  .btn-productCart > img {
-    width: 36px;
-    margin-left: 30%;
-    margin-top: 30%;
-  }
-  .btn-productCart:active {
-    border-radius: 180px;
-    background-color: $secondary-color;
-    border-color: transparent;
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 100px;
-    height: 100px;
-  }
 
   .cartIcon-layout {
     display: flex;
@@ -705,7 +621,7 @@
     z-index: 3;
     width: 100%;
     height: 95px;
-    bottom: 120px;
+    bottom: 30px;
     left: 0;
   }
 
@@ -1138,7 +1054,7 @@
 
   .product-merchant {
     max-width: 382px;
-    width: 100%;
+    // width: 100%;
     height: auto;
     border-radius: 30px;
     background-color: #ffffff;
@@ -1162,17 +1078,22 @@
   }
 
   .product-detail {
-    max-width: 179px;
-    width: auto;
+    display: none;
   }
 
   .product-detail-mob {
     display: flex;
+    width: 245px;
     justify-content: space-between;
     margin-left: 23px;
   }
 
-  .product-star {
+  .product-detailInfo-mob {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-star-mob {
     width: 38.7px;
     height: 20px;
     background-color: #f5f6f7;
@@ -1184,12 +1105,12 @@
     margin-bottom: 3px;
   }
 
-  .product-star-img {
+  .product-star-img-mob {
     width: 9.35px;
     height: 9.35px;
   }
 
-  .product-star-rating {
+  .product-star-rating-mob {
     font-family: "SF-Compact-Rounded", sans-serif;
     font-size: 10px;
     font-weight: 500;
@@ -1199,7 +1120,7 @@
     margin-left: 3.3px;
   }
 
-  .product-name {
+  .product-name-mob {
     width: 179px;
     font-family: "Montserrat", sans-serif;
     font-style: normal;
@@ -1210,7 +1131,7 @@
     line-height: 20px;
   }
 
-  .product-desc {
+  .product-desc-mob {
     width: 179px;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
@@ -1220,10 +1141,6 @@
     text-transform: capitalize;
     color: #767676;
     margin-bottom: 14px;
-  }
-
-  .product-price {
-    display: none;
   }
 
   .product-price-mob {
@@ -1236,8 +1153,8 @@
     text-transform: capitalize;
     letter-spacing: 0.05em;
     color: #111111;
-    margin-top: 34px;
-    margin-right: 10px;
+    padding-top: 32px;
+    padding-right: 10px;
   }
 
   .pikapp-info {
@@ -1266,179 +1183,91 @@
   }
   //Product End
 
-  .storeImage {
-    margin-top: 8px;
-    // width: 70px;
-    // height: 70px;
-    object-fit: fill;
+  //merchant list start
+  .merchantList-layout {
+    width: 390px;
+    height: calc(390px * 0.75);
+    margin-left: 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   }
-  .foodTitle {
-    margin-top: 16px;
-    font-weight: bold;
-    font-size: 16px;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-  }
-  .foodPrice {
-    margin-top: 50%;
-    font-weight: bold;
-    font-size: 14px;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-  }
-  .foodDesc {
-    font-size: 14px;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-  }
-  .storeLabel {
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
-    margin-top: 8px;
-    margin-left: 8px;
-  }
-  .storeColumn {
-    align-items: center;
-    text-align: center;
-  }
-  .foodHeader {
-    margin-top: 8px;
-    margin-left: 8px;
-  }
-  .foodImage {
-    margin-top: 32px;
-    margin-left: 8px;
-    height: 80px;
-    max-width: 80px;
-    min-width: 80px;
-    max-height: 80px;
-    min-height: 80px;
-    object-fit: fill;
-  }
-  .card {
-    border: none;
-    border-bottom-width: 1px;
-    border-bottom-color: lightgray;
-    border-bottom-style: solid;
-    border-radius: 0px;
-  }
-  // .nav-tabs {
-  //   overflow-x: scroll;
-  //   overflow-y: hidden;
-  //   display: -webkit-box;
-  //   display: -moz-box;
-  //   -ms-overflow-style: none;
-  //   scrollbar-width: none;
-  //   flex-wrap: nowrap;
-  // }
-  // .nav-tabs::-webkit-scrollbar {
-  //   display: none;
-  // }
-  // .nav-tabs > li {
-  //   float: none;
-  // }
 
-  // .modalField {
-  //   text-align: center;
-  //   max-width: 40px;
-  // }
-  // .modalField:disabled {
-  //   background-color: white;
-  // }
-  // .btn-modalMiniButton {
-  //   border-radius: 36px;
-  //   background-color: #4bb7ac;
-  //   font-weight: bolder;
-  //   font-size: 24px;
-  //   line-height: 0px;
-  //   color: white;
-  //   max-width: 40px;
-  // }
-  // .btn-modalMiniButton:hover {
-  //   background-color: #5bc7bc;
-  //   font-weight: bolder;
-  //   font-size: 24px;
-  //   line-height: 0px;
-  //   color: white;
-  // }
-  // .modalNoteLabel {
-  //   font-size: 24px;
-  //   font-weight: normal;
-  //   margin-left: 16px;
-  //   -moz-hyphens: auto;
-  //   -ms-hyphens: auto;
-  //   -webkit-hyphens: auto;
-  //   hyphens: auto;
-  //   word-wrap: break-word;
-  // }
-  // .modalFoodName {
-  //   margin-left: 16px;
-  //   -moz-hyphens: auto;
-  //   -ms-hyphens: auto;
-  //   -webkit-hyphens: auto;
-  //   hyphens: auto;
-  //   word-wrap: break-word;
-  // }
-  // .btn-modalPika {
-  //   background-color: #4bb7ac;
-  //   font-weight: bold;
-  //   border-radius: 36px;
-  //   text-decoration: none;
-  //   width: 100%;
-  //   color: white;
-  //   height: 50px;
-  // }
-  // .btn-modalPika:hover {
-  //   background-color: #5bc7bc;
-  //   font-weight: bold;
-  //   border-radius: 36px;
-  //   text-decoration: none;
-  //   width: 100%;
-  //   color: white;
-  //   height: 50px;
-  // }
-  // .modalNote {
-  //   border-radius: 36px;
-  // }
-  .btn-productCart {
-    border-radius: 180px;
-    background-color: $primary-color;
-    border-color: $secondary-color;
-    border-width: 2px;
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 64px;
-    height: 64px;
+  .merchantList-banner {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: calc(390px * 0.5625);
   }
-  .btn-productCart > img {
-    width: 24px;
-    margin-left: 30%;
-    margin-top: 30%;
+
+  .merchantList-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-  .btn-productCart:active {
-    border-radius: 180px;
-    background-color: $primary-color;
-    border-color: $secondary-color;
-    border-width: 2px;
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 64px;
-    height: 64px;
+
+  .merchantList-content {
+    padding: 12px 0px 0px 12px;
   }
+
+  .merchantList-contentLocStar {
+    display: flex;
+  }
+
+  .merchantList-ratingArea, .merchantList-locArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .merchantList-locArea {
+    margin-left: 7px;
+  }
+
+  .merchantList-ratingIcon, .merchantList-locIcon {
+    width: 10px;
+    height: 10px;
+  }
+
+  .merchantList-ratingScore, .merchantList-location {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    text-transform: capitalize;
+    color: #111111;
+    margin-left: 4px;
+  }
+
+  .merchantList-distance {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    text-transform: capitalize;
+    color: #767676;
+  }
+
+  .merchantList-storeName {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    color: #111111;
+  }
+
+  .merchantList-storeCategory {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    text-transform: capitalize;
+    color: #767676;
+  }
+  //merchant list end
 
   .cartIcon-layout {
     display: flex;
@@ -1485,20 +1314,59 @@
   }
 
   //Product Start
-  .product-price-mob {
-    margin-left: 5px;
+  .product-detail-mob {
+    width: 200px;
+    margin-left: 20px;
   }
 
-  .product-name {
+  .product-name-mob {
     max-width: 140px;
     width: auto;
   }
 
-  .product-desc {
+  .product-desc-mob {
     max-width: 140px;
     width: auto;
   }
   //Product End
+
+  .merchantList-layout {
+    width: 350px;
+    height: calc(350px * 0.75);
+  }
+
+  .merchantList-banner {
+    height: calc(350px * 0.5625);
+  }
+
+  .merchantList-content {
+    padding: 9px 0px 0px 12px;
+  }
+
+  .merchantList-locArea {
+    margin-left: 7px;
+  }
+
+  .merchantList-ratingIcon, .merchantList-locIcon {
+    width: 9px;
+    height: 9px;
+  }
+
+  .merchantList-ratingScore, .merchantList-location {
+    font-size: 9px;
+  }
+
+  .merchantList-distance {
+    font-size: 9px;
+  }
+
+  .merchantList-storeName {
+    font-size: 13px;
+  }
+
+  .merchantList-storeCategory {
+    font-size: 9px;
+  }
 
   .cartIcon-content {
     min-width: 336px;
@@ -1507,12 +1375,48 @@
 }
 
 @media (max-width: 320px) {
-  //Product Start
-  .product-price-mob {
-    margin-left: 10px;
-    margin-right: 5px;
+  .product-detail-mob {
+    width: 160px;
+    margin-left: 15px;
   }
-  //Product End
+
+  .merchantList-layout {
+    width: 295px;
+    height: calc(295px * 0.75);
+  }
+
+  .merchantList-banner {
+    height: calc(295px * 0.5625);
+  }
+
+  .merchantList-content {
+    padding: 5px 0px 0px 12px;
+  }
+
+  .merchantList-locArea {
+    margin-left: 7px;
+  }
+
+  .merchantList-ratingIcon, .merchantList-locIcon {
+    width: 8px;
+    height: 8px;
+  }
+
+  .merchantList-ratingScore, .merchantList-location {
+    font-size: 8px;
+  }
+
+  .merchantList-distance {
+    font-size: 8px;
+  }
+
+  .merchantList-storeName {
+    font-size: 12px;
+  }
+
+  .merchantList-storeCategory {
+    font-size: 8px;
+  }
 
   .cartIcon-content {
     min-width: 300px;

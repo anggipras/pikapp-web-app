@@ -12,6 +12,7 @@ import RegisterDialog from '../Authentication/RegisterDialog';
 import Cookies from "js-cookie"
 import PinDialog from "../Authentication/PinDialog";
 import Loader from 'react-loader-spinner'
+import Swal from 'sweetalert2'
 
 const MenuDetail = (props) => {
     const dispatch = useDispatch()
@@ -65,7 +66,15 @@ const MenuDetail = (props) => {
                 dispatch({ type: 'DEFAULTSTATE' })
                 props.onHide()
             } else {
-                alert('cannot buy')
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    text: 'Pilih terlebih dahulu pilihan yang wajib',
+                    showConfirmButton: true,
+                    confirmButtonColor: "#4bb7ac",
+                    confirmButtonText: "Close",
+                    closeOnConfirm: false,
+                })
             }
         }
     }
