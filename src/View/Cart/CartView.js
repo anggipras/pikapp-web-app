@@ -7,7 +7,7 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
-import CartModalDev from "../../Component/Modal/CartModalDev";
+import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
@@ -94,7 +94,7 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
-      is_email_verified : true
+      is_email_verified: true
     };
 
     if (Cookies.get("auth") !== undefined) {
@@ -103,8 +103,8 @@ class CartView extends React.Component {
 
     this.setState({ isEmailVerified: auth.is_email_verified });
 
-    if(this.state.isEmailVerified === false) {
-        this.handleReloadEmail();
+    if (this.state.isEmailVerified === false) {
+      this.handleReloadEmail();
     }
 
   }
@@ -394,7 +394,7 @@ class CartView extends React.Component {
             this.props.DoneLoad()
           }, 1000);
         } else {
-          this.setState({ successMessage: 'Transaksi OVO berhasil' })
+          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
           setTimeout(() => {
             let filterOtherCart = storageData.filter(valFilter => {
               return valFilter.mid !== currentCartMerchant.mid
@@ -592,14 +592,14 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
-      is_email_verified : true
+      is_email_verified: true
     };
 
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
 
-    if(auth.is_email_verified === false) {
+    if (auth.is_email_verified === false) {
       console.log(auth)
       let uuid = uuidV4();
       uuid = uuid.replaceAll("-", "");
@@ -708,7 +708,7 @@ class CartView extends React.Component {
     if (this.state.loadButton) {
       return <Redirect to='/status' />
     }
-    
+
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let allCart = JSON.parse(localStorage.getItem('cart'))
     let filterCart = allCart.filter(valCart => {
@@ -736,7 +736,7 @@ class CartView extends React.Component {
       new_event: true,
       recommendation_status: false,
       email: "",
-      is_email_verified : true
+      is_email_verified: true
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
@@ -750,7 +750,7 @@ class CartView extends React.Component {
     let modal;
     if (this.state.showModal === true) {
       modal = (
-        <CartModalDev
+        <CartModal
           isShow={this.state.showModal}
           onHide={() => this.setModal(false)}
           title={this.state.currentModalTitle}
@@ -847,19 +847,20 @@ class CartView extends React.Component {
       }
     });
 
-    let totalPaymentShow = storeList.map(store => {
+    let totalPaymentShow = 0
+    let selectedMerch = storeList.map(store => {
       if (store.mid === currentCartMerchant.mid) {
-        let countAllProduct = 0
-        store.food.forEach(food => {
-          countAllProduct += food.foodTotalPrice
-        })
-        return countAllProduct
+        return store
       }
     });
 
+    selectedMerch[0].food.forEach(thefood => {
+      totalPaymentShow += thefood.foodTotalPrice
+    })
+
     finalProduct = [
       {
-        totalPrice: totalPaymentShow[0],
+        totalPrice: totalPaymentShow,
         discountPrice: 0,
       },
     ]

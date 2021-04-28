@@ -747,25 +747,43 @@ class ProductView extends React.Component {
                       <img src={product.foodImage} className='product-imgContent' alt='' />
                     </div>
 
+                    {/* desktop view */}
+                    <div className='product-detail'>
+                      <div className='product-star'>
+                        <img className='product-star-img' src={StarIcon} alt='' />
+                        <h6 className='product-star-rating'>{product.foodRating}</h6>
+                      </div>
+
+                      <div className='product-name'>
+                        {product.foodName}
+                      </div>
+
+                      <div className='product-desc'>
+                        {product.foodDesc}
+                      </div>
+
+                      <div className='product-price'>
+                        {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
+                    </div>
+
+                    {/* mobile view */}
                     <div className='product-detail-mob'>
-                      <div className='product-detail'>
-                        <div className='product-star'>
-                          <img className='product-star-img' src={StarIcon} alt='' />
-                          <h6 className='product-star-rating'>{product.foodRating}</h6>
+                      <div className='product-detailInfo-mob'>
+                        <div className='product-star-mob'>
+                          <img className='product-star-img-mob' src={StarIcon} alt='' />
+                          <h6 className='product-star-rating-mob'>{product.foodRating}</h6>
                         </div>
 
-                        <div className='product-name'>
+                        <div className='product-name-mob'>
                           {product.foodName}
                         </div>
 
-                        <div className='product-desc'>
+                        <div className='product-desc-mob'>
                           {product.foodDesc}
                         </div>
-
-                        <div className='product-price'>
-                          {Intl.NumberFormat("id-ID").format(product.foodPrice)}
-                        </div>
                       </div>
+
                       <div className='product-price-mob'>
                         {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
