@@ -20,15 +20,16 @@ import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
-import Rating from 'react-rating'
 import Cookies from "js-cookie";
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
+import Rating from 'react-rating'
 
 export class StatusView extends React.Component {
   state = {
     showModal: false,
     activeTab: 1,
     showRegisterDialog : false,
+    isLogin : false,
     data: [
       {
         title: "",
@@ -158,13 +159,74 @@ export class StatusView extends React.Component {
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
+      this.setState({ isLogin: auth.isLogged });
     }
     if(auth.isLogged === false) {
       var lastLink = { value: window.location.href}
       Cookies.set("lastLink", lastLink,{ expires: 1})
       this.setRegisterDialog(true);
       // window.location.href = "/login"
+    } else {
+      this.getTransactionHistory();
     }
+    // var state = { ...this.state };
+    // state.data.pop();
+    // state.data.push({
+    //   title: "Food1",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "unpaid",
+    // });
+    // state.data.push({
+    //   title: "Food4",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "unpaid",
+    // });
+    // state.data.push({
+    //   title: "Food2",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "pick",
+    // });
+    // state.data.push({
+    //   title: "Food3",
+    //   distance: "dist1",
+    //   quantity: "qty1",
+    //   status: "send",
+    // });
+    // this.setState({ data: state.data });
+  }
+
+  componentDidUpdate() {
+    if(this.state.isLogin === false) {
+      var auth = {
+        isLogged: false,
+        token: "",
+        new_event: true,
+        recommendation_status: false,
+        email: "",
+      };
+      if(Cookies.get("auth") !== undefined) {
+        auth = JSON.parse(Cookies.get("auth"))
+        this.getTransactionHistory();
+        this.setState({ isLogin: auth.isLogged });
+      }
+    }
+  }
+
+  getTransactionHistory() {
+    var auth = {
+      isLogged: false,
+      token: "",
+      new_event: true,
+      recommendation_status: false,
+      email: "",
+    };
+    if(Cookies.get("auth") !== undefined) {
+      auth = JSON.parse(Cookies.get("auth"))
+    }
+
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -200,33 +262,7 @@ export class StatusView extends React.Component {
       })
       .catch((err) => {
       });
-    // var state = { ...this.state };
-    // state.data.pop();
-    // state.data.push({
-    //   title: "Food1",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "unpaid",
-    // });
-    // state.data.push({
-    //   title: "Food4",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "unpaid",
-    // });
-    // state.data.push({
-    //   title: "Food2",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "pick",
-    // });
-    // state.data.push({
-    //   title: "Food3",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "send",
-    // });
-    // this.setState({ data: state.data });
+
   }
 
   setRegisterDialog(isShow) {
