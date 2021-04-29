@@ -528,14 +528,29 @@
   //Product End
 
   //merchant list start
+  .merchantList-background {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .merchantList-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
   .merchantList-layout {
     width: 500px;
     height: calc(500px * 0.75);
-    margin-left: 90px;
     border-radius: 20px;
     margin-bottom: 20px;
     overflow: hidden;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .merchantList-layout:nth-child(odd) {
+    margin-right: 20px;
   }
 
   .merchantList-banner {
@@ -1184,10 +1199,21 @@
   //Product End
 
   //merchant list start
+  .merchantList-background {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchantList-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
   .merchantList-layout {
     width: 390px;
     height: calc(390px * 0.75);
-    margin-left: 12px;
     border-radius: 20px;
     margin-bottom: 20px;
     overflow: hidden;
