@@ -11,6 +11,7 @@ import ProfileLayout from "./Master/ProfileLayout";
 import MerchantResto from "./Master/MerchantQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import { Route, Switch } from "react-router-dom";
+import Cookies from "js-cookie"
 
 export var cart = [
     {
@@ -38,6 +39,13 @@ if (localStorage.getItem("cart")) {
 }
 
 function App() {
+      if (Cookies.get("auth") === undefined) {
+        let deleteCart = JSON.parse(localStorage.getItem("cart"))
+        let newCart = []
+        newCart.push(deleteCart[0])
+        localStorage.setItem('cart', JSON.stringify(newCart))
+      }
+
     return (
         <Switch>
             <Route path="/login" component={() => <AuthLayout isLogin={true} />} />

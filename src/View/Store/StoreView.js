@@ -1,7 +1,6 @@
 import React from "react";
 import StarIcon from '../../Asset/Icon/star.png'
 import LocaIcon from '../../Asset/Icon/location.png'
-import { Col, Row, Image } from "react-bootstrap";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
 import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
@@ -59,8 +58,6 @@ class StoreView extends React.Component {
     }
     // else {
     const value = queryString.parse(window.location.search);
-    var longitude = "";
-    var latitude = "";
     var merchant = "";
 
     if (navigator.geolocation) {
@@ -333,12 +330,12 @@ class StoreView extends React.Component {
             <div className='merchantList-content'>
               <div className='merchantList-contentLocStar'>
                 <div className='merchantList-ratingArea'>
-                  <img src={StarIcon} className='merchantList-ratingIcon' />
+                  <img src={StarIcon} className='merchantList-ratingIcon' alt='' />
                   <div className='merchantList-ratingScore'>{cardData.rating ? cardData.rating : "5.0"}</div>
                 </div>
 
                 <div className='merchantList-locArea'>
-                  <img src={LocaIcon} className='merchantList-locIcon' />
+                  <img src={LocaIcon} className='merchantList-locIcon' alt='' />
                   {
                     cardData.distance ?
                       <div className='merchantList-location'>{cardData.distance} <span className='merchantList-distance'>{'(' + Math.round((parseInt(cardData.distance) / 22) * 60) + ' min)'}</span></div>
@@ -363,40 +360,34 @@ class StoreView extends React.Component {
     });
 
     return (
-      <div>
-        <Row>
-          <Col xs={4} md={1} />
-          <Col xs={0} md={4} className="storeColumn">
-            <h6 className="" style={{ textAlign: "left" }}>
-              Lokasi:
+      <div className='merchantList-background'>
+        <div className="storeColumn">
+          <h6 className="" style={{ textAlign: "left" }}>
+            Lokasi:
             </h6>
-            <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.location || <Skeleton height={20} />}
-            </p>
-          </Col>
-          <Col />
-        </Row>
-        <Row />
-        <Row>
-          <div>
+          <p className="storeLabel" style={{ textAlign: "left" }}>
+            {this.state.location || <Skeleton height={20} />}
+          </p>
+        </div>
+        <div>
+          <div className='merchantList-grid'>
             {allCards}
-            {
-              !this.state.loadView ?
-                this.state.idCol <= this.state.page ?
-                  this.state.totalPage - 1 === this.state.page ?
-                    null
-                    :
-                    <div id={"idCol"}>
-                      {this.merchantLoading()}
-                    </div>
-                  :
+          </div>
+          {
+            !this.state.loadView ?
+              this.state.idCol <= this.state.page ?
+                this.state.totalPage - 1 === this.state.page ?
                   null
+                  :
+                  <div id={"idCol"}>
+                    {this.merchantLoading()}
+                  </div>
                 :
                 null
-            }
-          </div>
-        </Row>
-        <Row></Row>
+              :
+              null
+          }
+        </div>
       </div>
     );
   }
