@@ -22,7 +22,6 @@ import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import Cookies from "js-cookie";
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
-import Rating from 'react-rating'
 
 export class StatusView extends React.Component {
   state = {
@@ -62,21 +61,6 @@ export class StatusView extends React.Component {
         },
       ],
     },
-    ratingScore: 0,
-    openRating: false,
-    ratingNote: "",
-    dummyData: [
-      {
-        title: "goldlands",
-        distance: "7km",
-        quantity: "1",
-        status: "FINALIZE",
-        biz_type: "DINE_IN",
-        payment: "WALLET_OVO",
-        transactionId: "7777777",
-        transactionTime: "30 Januari 1994",
-      },
-    ],
   };
 
   setModal(isShow) {
@@ -279,15 +263,6 @@ export class StatusView extends React.Component {
         />
       )
     }
-  }
-
-  onRating = (value) => {
-    this.setState({ ratingScore: value })
-    this.setState({ openRating: true })
-  }
-
-  notesRating = (e) => {
-    this.setState({ ratingNote: e.target.value })
   }
 
   render() {
@@ -670,7 +645,7 @@ export class StatusView extends React.Component {
     let reviewImage;
     if (currentState === 4) {
       reviewImage = reviewActiveIcon;
-      let data = this.state.dummyData;
+      let data = this.state.data;
       contentView = data.map((value) => {
         if (value.status === "CLOSE" || value.status === "FINALIZE") {
           let bizImage;
@@ -741,13 +716,6 @@ export class StatusView extends React.Component {
                       <span class="statusRightText">{payLabel}</span>
                     </Col>
                   </Row>
-                  <Rating onChange={this.onRating} initialRating={this.state.ratingScore} />
-                  {
-                    this.state.openRating ?
-                      <textarea rows='5' id="ratingnote" placeholder={"Berikan rating untuk produk ini"} onChange={this.notesRating} />
-                      :
-                      null
-                  }
                 </Card>
               </Col>
               <Col xs={1} md={1} />

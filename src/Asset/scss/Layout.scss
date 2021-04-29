@@ -23,6 +23,9 @@ body .bodyPrimary {
     z-index: 1;
     padding: 40px 0;
     min-height: 100vh;
+  }
+
+  .container2 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,10 +41,14 @@ body .bodyPrimary {
     font-size: 12px;
     min-height: 100vh;
     padding-top: 16px;
+  }
+
+  .container2 {
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   h2 {
     font-size: 22px;
   }

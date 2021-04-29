@@ -361,7 +361,7 @@ class StoreView extends React.Component {
 
     return (
       <div className='merchantList-background'>
-        <div xs={0} md={4} className="storeColumn">
+        <div className="storeColumn">
           <h6 className="" style={{ textAlign: "left" }}>
             Lokasi:
             </h6>
