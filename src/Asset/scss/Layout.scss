@@ -8,8 +8,6 @@
 
 body {
   background-color: inherit;
-  // overflow-x: hidden;
-  // overflow-y: hidden;
 }
 body .bodySecondary {
   background-color: $secondary-color;
@@ -26,6 +24,12 @@ body .bodyPrimary {
     padding: 40px 0;
     min-height: 100vh;
   }
+
+  .container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -38,6 +42,13 @@ body .bodyPrimary {
     min-height: 100vh;
     padding-top: 16px;
   }
+
+  .container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   h2 {
     font-size: 22px;
   }

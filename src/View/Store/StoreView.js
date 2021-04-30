@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Row, Image } from "react-bootstrap";
+import StarIcon from '../../Asset/Icon/star.png'
+import LocaIcon from '../../Asset/Icon/location.png'
 import queryString from "query-string";
 import { Link } from "react-router-dom";
 import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
@@ -54,128 +55,126 @@ class StoreView extends React.Component {
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
-    } 
+    }
     // else {
-      const value = queryString.parse(window.location.search);
-      var longitude = "";
-      var latitude = "";
-      var merchant = "";
+    const value = queryString.parse(window.location.search);
+    var merchant = "";
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
 
-          let latitude = position.coords.latitude
-          let longitude = position.coords.longitude
-          let longlat = { lat: latitude, lon: longitude }
-          console.log(latitude, longitude);
-          this.setState({ lat: latitude, lon: longitude })
-          localStorage.setItem("longlat", JSON.stringify(longlat))
-          // Show a map centered at latitude / longitude.
+        let latitude = position.coords.latitude
+        let longitude = position.coords.longitude
+        let longlat = { lat: latitude, lon: longitude }
+        console.log(latitude, longitude);
+        this.setState({ lat: latitude, lon: longitude })
+        localStorage.setItem("longlat", JSON.stringify(longlat))
+        // Show a map centered at latitude / longitude.
 
-          if (localStorage.getItem("longlat")) {
-            var getLocation = JSON.parse(localStorage.getItem("longlat"))
-            latitude = getLocation.lat
-            longitude = getLocation.lon
-          } else {
-            // window.location.href = "/login"
-          }
-      
-          if (auth.isLogged === false) {
-            var lastLink = { value: window.location.href }
-            Cookies.set("lastLink", lastLink, { expires: 1 })
-            // window.location.href = "/login"
-          }
-          else {
-            longitude = value.longitude || longitude
-            latitude = value.latitude || latitude
-            if (window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
-      
-            } else {
-              window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
-            }
-          }
+        if (localStorage.getItem("longlat")) {
+          var getLocation = JSON.parse(localStorage.getItem("longlat"))
+          latitude = getLocation.lat
+          longitude = getLocation.lon
+        } else {
+          // window.location.href = "/login"
+        }
+
+        if (auth.isLogged === false) {
+          var lastLink = { value: window.location.href }
+          Cookies.set("lastLink", lastLink, { expires: 1 })
+          // window.location.href = "/login"
+        }
+        else {
           longitude = value.longitude || longitude
           latitude = value.latitude || latitude
-          merchant = value.merchant;
-      
-          // GOOGLE GEOCODE
-          if (localStorage.getItem("address")) {
-            var getAdress = JSON.parse(localStorage.getItem("address"))
-            this.setState({ location: getAdress })
-          } else {
-            Geocode.setApiKey(googleKey)
-            Geocode.fromLatLng(latitude, longitude)
-              .then((res) => {
-                console.log(res.results[0].formatted_address);
-                this.setState({ location: res.results[0].formatted_address })
-                localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
-              })
-              .catch((err) => {
-                this.setState({ location: "Tidak tersedia" })
-              })
-          }
+          if (window.location.href.includes('?latitude') || window.location.href.includes('store?')) {
 
-          let addressRoute;
-          if (merchant === undefined) {
-            addressRoute =
-              address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
           } else {
-            addressRoute =
-              address +
-              "home/v1/merchant/" +
-              longitude +
-              "/" +
-              latitude +
-              "/" +
-              merchant
-              + "/"
+            window.location.href = window.location.href + `?latitude=${latitude}&longitude=${longitude}`
           }
-          var stateData;
-          let uuid = uuidV4();
-          uuid = uuid.replaceAll("-", "");
-          const date = new Date().toISOString();
-          Axios(addressRoute, {
-            headers: {
-              "Content-Type": "application/json",
-              "x-request-id": uuid,
-              "x-request-timestamp": date,
-              "x-client-id": clientId,
-              "token": "PUBLIC",
-              "category": "1",
-            },
-            method: "GET",
-            params: {
-              page: this.state.page,
-              size: this.state.size
-            }
-          })
+        }
+        longitude = value.longitude || longitude
+        latitude = value.latitude || latitude
+        merchant = value.merchant;
+
+        // GOOGLE GEOCODE
+        if (localStorage.getItem("address")) {
+          var getAdress = JSON.parse(localStorage.getItem("address"))
+          this.setState({ location: getAdress })
+        } else {
+          Geocode.setApiKey(googleKey)
+          Geocode.fromLatLng(latitude, longitude)
             .then((res) => {
-              console.log(res.data.results);
-              stateData = { ...this.state.data };
-              let responseDatas = res.data;
-              stateData.data.pop();
-              responseDatas.results.forEach((data) => {
-                stateData.data.push({
-                  address: data.merchant_address,
-                  rating: data.merchant_rating,
-                  logo: data.merchant_logo,
-                  distance: data.merchant_distance,
-                  storeId: data.mid,
-                  storeName: data.merchant_name,
-                  storeDesc: "",
-                  storeImage: data.merchant_pict,
-                })
-              })
-              this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
-              document.addEventListener('scroll', this.loadMoreMerchant)
-              if (res.data.results.length < 6) {
-                document.removeEventListener('scroll', this.loadMoreMerchant)
-              }
+              console.log(res.results[0].formatted_address);
+              this.setState({ location: res.results[0].formatted_address })
+              localStorage.setItem("address", JSON.stringify(res.results[0].formatted_address));
             })
             .catch((err) => {
-            });
-            });
-      }
+              this.setState({ location: "Tidak tersedia" })
+            })
+        }
+
+        let addressRoute;
+        if (merchant === undefined) {
+          addressRoute =
+            address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
+        } else {
+          addressRoute =
+            address +
+            "home/v1/merchant/" +
+            longitude +
+            "/" +
+            latitude +
+            "/" +
+            merchant
+            + "/"
+        }
+        var stateData;
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
+        Axios(addressRoute, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token": "PUBLIC",
+            "category": "1",
+          },
+          method: "GET",
+          params: {
+            page: this.state.page,
+            size: this.state.size
+          }
+        })
+          .then((res) => {
+            console.log(res.data.results);
+            stateData = { ...this.state.data };
+            let responseDatas = res.data;
+            stateData.data.pop();
+            responseDatas.results.forEach((data) => {
+              stateData.data.push({
+                address: data.merchant_address,
+                rating: data.merchant_rating,
+                logo: data.merchant_logo,
+                distance: data.merchant_distance,
+                storeId: data.mid,
+                storeName: data.merchant_name,
+                storeDesc: "",
+                storeImage: data.merchant_pict,
+              })
+            })
+            this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+            document.addEventListener('scroll', this.loadMoreMerchant)
+            if (res.data.results.length < 6) {
+              document.removeEventListener('scroll', this.loadMoreMerchant)
+            }
+          })
+          .catch((err) => {
+          });
+      });
+    }
     // }
   }
   //OPENCAGE API
@@ -299,20 +298,9 @@ class StoreView extends React.Component {
   }
 
   merchantLoading = () => (
-    <Row>
-      <Col xs={3} md={3}>
-        <Skeleton style={{ width: 70, height: 70, marginLeft: 10 }} />
-      </Col>
-      <Col xs={9} md={6}>
-        <Row>
-          <Col xs={7} md={9}>
-            <Skeleton style={{ width: 100, height: 30, marginLeft: 10 }} />
-            <Skeleton style={{ width: 100, height: 20, marginLeft: 10 }} />
-            <Skeleton style={{ width: 100, height: 20, marginLeft: 10 }} />
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <div className='merchantList-layout' >
+      <Skeleton style={{ paddingTop: 100, width: "100%", height: "100%" }} />
+    </div>
   )
 
   render() {
@@ -328,92 +316,78 @@ class StoreView extends React.Component {
     });
     var allCards = storeDatas.map((cardData, indexCard) => {
       return (
-        <Row key={indexCard}>
-          <Col xs={3} md={3}>
-            {
-              this.state.loadView ?
-                <Skeleton width={70} height={70} />
-                :
-                <Image
-                  src={cardData.storeImage}
-                  rounded
-                  fluid
-                  className="storeImage"
-                />
-            }
-          </Col>
-          <Col xs={9} md={6}>
-            <Row>
-              <Col xs={7} md={9} className="storeInfo">
-                {
-                  this.state.loadView ?
-                    <Skeleton style={{ width: 100, height: 30, marginLeft: 20 }} />
-                    :
-                    <h5 className="foodTitle">{cardData.storeName}</h5>
-                }
-                <p className="storeDesc">{cardData.storeDesc}</p>
-                {
-                  this.state.loadView ?
-                    <Skeleton style={{ width: 100, height: 20, marginLeft: 20 }} />
-                    :
-                    <div className="foodButton">
-                      <Link
-                        className={"btn-cartPika"}
-                        to={"/store?mid=" + cardData.storeId}
-                        style={{
-                          padding: 8,
-                          textDecoration: "none",
-                          color: "black",
-                        }}
-                        onClick={() => this.storeClick(cardData)}
-                      >
-                        Go to store
-                    </Link>
-                    </div>
-                }
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+        <Link to={"/store?mid=" + cardData.storeId} style={{ textDecoration: "none" }} onClick={() => this.storeClick(cardData)} >
+          <div key={indexCard} className='merchantList-layout'>
+            <div className='merchantList-banner'>
+              {
+                cardData.storeImage ?
+                  <img src={cardData.storeImage} className='merchantList-image' alt='' />
+                  :
+                  <Skeleton style={{ paddingTop: 100, width: "100%", height: "100%" }} />
+              }
+            </div>
+
+            <div className='merchantList-content'>
+              <div className='merchantList-contentLocStar'>
+                <div className='merchantList-ratingArea'>
+                  <img src={StarIcon} className='merchantList-ratingIcon' alt='' />
+                  <div className='merchantList-ratingScore'>{cardData.rating ? cardData.rating : "5.0"}</div>
+                </div>
+
+                <div className='merchantList-locArea'>
+                  <img src={LocaIcon} className='merchantList-locIcon' alt='' />
+                  {
+                    cardData.distance ?
+                      <div className='merchantList-location'>{cardData.distance} <span className='merchantList-distance'>{'(' + Math.round((parseInt(cardData.distance) / 22) * 60) + ' min)'}</span></div>
+                      :
+                      <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
+                  }
+                </div>
+              </div>
+
+              {
+                cardData.storeName ?
+                  <div className='merchantList-storeName'>{cardData.storeName}</div>
+                  :
+                  <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
+              }
+
+              <div className='merchantList-storeCategory'>Merchant Categories</div>
+            </div>
+          </div>
+        </Link>
       );
     });
 
     return (
-      <div>
-        <Row>
-          <Col xs={4} md={1} />
-          <Col xs={0} md={4} className="storeColumn">
-            <h6 className="" style={{ textAlign: "left" }}>
-              Lokasi:
+      <div className='merchantList-background'>
+        <div className="storeColumn">
+          <h6 className="" style={{ textAlign: "left" }}>
+            Lokasi:
             </h6>
-            <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.location || <Skeleton height={20} />}
-            </p>
-          </Col>
-          <Col />
-        </Row>
-        <Row />
-        <Row>
-          <div>
-            <Col md={12}>{allCards}</Col>
-            {
-              !this.state.loadView ?
-                this.state.idCol <= this.state.page ?
-                  this.state.totalPage - 1 === this.state.page ?
-                    null
-                    :
-                    <div id={"idCol"}>
-                      {/* <Skeleton style={{paddingTop: 100, marginTop: 10, marginLeft: 10, width: "95%"}} /> */}
-                      {this.merchantLoading()}
-                    </div>
-                  :
+          <p className="storeLabel" style={{ textAlign: "left" }}>
+            {this.state.location || <Skeleton height={20} />}
+          </p>
+        </div>
+        <div>
+          <div className='merchantList-grid'>
+            {allCards}
+          </div>
+          {
+            !this.state.loadView ?
+              this.state.idCol <= this.state.page ?
+                this.state.totalPage - 1 === this.state.page ?
                   null
+                  :
+                  <div id={"idCol"}>
+                    {this.merchantLoading()}
+                  </div>
                 :
                 null
-            }
-          </div>
-        </Row>
-        <Row></Row>
+              :
+              null
+          }
+        </div>
       </div>
     );
   }
