@@ -845,7 +845,20 @@ class ProductView extends React.Component {
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
-    const notab = value.table || ""
+    let notab = ""
+    if (JSON.parse(localStorage.getItem('table'))) {
+      if (!value.table) {
+        notab = localStorage.getItem('fctable')
+      } else {
+        notab = value.table || ""
+      }
+    } else {
+      if (localStorage.getItem('fctable')) {
+        notab = localStorage.getItem('fctable')
+      } else {
+        notab = value.table || ""
+      }
+    }
     if (JSON.parse(localStorage.getItem('cart'))) {
       let allCart = JSON.parse(localStorage.getItem('cart'))
       let filterMerchantCart = allCart.filter(cartVal => {

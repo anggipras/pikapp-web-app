@@ -317,7 +317,7 @@ class StoreView extends React.Component {
     var allCards = storeDatas.map((cardData, indexCard) => {
       return (
         <Link to={"/store?mid=" + cardData.storeId} style={{ textDecoration: "none" }} onClick={() => this.storeClick(cardData)} >
-          <div key={indexCard} className='merchantList-layout'>
+          <div key={indexCard} className='merchantList-layout' data-testid="merchantlist-item">
             <div className='merchantList-banner'>
               {
                 cardData.storeImage ?
