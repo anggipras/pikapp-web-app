@@ -9,7 +9,7 @@ import Cookies from "js-cookie"
 
 export default class StoreLayout extends React.Component {
   state = {
-    isLogin : false
+    isLogin: false
   }
 
   componentDidMount() {
@@ -33,13 +33,17 @@ export default class StoreLayout extends React.Component {
         <MainNavigation />
         {
           this.state.isLogin ?
-          <Container>
-            <StoreView />
-          </Container>
-          :
-          <Container style={{marginTop: "50px"}}>
-            <StoreView />
-          </Container>
+            <Container>
+              <div className='container2'>
+                <StoreView />
+              </div>
+            </Container>
+            :
+            <Container style={{ marginTop: "50px" }}>
+              <div className='container2'>
+                <StoreView />
+              </div>
+            </Container>
         }
       </>
     );

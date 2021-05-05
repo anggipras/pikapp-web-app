@@ -24,7 +24,9 @@ const MerchantResto = (props) => {
     let longlat = { lat: latitude, lon: longitude }
     console.log(latitude, longitude);
     localStorage.setItem("longlat", JSON.stringify(longlat))
-    setlonglat({ lat: latitude, lon: longitude })
+    if (!props.match.params.address) {
+      setlonglat({ lat: latitude, lon: longitude })
+    }
   }
 
   if (longlat.lat) {

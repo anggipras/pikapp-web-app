@@ -53,7 +53,7 @@ class ProductView extends React.Component {
     testingchange: false, //only for testing, would be remove
     showModal: false, // show customization of selected menu such as qty, notes and more advance choice
     showMenuDet: false, //show menu detail
-    isLogin : false,
+    isLogin: false,
     data: {
       mid: "",
       title: "",
@@ -85,7 +85,10 @@ class ProductView extends React.Component {
     productCategpersize: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     choosenIndCateg: null, //index of category selected when load more products in selected category
     counterLoad: 0,
+    isScrolling: false
   };
+
+  timeout = null
 
   componentDidMount() {
     this.props.ValidQty(0)
@@ -253,6 +256,7 @@ class ProductView extends React.Component {
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)
+              document.addEventListener('scroll', this.onScrollCart)
             });
           }).catch(err => {
             console.log(err)
@@ -279,7 +283,7 @@ class ProductView extends React.Component {
       }
     }
 
-    if(this.state.isLogin === false) {
+    if (this.state.isLogin === false) {
       var auth = {
         isLogged: false,
         token: "",
@@ -327,6 +331,14 @@ class ProductView extends React.Component {
 
     this.setState({ backColor1: brightColor, backColor2: brightColor2, testColor: false })
     document.body.style.backgroundColor = '#' + hex;
+  }
+
+  onScrollCart = () => {
+    this.setState({ isScrolling: true })
+    clearTimeout(this.timeout)
+    this.timeout = setTimeout(() => {
+      this.setState({ isScrolling: false })
+    }, 300);
   }
 
   loadProducts = (indexOfCateg) => {
@@ -730,6 +742,8 @@ class ProductView extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('scroll', this.loadMoreMerchant)
+    document.removeEventListener('scroll', this.onScrollCart)
+
   }
 
   contentView = () => {
@@ -831,7 +845,20 @@ class ProductView extends React.Component {
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
-    const notab = value.table || ""
+    let notab = ""
+    if (JSON.parse(localStorage.getItem('table'))) {
+      if (!value.table) {
+        notab = localStorage.getItem('fctable')
+      } else {
+        notab = value.table || ""
+      }
+    } else {
+      if (localStorage.getItem('fctable')) {
+        notab = localStorage.getItem('fctable')
+      } else {
+        notab = value.table || ""
+      }
+    }
     if (JSON.parse(localStorage.getItem('cart'))) {
       let allCart = JSON.parse(localStorage.getItem('cart'))
       let filterMerchantCart = allCart.filter(cartVal => {
@@ -845,19 +872,20 @@ class ProductView extends React.Component {
           totalCartIcon += valCart.foodTotalPrice
         })
         if (filterMerchantCart[0].mid) {
-          cartButton = (
-            // <Link to={"/cart"} className={"btn-productCart"}>
-            //   <img src={cartIcon} alt='' />
-            // </Link>
-            <Link to={"/cart"}>
-              <div className='cartIcon-layout'>
-                <div className='cartIcon-content'>
-                  <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
-                  <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+          if (this.state.isScrolling) {
+            cartButton = <></>
+          } else {
+            cartButton = (
+              <Link to={"/cart"}>
+                <div className='cartIcon-layout'>
+                  <div className='cartIcon-content'>
+                    <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+                    <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          );
+              </Link>
+            );
+          }
         } else {
           cartButton = <></>;
         }
@@ -865,28 +893,6 @@ class ProductView extends React.Component {
         cartButton = <></>;
       }
     }
-    // else {
-    //   let cart = JSON.parse(localStorage.getItem('cart'))
-    //   if (cart.length > 1) {
-    //     localStorage.setItem('table', notab)
-    //     localStorage.setItem('lastTable', notab)
-    //     cartButton = (
-    //       // <Link to={"/cart"} className={"btn-productCart"}>
-    //       //   <img src={cartIcon} alt={"cart"} />
-    //       // </Link>
-    //       <Link to={"/cart"}>
-    //         <div className='cartIcon-layout'>
-    //           <div className='cartIcon-content'>
-    //             <div className='cartItem-total'>Checkout 1000 Items</div>
-    //             <div className='cartItem-price'>50.000</div>
-    //           </div>
-    //         </div>
-    //       </Link>
-    //     );
-    //   } else {
-    //     cartButton = <></>;
-    //   }
-    // }
 
     if (this.state.categName !== "All Categories") {
       if (this.props.AllRedu.openSelect === false) {
@@ -906,32 +912,32 @@ class ProductView extends React.Component {
               :
               <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
           }
-          
+
           {
             this.state.isLogin ?
-            <div className='iconBanner'>
-              <Link to={"/profile"}>
-                <div className='profileIcon-sec'>
-                  <div className='profileIcon'>
-                    <span className='reactProfIcons'>
-                      <img className='profileicon-img' src={ProfileIcon} alt='' />
-                    </span>
+              <div className='iconBanner'>
+                <Link to={"/profile"}>
+                  <div className='profileIcon-sec'>
+                    <div className='profileIcon'>
+                      <span className='reactProfIcons'>
+                        <img className='profileicon-img' src={ProfileIcon} alt='' />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
 
-              <Link to={"/status"}>
-                <div className='notifIcon-sec'>
-                  <div className='notifIcon'>
-                    <span className='reactNotifIcons'>
-                      <img className='notificon-img' src={NotifIcon} alt='' />
-                    </span>
+                <Link to={"/status"}>
+                  <div className='notifIcon-sec'>
+                    <div className='notifIcon'>
+                      <span className='reactNotifIcons'>
+                        <img className='notificon-img' src={NotifIcon} alt='' />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </div>
-            :
-            <div></div>
+                </Link>
+              </div>
+              :
+              <div></div>
           }
         </div>
         <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>

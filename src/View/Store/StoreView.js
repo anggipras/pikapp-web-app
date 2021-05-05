@@ -1,7 +1,6 @@
 import React from "react";
 import StarIcon from '../../Asset/Icon/star.png'
 import LocaIcon from '../../Asset/Icon/location.png'
-import { Col, Row, Image } from "react-bootstrap";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
 import { address, clientId, googleKey } from "../../Asset/Constant/APIConstant";
@@ -59,8 +58,6 @@ class StoreView extends React.Component {
     }
     // else {
     const value = queryString.parse(window.location.search);
-    var longitude = "";
-    var latitude = "";
     var merchant = "";
 
     if (navigator.geolocation) {
@@ -178,31 +175,32 @@ class StoreView extends React.Component {
                 storeImage: data.merchant_pict,
               })
             })
-            this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+            if (Cookies.get("fcaddress") !== undefined) {
+              let foodcourtadd = Cookies.get("fcaddress")
+              let filterMerchantDetail = stateData.data.filter(fcVal => {
+                return fcVal.address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+              })
+              stateData.data = filterMerchantDetail
+              let filterMerchantMain = res.data.results.filter(fcVal => {
+                return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+              })
+              this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: filterMerchantMain });
+            } else {
+              this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+            }
+
             document.addEventListener('scroll', this.loadMoreMerchant)
-            if (res.data.results.length < 6) {
-              document.removeEventListener('scroll', this.loadMoreMerchant)
+            if (Cookies.get("fcaddress") === undefined) {
+              if (res.data.results.length < 6) {
+                document.removeEventListener('scroll', this.loadMoreMerchant)
+              }
             }
           })
           .catch((err) => {
           });
       });
     }
-    // }
   }
-  //OPENCAGE API
-  // let opencagelonglat = latitude + "," + longitude
-  // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-  //     params:{
-  //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
-  //         q: opencagelonglat
-  //     }
-  // }).then((res)=> {
-  //   console.log(res.data.results[0].formatted);
-  //   this.setState({location: res.data.results[0].formatted})
-  // }).catch((err) => {
-  //   this.setState({location: "Tidak tersedia"})
-  // })
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {
@@ -230,23 +228,50 @@ class StoreView extends React.Component {
           .then((res) => {
             stateData = { ...this.state.data };
             let responseDatas = res.data;
-            responseDatas.results.forEach((data) => {
-              stateData.data.push({
-                address: data.merchant_address,
-                rating: data.merchant_rating,
-                logo: data.merchant_logo,
-                distance: data.merchant_distance,
-                storeId: data.mid,
-                storeName: data.merchant_name,
-                storeDesc: "",
-                storeImage: data.merchant_pict,
+            if (Cookies.get("fcaddress") !== undefined) {
+              let foodcourtadd = Cookies.get("fcaddress")
+              let filterMerchantMain = res.data.results.filter(fcVal => {
+                return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
               })
-            })
-            let updateMerchant = [...this.state.allMerchantAPI]
-            responseDatas.results.forEach((data) => {
-              updateMerchant.push(data)
-            })
-            this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+
+              filterMerchantMain.forEach((data) => {
+                stateData.data.push({
+                  address: data.merchant_address,
+                  rating: data.merchant_rating,
+                  logo: data.merchant_logo,
+                  distance: data.merchant_distance,
+                  storeId: data.mid,
+                  storeName: data.merchant_name,
+                  storeDesc: "",
+                  storeImage: data.merchant_pict,
+                })
+              })
+
+              let updateMerchant = [...this.state.allMerchantAPI]
+              filterMerchantMain.forEach((data) => {
+                updateMerchant.push(data)
+              })
+              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+            } else {
+              responseDatas.results.forEach((data) => {
+                stateData.data.push({
+                  address: data.merchant_address,
+                  rating: data.merchant_rating,
+                  logo: data.merchant_logo,
+                  distance: data.merchant_distance,
+                  storeId: data.mid,
+                  storeName: data.merchant_name,
+                  storeDesc: "",
+                  storeImage: data.merchant_pict,
+                })
+              })
+              let updateMerchant = [...this.state.allMerchantAPI]
+              responseDatas.results.forEach((data) => {
+                updateMerchant.push(data)
+              })
+              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+            }
+
             document.addEventListener('scroll', this.loadMoreMerchant)
             if (this.state.page === this.state.totalPage - 1) {
               this.setState({ idCol: this.state.idCol + 1 })
@@ -259,30 +284,6 @@ class StoreView extends React.Component {
   }
 
   storeClick = (e) => {
-    // let selectedStore = this.state.allMerchantAPI.filter(value => {
-    //   return value.mid === e.storeId
-    // })
-    // var currentMerchant = {
-    //   mid: "",
-    //   storeName: "",
-    //   storeDesc: "",
-    //   distance: "",
-    //   storeImage: "",
-    //   storeAdress: "",
-    //   storeRating: "",
-    //   storeLogo: "",
-    // };
-    // currentMerchant.mid = e.storeId;
-    // currentMerchant.storeName = e.storeName;
-    // currentMerchant.storeDesc = "Desc";
-    // currentMerchant.distance = e.distance;
-    // currentMerchant.storeImage = e.storeImage;
-    // currentMerchant.storeAdress = e.address;
-    // currentMerchant.storeRating = e.rating;
-    // currentMerchant.storeLogo = e.logo;
-
-    // localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
-    // Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
     localStorage.setItem('page', JSON.stringify(1))
   }
   handleDetail(data) {
@@ -324,13 +325,14 @@ class StoreView extends React.Component {
         window.location.reload()
       }
     }
+    console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });
     var allCards = storeDatas.map((cardData, indexCard) => {
       return (
         <Link to={"/store?mid=" + cardData.storeId} style={{ textDecoration: "none" }} onClick={() => this.storeClick(cardData)} >
-          <div key={indexCard} className='merchantList-layout'>
+          <div key={indexCard} className='merchantList-layout' data-testid="merchantlist-item">
             <div className='merchantList-banner'>
               {
                 cardData.storeImage ?
@@ -343,12 +345,12 @@ class StoreView extends React.Component {
             <div className='merchantList-content'>
               <div className='merchantList-contentLocStar'>
                 <div className='merchantList-ratingArea'>
-                  <img src={StarIcon} className='merchantList-ratingIcon' />
+                  <img src={StarIcon} className='merchantList-ratingIcon' alt='' />
                   <div className='merchantList-ratingScore'>{cardData.rating ? cardData.rating : "5.0"}</div>
                 </div>
 
                 <div className='merchantList-locArea'>
-                  <img src={LocaIcon} className='merchantList-locIcon' />
+                  <img src={LocaIcon} className='merchantList-locIcon' alt='' />
                   {
                     cardData.distance ?
                       <div className='merchantList-location'>{cardData.distance} <span className='merchantList-distance'>{'(' + Math.round((parseInt(cardData.distance) / 22) * 60) + ' min)'}</span></div>
@@ -373,40 +375,34 @@ class StoreView extends React.Component {
     });
 
     return (
-      <div>
-        <Row>
-          <Col xs={4} md={1} />
-          <Col xs={0} md={4} className="storeColumn">
-            <h6 className="" style={{ textAlign: "left" }}>
-              Lokasi:
+      <div className='merchantList-background'>
+        <div className="storeColumn">
+          <h6 className="" style={{ textAlign: "left" }}>
+            Lokasi:
             </h6>
-            <p className="storeLabel" style={{ textAlign: "left" }}>
-              {this.state.location || <Skeleton height={20} />}
-            </p>
-          </Col>
-          <Col />
-        </Row>
-        <Row />
-        <Row>
-          <div>
+          <p className="storeLabel" style={{ textAlign: "left" }}>
+            {this.state.location || <Skeleton height={20} />}
+          </p>
+        </div>
+        <div>
+          <div className='merchantList-grid'>
             {allCards}
-            {
-              !this.state.loadView ?
-                this.state.idCol <= this.state.page ?
-                  this.state.totalPage - 1 === this.state.page ?
-                    null
-                    :
-                    <div id={"idCol"}>
-                      {this.merchantLoading()}
-                    </div>
-                  :
+          </div>
+          {
+            !this.state.loadView ?
+              this.state.idCol <= this.state.page ?
+                this.state.totalPage - 1 === this.state.page ?
                   null
+                  :
+                  <div id={"idCol"}>
+                    {this.merchantLoading()}
+                  </div>
                 :
                 null
-            }
-          </div>
-        </Row>
-        <Row></Row>
+              :
+              null
+          }
+        </div>
       </div>
     );
   }
