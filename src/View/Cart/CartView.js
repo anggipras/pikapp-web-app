@@ -386,10 +386,9 @@ class CartView extends React.Component {
               return valFilter.mid !== currentCartMerchant.mid
             })
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            // localStorage.setItem('page', JSON.stringify(2))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
-            // window.location.href = '/status'
+            localStorage.removeItem("fctable")
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -400,10 +399,9 @@ class CartView extends React.Component {
               return valFilter.mid !== currentCartMerchant.mid
             })
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            // localStorage.setItem('page', JSON.stringify(2))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
-            // window.location.href = '/status'
+            localStorage.removeItem("fctable")
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
