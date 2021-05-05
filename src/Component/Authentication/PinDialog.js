@@ -14,6 +14,7 @@ import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import ForgotPin from "./ForgotPinDialog";
 import Button from "react-bootstrap/Button";
+import NotifModal from '../Modal/NotifModal';
 
 const PinDialog = (props) => {
     const dispatch = useDispatch()
@@ -27,6 +28,7 @@ const PinDialog = (props) => {
     const [errorMsg, setErrorMsg] = useState('');
     const [isLoginStep, setIsLoginStep] = useState(false);
     const [captchaCounter, setCaptchaCounter] = useState(0);
+    const [successMessage, setSuccessMessage] = useState('');
 
     const isMobile = useMediaQuery({ maxWidth: 768 })
 
@@ -109,19 +111,22 @@ const PinDialog = (props) => {
         data: data,
         })
         .then((res) => {
-            auth.isLogged = true;
-            auth.token = res.data.token;
-            auth.new_event = res.data.new_event;
-            auth.recommendation_status = res.data.recommendation_status;
-            auth.is_email_verified = res.data.is_email_verified;
-            auth.email = AuthRedu.dataLogin.email;
-            Cookies.set("auth", auth, { expires: 1 });
-            var getLocation = JSON.parse(localStorage.getItem("longlat"))
-            var latitude = getLocation.lat
-            var longitude = getLocation.lon
-            // props.onHidePin()
-            props.onHideLoginFlow()
-            dispatch({ type: 'DONELOAD' });
+            setSuccessMessage("Login Berhasil.");
+            setTimeout(() => {
+                auth.isLogged = true;
+                auth.token = res.data.token;
+                auth.new_event = res.data.new_event;
+                auth.recommendation_status = res.data.recommendation_status;
+                auth.is_email_verified = res.data.is_email_verified;
+                auth.email = AuthRedu.dataLogin.email;
+                Cookies.set("auth", auth, { expires: 1 });
+                var getLocation = JSON.parse(localStorage.getItem("longlat"))
+                var latitude = getLocation.lat
+                var longitude = getLocation.lon
+                // props.onHidePin()
+                props.onHideLoginFlow()
+                dispatch({ type: 'DONELOAD' });
+            }, 1000);
             // if (Cookies.get("lastLink") !== undefined) {
             //     var lastlink = JSON.parse(Cookies.get("lastLink")).value
             // }
@@ -185,6 +190,12 @@ const PinDialog = (props) => {
             return true;
         }
     };
+
+    const showNotifModal = () => {
+        if (AllRedu.buttonLoad === false) {
+            return <NotifModal isShowNotif={AllRedu.buttonLoad} responseMessage={successMessage} />
+        }
+    }
 
     return (
         <div>
@@ -381,6 +392,7 @@ const PinDialog = (props) => {
                     </div>
                 </div>
             }
+            {showNotifModal()}
         </div>
     );
 }
