@@ -63,6 +63,9 @@ class StoreView extends React.Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
 
+        let latitude = 0;
+        let longitude = 0;
+
         if(position) {
           let latitude = position.coords.latitude
           let longitude = position.coords.longitude

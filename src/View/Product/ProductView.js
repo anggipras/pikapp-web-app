@@ -113,165 +113,179 @@ class ProductView extends React.Component {
     const mid = value.mid;
     const notab = value.table || ""
 
-    let longlatAddress = JSON.parse(localStorage.getItem('longlat'))
-    let addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
-    let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
-    const date = new Date().toISOString();
+    // let longlatAddress
+    let addressRoute
+    // if (JSON.parse(localStorage.getItem('longlat'))) {
+    //   longlatAddress = JSON.parse(localStorage.getItem('longlat'))
+    //   addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
+    // }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        let latitude = position.coords.latitude
+        let longitude = position.coords.longitude
+        let longlat = { lat: latitude, lon: longitude }
+        localStorage.setItem("longlat", JSON.stringify(longlat))
+        addressRoute = address + "home/v2/detail/merchant/" + longitude + "/" + latitude + "/"
 
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "mid": mid,
-      },
-      method: "GET"
-    })
-      .then((res) => {
-        // console.log(res.data.results);
-        var currentMerchant = {
-          mid: "",
-          storeName: "",
-          storeDesc: "",
-          distance: "",
-          storeImage: "",
-          storeAdress: "",
-          storeRating: "",
-          storeLogo: "",
-        };
-        currentMerchant.mid = res.data.results.mid;
-        currentMerchant.storeName = res.data.results.merchant_name;
-        currentMerchant.storeDesc = "Desc";
-        currentMerchant.distance = res.data.results.merchant_distance;
-        currentMerchant.storeImage = res.data.results.merchant_pict;
-        currentMerchant.storeAdress = res.data.results.merchant_address;
-        currentMerchant.storeRating = res.data.results.merchant_rating;
-        currentMerchant.storeLogo = res.data.results.merchant_logo;
+        let uuid = uuidV4();
+        uuid = uuid.replaceAll("-", "");
+        const date = new Date().toISOString();
 
-        let selectedStore = []
-        selectedStore.push(res.data.results)
-        localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
-        Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
-
-        let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-        let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-
-        let stateData = { ...this.state.data };
-        stateData.mid = mid;
-        stateData.title = currentMerchant.storeName;
-        stateData.image = currentMerchant.storeImage;
-        stateData.logo = currentMerchant.storeLogo;
-        stateData.desc = currentMerchant.storeDistance;
-        stateData.address = currentMerchant.storeAdress;
-        stateData.rating = currentMerchant.storeRating;
-        stateData.phone = "081296000823";
-        stateData.notable = notab
-        var productCateg = []
-        var idCateg = []
-        var productPage = []
-        productCateg = selectedMerchant[0].categories.map((categ) => {
-          idCateg.push(0)
-          productPage.push(this.state.size)
-          return categ
+        Axios(addressRoute, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token": "PUBLIC",
+            "mid": mid,
+          },
+          method: "GET"
         })
+          .then((res) => {
+            // console.log(res.data.results);
+            var currentMerchant = {
+              mid: "",
+              storeName: "",
+              storeDesc: "",
+              distance: "",
+              storeImage: "",
+              storeAdress: "",
+              storeRating: "",
+              storeLogo: "",
+            };
+            currentMerchant.mid = res.data.results.mid;
+            currentMerchant.storeName = res.data.results.merchant_name;
+            currentMerchant.storeDesc = "Desc";
+            currentMerchant.distance = res.data.results.merchant_distance;
+            currentMerchant.storeImage = res.data.results.merchant_pict;
+            currentMerchant.storeAdress = res.data.results.merchant_address;
+            currentMerchant.storeRating = res.data.results.merchant_rating;
+            currentMerchant.storeLogo = res.data.results.merchant_logo;
 
-        productCateg.forEach((val) => {
-          val.category_products = []
-        })
+            let selectedStore = []
+            selectedStore.push(res.data.results)
+            localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
+            Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
 
-        productCateg.forEach((categProd) => {
-          selectedMerchant[0].products.forEach((allproducts) => {
-            if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-              categProd.category_products.push({
-                productId: allproducts.product_id,
-                category: allproducts.product_category,
-                foodName: allproducts.product_name,
-                foodDesc: allproducts.product_desc,
-                foodPrice: allproducts.product_price,
-                foodRating: allproducts.rating,
-                foodImage: allproducts.product_picture1,
-                foodExt: [
-                  {
-                    name: "",
-                    amount: 0,
-                  },
-                ],
+            let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+            let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+
+            let stateData = { ...this.state.data };
+            stateData.mid = mid;
+            stateData.title = currentMerchant.storeName;
+            stateData.image = currentMerchant.storeImage;
+            stateData.logo = currentMerchant.storeLogo;
+            stateData.desc = currentMerchant.storeDistance;
+            stateData.address = currentMerchant.storeAdress;
+            stateData.rating = currentMerchant.storeRating;
+            stateData.phone = "081296000823";
+            stateData.notable = notab
+            var productCateg = []
+            var idCateg = []
+            var productPage = []
+            productCateg = selectedMerchant[0].categories.map((categ) => {
+              idCateg.push(0)
+              productPage.push(this.state.size)
+              return categ
+            })
+
+            productCateg.forEach((val) => {
+              val.category_products = []
+            })
+
+            productCateg.forEach((categProd) => {
+              selectedMerchant[0].products.forEach((allproducts) => {
+                if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+                  categProd.category_products.push({
+                    productId: allproducts.product_id,
+                    category: allproducts.product_category,
+                    foodName: allproducts.product_name,
+                    foodDesc: allproducts.product_desc,
+                    foodPrice: allproducts.product_price,
+                    foodRating: allproducts.rating,
+                    foodImage: allproducts.product_picture1,
+                    foodExt: [
+                      {
+                        name: "",
+                        amount: 0,
+                      },
+                    ],
+                  })
+                }
               })
-            }
-          })
-        })
+            })
 
-        let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
-          return categ
-        })
+            let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
+              return categ
+            })
 
-        productPerSize.forEach((val) => {
-          val.category_products = []
-        })
+            productPerSize.forEach((val) => {
+              val.category_products = []
+            })
 
-        productPerSize.forEach((categProd) => {
-          filtersizeMerchant[0].products.forEach((allproducts) => {
-            if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-              categProd.category_products.push({
-                productId: allproducts.product_id,
-                category: allproducts.product_category,
-                foodName: allproducts.product_name,
-                foodDesc: allproducts.product_desc,
-                foodPrice: allproducts.product_price,
-                foodRating: allproducts.rating,
-                foodImage: allproducts.product_picture1,
-                foodExt: [
-                  {
-                    name: "",
-                    amount: 0,
-                  },
-                ],
+            productPerSize.forEach((categProd) => {
+              filtersizeMerchant[0].products.forEach((allproducts) => {
+                if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+                  categProd.category_products.push({
+                    productId: allproducts.product_id,
+                    category: allproducts.product_category,
+                    foodName: allproducts.product_name,
+                    foodDesc: allproducts.product_desc,
+                    foodPrice: allproducts.product_price,
+                    foodRating: allproducts.rating,
+                    foodImage: allproducts.product_picture1,
+                    foodExt: [
+                      {
+                        name: "",
+                        amount: 0,
+                      },
+                    ],
+                  })
+                }
               })
-            }
-          })
-        })
+            })
 
-        let firstShownProduct = []
-        productPerSize.forEach((categProd, indexcategProd) => {
-          firstShownProduct.push(categProd)
-          let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
-            return indexvalProd < this.state.size
-          })
-          categProd.category_products = newFilter
-          firstShownProduct[indexcategProd].category_products = []
-          firstShownProduct[indexcategProd].category_products = newFilter
-        })
+            let firstShownProduct = []
+            productPerSize.forEach((categProd, indexcategProd) => {
+              firstShownProduct.push(categProd)
+              let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
+                return indexvalProd < this.state.size
+              })
+              categProd.category_products = newFilter
+              firstShownProduct[indexcategProd].category_products = []
+              firstShownProduct[indexcategProd].category_products = newFilter
+            })
 
-        let newImage = Storeimg
-        Axios.get(currentMerchant.storeImage)
-          .then(() => {
-            newImage = currentMerchant.storeImage
-            prominent(newImage, { amount: 3 }).then((color) => {
-              // return RGB color for example [241, 221, 63]
-              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-              this.brightenColor(merchantColor, 70, productColor, 60)
-              this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-              document.addEventListener('scroll', this.loadMoreMerchant)
-              document.addEventListener('scroll', this.onScrollCart)
-            });
-          }).catch(err => {
-            console.log(err)
-            newImage = Storeimg
-            prominent(newImage, { amount: 3 }).then((color) => {
-              // return RGB color for example [241, 221, 63]
-              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-              this.brightenColor(merchantColor, 70, productColor, 60)
-              this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-              document.addEventListener('scroll', this.loadMoreMerchant)
-            });
+            let newImage = Storeimg
+            Axios.get(currentMerchant.storeImage)
+              .then(() => {
+                newImage = currentMerchant.storeImage
+                prominent(newImage, { amount: 3 }).then((color) => {
+                  // return RGB color for example [241, 221, 63]
+                  var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                  var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+                  this.brightenColor(merchantColor, 70, productColor, 60)
+                  this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+                  document.addEventListener('scroll', this.loadMoreMerchant)
+                  document.addEventListener('scroll', this.onScrollCart)
+                });
+              }).catch(err => {
+                console.log(err)
+                newImage = Storeimg
+                prominent(newImage, { amount: 3 }).then((color) => {
+                  // return RGB color for example [241, 221, 63]
+                  var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                  var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+                  this.brightenColor(merchantColor, 70, productColor, 60)
+                  this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+                  document.addEventListener('scroll', this.loadMoreMerchant)
+                });
+              })
           })
+          .catch((err) => console.log(err));
       })
-      .catch((err) => console.log(err));
+    }
   }
 
   componentDidUpdate() {
@@ -846,7 +860,7 @@ class ProductView extends React.Component {
     let cartButton;
     const value = queryString.parse(window.location.search);
     let notab = ""
-    if (JSON.parse(localStorage.getItem('table'))) {
+    if (localStorage.getItem('table')) {
       if (!value.table) {
         notab = localStorage.getItem('fctable')
       } else {
