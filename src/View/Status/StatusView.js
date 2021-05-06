@@ -27,8 +27,8 @@ export class StatusView extends React.Component {
   state = {
     showModal: false,
     activeTab: 1,
-    showRegisterDialog : false,
-    isLogin : false,
+    showRegisterDialog: false,
+    isLogin: false,
     data: [
       {
         title: "",
@@ -58,6 +58,7 @@ export class StatusView extends React.Component {
           image: "",
           note: "",
           quantity: 1,
+          extraprice: 0
         },
       ],
     },
@@ -87,7 +88,7 @@ export class StatusView extends React.Component {
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "txn/v1/" + transId + "/txn-detail/", {
+    Axios(address + "txn/v2/" + transId + "/txn-detail/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -99,6 +100,7 @@ export class StatusView extends React.Component {
       method: "GET",
     })
       .then((res) => {
+        console.log(res.data.results);
         var results = res.data.results;
         var resultModal = { ...this.currentModal }
         resultModal.transactionId = results.transaction_id
@@ -116,7 +118,8 @@ export class StatusView extends React.Component {
             price: product.price,
             quantity: product.qty,
             image: product.image,
-            note: product.notes
+            note: product.notes,
+            extraprice: product.extra_price
           })
         })
         this.setState({
@@ -145,9 +148,9 @@ export class StatusView extends React.Component {
       auth = JSON.parse(Cookies.get("auth"))
       this.setState({ isLogin: auth.isLogged });
     }
-    if(auth.isLogged === false) {
-      var lastLink = { value: window.location.href}
-      Cookies.set("lastLink", lastLink,{ expires: 1})
+    if (auth.isLogged === false) {
+      var lastLink = { value: window.location.href }
+      Cookies.set("lastLink", lastLink, { expires: 1 })
       this.setRegisterDialog(true);
       // window.location.href = "/login"
     } else {
@@ -183,7 +186,7 @@ export class StatusView extends React.Component {
   }
 
   componentDidUpdate() {
-    if(this.state.isLogin === false) {
+    if (this.state.isLogin === false) {
       var auth = {
         isLogged: false,
         token: "",
@@ -191,7 +194,7 @@ export class StatusView extends React.Component {
         recommendation_status: false,
         email: "",
       };
-      if(Cookies.get("auth") !== undefined) {
+      if (Cookies.get("auth") !== undefined) {
         auth = JSON.parse(Cookies.get("auth"))
         this.getTransactionHistory();
         this.setState({ isLogin: auth.isLogged });
@@ -207,7 +210,7 @@ export class StatusView extends React.Component {
       recommendation_status: false,
       email: "",
     };
-    if(Cookies.get("auth") !== undefined) {
+    if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
     }
 
@@ -258,8 +261,8 @@ export class StatusView extends React.Component {
     if (this.state.showRegisterDialog === true) {
       return (
         <RegisterDialog
-            isShowRegister={this.state.showRegisterDialog}
-            onHideRegister={() => this.setRegisterDialog(false)}
+          isShowRegister={this.state.showRegisterDialog}
+          onHideRegister={() => this.setRegisterDialog(false)}
         />
       )
     }
@@ -283,7 +286,7 @@ export class StatusView extends React.Component {
                   {Intl.NumberFormat("id-ID", {
                     style: "currency",
                     currency: "IDR",
-                  }).format(data.price)}
+                  }).format(data.price + data.extraprice)}
                 </p>
               </Col>
               <Col>
@@ -299,7 +302,7 @@ export class StatusView extends React.Component {
     });
     let currentTotal = 0;
     modalList.forEach((data) => {
-      currentTotal = currentTotal + data.price * data.quantity;
+      currentTotal = currentTotal + (data.price + data.extraprice) * data.quantity;
     });
     if (this.state.showModal === true) {
       let payImage;
