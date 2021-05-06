@@ -63,12 +63,22 @@ class StoreView extends React.Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
 
-        let latitude = position.coords.latitude
-        let longitude = position.coords.longitude
-        let longlat = { lat: latitude, lon: longitude }
-        console.log(latitude, longitude);
-        this.setState({ lat: latitude, lon: longitude })
-        localStorage.setItem("longlat", JSON.stringify(longlat))
+        if(position) {
+          let latitude = position.coords.latitude
+          let longitude = position.coords.longitude
+          let longlat = { lat: latitude, lon: longitude }
+          console.log(latitude, longitude);
+          this.setState({ lat: latitude, lon: longitude })
+          localStorage.setItem("longlat", JSON.stringify(longlat))
+        } else {
+          let latitude = 1;
+          let longitude = 1;
+          let longlat = { lat: latitude, lon: longitude }
+          console.log(latitude, longitude);
+          this.setState({ lat: latitude, lon: longitude })
+          localStorage.setItem("longlat", JSON.stringify(longlat))
+        }
+        
         // Show a map centered at latitude / longitude.
 
         if (localStorage.getItem("longlat")) {

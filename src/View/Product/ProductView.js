@@ -846,7 +846,7 @@ class ProductView extends React.Component {
     let cartButton;
     const value = queryString.parse(window.location.search);
     let notab = ""
-    if (JSON.parse(localStorage.getItem('table'))) {
+    if (localStorage.getItem('table')) {
       if (!value.table) {
         notab = localStorage.getItem('fctable')
       } else {
