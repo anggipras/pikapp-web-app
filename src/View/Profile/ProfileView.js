@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken"
 import {connect} from 'react-redux'
 import {LoadingButton, DoneLoad} from '../../Redux/Actions'
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
+import NotifModal from '../../Component/Modal/NotifModal';
 
 class ProfileView extends React.Component {
   state = {
@@ -21,6 +22,7 @@ class ProfileView extends React.Component {
       name: "Name",
       phone: "080808",
       email: "",
+      successMessage: '',
   };
 
   componentDidMount() {
@@ -106,6 +108,8 @@ class ProfileView extends React.Component {
   handleLogout() {
     this.props.LoadingButton()
     this.setState({loadButton: false})
+    this.setModal(false);
+
     var auth = {
         isLogged: false,
         token: "",
@@ -142,13 +146,16 @@ class ProfileView extends React.Component {
           method: "GET",
         })
         .then((res) => {
-          var lastLink = { value: window.location.origin}
-          Cookies.set("lastLink", lastLink,{ expires: 1})
-          localStorage.clear()
-          Cookies.remove("auth")
-          auth = null;
-          this.props.DoneLoad()
-          window.location.href = "/"
+          this.setState({ successMessage: 'Logout Berhasil.' })
+          setTimeout(() => {
+            var lastLink = { value: window.location.origin}
+            Cookies.set("lastLink", lastLink,{ expires: 1})
+            localStorage.clear()
+            Cookies.remove("auth")
+            auth = null;
+            this.props.DoneLoad()
+            window.location.href = "/"
+          }, 1000);
         })
         .catch((err) => {
           if(err.response.data !== undefined) {
@@ -173,6 +180,12 @@ class ProfileView extends React.Component {
             onHideRegister={() => this.setRegisterDialog(false)}
         />
       )
+    }
+  }
+
+  showNotifModal = () => {
+    if (this.props.AllRedu.buttonLoad === false) {
+      return <NotifModal isShowNotif={this.props.AllRedu.buttonLoad} responseMessage={this.state.successMessage} />
     }
   }
 
@@ -243,6 +256,7 @@ class ProfileView extends React.Component {
             </Row>
             {modal}
             {this.showRegisterDialog()}
+            {this.showNotifModal()}
         </>
     )
   }
@@ -250,7 +264,8 @@ class ProfileView extends React.Component {
 
 const Mapstatetoprops = (state) => {
   return {
-    theLoading: state.AllRedu
+    theLoading: state.AllRedu,
+    AllRedu: state.AllRedu
   }
 }
 

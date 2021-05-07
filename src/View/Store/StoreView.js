@@ -63,12 +63,25 @@ class StoreView extends React.Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
 
-        let latitude = position.coords.latitude
-        let longitude = position.coords.longitude
-        let longlat = { lat: latitude, lon: longitude }
-        console.log(latitude, longitude);
-        this.setState({ lat: latitude, lon: longitude })
-        localStorage.setItem("longlat", JSON.stringify(longlat))
+        let latitude = 0;
+        let longitude = 0;
+
+        if(position) {
+          let latitude = position.coords.latitude
+          let longitude = position.coords.longitude
+          let longlat = { lat: latitude, lon: longitude }
+          console.log(latitude, longitude);
+          this.setState({ lat: latitude, lon: longitude })
+          localStorage.setItem("longlat", JSON.stringify(longlat))
+        } else {
+          let latitude = 1;
+          let longitude = 1;
+          let longlat = { lat: latitude, lon: longitude }
+          console.log(latitude, longitude);
+          this.setState({ lat: latitude, lon: longitude })
+          localStorage.setItem("longlat", JSON.stringify(longlat))
+        }
+        
         // Show a map centered at latitude / longitude.
 
         if (localStorage.getItem("longlat")) {
@@ -165,31 +178,32 @@ class StoreView extends React.Component {
                 storeImage: data.merchant_pict,
               })
             })
-            this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+            if (Cookies.get("fcaddress") !== undefined) {
+              let foodcourtadd = Cookies.get("fcaddress")
+              let filterMerchantDetail = stateData.data.filter(fcVal => {
+                return fcVal.address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+              })
+              stateData.data = filterMerchantDetail
+              let filterMerchantMain = res.data.results.filter(fcVal => {
+                return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+              })
+              this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: filterMerchantMain });
+            } else {
+              this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+            }
+
             document.addEventListener('scroll', this.loadMoreMerchant)
-            if (res.data.results.length < 6) {
-              document.removeEventListener('scroll', this.loadMoreMerchant)
+            if (Cookies.get("fcaddress") === undefined) {
+              if (res.data.results.length < 6) {
+                document.removeEventListener('scroll', this.loadMoreMerchant)
+              }
             }
           })
           .catch((err) => {
           });
       });
     }
-    // }
   }
-  //OPENCAGE API
-  // let opencagelonglat = latitude + "," + longitude
-  // Axios.get(`https://api.opencagedata.com/geocode/v1/json?`,{
-  //     params:{
-  //         key: 'cdeab36e4fec4073b0de60ff6b595c70',
-  //         q: opencagelonglat
-  //     }
-  // }).then((res)=> {
-  //   console.log(res.data.results[0].formatted);
-  //   this.setState({location: res.data.results[0].formatted})
-  // }).catch((err) => {
-  //   this.setState({location: "Tidak tersedia"})
-  // })
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {
@@ -217,23 +231,50 @@ class StoreView extends React.Component {
           .then((res) => {
             stateData = { ...this.state.data };
             let responseDatas = res.data;
-            responseDatas.results.forEach((data) => {
-              stateData.data.push({
-                address: data.merchant_address,
-                rating: data.merchant_rating,
-                logo: data.merchant_logo,
-                distance: data.merchant_distance,
-                storeId: data.mid,
-                storeName: data.merchant_name,
-                storeDesc: "",
-                storeImage: data.merchant_pict,
+            if (Cookies.get("fcaddress") !== undefined) {
+              let foodcourtadd = Cookies.get("fcaddress")
+              let filterMerchantMain = res.data.results.filter(fcVal => {
+                return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
               })
-            })
-            let updateMerchant = [...this.state.allMerchantAPI]
-            responseDatas.results.forEach((data) => {
-              updateMerchant.push(data)
-            })
-            this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+
+              filterMerchantMain.forEach((data) => {
+                stateData.data.push({
+                  address: data.merchant_address,
+                  rating: data.merchant_rating,
+                  logo: data.merchant_logo,
+                  distance: data.merchant_distance,
+                  storeId: data.mid,
+                  storeName: data.merchant_name,
+                  storeDesc: "",
+                  storeImage: data.merchant_pict,
+                })
+              })
+
+              let updateMerchant = [...this.state.allMerchantAPI]
+              filterMerchantMain.forEach((data) => {
+                updateMerchant.push(data)
+              })
+              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+            } else {
+              responseDatas.results.forEach((data) => {
+                stateData.data.push({
+                  address: data.merchant_address,
+                  rating: data.merchant_rating,
+                  logo: data.merchant_logo,
+                  distance: data.merchant_distance,
+                  storeId: data.mid,
+                  storeName: data.merchant_name,
+                  storeDesc: "",
+                  storeImage: data.merchant_pict,
+                })
+              })
+              let updateMerchant = [...this.state.allMerchantAPI]
+              responseDatas.results.forEach((data) => {
+                updateMerchant.push(data)
+              })
+              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+            }
+
             document.addEventListener('scroll', this.loadMoreMerchant)
             if (this.state.page === this.state.totalPage - 1) {
               this.setState({ idCol: this.state.idCol + 1 })
@@ -246,30 +287,6 @@ class StoreView extends React.Component {
   }
 
   storeClick = (e) => {
-    // let selectedStore = this.state.allMerchantAPI.filter(value => {
-    //   return value.mid === e.storeId
-    // })
-    // var currentMerchant = {
-    //   mid: "",
-    //   storeName: "",
-    //   storeDesc: "",
-    //   distance: "",
-    //   storeImage: "",
-    //   storeAdress: "",
-    //   storeRating: "",
-    //   storeLogo: "",
-    // };
-    // currentMerchant.mid = e.storeId;
-    // currentMerchant.storeName = e.storeName;
-    // currentMerchant.storeDesc = "Desc";
-    // currentMerchant.distance = e.distance;
-    // currentMerchant.storeImage = e.storeImage;
-    // currentMerchant.storeAdress = e.address;
-    // currentMerchant.storeRating = e.rating;
-    // currentMerchant.storeLogo = e.logo;
-
-    // localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
-    // Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
     localStorage.setItem('page', JSON.stringify(1))
   }
   handleDetail(data) {
@@ -311,13 +328,14 @@ class StoreView extends React.Component {
         window.location.reload()
       }
     }
+    console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });
     var allCards = storeDatas.map((cardData, indexCard) => {
       return (
         <Link to={"/store?mid=" + cardData.storeId} style={{ textDecoration: "none" }} onClick={() => this.storeClick(cardData)} >
-          <div key={indexCard} className='merchantList-layout'>
+          <div key={indexCard} className='merchantList-layout' data-testid="merchantlist-item">
             <div className='merchantList-banner'>
               {
                 cardData.storeImage ?
