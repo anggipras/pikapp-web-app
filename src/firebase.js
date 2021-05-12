@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/messaging'
+import Swal from 'sweetalert2'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBbLM1-27VK0e65peGPQgdKH5TGlRnaeio",
@@ -17,7 +18,7 @@ export const getToken = (setTokenFound) => {
     return messaging.getToken({ vapidKey: 'BJCOvaBBNyOqX0lyOWEPiIJ9t2UuXQz3bZvsC5BAfogOsf8iRlhrUfCPjhuD0iuLtKV-tU0QmqZ5KMRZgYgek0o' }).then((currentToken) => {
         if (currentToken) {
             console.log('current token for client: ', currentToken);
-            alert(currentToken)
+            Swal.fire({ text: currentToken })
             setTokenFound(true);
             // Track the token -> client mapping, by sending to backend server
             // show on the UI that permission is secured
