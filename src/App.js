@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "./Asset/scss/App.scss";
@@ -13,6 +13,7 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie"
+import { getToken } from './firebase'
 
 export var cart = [
     {
@@ -40,12 +41,15 @@ if (localStorage.getItem("cart")) {
 }
 
 function App() {
-      if (Cookies.get("auth") === undefined) {
+    const [isTokenFound, setTokenFound] = useState(false)
+    getToken(setTokenFound)
+
+    if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
         let newCart = []
         newCart.push(deleteCart[0])
         localStorage.setItem('cart', JSON.stringify(newCart))
-      }
+    }
 
     return (
         <Switch>
