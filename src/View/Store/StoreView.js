@@ -162,7 +162,7 @@ class StoreView extends React.Component {
           }
         })
           .then((res) => {
-            console.log(res.data.results);
+            // console.log(res.data.results);
             stateData = { ...this.state.data };
             let responseDatas = res.data;
             stateData.data.pop();
