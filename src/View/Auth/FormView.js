@@ -38,7 +38,12 @@ class FormView extends React.Component {
     //   this.setState({noreload: true})
     // }
     // this.setState({noreload: true})
-    this.geoLocation()
+    // this.geoLocation() //shut down for a while
+    let latitude = -6.28862
+    let longitude = 106.71789
+    let longlat = { lat: latitude, lon: longitude }
+    console.log(latitude, longitude);
+    localStorage.setItem("longlat", JSON.stringify(longlat))
     localStorage.setItem('page', JSON.stringify(0))
   }
 
@@ -132,22 +137,22 @@ class FormView extends React.Component {
   };
 
   //show current location start
-  showPosition = (position) => {
-    let latitude = position.coords.latitude
-    let longitude = position.coords.longitude
-    let longlat = { lat: latitude, lon: longitude }
-    console.log(latitude, longitude);
-    this.setState({ lat: latitude, lon: longitude })
-    localStorage.setItem("longlat", JSON.stringify(longlat))
-  }
+  // showPosition = (position) => { //SHUTDOWN FOR A WHILE
+  //   let latitude = position.coords.latitude
+  //   let longitude = position.coords.longitude
+  //   let longlat = { lat: latitude, lon: longitude }
+  //   console.log(latitude, longitude);
+  //   this.setState({ lat: latitude, lon: longitude })
+  //   localStorage.setItem("longlat", JSON.stringify(longlat))
+  // }
 
-  geoLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(this.showPosition)
-    } else {
-      alert('Geolocation is not supported by this browser.')
-    }
-  }
+  // geoLocation = () => { //SHUTDOWN FOR A WHILE
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(this.showPosition)
+  //   } else {
+  //     alert('Geolocation is not supported by this browser.')
+  //   }
+  // }
   //show current location end
 
   handleLogin = (e) => {
