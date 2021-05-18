@@ -113,8 +113,24 @@ class ProductView extends React.Component {
     const mid = value.mid;
     const notab = value.table || ""
 
-    let longlatAddress = JSON.parse(localStorage.getItem('longlat'))
-    let addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
+    // let longlatAddress
+    let addressRoute
+    // if (JSON.parse(localStorage.getItem('longlat'))) {
+    //   longlatAddress = JSON.parse(localStorage.getItem('longlat'))
+    //   addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
+    // }
+    // if (navigator.geolocation) { //SHUTDOWN FOR A WHILE
+    //   navigator.geolocation.getCurrentPosition(position => {
+    //     let latitude = position.coords.latitude
+    //     let longitude = position.coords.longitude
+    //   })
+    // }
+    let latitude = -6.28862
+    let longitude = 106.71789
+    let longlat = { lat: latitude, lon: longitude }
+    localStorage.setItem("longlat", JSON.stringify(longlat))
+    addressRoute = address + "home/v2/detail/merchant/" + longitude + "/" + latitude + "/"
+
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();

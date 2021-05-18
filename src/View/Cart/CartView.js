@@ -77,17 +77,6 @@ class CartView extends React.Component {
   };
 
   componentDidMount() {
-    // const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    // let allCart = JSON.parse(localStorage.getItem('cart'))
-    // let filterCart = allCart.filter(valCart => {
-    //   return valCart.mid === currentCartMerchant.mid
-    // })
-    // if (filterCart.length === 0) {
-    //   window.history.go(-1)
-    // } else {
-    //   this.setState({ changeUI: false })
-    // }
-
     var auth = {
       isLogged: false,
       token: "",
@@ -329,24 +318,29 @@ class CartView extends React.Component {
 
     allMenu[0].food.forEach(selectMenu => {
       let newlistArr = ''
+      let extraprice = 0
       selectMenu.foodListCheckbox.forEach((val) => {
         val.forEach((val2) => {
-          return newlistArr += `${val2.name}, `
+          newlistArr += `${val2.name}, `
+          extraprice += val2.price
         })
       })
 
       selectMenu.foodListRadio.forEach((val) => {
         val.forEach((val2) => {
-          return newlistArr += `${val2.name}, `
+          newlistArr += `${val2.name}, `
+          extraprice += val2.price
         })
       })
 
       newlistArr += selectMenu.foodNote
+      extraprice = extraprice.toString()
 
       selectedProd.push({
         product_id: selectMenu.productId,
         notes: newlistArr,
-        qty: selectMenu.foodAmount
+        qty: selectMenu.foodAmount,
+        extra_price: extraprice
       })
     })
 
@@ -366,7 +360,7 @@ class CartView extends React.Component {
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
-    Axios(address + "/txn/v1/txn-post/", {
+    Axios(address + "/txn/v2/txn-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -641,7 +635,6 @@ class CartView extends React.Component {
       auth = JSON.parse(Cookies.get("auth"))
     }
 
-    console.log(auth)
     let uuid = uuidV4();
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
@@ -702,7 +695,6 @@ class CartView extends React.Component {
   }
 
   render() {
-    console.log(this.state.loadButton, 'PERHATIKAN!!');
     if (this.state.loadButton) {
       return <Redirect to='/status' />
     }
@@ -719,14 +711,6 @@ class CartView extends React.Component {
         this.setState({ changeUI: false })
       }
     }
-
-    // if (localStorage.getItem('page')) {
-    //   let currentPage = JSON.parse(localStorage.getItem('page'))
-    //   if (currentPage === 2) {
-    //     localStorage.setItem('page', JSON.stringify(1))
-    //     window.location.reload()
-    //   }
-    // }
 
     var auth = {
       isLogged: false,
