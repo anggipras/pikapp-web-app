@@ -41,8 +41,8 @@ if (localStorage.getItem("cart")) {
 }
 
 function App() {
-    // const [isTokenFound, setTokenFound] = useState(false)
-    // getToken(setTokenFound)
+    const [isTokenFound, setTokenFound] = useState(false)
+    getToken(setTokenFound)
 
     if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
