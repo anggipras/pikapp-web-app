@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "./Asset/scss/App.scss";
@@ -40,12 +40,12 @@ if (localStorage.getItem("cart")) {
 }
 
 function App() {
-      if (Cookies.get("auth") === undefined) {
+    if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
         let newCart = []
         newCart.push(deleteCart[0])
         localStorage.setItem('cart', JSON.stringify(newCart))
-      }
+    }
 
     return (
         <Switch>

@@ -80,7 +80,7 @@ class ProfileView extends React.Component {
     uuid = uuid.replaceAll("-", "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    axios(address + "home/v1/customer-info", {
+    axios(address + "home/v2/customer-info", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
