@@ -85,7 +85,7 @@ export class StatusView extends React.Component {
       // window.location.href = "/login"
     }
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
     Axios(address + "txn/v2/" + transId + "/txn-detail/", {
@@ -215,7 +215,7 @@ export class StatusView extends React.Component {
     }
 
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
     Axios(address + "txn/v1/txn-history/", {

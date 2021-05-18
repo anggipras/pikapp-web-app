@@ -98,7 +98,7 @@ const PinDialog = (props) => {
         };
 
         let uuid = uuidV4();
-        uuid = uuid.replaceAll("-", "");
+        uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
         axios(address + "auth/v2/login", {
         headers: {
