@@ -7,7 +7,7 @@ const FoodCourt = (props) => {
 
     useEffect(() => {
         let fcadd = props.match.params.address
-        fcadd = fcadd.replaceAll("_", " ")
+        fcadd = fcadd.replace(/_/g, " ")
         localStorage.setItem('fctable', props.match.params.notab)
         Cookies.set("fcaddress", fcadd, { expires: 1 })
         history.push("/");

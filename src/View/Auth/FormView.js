@@ -180,7 +180,7 @@ class FormView extends React.Component {
       email: "",
     };
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     axios(address + "auth/login", {
       headers: {
@@ -257,7 +257,7 @@ class FormView extends React.Component {
     };
 
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     axios(address + "auth/register", {
       headers: {

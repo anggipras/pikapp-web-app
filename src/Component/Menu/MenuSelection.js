@@ -53,7 +53,7 @@ const MenuSelection = (props) => {
 
         //hit API in order to get response of product detail v2
         let uuid = uuidV4()
-        uuid = uuid.replaceAll("-", "");
+        uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
         Axios(`${address}/home/v2/detail/product/`, {
             headers: {
