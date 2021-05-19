@@ -45,7 +45,7 @@ var currentTotal = 0
 class ProductView extends React.Component {
   state = {
     page: 0, //products pagination
-    size: 3, //set amount of products to be shown in frontend
+    size: 9, //set amount of products to be shown in frontend
     boolpage: false,
     productPage: [], //set how many page of product merchant from backend server
     idCateg: [], //set current product page of specific size of loaded products
@@ -132,7 +132,7 @@ class ProductView extends React.Component {
     addressRoute = address + "home/v2/detail/merchant/" + longitude + "/" + latitude + "/"
 
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
 
     Axios(addressRoute, {
@@ -679,7 +679,7 @@ class ProductView extends React.Component {
 
     let uuid = uuidV4();
     const date = new Date().toISOString();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
     Axios(address + "txn/v1/cart-post/", {
       headers: {

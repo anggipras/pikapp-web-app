@@ -356,7 +356,7 @@ class CartView extends React.Component {
     // console.log(requestData);
 
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
 
@@ -550,7 +550,7 @@ class CartView extends React.Component {
 
     let uuid = uuidV4();
     const date = new Date().toISOString();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
     Axios(address + "txn/v1/cart-post/", {
       headers: {
@@ -594,7 +594,7 @@ class CartView extends React.Component {
     if (auth.is_email_verified === false) {
       console.log(auth)
       let uuid = uuidV4();
-      uuid = uuid.replaceAll("-", "");
+      uuid = uuid.replace(/-/g, "");
       const date = new Date().toISOString();
       let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
       Axios(address + "home/v2/customer-info", {
@@ -636,7 +636,7 @@ class CartView extends React.Component {
     }
 
     let uuid = uuidV4();
-    uuid = uuid.replaceAll("-", "");
+    uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     Axios(address + "auth/resend-email/" + auth.email + "/", {
       headers: {

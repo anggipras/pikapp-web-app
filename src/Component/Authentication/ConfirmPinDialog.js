@@ -78,7 +78,7 @@ const ConfirmPinDialog = (props) => {
         };
 
         let uuid = uuidV4();
-        uuid = uuid.replaceAll("-", "");
+        uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
         axios(address + "auth/register", {
             headers: {
@@ -133,7 +133,7 @@ const ConfirmPinDialog = (props) => {
         };
 
         let uuid = uuidV4();
-        uuid = uuid.replaceAll("-", "");
+        uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
         axios(address + "auth/v2/login", {
         headers: {

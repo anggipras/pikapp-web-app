@@ -15,15 +15,11 @@ it("renders without crashing StoreView", () => {
   );
 });
 
+jest.mock('Axios')
+
 test('render merchant list data correctly', async () => {
-  let latitude
-  let longitude
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      latitude = position.coords.latitude
-      longitude = position.coords.longitude
-    })
-  }
+  let latitude = -6.28862
+  let longitude = 106.71789
 
   let addressRoute = address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/"
   let uuid = uuidV4();
@@ -62,5 +58,5 @@ test('render merchant list data correctly', async () => {
   const { getAllMerchantData } = render(<StoreView />)
   const realData = getAllMerchantData('merchantlist-item').map(cardData => cardData.storeName)
   const imitationData = testData.map(resdata => resdata.storeName)
-  expect(realData).toEqual(imitationData)
+  await expect(realData).toEqual(imitationData)
 })
