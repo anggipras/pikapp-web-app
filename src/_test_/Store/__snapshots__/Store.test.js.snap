@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchData matches the snapshot 1`] = `
+<div
+  className="merchantList-background"
+>
+  <div
+    className="storeColumn"
+  >
+    <h6
+      className=""
+      style={
+        Object {
+          "textAlign": "left",
+        }
+      }
+    >
+      Lokasi:
+    </h6>
+    <p
+      className="storeLabel"
+      style={
+        Object {
+          "textAlign": "left",
+        }
+      }
+    >
+      <span>
+        <span
+          className="react-loading-skeleton css-1eg0sfo-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 20,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
+    </p>
+  </div>
+  <div>
+    <div
+      className="merchantList-grid"
+    >
+      <a
+        href="/store?mid="
+        onClick={[Function]}
+        style={
+          Object {
+            "textDecoration": "none",
+          }
+        }
+      >
+        <div
+          className="merchantList-layout"
+          data-testid="merchantlist-item"
+        >
+          <div
+            className="merchantList-banner"
+          >
+            <span>
+              <span
+                className="react-loading-skeleton css-1eg0sfo-skeletonStyles-Skeleton"
+                style={
+                  Object {
+                    "height": "100%",
+                    "paddingTop": 100,
+                    "width": "100%",
+                  }
+                }
+              >
+                ‌
+              </span>
+            </span>
+          </div>
+          <div
+            className="merchantList-content"
+          >
+            <div
+              className="merchantList-contentLocStar"
+            >
+              <div
+                className="merchantList-ratingArea"
+              >
+                <img
+                  alt=""
+                  className="merchantList-ratingIcon"
+                  src="star.png"
+                />
+                <div
+                  className="merchantList-ratingScore"
+                >
+                  5.0
+                </div>
+              </div>
+              <div
+                className="merchantList-locArea"
+              >
+                <img
+                  alt=""
+                  className="merchantList-locIcon"
+                  src="location.png"
+                />
+                <span>
+                  <span
+                    className="react-loading-skeleton css-1eg0sfo-skeletonStyles-Skeleton"
+                    style={
+                      Object {
+                        "height": "100%",
+                        "paddingTop": 10,
+                        "width": "100%",
+                      }
+                    }
+                  >
+                    ‌
+                  </span>
+                </span>
+              </div>
+            </div>
+            <span>
+              <span
+                className="react-loading-skeleton css-1eg0sfo-skeletonStyles-Skeleton"
+                style={
+                  Object {
+                    "height": "100%",
+                    "paddingTop": 10,
+                    "width": "100%",
+                  }
+                }
+              >
+                ‌
+              </span>
+            </span>
+            <div
+              className="merchantList-storeCategory"
+            >
+              Merchant Categories
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+`;

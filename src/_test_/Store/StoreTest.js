@@ -42,3 +42,21 @@ export const fetchData = async () => {
 
     return realData
 }
+
+export const loadMoreMerch = () => {
+    let idCol = 0
+    let page = 0 //will load more merchant until all pages load
+    let totalpage = 7 //there are 6 pages for instance
+
+    do {
+        if (idCol <= page) {
+            idCol += 1
+            page += 1
+            console.log('loadagain');
+        } else {
+            console.log('disable scroll');
+        }
+    } while (page < totalpage - 1);
+
+    return page
+}

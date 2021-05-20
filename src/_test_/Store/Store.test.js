@@ -1,9 +1,10 @@
 import { shallow } from "enzyme";
 import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from "react-router-dom";
 import Store from '../../Redux/Store'
 import StoreView from "../../View/Store/StoreView";
-import Axios from "axios";
-import { fetchData } from './StoreTest'
+import { fetchData, loadMoreMerch } from './StoreTest'
+import renderer from 'react-test-renderer'
 
 it("renders without crashing StoreView", () => {
   shallow(
@@ -77,6 +78,21 @@ describe('fetchData', () => {
     fetchData().then(res => {
       expect(res).toEqual(testData)
     })
-
   })
+
+  it('matches the snapshot', () => {
+    const tree = renderer.create(
+      <Router>
+        <Provider store={Store}>
+          <StoreView />
+        </Provider>
+      </Router>
+    ).toJSON()
+
+    expect(tree).toMatchSnapshot()
+  })
+})
+
+it('test loadmoremerchant', () => {
+  expect(loadMoreMerch()).toBe(6)
 })
