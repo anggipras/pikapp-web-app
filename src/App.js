@@ -40,6 +40,13 @@ if (localStorage.getItem("cart")) {
     localStorage.setItem('cart', JSON.stringify(cart))
 }
 
+if (!localStorage.getItem("storeTour")) {
+    localStorage.setItem('storeTour', 1);
+    localStorage.setItem('productTour', 1);
+    localStorage.setItem('cartTour', 1);
+    localStorage.setItem('merchantFlow', 1);
+}
+
 function App() {
     // const [isTokenFound, setTokenFound] = useState(false)
     // getToken(setTokenFound)

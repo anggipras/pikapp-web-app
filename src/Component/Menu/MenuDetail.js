@@ -232,10 +232,10 @@ const MenuDetail = (props) => {
                                     </div>
 
                                     <div className='menu-detail'>
-                                        <div className='menu-star'>
+                                        {/* <div className='menu-star'>
                                             <img className='menu-star-img' src={StarIcon} alt='' />
                                             <h6 className='menu-star-rating'>5.0</h6>
-                                        </div>
+                                        </div> */}
 
                                         <div className='menu-name'>
                                             {props.datas.foodName}
@@ -341,10 +341,10 @@ const MenuDetail = (props) => {
                             <div className='mob-menuContain'>
                                 <div className='mob-inside-menuContain' style={{ boxShadow: menuSelect ? "0px 5px 4px rgba(0, 0, 0, 0.1)" : "none" }}>
                                     <div className='mob-menu-detail'>
-                                        <div className='mob-menu-star'>
+                                        {/* <div className='mob-menu-star'>
                                             <img className='mob-menu-star-img' src={StarIcon} alt='' />
                                             <h6 className='mob-menu-star-rating'>{props.datas.foodRating}</h6>
-                                        </div>
+                                        </div> */}
 
                                         <div className='mob-menu-name'>
                                             {props.datas.foodName}

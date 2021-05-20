@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 
 const MerchantResto = (props) => {
   const merchantID = props.match.params.mid
   const [longlat, setlonglat] = useState({});
   let history = useHistory();
+  const dispatch = useDispatch();
   // const _isMounted = useRef(true)
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const MerchantResto = (props) => {
     if (!props.match.params.address) {
       setlonglat({ lat: latitude, lon: longitude })
     }
+    dispatch({ type: 'ISMERCHANTQR', payload: true });
   }, []);
 
   // const showPosition = (position) => { //SHUTDOWN FOR A WHILE
