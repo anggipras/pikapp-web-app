@@ -13,6 +13,7 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie"
+// import { getToken } from './firebase'
 
 export var cart = [
     {
@@ -47,6 +48,9 @@ if (!localStorage.getItem("storeTour")) {
 }
 
 function App() {
+    // const [isTokenFound, setTokenFound] = useState(false)
+    // getToken(setTokenFound)
+
     if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
         let newCart = []
