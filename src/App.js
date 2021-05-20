@@ -13,10 +13,6 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie"
-<<<<<<< HEAD
-import { getToken } from './firebase'
-=======
->>>>>>> a4f134bb6b4be18e916318a03cc102f3bada1f07
 
 export var cart = [
     {
