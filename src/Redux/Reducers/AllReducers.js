@@ -11,7 +11,7 @@ const INITIAL_STATE = {
     mandatRadioCond: false,
     mandatRadio: false,
     totalAmountProd: 0,
-    openMenuCart: false
+    openMenuCart: false,
 }
 
 export default (state = INITIAL_STATE, action) => {
