@@ -22,6 +22,7 @@ import Loader from 'react-loader-spinner'
 import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import Swal from 'sweetalert2';
+import TourPage from '../../Component/Tour/TourPage';
 
 var currentExt = {
   detailCategory: [
@@ -74,6 +75,49 @@ class CartView extends React.Component {
     isShowCounterTime : false,
     countHit : 0,
     counterTime : 120,
+    startTour : false,
+    steptour:[
+      {
+        selector: '.cart-foodService',
+        content : () => (
+          <div>
+            <h4>Mau makan dimana?</h4>
+            <br />
+            <span>Kamu bisa ubah pilihan makan kamu antara Makan di Tempat atau Takeaway</span>
+          </div>
+        ),
+      },
+      {
+        selector: '.cart-paymentService',
+        content : () => (
+          <div>
+            <h4>Bayar pakai apa?</h4>
+            <br />
+            <span>Kami menyediakan 2 tipe pembayaran, secara OVO ataupun bayar di kasir</span>
+          </div>
+        )
+      },
+      {
+        selector: '.cart-OrderButton',
+        content : () => (
+          <div>
+            <h4>Sudah siap makan?</h4>
+            <br />
+            <span>Silakan tekan tombol Order untuk melakukan pembayaran (psstt, untuk pembayaran di kasir, jangan lupa ke kasir ya!)</span>
+          </div>
+        )
+      },
+      {
+        selector: '.cart-OrderButton-mob',
+        content : () => (
+          <div>
+            <h4>Sudah siap makan?</h4>
+            <br />
+            <span>Silakan tekan tombol Order untuk melakukan pembayaran (psstt, untuk pembayaran di kasir, jangan lupa ke kasir ya!)</span>
+          </div>
+        )
+      }
+    ]
   };
 
   componentDidMount() {
@@ -90,6 +134,18 @@ class CartView extends React.Component {
       auth = JSON.parse(Cookies.get("auth"))
     }
 
+    if(window.innerWidth < 700) {
+      this.state.steptour.splice(2,1);
+    } else {
+      this.state.steptour.pop();
+    }
+
+    if (localStorage.getItem("cartTour") == 1) {
+      this.setState({ startTour : true});
+    } else if (localStorage.getItem('merchantFlow') == 1) {
+      this.setState({ startTour : true});
+    }
+
     this.setState({ isEmailVerified: auth.is_email_verified });
 
     if (this.state.isEmailVerified === false) {
@@ -101,25 +157,8 @@ class CartView extends React.Component {
   componentDidUpdate() {
     if(this.state.counterTime === 0) {
       clearInterval(this.interval);
-      // this.setState({ isShowCounterTime : false });
       console.log("clear");
     }
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    //   is_email_verified : true
-    // };
-
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
-
-    // if(this.state.isEmailVerified === false) {
-    //     this.handleReloadEmail();
-    // }
   }
 
   handleDetail(data) {
@@ -674,24 +713,31 @@ class CartView extends React.Component {
   }
 
   countDownTime = () => {
-    // this.setState({ counterTime : this.state.counter2Mins - 1});
-
-    // this.interval = setInterval(
-    //   () => this.setState((state)=> ({ counter2Mins: this.state.counter2Mins - 1 })),
-    //   1000
-    // );
-
     this.interval = setInterval(
       () => this.setState((state)=> ({ counterTime: this.state.counterTime - 1 })),
       1000
     );
+  }
 
-    // const down = (minus) =>
-    // {
-    //     this.setState({ counter2Mins: minus });
-    // }
+  tourPage = () => {
+    if (this.state.startTour === true) {
+      return (
+        <TourPage 
+          stepsContent={this.state.steptour}
+          isShowTour={this.state.startTour}
+          isHideTour={() =>this.showTourPage(false)}
+        />
+      )
+    }
+  }
 
-    // setInterval(() => down(this.state.counter2Mins - 1), 1000);
+  showTourPage = (isShowTour) => {
+    this.setState({ startTour: isShowTour });
+    document.body.style.overflowY = 'auto';
+    localStorage.setItem('cartTour', 0);
+    if(this.props.AuthRedu.isMerchantQR === true) {
+      localStorage.setItem('merchantFlow', 0);
+    }
   }
 
   render() {
@@ -973,7 +1019,7 @@ class CartView extends React.Component {
                     </div>
                   </div>
 
-                  <div className='cart-OrderButton' onClick={() => this.handlePayment()}>
+                  <div className='cart-OrderButton buttonorder' onClick={() => this.handlePayment()}>
                     <div className='cart-OrderButton-content'>
                       <span className='cart-OrderButton-Frame'>
                         <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
@@ -1008,7 +1054,7 @@ class CartView extends React.Component {
               </div>
             </div>
 
-            <div className='cart-OrderButton-mob' onClick={() => this.handlePayment()}>
+            <div className='cart-OrderButton-mob buttonorder' onClick={() => this.handlePayment()}>
               <div className='cart-OrderButton-content-mob'>
                 <span className='cart-OrderButton-Frame-mob'>
                   <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
@@ -1026,6 +1072,7 @@ class CartView extends React.Component {
         {modal}
         {this.menuDetail()}
         {this.notifModal()}
+        {this.tourPage()}
       </>
     );
   }
@@ -1033,7 +1080,8 @@ class CartView extends React.Component {
 
 const Mapstatetoprops = (state) => {
   return {
-    AllRedu: state.AllRedu
+    AllRedu: state.AllRedu,
+    AuthRedu: state.AuthRedu
   }
 }
 

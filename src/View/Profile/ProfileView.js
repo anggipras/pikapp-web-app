@@ -150,7 +150,15 @@ class ProfileView extends React.Component {
           setTimeout(() => {
             var lastLink = { value: window.location.origin}
             Cookies.set("lastLink", lastLink,{ expires: 1})
+            var storeStatus = localStorage.getItem("storeTour");
+            var productStatus = localStorage.getItem("productTour");
+            var cartStatus = localStorage.getItem("cartTour");
+            var merchantFlow = localStorage.getItem("merchantFlow")
             localStorage.clear()
+            localStorage.setItem("storeTour",storeStatus);
+            localStorage.setItem("productTour",productStatus);
+            localStorage.setItem("cartTour",cartStatus);
+            localStorage.setItem("merchantFlow",merchantFlow);
             Cookies.remove("auth")
             auth = null;
             this.props.DoneLoad()
