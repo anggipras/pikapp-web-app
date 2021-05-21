@@ -39,7 +39,7 @@ export default class StoreLayout extends React.Component {
               </div>
             </Container>
             :
-            <Container style={{ marginTop: "50px" }}>
+            <Container>
               <div className='container2'>
                 <StoreView />
               </div>

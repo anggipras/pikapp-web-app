@@ -30,22 +30,23 @@ export default class MainNavigation extends React.Component {
     return (
       <div>
         <Navbar>
-          <Navbar>
-            { this.state.isLogin ?
+          { this.state.isLogin ?
+            <Navbar>
               <Link to={"/status"}>
                 <img src={bellIcon} class="icon" alt={"status"}></img>
               </Link>
-              :
-              <div></div>
-            }
-          </Navbar>
+            </Navbar>
+            :
+            <div></div>
+          }
+          
           {
             this.state.isLogin ?
             <Navbar.Brand class="navbar-center">
               <Link to={homePage}> <img src={logo} alt={"logo"} class="icon"></img> </Link>
             </Navbar.Brand>
             :
-            <Navbar.Brand class="navbar-center" style={{marginTop: "45px"}}>
+            <Navbar.Brand class="navbar-center" style={{position:"relative"}}>
               <Link to={homePage}> <img src={logo} alt={"logo"} class="icon"></img> </Link>
             </Navbar.Brand>
           }
