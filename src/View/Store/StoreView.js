@@ -400,10 +400,10 @@ class StoreView extends React.Component {
             
             <div className='merchantList-content'>
               <div className='merchantList-contentLocStar'>
-                {/* <div className='merchantList-ratingArea'>
+                <div className='merchantList-ratingArea'>
                   <img src={StarIcon} className='merchantList-ratingIcon' alt='' />
                   <div className='merchantList-ratingScore'>{cardData.rating ? cardData.rating : "5.0"}</div>
-                </div> */}
+                </div>
 
                 <div className='merchantList-locArea'>
                   <img src={LocaIcon} className='merchantList-locIcon' alt='' />
