@@ -10,7 +10,7 @@ import Cookies from "js-cookie"
 import Geocode from "react-geocode"
 import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
-import { DoneLoad } from '../../Redux/Actions'
+import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 
 class StoreView extends React.Component {
@@ -67,8 +67,9 @@ class StoreView extends React.Component {
     ]
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.props.DoneLoad()
+    this.props.IsMerchantQR(false);
     Cookies.set("homePage", window.location.search)
     var auth = {
       isLogged: false,
@@ -183,7 +184,7 @@ class StoreView extends React.Component {
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
-    return await Axios(addressRoute, {
+    Axios(addressRoute, {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -465,4 +466,4 @@ class StoreView extends React.Component {
   }
 }
 
-export default connect(null, { DoneLoad })(StoreView)
+export default connect(null, { DoneLoad, IsMerchantQR })(StoreView)

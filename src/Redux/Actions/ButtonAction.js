@@ -51,3 +51,10 @@ export const EditMenuCart = (bool) => {
         payload: bool
     }
 }
+
+export const IsMerchantQR = (bool) => {
+    return {
+        type: 'ISMERCHANTQR',
+        payload: bool
+    }
+}

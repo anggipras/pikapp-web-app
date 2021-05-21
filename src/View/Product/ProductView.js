@@ -306,7 +306,7 @@ class ProductView extends React.Component {
               }
               this.setState({ startTour : true});
             } 
-            else if (localStorage.getItem('merchantFlow') == 1) {
+            else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
               this.setState({ startTour : true});
             }
           }).catch(err => {
@@ -327,7 +327,7 @@ class ProductView extends React.Component {
               }
               this.setState({ startTour : true});
             } 
-            else if (localStorage.getItem('merchantFlow') == 1) {
+            else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
               this.setState({ startTour : true});
             }
           })
@@ -919,6 +919,9 @@ class ProductView extends React.Component {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
     localStorage.setItem('productTour', 0);
+    if(this.props.AuthRedu.isMerchantQR === true) {
+      localStorage.setItem('merchantFlow', 0);
+    }
   }
 
   render() {

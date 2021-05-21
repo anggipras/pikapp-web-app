@@ -25,7 +25,7 @@ const TourPage = (props) => {
                 showNumber={false}
                 rounded={10}
                 nextButton={<Button style={{ backgroundColor: "#4056C6" }}>Selanjutnya</Button>}
-                prevButton={<Button style={{ backgroundColor: "#4056C6" }}>Lewati</Button>}
+                prevButton={<Button style={{ backgroundColor: "#4056C6" }} onClick={isTourClose}>Lewati</Button>}
                 lastStepNextButton={<Button style={{ backgroundColor: "#4056C6" }}>Selesai</Button>}
                 onAfterOpen={target => (document.body.style.overflowY = 'hidden')}
                 onBeforeClose={target => (document.body.style.overflowY = 'auto')}
