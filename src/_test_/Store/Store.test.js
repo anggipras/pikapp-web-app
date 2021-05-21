@@ -1,8 +1,8 @@
 import { shallow } from "enzyme";
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router } from "react-router-dom";
 import Store from '../../Redux/Store'
 import StoreView from "../../View/Store/StoreView";
+import { BrowserRouter as Router } from "react-router-dom";
 import { fetchData, loadMoreMerch } from './StoreTest'
 import renderer from 'react-test-renderer'
 
@@ -93,17 +93,18 @@ describe('fetchData', () => {
     })
   })
 
-  it('matches the snapshot', () => {
-    const tree = renderer.create(
-      <Router>
-        <Provider store={Store}>
-          <StoreView />
-        </Provider>
-      </Router>
-    ).toJSON()
+})
 
-    expect(tree).toMatchSnapshot()
-  })
+it('matches the snapshot', () => {
+  const tree = renderer.create(
+    <Router>
+      <Provider store={Store}>
+        <StoreView />
+      </Provider>
+    </Router>
+  ).toJSON()
+
+  expect(tree).toMatchSnapshot()
 })
 
 it('test loadmoremerchant', () => {
