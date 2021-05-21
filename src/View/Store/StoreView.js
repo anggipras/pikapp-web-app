@@ -423,7 +423,7 @@ class StoreView extends React.Component {
                   <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
               }
 
-              <div className='merchantList-storeCategory'>Merchant Categories</div>
+              {/* <div className='merchantList-storeCategory'>Merchant Categories</div> */}
             </div>
           </div>
         </Link>
@@ -432,14 +432,14 @@ class StoreView extends React.Component {
 
     return (
       <div className='merchantList-background'>
-        <div className="storeColumn">
+        {/* <div className="storeColumn">
           <h6 className="" style={{ textAlign: "left" }}>
             Lokasi:
             </h6>
           <p className="storeLabel" style={{ textAlign: "left" }}>
             {this.state.location || <Skeleton height={20} />}
           </p>
-        </div>
+        </div> */}
         <div>
           <div className='merchantList-grid'>
             {allCards}
