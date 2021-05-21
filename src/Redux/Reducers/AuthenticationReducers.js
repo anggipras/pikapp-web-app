@@ -4,7 +4,8 @@ const INITIAL_STATE = {
     isLoginStep : false,
     dataResetPin : {},
     dataPin : '',
-    dataPinToken: ''
+    dataPinToken: '',
+    isMerchantQR: false,
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,6 +22,8 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, dataPin: action.payload}
         case "PINTOKEN" :
             return {...state, dataPinToken: action.payload}
+        case "ISMERCHANTQR":
+            return { ...state, isMerchantQR: action.payload }
         default:
             return state
     }

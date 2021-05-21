@@ -11,7 +11,7 @@ export const fetchData = async () => {
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
 
-    const allMerchantAPI = await Axios(addressRoute, {
+    return await Axios(addressRoute, {
         headers: {
             "Content-Type": "application/json",
             "x-request-id": uuid,
@@ -26,21 +26,6 @@ export const fetchData = async () => {
             size: 6
         }
     })
-
-    let allData = allMerchantAPI.data.results
-    let realData = []
-    realData.push({
-        address: allData.merchant_address,
-        rating: allData.merchant_rating,
-        logo: allData.merchant_logo,
-        distance: allData.merchant_distance,
-        storeId: allData.mid,
-        storeName: allData.merchant_name,
-        storeDesc: "",
-        storeImage: allData.merchant_pict,
-    })
-
-    return realData
 }
 
 export const loadMoreMerch = () => {

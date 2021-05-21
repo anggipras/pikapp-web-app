@@ -76,7 +76,20 @@ describe('fetchData', () => {
     ]
 
     fetchData().then(res => {
-      expect(res).toEqual(testData)
+      let allData = res.data.results
+      let realData = []
+      realData.push({
+        address: allData.merchant_address,
+        rating: allData.merchant_rating,
+        logo: allData.merchant_logo,
+        distance: allData.merchant_distance,
+        storeId: allData.mid,
+        storeName: allData.merchant_name,
+        storeDesc: "",
+        storeImage: allData.merchant_pict,
+      })
+
+      expect(realData).toEqual(testData)
     })
   })
 
