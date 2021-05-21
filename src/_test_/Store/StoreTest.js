@@ -12,10 +12,14 @@ export const fetchData = async () => {
     const date = new Date().toISOString();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const allMerchantAPI = await Axios(addressRoute, {
 =======
     return await Axios(addressRoute, {
 >>>>>>> b88195ce4784105b65b179d6115d42e51ea5fe2a
+=======
+    return await Axios(addressRoute, {
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
         headers: {
             "Content-Type": "application/json",
             "x-request-id": uuid,
@@ -30,6 +34,7 @@ export const fetchData = async () => {
             size: 6
         }
     })
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     let allData = allMerchantAPI.data.results
@@ -47,6 +52,8 @@ export const fetchData = async () => {
 
     return realData
 =======
+=======
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
 }
 
 export const loadMoreMerch = () => {
@@ -65,5 +72,8 @@ export const loadMoreMerch = () => {
     } while (page < totalpage - 1);
 
     return page
+<<<<<<< HEAD
 >>>>>>> b88195ce4784105b65b179d6115d42e51ea5fe2a
+=======
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
 }

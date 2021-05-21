@@ -1,17 +1,23 @@
 import { shallow } from "enzyme";
 import { Provider } from 'react-redux'
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Store from '../../Redux/Store'
 import StoreView from "../../View/Store/StoreView";
 import Axios from "axios";
 import { fetchData } from './StoreTest'
 =======
+=======
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
 import { BrowserRouter as Router } from "react-router-dom";
 import Store from '../../Redux/Store'
 import StoreView from "../../View/Store/StoreView";
 import { fetchData, loadMoreMerch } from './StoreTest'
 import renderer from 'react-test-renderer'
+<<<<<<< HEAD
 >>>>>>> b88195ce4784105b65b179d6115d42e51ea5fe2a
+=======
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
 
 it("renders without crashing StoreView", () => {
   shallow(
@@ -84,12 +90,15 @@ describe('fetchData', () => {
 
     fetchData().then(res => {
 <<<<<<< HEAD
+<<<<<<< HEAD
       expect(res).toEqual(testData)
     })
 
   })
 })
 =======
+=======
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
       let allData = res.data.results
       let realData = []
       realData.push({
@@ -122,5 +131,9 @@ describe('fetchData', () => {
 
 it('test loadmoremerchant', () => {
   expect(loadMoreMerch()).toBe(6)
+<<<<<<< HEAD
 })
 >>>>>>> b88195ce4784105b65b179d6115d42e51ea5fe2a
+=======
+})
+>>>>>>> 68f3f0b4fa8679d082e885ebbc981032b4320121
