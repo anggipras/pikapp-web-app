@@ -1,6 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/messaging'
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBbLM1-27VK0e65peGPQgdKH5TGlRnaeio",
