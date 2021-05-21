@@ -39,12 +39,18 @@ if (localStorage.getItem("cart")) {
     localStorage.setItem('cart', JSON.stringify(cart))
 }
 
+<<<<<<< HEAD
 if (!localStorage.getItem("storeTour")) {
     localStorage.setItem('storeTour', 1);
     localStorage.setItem('productTour', 1);
     localStorage.setItem('cartTour', 1);
     localStorage.setItem('merchantFlow', 1);
 }
+=======
+function App() {
+    const [isTokenFound, setTokenFound] = useState(false)
+    getToken(setTokenFound)
+>>>>>>> mocking async fetch merchant list page
 
 function App() {
     if (Cookies.get("auth") === undefined) {

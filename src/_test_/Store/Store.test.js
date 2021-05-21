@@ -1,10 +1,17 @@
 import { shallow } from "enzyme";
 import { Provider } from 'react-redux'
+<<<<<<< HEAD
 import { BrowserRouter as Router } from "react-router-dom";
 import Store from '../../Redux/Store'
 import StoreView from "../../View/Store/StoreView";
 import { fetchData, loadMoreMerch } from './StoreTest'
 import renderer from 'react-test-renderer'
+=======
+import Store from '../../Redux/Store'
+import StoreView from "../../View/Store/StoreView";
+import Axios from "axios";
+import { fetchData } from './StoreTest'
+>>>>>>> mocking async fetch merchant list page
 
 it("renders without crashing StoreView", () => {
   shallow(
@@ -76,6 +83,7 @@ describe('fetchData', () => {
     ]
 
     fetchData().then(res => {
+<<<<<<< HEAD
       let allData = res.data.results
       let realData = []
       realData.push({
@@ -109,3 +117,10 @@ describe('fetchData', () => {
 it('test loadmoremerchant', () => {
   expect(loadMoreMerch()).toBe(6)
 })
+=======
+      expect(res).toEqual(testData)
+    })
+
+  })
+})
+>>>>>>> mocking async fetch merchant list page

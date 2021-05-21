@@ -11,7 +11,11 @@ export const fetchData = async () => {
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
 
+<<<<<<< HEAD
     return await Axios(addressRoute, {
+=======
+    const allMerchantAPI = await Axios(addressRoute, {
+>>>>>>> mocking async fetch merchant list page
         headers: {
             "Content-Type": "application/json",
             "x-request-id": uuid,
@@ -26,6 +30,7 @@ export const fetchData = async () => {
             size: 6
         }
     })
+<<<<<<< HEAD
 }
 
 export const loadMoreMerch = () => {
@@ -44,4 +49,21 @@ export const loadMoreMerch = () => {
     } while (page < totalpage - 1);
 
     return page
+=======
+
+    let allData = allMerchantAPI.data.results
+    let realData = []
+    realData.push({
+        address: allData.merchant_address,
+        rating: allData.merchant_rating,
+        logo: allData.merchant_logo,
+        distance: allData.merchant_distance,
+        storeId: allData.mid,
+        storeName: allData.merchant_name,
+        storeDesc: "",
+        storeImage: allData.merchant_pict,
+    })
+
+    return realData
+>>>>>>> mocking async fetch merchant list page
 }
