@@ -172,7 +172,7 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        // console.log(res.data.results);
+        console.log(res.data.results);
         var currentMerchant = {
           mid: "",
           storeName: "",

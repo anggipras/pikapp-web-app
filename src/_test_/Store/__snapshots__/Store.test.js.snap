@@ -1,44 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fetchData matches the snapshot 1`] = `
+exports[`matches the snapshot StoreView 1`] = `
 <div
   className="merchantList-background"
 >
-  <div
-    className="storeColumn"
-  >
-    <h6
-      className=""
-      style={
-        Object {
-          "textAlign": "left",
-        }
-      }
-    >
-      Lokasi:
-    </h6>
-    <p
-      className="storeLabel"
-      style={
-        Object {
-          "textAlign": "left",
-        }
-      }
-    >
-      <span>
-        <span
-          className="react-loading-skeleton css-1eg0sfo-skeletonStyles-Skeleton"
-          style={
-            Object {
-              "height": 20,
-            }
-          }
-        >
-          ‌
-        </span>
-      </span>
-    </p>
-  </div>
   <div>
     <div
       className="merchantList-grid"
@@ -132,11 +97,6 @@ exports[`fetchData matches the snapshot 1`] = `
                 ‌
               </span>
             </span>
-            <div
-              className="merchantList-storeCategory"
-            >
-              Merchant Categories
-            </div>
           </div>
         </div>
       </a>
