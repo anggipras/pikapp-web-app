@@ -470,6 +470,7 @@
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
+    margin-top: 10px;
   }
 
   .product-desc {
@@ -570,7 +571,8 @@
   }
 
   .merchantList-contentLocStar {
-    display: flex;
+    // display: flex;
+    display: none;
   }
 
   .merchantList-ratingArea,
@@ -1151,6 +1153,7 @@
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
+    margin-top: 10px;
   }
 
   .product-desc-mob {
@@ -1245,7 +1248,8 @@
   }
 
   .merchantList-contentLocStar {
-    display: flex;
+    // display: flex;
+    display: none;
   }
 
   .merchantList-ratingArea,

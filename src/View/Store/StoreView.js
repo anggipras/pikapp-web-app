@@ -10,7 +10,8 @@ import Cookies from "js-cookie"
 import Geocode from "react-geocode"
 import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
-import { DoneLoad } from '../../Redux/Actions'
+import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
+import TourPage from '../../Component/Tour/TourPage';
 
 class StoreView extends React.Component {
   state = {
@@ -41,10 +42,34 @@ class StoreView extends React.Component {
     allMerchantAPI: [],
     lat: "",
     lon: "",
+    startTour : false,
+    steptour:[
+      {
+        selector: '',
+        content : () => (
+          <div>
+            <h2>Selamat Datang di PikApp!</h2>
+            <br />
+            <span>Yuk caritau cara memesan dengan PikApp dengan mudah.</span>
+          </div>
+        )
+      },
+      {
+        selector: '.merchantList-layout',
+        content : () => (
+          <div>
+            <h4>Ini adalah Daftar Restoran</h4>
+            <br />
+            <span>Kamu bisa cek restoran apa saja yang ada di dalam foodcourt ini. Anda bisa tap salah satu restoran untuk ke halaman berikutnya.</span>
+          </div>
+        )
+      }
+    ]
   };
 
   componentDidMount() {
     this.props.DoneLoad()
+    this.props.IsMerchantQR(false);
     Cookies.set("homePage", window.location.search)
     var auth = {
       isLogged: false,
@@ -55,7 +80,12 @@ class StoreView extends React.Component {
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
+    } 
+
+    if (localStorage.getItem("storeTour") == 1) {
+      this.setState({ startTour : true});
     }
+
     // else {
     const value = queryString.parse(window.location.search);
     var merchant = "";
@@ -326,6 +356,24 @@ class StoreView extends React.Component {
     </div>
   )
 
+  tourPage = () => {
+    if (this.state.startTour === true) {
+      return (
+        <TourPage 
+          stepsContent={this.state.steptour}
+          isShowTour={this.state.startTour}
+          isHideTour={() =>this.showTourPage(false)}
+        />
+      )
+    }
+  }
+
+  showTourPage = (isShowTour) => {
+    this.setState({ startTour: isShowTour });
+    document.body.style.overflowY = 'auto';
+    localStorage.setItem('storeTour', 0);
+  }
+
   render() {
     if (localStorage.getItem('page')) {
       let currentPage = JSON.parse(localStorage.getItem('page'))
@@ -350,7 +398,7 @@ class StoreView extends React.Component {
                   <Skeleton style={{ paddingTop: 100, width: "100%", height: "100%" }} />
               }
             </div>
-
+            
             <div className='merchantList-content'>
               <div className='merchantList-contentLocStar'>
                 <div className='merchantList-ratingArea'>
@@ -376,7 +424,7 @@ class StoreView extends React.Component {
                   <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
               }
 
-              <div className='merchantList-storeCategory'>Merchant Categories</div>
+              {/* <div className='merchantList-storeCategory'>Merchant Categories</div> */}
             </div>
           </div>
         </Link>
@@ -385,14 +433,14 @@ class StoreView extends React.Component {
 
     return (
       <div className='merchantList-background'>
-        <div className="storeColumn">
+        {/* <div className="storeColumn">
           <h6 className="" style={{ textAlign: "left" }}>
             Lokasi:
             </h6>
           <p className="storeLabel" style={{ textAlign: "left" }}>
             {this.state.location || <Skeleton height={20} />}
           </p>
-        </div>
+        </div> */}
         <div>
           <div className='merchantList-grid'>
             {allCards}
@@ -411,10 +459,11 @@ class StoreView extends React.Component {
               :
               null
           }
+          {this.tourPage()}
         </div>
       </div>
     );
   }
 }
 
-export default connect(null, { DoneLoad })(StoreView)
+export default connect(null, { DoneLoad, IsMerchantQR })(StoreView)

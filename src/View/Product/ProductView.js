@@ -25,6 +25,7 @@ import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
+import TourPage from '../../Component/Tour/TourPage';
 
 var currentExt = {
   detailCategory: [
@@ -85,7 +86,30 @@ class ProductView extends React.Component {
     productCategpersize: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     choosenIndCateg: null, //index of category selected when load more products in selected category
     counterLoad: 0,
-    isScrolling: false
+    isScrolling: false,
+    startTour : false,
+    steptour:[
+      {
+        selector: '',
+        content : () => (
+          <div>
+            <h2>Selamat Datang di PikApp!</h2>
+            <br />
+            <span>Yuk caritau cara memesan dengan PikApp dengan mudah.</span>
+          </div>
+        )
+      },
+      {
+        selector: '.product-merchant',
+        content : () => (
+          <div>
+            <h4>Ini adalah Menu Restoran</h4>
+            <br />
+            <span>Kamu bisa pilih makanan kesukaan kamu disini. Silakan tap untuk dipesan!</span>
+          </div>
+        )
+      }
+    ]
   };
 
   timeout = null
@@ -104,7 +128,8 @@ class ProductView extends React.Component {
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"));
       this.setState({ isLogin: auth.isLogged });
-    }
+    } 
+    
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
@@ -274,6 +299,16 @@ class ProductView extends React.Component {
               document.addEventListener('scroll', this.loadMoreMerchant)
               document.addEventListener('scroll', this.onScrollCart)
             });
+            
+            if (localStorage.getItem("productTour") == 1) {
+              if(this.props.AuthRedu.isMerchantQR === false) {
+                this.state.steptour.shift();
+              }
+              this.setState({ startTour : true});
+            } 
+            else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+              this.setState({ startTour : true});
+            }
           }).catch(err => {
             console.log(err)
             newImage = Storeimg
@@ -285,9 +320,19 @@ class ProductView extends React.Component {
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)
             });
+            
+            if (localStorage.getItem("productTour") == 1) {
+              if(this.props.AuthRedu.isMerchantQR === false) {
+                this.state.steptour.shift();
+              }
+              this.setState({ startTour : true});
+            } 
+            else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+              this.setState({ startTour : true});
+            }
           })
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err)); 
   }
 
   componentDidUpdate() {
@@ -779,10 +824,10 @@ class ProductView extends React.Component {
 
                     {/* desktop view */}
                     <div className='product-detail'>
-                      <div className='product-star'>
+                      {/* <div className='product-star'>
                         <img className='product-star-img' src={StarIcon} alt='' />
                         <h6 className='product-star-rating'>{product.foodRating}</h6>
-                      </div>
+                      </div> */}
 
                       <div className='product-name'>
                         {product.foodName}
@@ -800,10 +845,10 @@ class ProductView extends React.Component {
                     {/* mobile view */}
                     <div className='product-detail-mob'>
                       <div className='product-detailInfo-mob'>
-                        <div className='product-star-mob'>
+                        {/* <div className='product-star-mob'>
                           <img className='product-star-img-mob' src={StarIcon} alt='' />
                           <h6 className='product-star-rating-mob'>{product.foodRating}</h6>
-                        </div>
+                        </div> */}
 
                         <div className='product-name-mob'>
                           {product.foodName}
@@ -855,6 +900,28 @@ class ProductView extends React.Component {
           handleData={this.handleCart}
         />
       );
+    }
+  }
+
+  tourPage = () => {
+    if (this.state.startTour === true) {
+      return (
+        <TourPage 
+          stepsContent={this.state.steptour}
+          isShowTour={this.state.startTour}
+          isHideTour={() =>this.showTourPage(false)}
+        />
+      )
+    }
+  }
+
+  showTourPage = (isShowTour) => {
+    this.setState({ startTour: isShowTour });
+    document.body.style.overflowY = 'auto';
+    localStorage.setItem('productTour', 0);
+    if(this.props.AuthRedu.isMerchantQR === true) {
+      localStorage.setItem('merchantFlow', 0);
+      localStorage.setItem('storeTour', 0);
     }
   }
 
@@ -980,13 +1047,13 @@ class ProductView extends React.Component {
                         <div className='merchant-allcateg'>Merchant Category</div>
                         <div className='merchant-starInfo'>
                           {
-                            this.state.data.rating ?
-                              <>
-                                <img className='star-img' src={StarIcon} alt='' />
-                                <div className='merchant-star'>{this.state.data.rating}</div>
-                              </>
-                              :
-                              null
+                            // this.state.data.rating ?
+                            //   <>
+                            //     <img className='star-img' src={StarIcon} alt='' />
+                            //     <div className='merchant-star'>{this.state.data.rating}</div>
+                            //   </>
+                            //   :
+                            //   null
                             // <Skeleton width={50} />
                           }
                           {/* <div className='star-votes'>(50+ Upvotes)</div> */}
@@ -1077,6 +1144,7 @@ class ProductView extends React.Component {
         </div>
         {cartButton}
         {this.menuDetail()}
+        {this.tourPage()}
       </>
     );
   }
@@ -1084,7 +1152,8 @@ class ProductView extends React.Component {
 
 const Mapstatetoprops = (state) => {
   return {
-    AllRedu: state.AllRedu
+    AllRedu: state.AllRedu,
+    AuthRedu: state.AuthRedu
   }
 }
 
