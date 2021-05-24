@@ -921,6 +921,7 @@ class ProductView extends React.Component {
     localStorage.setItem('productTour', 0);
     if(this.props.AuthRedu.isMerchantQR === true) {
       localStorage.setItem('merchantFlow', 0);
+      localStorage.setItem('storeTour', 0);
     }
   }
 
