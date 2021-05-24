@@ -44,6 +44,7 @@ if (!localStorage.getItem("storeTour")) {
     localStorage.setItem('productTour', 1);
     localStorage.setItem('cartTour', 1);
     localStorage.setItem('merchantFlow', 1);
+    localStorage.setItem('cartMerchant', 1);
 }
 
 function App() {

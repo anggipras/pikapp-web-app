@@ -17,7 +17,7 @@ import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
 import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
-import { EditMenuCart } from '../../Redux/Actions'
+import { EditMenuCart, IsMerchantQR } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
@@ -142,7 +142,7 @@ class CartView extends React.Component {
 
     if (localStorage.getItem("cartTour") == 1) {
       this.setState({ startTour : true});
-    } else if (localStorage.getItem('merchantFlow') == 1) {
+    } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
       this.setState({ startTour : true});
     }
 
@@ -734,10 +734,11 @@ class CartView extends React.Component {
   showTourPage = (isShowTour) => {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
+    this.props.IsMerchantQR(false);
     localStorage.setItem('cartTour', 0);
-    if(this.props.AuthRedu.isMerchantQR === true) {
-      localStorage.setItem('merchantFlow', 0);
-    }
+    localStorage.setItem('storeTour',0);
+    localStorage.setItem('cartMerchant', 0);
+    localStorage.setItem('merchantFlow', 0);
   }
 
   render() {
@@ -1085,4 +1086,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad })(CartView)
+export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR })(CartView)

@@ -153,12 +153,14 @@ class ProfileView extends React.Component {
             var storeStatus = localStorage.getItem("storeTour");
             var productStatus = localStorage.getItem("productTour");
             var cartStatus = localStorage.getItem("cartTour");
-            var merchantFlow = localStorage.getItem("merchantFlow")
+            var merchantFlow = localStorage.getItem("merchantFlow");
+            var cartMerchant = localStorage.getItem("cartMerchant");
             localStorage.clear()
             localStorage.setItem("storeTour",storeStatus);
             localStorage.setItem("productTour",productStatus);
             localStorage.setItem("cartTour",cartStatus);
             localStorage.setItem("merchantFlow",merchantFlow);
+            localStorage.setItem("cartMerchant",cartMerchant);
             Cookies.remove("auth")
             auth = null;
             this.props.DoneLoad()
