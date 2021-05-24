@@ -673,6 +673,10 @@ class ProductView extends React.Component {
         ],
       });
     }
+    console.log(currentMerchant);
+    console.log(this.state.currentData);
+    console.log(currentExt);
+    console.log(currentTotal);
     let addedMerchants = []
     if (Cookies.get("addedMerchants") === undefined) {
       if (!addedMerchants.includes(mid)) {
