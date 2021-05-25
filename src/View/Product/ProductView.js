@@ -46,7 +46,7 @@ var currentTotal = 0
 class ProductView extends React.Component {
   state = {
     page: 0, //products pagination
-    size: 9, //set amount of products to be shown in frontend
+    size: 3, //set amount of products to be shown in frontend
     boolpage: false,
     productPage: [], //set how many page of product merchant from backend server
     idCateg: [], //set current product page of specific size of loaded products
@@ -285,6 +285,7 @@ class ProductView extends React.Component {
           firstShownProduct[indexcategProd].category_products = []
           firstShownProduct[indexcategProd].category_products = newFilter
         })
+
 
         let newImage = Storeimg
         Axios.get(currentMerchant.storeImage)
@@ -1076,7 +1077,7 @@ class ProductView extends React.Component {
               </div>
               <div className='bottom-merchantInfo'>
                 <div className='inside-bottomMerchantInfo'>
-                  <div className='merchantdetail-section'>
+                  {/* <div className='merchantdetail-section'>
                     <div className='icon-based'>
                       <img className='openhouricon' src={OpenHourIcon} alt='' />
                     </div>
@@ -1095,7 +1096,7 @@ class ProductView extends React.Component {
                       <div className='top-detail-info'>$$$</div>
                       <div className='bottom-detail-info'>50 K - 100 K</div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className='merchantdetail-section'>
                     <div className='icon-based'>
                       <img className='locationicon' src={LocationIcon} alt='' />
