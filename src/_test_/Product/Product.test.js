@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import Store from '../../Redux/Store'
 import ProductView from "../../View/Product/ProductView";
 import { BrowserRouter as Router } from "react-router-dom";
-import { fetchMerchantDetail, handleAddCart } from './ProductTest'
+import { fetchMerchantDetail, handleAddCart, loadTheMenu } from './ProductTest'
 import renderer from 'react-test-renderer'
 
 it("renders without crashing ProductView", () => {
@@ -206,23 +206,64 @@ it('render addtocart merchant detail', () => {
       ],
     },
     {
-      mid: "M00000008",
-      storeName: "Pikapp Store",
-      storeDesc: "Desc",
-      storeDistance: "7.61 km",
-      food: [
+      "mid": "M00000008",
+      "storeName": "Pikapp Store",
+      "storeDesc": "Desc",
+      "storeDistance": "7.61 km",
+      "food": [
         {
-          productId: "P00000026",
-          foodName: "Mie Ayam Yamin Jumbo Pangsit",
-          foodPrice: 30000,
-          foodAmount: 1,
-          foodImage: "https://production-merchant.s3.ap-southeast-1.amazonaws.com/09-04-2021_10%3A30%3A01DSCF6013-2%202.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210524T091543Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20210524%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=636bc139a2f7f583738d963d4f4d9eac4a876cf0ba4c216234eb633e16f7e9ee",
-          foodNote: "",
-        },
-      ],
+          "productId": "P00000026",
+          "foodName": "Mie Ayam Yamin Jumbo Pangsit",
+          "foodPrice": 30000,
+          "foodImage": "https://production-merchant.s3.ap-southeast-1.amazonaws.com/09-04-2021_10%3A30%3A01DSCF6013-2%202.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210528T092531Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20210528%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=149d83b48c2440867dad49668af9c9a304e94262d437466dca4c81d1dbb1057b",
+          "foodCategory": "mie",
+          "foodAmount": 1,
+          "foodNote": "",
+          "foodListCheckbox": [
+            [
+              {
+                "name": "Tambah Pangsit",
+                "price": 1000,
+                "isChecked": true
+              }
+            ],
+            [
+              {
+                "name": "Pake sambal",
+                "price": 0,
+                "isChecked": true
+              }
+            ],
+            [
+              {
+                "name": "tomat",
+                "price": 1000,
+                "isChecked": true
+              }
+            ]
+          ],
+          "foodListRadio": [
+            [
+              {
+                "name": "kerupuk kulit",
+                "price": 0,
+                "isChecked": true
+              }
+            ]
+          ],
+          "foodTotalPrice": 32000
+        }
+      ]
     }
   ];
 
   let incomingData = handleAddCart()
   expect(cart).toEqual(incomingData)
+})
+
+it('render loadTheProd', () => {
+  var imitationProducts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  let realProducts = loadTheMenu()
+  expect(imitationProducts).toEqual(realProducts)
 })

@@ -67,7 +67,7 @@ class StoreView extends React.Component {
     ]
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.DoneLoad()
     this.props.IsMerchantQR(false);
     Cookies.set("homePage", window.location.search)
@@ -184,7 +184,7 @@ class StoreView extends React.Component {
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
-    Axios(addressRoute, {
+    return await Axios(addressRoute, {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,

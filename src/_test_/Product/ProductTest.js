@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
+import { useEffect, useState } from "react";
 
 export const fetchMerchantDetail = async () => {
     const mid = "M00000008";
@@ -63,7 +64,7 @@ export const handleAddCart = () => {
         "foodDesc": "Mie ukuran besar ditambah bumbu kecap dengan potongan daging ayam dan kriuk ayam yang renyah + pangsit kuah",
         "foodPrice": 30000,
         "foodRating": "0.0",
-        "foodImage": "https://production-merchant.s3.ap-southeast-1.amazonaws.com/09-04-2021_10%3A30%3A01DSCF6013-2%202.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210524T091543Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20210524%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=636bc139a2f7f583738d963d4f4d9eac4a876cf0ba4c216234eb633e16f7e9ee",
+        "foodImage": "https://production-merchant.s3.ap-southeast-1.amazonaws.com/09-04-2021_10%3A30%3A01DSCF6013-2%202.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210528T092531Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20210528%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=149d83b48c2440867dad49668af9c9a304e94262d437466dca4c81d1dbb1057b",
         "foodExt": [
             {
                 "name": "",
@@ -116,7 +117,7 @@ export const handleAddCart = () => {
     }
 
     let currentTotal = 32000
-    let datamid = ""
+    let datamid = "M00000008"
 
     //mock function start
 
@@ -241,16 +242,16 @@ export const handleAddCart = () => {
         console.log('in development');
     } else {
         cart.push({
-            mid: mid,
+            mid: currentMerchant.mid,
             storeName: currentMerchant.storeName,
             storeDesc: currentMerchant.storeDesc,
             storeDistance: currentMerchant.distance,
             food: [
                 {
-                    productId: this.state.currentData.productId,
-                    foodName: this.state.currentData.foodName,
-                    foodPrice: this.state.currentData.foodPrice,
-                    foodImage: this.state.currentData.foodImage,
+                    productId: currentData.productId,
+                    foodName: currentData.foodName,
+                    foodPrice: currentData.foodPrice,
+                    foodImage: currentData.foodImage,
                     foodCategory: currentExt.foodCategory,
                     foodAmount: currentExt.detailCategory[0].amount,
                     foodNote: currentExt.note,
@@ -263,4 +264,57 @@ export const handleAddCart = () => {
     }
 
     return cart
+}
+
+export const loadTheMenu = () => {
+    const [allProductsandCategories, setallProductsandCategories] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    const [productCategpersize, setproductCategpersize] = useState([0, 1, 2])
+    const [categProd, setcategProd] = useState(0)
+    const [counterLoad, setcounterLoad] = useState(0)
+    const [idCateg, setidCateg] = useState(0)
+    const [productPage, setproductPage] = useState(3)
+    const sizePage = 3
+
+    useEffect(() => {
+        loadMoreMerchant()
+    }, [])
+
+    useEffect(() => {
+        let getindexProd = allProductsandCategories
+        let loadtheProd = getindexProd.filter((valProd, indvalProd) => {
+            return indvalProd >= idCateg && indvalProd < productPage
+        })
+
+        let updatedProduct = productCategpersize
+        updatedProduct.forEach((value) => {
+            loadtheProd.forEach((valLoadProd) => {
+                value.push(valLoadProd)
+            })
+        })
+
+        setproductCategpersize(updatedProduct)
+        loadMoreMerchant()
+    }, [idCateg])
+
+    const loadMoreMerchant = () => {
+        let wrappedElement = categProd
+        if (wrappedElement === counterLoad) {
+            stopAndLoadMore(wrappedElement)
+        }
+    }
+
+    const stopAndLoadMore = (ind) => {
+        if (productCategpersize.length < allProductsandCategories.length) {
+            var openidCateg = idCateg
+            openidCateg += sizePage
+            var openproductPage = productPage
+            openproductPage += sizePage
+            setidCateg(openidCateg)
+            setproductPage(openproductPage)
+        } else {
+            console.log('done');
+        }
+    }
+
+    return productCategpersize
 }

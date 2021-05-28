@@ -130,60 +130,6 @@ Array [
               >
                 <img
                   alt=""
-                  className="openhouricon"
-                  src="hour.png"
-                />
-              </div>
-              <div
-                className="detail-info"
-              >
-                <div
-                  className="top-detail-info"
-                >
-                  Open
-                </div>
-                <div
-                  className="bottom-detail-info"
-                >
-                  Jum (08.00 - 20.00)
-                </div>
-              </div>
-            </div>
-            <div
-              className="merchantdetail-section"
-            >
-              <div
-                className="icon-based"
-              >
-                <img
-                  alt=""
-                  className="coinicon"
-                  src="coin.png"
-                />
-              </div>
-              <div
-                className="detail-info"
-              >
-                <div
-                  className="top-detail-info"
-                >
-                  $$$
-                </div>
-                <div
-                  className="bottom-detail-info"
-                >
-                  50 K - 100 K
-                </div>
-              </div>
-            </div>
-            <div
-              className="merchantdetail-section"
-            >
-              <div
-                className="icon-based"
-              >
-                <img
-                  alt=""
                   className="locationicon"
                   src="location.png"
                 />
