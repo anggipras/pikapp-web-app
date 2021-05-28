@@ -46,7 +46,7 @@ var currentTotal = 0
 class ProductView extends React.Component {
   state = {
     page: 0, //products pagination
-    size: 3, //set amount of products to be shown in frontend
+    size: 9, //set amount of products to be shown in frontend
     boolpage: false,
     productPage: [], //set how many page of product merchant from backend server
     idCateg: [], //set current product page of specific size of loaded products
@@ -87,11 +87,11 @@ class ProductView extends React.Component {
     choosenIndCateg: null, //index of category selected when load more products in selected category
     counterLoad: 0,
     isScrolling: false,
-    startTour : false,
-    steptour:[
+    startTour: false,
+    steptour: [
       {
         selector: '',
-        content : () => (
+        content: () => (
           <div>
             <h2>Selamat Datang di PikApp!</h2>
             <br />
@@ -101,7 +101,7 @@ class ProductView extends React.Component {
       },
       {
         selector: '.product-merchant',
-        content : () => (
+        content: () => (
           <div>
             <h4>Ini adalah Menu Restoran</h4>
             <br />
@@ -128,8 +128,8 @@ class ProductView extends React.Component {
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"));
       this.setState({ isLogin: auth.isLogged });
-    } 
-    
+    }
+
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
@@ -172,7 +172,7 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        console.log(res.data.results);
+        // console.log(res.data.results);
         var currentMerchant = {
           mid: "",
           storeName: "",
@@ -300,15 +300,15 @@ class ProductView extends React.Component {
               document.addEventListener('scroll', this.loadMoreMerchant)
               document.addEventListener('scroll', this.onScrollCart)
             });
-            
+
             if (localStorage.getItem("productTour") == 1) {
-              if(this.props.AuthRedu.isMerchantQR === false) {
+              if (this.props.AuthRedu.isMerchantQR === false) {
                 this.state.steptour.shift();
               }
-              this.setState({ startTour : true});
-            } 
+              this.setState({ startTour: true });
+            }
             else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-              this.setState({ startTour : true});
+              this.setState({ startTour: true });
             }
           }).catch(err => {
             console.log(err)
@@ -321,27 +321,25 @@ class ProductView extends React.Component {
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)
             });
-            
+
             if (localStorage.getItem("productTour") == 1) {
-              if(this.props.AuthRedu.isMerchantQR === false) {
+              if (this.props.AuthRedu.isMerchantQR === false) {
                 this.state.steptour.shift();
               }
-              this.setState({ startTour : true});
-            } 
+              this.setState({ startTour: true });
+            }
             else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-              this.setState({ startTour : true});
+              this.setState({ startTour: true });
             }
           })
       })
-      .catch((err) => console.log(err)); 
+      .catch((err) => console.log(err));
   }
 
   componentDidUpdate() {
     if (this.state.idCateg[this.state.choosenIndCateg] > 0) { //load more products with selected index of category
       if (this.state.boolpage === true) {
         this.loadProducts(this.state.choosenIndCateg)
-      } else {
-        document.addEventListener('scroll', this.loadMoreMerchant)
       }
     }
 
@@ -454,6 +452,13 @@ class ProductView extends React.Component {
     this.setModal(false);
     var isStorePresent = false;
     let cart = JSON.parse(localStorage.getItem('cart'))
+    if (cart.length > 1) {
+      if (cart[1].mid !== currentMerchant.mid) {
+        let newCart = []
+        newCart.push(cart[0]) 
+        cart = newCart
+      }
+    }
     cart.forEach((data) => {
       if (data.mid === this.state.data.mid) {
         isStorePresent = true;
@@ -519,8 +524,8 @@ class ProductView extends React.Component {
             })
           })
 
-          console.log(sizecartArr);
-          console.log(sizecurrentArr);
+          // console.log(sizecartArr);
+          // console.log(sizecurrentArr);
           if (sizecartArr === sizecurrentArr) {
             menuProd.foodListCheckbox.forEach((firstVal) => {
               firstVal.forEach((nestedVal) => {
@@ -575,11 +580,11 @@ class ProductView extends React.Component {
     if (isStorePresent === true) {
       if (isDuplicate === true) {
         if (isDuplicateSelection) {
-          console.log('duplicate');
+          // console.log('duplicate');
           cart.forEach((data) => {
             if (isFound === false) {
               if (data.mid === this.state.data.mid) {
-                console.log('same mid');
+                // console.log('same mid');
                 if (isFound === false) {
                   if (duplicateProduct[indexOfspesificCart].foodNote === currentExt.note) {
                     isFound = true
@@ -615,7 +620,7 @@ class ProductView extends React.Component {
             })
           };
         } else {
-          console.log('noduplicate choice');
+          // console.log('noduplicate choice');
           cart.forEach((data) => {
             if (data.mid === this.state.data.mid) {
               data.food.push({
@@ -634,7 +639,7 @@ class ProductView extends React.Component {
           })
         }
       } else {
-        console.log('noduplicate product');
+        // console.log('noduplicate product');
         cart.forEach((data) => {
           if (data.mid === this.state.data.mid) {
             data.food.push({
@@ -674,10 +679,6 @@ class ProductView extends React.Component {
         ],
       });
     }
-    console.log(currentMerchant);
-    console.log(this.state.currentData);
-    console.log(currentExt);
-    console.log(currentTotal);
     let addedMerchants = []
     if (Cookies.get("addedMerchants") === undefined) {
       if (!addedMerchants.includes(mid)) {
@@ -787,7 +788,8 @@ class ProductView extends React.Component {
       // console.log('nambah');
       var num = this.state.counterLoad
       num++
-      this.setState({ counterLoad: num })
+      this.setState({ counterLoad: num, choosenIndCateg: ind })
+      document.addEventListener('scroll', this.loadMoreMerchant)
     }
   }
 
@@ -809,7 +811,6 @@ class ProductView extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('scroll', this.loadMoreMerchant)
     document.removeEventListener('scroll', this.onScrollCart)
-
   }
 
   contentView = () => {
@@ -911,10 +912,10 @@ class ProductView extends React.Component {
   tourPage = () => {
     if (this.state.startTour === true) {
       return (
-        <TourPage 
+        <TourPage
           stepsContent={this.state.steptour}
           isShowTour={this.state.startTour}
-          isHideTour={() =>this.showTourPage(false)}
+          isHideTour={() => this.showTourPage(false)}
         />
       )
     }
@@ -924,7 +925,7 @@ class ProductView extends React.Component {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
     localStorage.setItem('productTour', 0);
-    if(this.props.AuthRedu.isMerchantQR === true) {
+    if (this.props.AuthRedu.isMerchantQR === true) {
       localStorage.setItem('merchantFlow', 0);
       localStorage.setItem('storeTour', 0);
     }
