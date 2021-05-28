@@ -200,7 +200,7 @@ class StoreView extends React.Component {
       }
     })
       .then((res) => {
-        console.log(res.data.results);
+        // console.log(res.data.results);
         stateData = { ...this.state.data };
         let responseDatas = res.data;
         stateData.data.pop();
@@ -382,7 +382,7 @@ class StoreView extends React.Component {
         window.location.reload()
       }
     }
-    console.log(this.state.data.data);
+    // console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });

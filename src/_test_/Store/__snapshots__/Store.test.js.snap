@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`matches the snapshot 1`] = `
+exports[`matches the snapshot StoreView 1`] = `
 <div
   className="merchantList-background"
 >
@@ -45,6 +45,20 @@ exports[`matches the snapshot 1`] = `
             <div
               className="merchantList-contentLocStar"
             >
+              <div
+                className="merchantList-ratingArea"
+              >
+                <img
+                  alt=""
+                  className="merchantList-ratingIcon"
+                  src="star.png"
+                />
+                <div
+                  className="merchantList-ratingScore"
+                >
+                  5.0
+                </div>
+              </div>
               <div
                 className="merchantList-locArea"
               >
