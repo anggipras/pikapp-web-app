@@ -739,6 +739,7 @@ class CartView extends React.Component {
     localStorage.setItem('storeTour',0);
     localStorage.setItem('cartMerchant', 0);
     localStorage.setItem('merchantFlow', 0);
+    localStorage.setItem('productTour', 0);
   }
 
   render() {

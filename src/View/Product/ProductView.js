@@ -182,6 +182,7 @@ class ProductView extends React.Component {
           storeAdress: "",
           storeRating: "",
           storeLogo: "",
+          storePhone: "",
         };
         currentMerchant.mid = res.data.results.mid;
         currentMerchant.storeName = res.data.results.merchant_name;
@@ -191,6 +192,7 @@ class ProductView extends React.Component {
         currentMerchant.storeAdress = res.data.results.merchant_address;
         currentMerchant.storeRating = res.data.results.merchant_rating;
         currentMerchant.storeLogo = res.data.results.merchant_logo;
+        currentMerchant.storePhone = res.data.results.merchant_phone;
 
         let selectedStore = []
         selectedStore.push(res.data.results)
@@ -208,7 +210,7 @@ class ProductView extends React.Component {
         stateData.desc = currentMerchant.storeDistance;
         stateData.address = currentMerchant.storeAdress;
         stateData.rating = currentMerchant.storeRating;
-        stateData.phone = "081296000823";
+        stateData.phone = currentMerchant.storePhone;
         stateData.notable = notab
         var productCateg = []
         var idCateg = []
@@ -925,10 +927,10 @@ class ProductView extends React.Component {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
     localStorage.setItem('productTour', 0);
-    if (this.props.AuthRedu.isMerchantQR === true) {
-      localStorage.setItem('merchantFlow', 0);
-      localStorage.setItem('storeTour', 0);
-    }
+    // if(this.props.AuthRedu.isMerchantQR === true) {
+    localStorage.setItem('merchantFlow', 0);
+    localStorage.setItem('storeTour', 0);
+    // }
   }
 
   render() {
