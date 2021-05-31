@@ -739,6 +739,7 @@ class CartView extends React.Component {
     localStorage.setItem('storeTour',0);
     localStorage.setItem('cartMerchant', 0);
     localStorage.setItem('merchantFlow', 0);
+    localStorage.setItem('productTour', 0);
   }
 
   render() {
@@ -877,10 +878,8 @@ class CartView extends React.Component {
     });
 
     let totalPaymentShow = 0
-    let selectedMerch = storeList.map(store => {
-      if (store.mid === currentCartMerchant.mid) {
-        return store
-      }
+    let selectedMerch = storeList.filter(store => {
+      return store.mid === currentCartMerchant.mid
     });
 
     selectedMerch[0].food.forEach(thefood => {

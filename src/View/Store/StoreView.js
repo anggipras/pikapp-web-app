@@ -382,7 +382,7 @@ class StoreView extends React.Component {
         window.location.reload()
       }
     }
-    console.log(this.state.data.data);
+    // console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });

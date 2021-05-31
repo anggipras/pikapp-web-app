@@ -95,7 +95,7 @@ describe('fetchData', () => {
 
 })
 
-it('matches the snapshot', () => {
+it('matches the snapshot StoreView', () => {
   const tree = renderer.create(
     <Router>
       <Provider store={Store}>
