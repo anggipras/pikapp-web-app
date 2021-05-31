@@ -42,11 +42,11 @@ class StoreView extends React.Component {
     allMerchantAPI: [],
     lat: "",
     lon: "",
-    startTour : false,
-    steptour:[
+    startTour: false,
+    steptour: [
       {
         selector: '',
-        content : () => (
+        content: () => (
           <div>
             <h2>Selamat Datang di PikApp!</h2>
             <br />
@@ -56,7 +56,7 @@ class StoreView extends React.Component {
       },
       {
         selector: '.merchantList-layout',
-        content : () => (
+        content: () => (
           <div>
             <h4>Ini adalah Daftar Restoran</h4>
             <br />
@@ -80,10 +80,10 @@ class StoreView extends React.Component {
     };
     if (Cookies.get("auth") !== undefined) {
       auth = JSON.parse(Cookies.get("auth"))
-    } 
+    }
 
     if (localStorage.getItem("storeTour") == 1) {
-      this.setState({ startTour : true});
+      this.setState({ startTour: true });
     }
 
     // else {
@@ -94,7 +94,7 @@ class StoreView extends React.Component {
     //   navigator.geolocation.getCurrentPosition(position => {
     //     let latitude = 0;
     //     let longitude = 0;
-    
+
     //     if(position) {
     //       let latitude = position.coords.latitude
     //       let longitude = position.coords.longitude
@@ -119,7 +119,7 @@ class StoreView extends React.Component {
     console.log(latitude, longitude);
     this.setState({ lat: latitude, lon: longitude })
     localStorage.setItem("longlat", JSON.stringify(longlat))
-    
+
     // Show a map centered at latitude / longitude.
 
     if (localStorage.getItem("longlat")) {
@@ -165,159 +165,284 @@ class StoreView extends React.Component {
         })
     }
 
-    let addressRoute;
-    if (merchant === undefined) {
-      addressRoute =
-        address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
-    } else {
-      addressRoute =
-        address +
-        "home/v1/merchant/" +
-        longitude +
-        "/" +
-        latitude +
-        "/" +
-        merchant
-        + "/"
-    }
-    var stateData;
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    return await Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "category": "1",
-      },
-      method: "GET",
-      params: {
-        page: this.state.page,
-        size: this.state.size
-      }
-    })
-      .then((res) => {
-        console.log(res.data.results);
-        stateData = { ...this.state.data };
-        let responseDatas = res.data;
-        stateData.data.pop();
-        responseDatas.results.forEach((data) => {
-          stateData.data.push({
-            address: data.merchant_address,
-            rating: data.merchant_rating,
-            logo: data.merchant_logo,
-            distance: data.merchant_distance,
-            storeId: data.mid,
-            storeName: data.merchant_name,
-            storeDesc: "",
-            storeImage: data.merchant_pict,
-          })
-        })
-        if (Cookies.get("fcaddress") !== undefined) {
-          let foodcourtadd = Cookies.get("fcaddress")
-          let filterMerchantDetail = stateData.data.filter(fcVal => {
-            return fcVal.address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
-          })
-          stateData.data = filterMerchantDetail
-          let filterMerchantMain = res.data.results.filter(fcVal => {
-            return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
-          })
-          this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: filterMerchantMain });
-        } else {
-          this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
-        }
+    //regular route or foodcourt route condition
+    if (Cookies.get("fcaddress") !== undefined) {
+      let foodcourtadd = Cookies.get("fcaddress")
 
-        document.addEventListener('scroll', this.loadMoreMerchant)
-        if (Cookies.get("fcaddress") === undefined) {
+      let addressRoute = address + "/home/v1/fc/mch/" + foodcourtadd + "/";
+      var stateDataFC;
+      let uuid = uuidV4();
+      uuid = uuid.replace(/-/g, "");
+      const date = new Date().toISOString();
+      return await Axios(addressRoute, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "token": "PUBLIC",
+          "category": "1",
+        },
+        method: "GET",
+        params: {
+          page: this.state.page,
+          size: this.state.size
+        }
+      })
+        .then((res) => {
+          console.log(res.data.results);
+          stateDataFC = { ...this.state.data };
+          let responseDatas = res.data;
+          stateDataFC.data.pop();
+          responseDatas.results.forEach((data) => {
+            stateDataFC.data.push({
+              address: data.merchant_address,
+              rating: data.merchant_rating,
+              logo: data.merchant_logo,
+              distance: data.merchant_distance,
+              storeId: data.mid,
+              storeName: data.merchant_name,
+              storeDesc: "",
+              storeImage: data.merchant_pict,
+            })
+          })
+
+          this.setState({ data: stateDataFC, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+          document.addEventListener('scroll', this.loadMoreMerchant)
           if (res.data.results.length < 6) {
             document.removeEventListener('scroll', this.loadMoreMerchant)
           }
+        })
+        .catch((err) => {
+        });
+
+    } else {
+      let addressRoute;
+      if (merchant === undefined) {
+        addressRoute =
+          address + "home/v2/merchant/" + longitude + "/" + latitude + "/ALL/";
+      } else {
+        addressRoute =
+          address +
+          "home/v1/merchant/" +
+          longitude +
+          "/" +
+          latitude +
+          "/" +
+          merchant
+          + "/"
+      }
+      var stateData;
+      let uuid = uuidV4();
+      uuid = uuid.replace(/-/g, "");
+      const date = new Date().toISOString();
+      return await Axios(addressRoute, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "token": "PUBLIC",
+          "category": "1",
+        },
+        method: "GET",
+        params: {
+          page: this.state.page,
+          size: this.state.size
         }
       })
-      .catch((err) => {
-      });
+        .then((res) => {
+          console.log(res.data.results);
+          stateData = { ...this.state.data };
+          let responseDatas = res.data;
+          stateData.data.pop();
+          responseDatas.results.forEach((data) => {
+            stateData.data.push({
+              address: data.merchant_address,
+              rating: data.merchant_rating,
+              logo: data.merchant_logo,
+              distance: data.merchant_distance,
+              storeId: data.mid,
+              storeName: data.merchant_name,
+              storeDesc: "",
+              storeImage: data.merchant_pict,
+            })
+          })
+          // if (Cookies.get("fcaddress") !== undefined) {
+          //   let foodcourtadd = Cookies.get("fcaddress")
+          //   let filterMerchantDetail = stateData.data.filter(fcVal => {
+          //     return fcVal.address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+          //   })
+          //   stateData.data = filterMerchantDetail
+          //   let filterMerchantMain = res.data.results.filter(fcVal => {
+          //     return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+          //   })
+          //   this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: filterMerchantMain });
+          // } else {
+          //   this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+          // }
+
+          this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+          document.addEventListener('scroll', this.loadMoreMerchant)
+          if (res.data.results.length < 6) {
+            document.removeEventListener('scroll', this.loadMoreMerchant)
+          }
+        })
+        .catch((err) => {
+        });
+    }
+
   }
 
   componentDidUpdate() {
     if (this.state.idCol > 0) {
       if (this.state.boolpage === true) {
-        let addressRoute = address + "home/v2/merchant/" + this.state.lon + "/" + this.state.lat + "/ALL/";
-        var stateData;
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        Axios(addressRoute, {
-          headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token": "PUBLIC",
-            "category": "1",
-          },
-          method: "GET",
-          params: {
-            page: this.state.page,
-            size: this.state.size
-          }
-        })
-          .then((res) => {
-            stateData = { ...this.state.data };
-            let responseDatas = res.data;
-            if (Cookies.get("fcaddress") !== undefined) {
-              let foodcourtadd = Cookies.get("fcaddress")
-              let filterMerchantMain = res.data.results.filter(fcVal => {
-                return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
-              })
 
-              filterMerchantMain.forEach((data) => {
-                stateData.data.push({
-                  address: data.merchant_address,
-                  rating: data.merchant_rating,
-                  logo: data.merchant_logo,
-                  distance: data.merchant_distance,
-                  storeId: data.mid,
-                  storeName: data.merchant_name,
-                  storeDesc: "",
-                  storeImage: data.merchant_pict,
-                })
-              })
-
-              let updateMerchant = [...this.state.allMerchantAPI]
-              filterMerchantMain.forEach((data) => {
-                updateMerchant.push(data)
-              })
-              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
-            } else {
-              responseDatas.results.forEach((data) => {
-                stateData.data.push({
-                  address: data.merchant_address,
-                  rating: data.merchant_rating,
-                  logo: data.merchant_logo,
-                  distance: data.merchant_distance,
-                  storeId: data.mid,
-                  storeName: data.merchant_name,
-                  storeDesc: "",
-                  storeImage: data.merchant_pict,
-                })
-              })
-              let updateMerchant = [...this.state.allMerchantAPI]
-              responseDatas.results.forEach((data) => {
-                updateMerchant.push(data)
-              })
-              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
-            }
-
-            document.addEventListener('scroll', this.loadMoreMerchant)
-            if (this.state.page === this.state.totalPage - 1) {
-              this.setState({ idCol: this.state.idCol + 1 })
+        if (Cookies.get("fcaddress") !== undefined) {
+          let foodcourtadd = Cookies.get("fcaddress")
+          let addressRoute = address + "/home/v1/fc/mch/" + foodcourtadd + "/";
+          var stateDataFC;
+          let uuid = uuidV4();
+          uuid = uuid.replace(/-/g, "");
+          const date = new Date().toISOString();
+          Axios(addressRoute, {
+            headers: {
+              "Content-Type": "application/json",
+              "x-request-id": uuid,
+              "x-request-timestamp": date,
+              "x-client-id": clientId,
+              "token": "PUBLIC",
+              "category": "1",
+            },
+            method: "GET",
+            params: {
+              page: this.state.page,
+              size: this.state.size
             }
           })
-          .catch((err) => {
-          });
+            .then((res) => {
+              stateDataFC = { ...this.state.data };
+              let responseDatas = res.data;
+              responseDatas.results.forEach((data) => {
+                stateDataFC.data.push({
+                  address: data.merchant_address,
+                  rating: data.merchant_rating,
+                  logo: data.merchant_logo,
+                  distance: data.merchant_distance,
+                  storeId: data.mid,
+                  storeName: data.merchant_name,
+                  storeDesc: "",
+                  storeImage: data.merchant_pict,
+                })
+              })
+              let updateMerchant = [...this.state.allMerchantAPI]
+              responseDatas.results.forEach((data) => {
+                updateMerchant.push(data)
+              })
+              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+
+              document.addEventListener('scroll', this.loadMoreMerchant)
+              if (this.state.page === this.state.totalPage - 1) {
+                this.setState({ idCol: this.state.idCol + 1 })
+              }
+            })
+            .catch((err) => {
+            });
+        } else {
+          let addressRoute = address + "home/v2/merchant/" + this.state.lon + "/" + this.state.lat + "/ALL/";
+          var stateData;
+          let uuid = uuidV4();
+          uuid = uuid.replace(/-/g, "");
+          const date = new Date().toISOString();
+          Axios(addressRoute, {
+            headers: {
+              "Content-Type": "application/json",
+              "x-request-id": uuid,
+              "x-request-timestamp": date,
+              "x-client-id": clientId,
+              "token": "PUBLIC",
+              "category": "1",
+            },
+            method: "GET",
+            params: {
+              page: this.state.page,
+              size: this.state.size
+            }
+          })
+            .then((res) => {
+              stateData = { ...this.state.data };
+              let responseDatas = res.data;
+              // if (Cookies.get("fcaddress") !== undefined) {
+              //   let foodcourtadd = Cookies.get("fcaddress")
+              //   let filterMerchantMain = res.data.results.filter(fcVal => {
+              //     return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
+              //   })
+
+              //   filterMerchantMain.forEach((data) => {
+              //     stateData.data.push({
+              //       address: data.merchant_address,
+              //       rating: data.merchant_rating,
+              //       logo: data.merchant_logo,
+              //       distance: data.merchant_distance,
+              //       storeId: data.mid,
+              //       storeName: data.merchant_name,
+              //       storeDesc: "",
+              //       storeImage: data.merchant_pict,
+              //     })
+              //   })
+
+              //   let updateMerchant = [...this.state.allMerchantAPI]
+              //   filterMerchantMain.forEach((data) => {
+              //     updateMerchant.push(data)
+              //   })
+              //   this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+              // } else {
+              //   responseDatas.results.forEach((data) => {
+              //     stateData.data.push({
+              //       address: data.merchant_address,
+              //       rating: data.merchant_rating,
+              //       logo: data.merchant_logo,
+              //       distance: data.merchant_distance,
+              //       storeId: data.mid,
+              //       storeName: data.merchant_name,
+              //       storeDesc: "",
+              //       storeImage: data.merchant_pict,
+              //     })
+              //   })
+              //   let updateMerchant = [...this.state.allMerchantAPI]
+              //   responseDatas.results.forEach((data) => {
+              //     updateMerchant.push(data)
+              //   })
+              //   this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+              // }
+
+              responseDatas.results.forEach((data) => {
+                stateData.data.push({
+                  address: data.merchant_address,
+                  rating: data.merchant_rating,
+                  logo: data.merchant_logo,
+                  distance: data.merchant_distance,
+                  storeId: data.mid,
+                  storeName: data.merchant_name,
+                  storeDesc: "",
+                  storeImage: data.merchant_pict,
+                })
+              })
+              let updateMerchant = [...this.state.allMerchantAPI]
+              responseDatas.results.forEach((data) => {
+                updateMerchant.push(data)
+              })
+              this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
+
+              document.addEventListener('scroll', this.loadMoreMerchant)
+              if (this.state.page === this.state.totalPage - 1) {
+                this.setState({ idCol: this.state.idCol + 1 })
+              }
+            })
+            .catch((err) => {
+            });
+        }
+
       }
     }
   }
@@ -359,10 +484,10 @@ class StoreView extends React.Component {
   tourPage = () => {
     if (this.state.startTour === true) {
       return (
-        <TourPage 
+        <TourPage
           stepsContent={this.state.steptour}
           isShowTour={this.state.startTour}
-          isHideTour={() =>this.showTourPage(false)}
+          isHideTour={() => this.showTourPage(false)}
         />
       )
     }
@@ -398,7 +523,7 @@ class StoreView extends React.Component {
                   <Skeleton style={{ paddingTop: 100, width: "100%", height: "100%" }} />
               }
             </div>
-            
+
             <div className='merchantList-content'>
               <div className='merchantList-contentLocStar'>
                 <div className='merchantList-ratingArea'>
