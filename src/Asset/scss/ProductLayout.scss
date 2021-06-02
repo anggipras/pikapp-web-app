@@ -402,9 +402,9 @@
     max-width: 384px;
     width: auto;
     height: 182px;
-    border-radius: 50px;
+    border-radius: 25px;
     background-color: #ffffff;
-    border: 0.5px solid #aaaaaa;
+    // border: 0.5px solid #aaaaaa;
     display: flex;
     justify-content: space-between;
     margin-bottom: 28px;
@@ -414,8 +414,8 @@
 
   .product-img {
     width: 182px;
-    height: 181px;
-    border-radius: 50px;
+    height: 182px;
+    border-radius: 25px;
     overflow: hidden;
   }
 
@@ -423,11 +423,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50px;
+    border-radius: 25px;
   }
 
   .product-detail {
-    padding-left: 20px;
+    padding-left: 15px;
     padding-right: 15px;
   }
 
@@ -471,7 +471,7 @@
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
-    margin-top: 10px;
+    margin-top: 20px;
 
     text-overflow: ellipsis;
     overflow: hidden;
@@ -500,6 +500,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    margin-top: 10px;
   }
 
   .product-price {
@@ -1097,9 +1098,9 @@
     max-width: 384px;
     // width: 100%;
     height: 128px;
-    border-radius: 30px;
+    border-radius: 15px;
     background-color: #ffffff;
-    border: 0.5px solid #aaaaaa;
+    // border: 0.5px solid #aaaaaa;
     display: flex;
     justify-content: space-between;
     margin-bottom: 17px;
@@ -1107,8 +1108,8 @@
 
   .product-img {
     width: 182px;
-    height: 127px;
-    border-radius: 30px;
+    height: 128px;
+    border-radius: 15px;
     overflow: hidden;
   }
 
@@ -1116,7 +1117,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 30px;
+    border-radius: 15px;
   }
 
   .product-detail {
@@ -1127,7 +1128,7 @@
     display: flex;
     width: 245px;
     justify-content: space-between;
-    margin-left: 23px;
+    margin-left: 17px;
   }
 
   .product-detailInfo-mob {
@@ -1171,7 +1172,7 @@
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
-    margin-top: 10px;
+    margin-top: 18px;
 
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1199,6 +1200,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    margin-top: 7px;
   }
 
   .product-price-mob {
