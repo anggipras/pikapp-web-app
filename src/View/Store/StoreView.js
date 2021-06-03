@@ -289,6 +289,7 @@ class StoreView extends React.Component {
           }
         })
         .catch((err) => {
+          throw new Error(err)
         });
     }
 
