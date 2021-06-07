@@ -58,3 +58,10 @@ export const IsMerchantQR = (bool) => {
         payload: bool
     }
 }
+
+export const DataOrder = (data) => {
+    return {
+        type: 'DATAORDER',
+        payload: data
+    }
+}

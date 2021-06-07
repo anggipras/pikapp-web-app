@@ -13,8 +13,8 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
-.cartLayout {
-  width: 100vw;
+.orderLayout {
+  width: 98vw;
   padding: 20px 117px 20px 107px;
   background-color: #ffffff;
 }
@@ -490,7 +490,7 @@
   width: auto;
 }
 
-.cartLayout-mob {
+.orderLayout-mob {
   display: none;
 }
 
@@ -690,12 +690,12 @@
     color: #000000;
     line-height: 20px;
     margin-top: 25px;
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 .order-transaction {
-    min-width: 480px;
-    max-width: 480px;
+    min-width: 530px;
+    max-width: 530px;
     margin-bottom: 24px;
     box-shadow: 0px 2px 5px 2px rgb(0 0 0 / 5%);
     border-radius: 8px;
@@ -753,8 +753,8 @@
 }
 
 .order-payment {
-    min-width: 480px;
-    max-width: 480px;
+    min-width: 530px;
+    max-width: 530px;
     margin-bottom: 24px;
     box-shadow: 0px 2px 5px 2px rgb(0 0 0 / 5%);
     border-radius: 8px;
@@ -769,7 +769,7 @@
 
 .buttonSide-order {
     display: flex;
-    width: 80%;
+    width: 90%;
     justify-content: space-between;
     margin-top: 20px;
 }
@@ -810,7 +810,7 @@
 
 .buttonPayment-order {
     display: flex;
-    width: 80%;
+    width: 90%;
     justify-content: space-between;
     margin-top: 10px;
 }
@@ -827,10 +827,22 @@
     box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
     cursor: pointer;
 }
+
+.modal-header-order {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-counter-order {
+    width: 75px;
+    margin-top: 20px;
+    color: #aaaaaa;
+}
 //cartCheckout end
 
 @media (max-width: 768px) {
-  .cartLayout {
+  .orderLayout {
+    width: 100vw;
     padding: 20px 17px 26px 17px;
   }
 
@@ -1072,7 +1084,7 @@
     display: none;
   }
 
-  .cartLayout-mob {
+  .orderLayout-mob {
     display: block;
     position: sticky;
     bottom: 0;
@@ -1280,7 +1292,7 @@
         color: #000000;
         line-height: 20px;
         margin-top: 15px;
-        margin-left: 0px;
+        margin-left: 5px;
     }
 
     .order-transaction {
@@ -1363,6 +1375,12 @@
         border-radius: 10px;
         box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
         cursor: pointer;
+    }
+
+    .menu-counter-order {
+        width: 50px;
+        margin-top: 10px;
+        color: #aaaaaa;
     }
   //cartCheckout end
 }

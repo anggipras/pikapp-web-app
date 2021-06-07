@@ -17,7 +17,7 @@ import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
 import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
-import { EditMenuCart, IsMerchantQR } from '../../Redux/Actions'
+import { EditMenuCart, IsMerchantQR, DataOrder } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
@@ -117,7 +117,7 @@ class CartView extends React.Component {
           </div>
         )
       }
-    ]
+    ],
   };
 
   componentDidMount() {
@@ -398,7 +398,7 @@ class CartView extends React.Component {
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-
+    
     Axios(address + "/txn/v2/txn-post/", {
       headers: {
         "Content-Type": "application/json",
@@ -418,6 +418,13 @@ class CartView extends React.Component {
             let filterOtherCart = storageData.filter(valFilter => {
               return valFilter.mid !== currentCartMerchant.mid
             })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
@@ -431,10 +438,18 @@ class CartView extends React.Component {
             let filterOtherCart = storageData.filter(valFilter => {
               return valFilter.mid !== currentCartMerchant.mid
             })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
+            // this.setState({ dataOrder : { transactionId : res.data.results[0].transaction_id, totalPayment : requestData.prices, paymentType : this.state.paymentType }});
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -744,7 +759,8 @@ class CartView extends React.Component {
 
   render() {
     if (this.state.loadButton) {
-      return <Redirect to='/status' />
+      // return <Redirect to='/status' />
+      return <Redirect to='/orderconfirmation' />
     }
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
@@ -905,6 +921,8 @@ class CartView extends React.Component {
     } else if (this.state.paymentType === "WALLET_OVO") {
       paymentImage = OvoPayment
     }
+
+    // this.setState({ dataOrder : { totalPayment : totalPaymentShow, paymentType : this.state.paymentType }});
 
     if (this.state.changeUI) {
       return (
@@ -1085,4 +1103,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR })(CartView)
+export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder })(CartView)
