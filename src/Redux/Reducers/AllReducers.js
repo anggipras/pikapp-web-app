@@ -12,6 +12,7 @@ const INITIAL_STATE = {
     mandatRadio: false,
     totalAmountProd: 0,
     openMenuCart: false,
+    dataOrder : {},
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -44,6 +45,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, totalAmountProd: action.payload }
         case "EDITCART":
             return { ...state, openMenuCart: action.payload }
+        case "DATAORDER":
+            return { ...state, dataOrder: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:
