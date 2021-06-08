@@ -429,6 +429,7 @@ class CartView extends React.Component {
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -449,7 +450,7 @@ class CartView extends React.Component {
             localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
-            // this.setState({ dataOrder : { transactionId : res.data.results[0].transaction_id, totalPayment : requestData.prices, paymentType : this.state.paymentType }});
+            localStorage.removeItem("counterPayment");
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
