@@ -84,6 +84,9 @@ class OrderConfirmationView extends React.Component {
         if(this.state.counterTime === 0) {
             clearInterval(this.interval);
             console.log("clear");
+            localStorage.setItem("counterPayment", this.state.counterTime);
+        } else {
+            localStorage.setItem("counterPayment", this.state.counterTime);
         }
     }
 
@@ -93,7 +96,7 @@ class OrderConfirmationView extends React.Component {
     }
 
     goToStatus = () => {
-        localStorage.setItem("counterPayment", this.state.counterTime);
+        // localStorage.setItem("counterPayment", this.state.counterTime);
         window.location.href = '/status';
     }
 
@@ -259,10 +262,13 @@ class OrderConfirmationView extends React.Component {
                                     Menunggu Pembayaran 
                                 </div>
                                 <div className='menu-counter-order'>
-                                    { this.state.counterTime < 10 ? 
-                                        <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
+                                    { this.state.paymentType === "WALLET_OVO" ?
+                                        this.state.counterTime < 10 ? 
+                                            <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
+                                            :
+                                            <span className="txtIndent"> 00 : {this.state.counterTime} </span>
                                         :
-                                        <span className="txtIndent"> 00 : {this.state.counterTime} </span>
+                                        <div></div>
                                     }
                                 </div>
                             </div>
