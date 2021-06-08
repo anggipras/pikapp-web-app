@@ -33,13 +33,33 @@ class OrderConfirmationView extends React.Component {
     }
 
     componentDidMount() {
-        this.countDownTime()
+        if(window.innerWidth < 700) {
+            this.setState({ isMobile : true });
+        } else {
+            this.setState({ isMobile : false });
+        }
+
+        let counter = localStorage.getItem("counterPayment");
+
+        if(localStorage.getItem("counterPayment")){
+            if(counter != 0) {
+                this.setState({ counterTime : counter});
+                this.countDownTime();
+            } else {
+                this.setState({ counterTime : counter});
+            }
+        } else {
+            this.countDownTime()
+        }
+
         if(Object.keys(this.props.AllRedu.dataOrder).length !== 0) {
             if (this.props.AllRedu.dataOrder.paymentType === "PAY_BY_CASHIER") {
+                this.setState({ paymentType : "PAY_BY_CASHIER" });
                 this.setState({ paymentOption : "Pembayaran Di Kasir" });
                 this.setState({ paymentImage : CashierPayment });
             } else if (this.props.AllRedu.dataOrder.paymentType === "WALLET_OVO") {
-            this.setState({ paymentOption : "Pembayaran Ovo" });
+                this.setState({ paymentType : "WALLET_OVO" });
+                this.setState({ paymentOption : "Pembayaran Ovo" });
                 this.setState({ paymentImage : OvoPayment });
             }
             this.setState({ dataOrder : this.props.AllRedu.dataOrder});
@@ -47,20 +67,16 @@ class OrderConfirmationView extends React.Component {
             var dataPayment = JSON.parse(localStorage.getItem("payment"));
 
             if (dataPayment.paymentType === "PAY_BY_CASHIER") {
+                this.setState({ paymentType : "PAY_BY_CASHIER" });
                 this.setState({ paymentOption : "Pembayaran Di Kasir" });
                 this.setState({ paymentImage : CashierPayment });
             } else if (dataPayment.paymentType === "WALLET_OVO") {
-            this.setState({ paymentOption : "Pembayaran Ovo" });
+                this.setState({ paymentType : "WALLET_OVO" });
+                this.setState({ paymentOption : "Pembayaran Ovo" });
                 this.setState({ paymentImage : OvoPayment });
             }
 
             this.setState({ dataOrder : dataPayment});
-        }
-
-        if(window.innerWidth < 700) {
-            this.setState({ isMobile : true });
-        } else {
-            this.setState({ isMobile : false });
         }
     }
 
@@ -77,6 +93,7 @@ class OrderConfirmationView extends React.Component {
     }
 
     goToStatus = () => {
+        localStorage.setItem("counterPayment", this.state.counterTime);
         window.location.href = '/status';
     }
 
@@ -144,10 +161,13 @@ class OrderConfirmationView extends React.Component {
                                     Menunggu Pembayaran 
                                 </div>
                                 <div className='menu-counter-order'>
-                                { this.state.counterTime < 10 ? 
-                                    <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
+                                { this.state.paymentType === "WALLET_OVO" ?
+                                    this.state.counterTime < 10 ? 
+                                        <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
+                                        :
+                                        <span className="txtIndent"> 00 : {this.state.counterTime} </span>
                                     :
-                                    <span className="txtIndent"> 00 : {this.state.counterTime} </span>
+                                    <div></div>
                                 }
                                 </div>
                             </div>
