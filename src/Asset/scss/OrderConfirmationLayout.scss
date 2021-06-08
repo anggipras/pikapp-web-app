@@ -1272,8 +1272,8 @@
         // height: auto; /* Height in proportion to its parent container */
         margin: auto; /* Auto margin according to the element width */
         border: none;
-        min-height: 474px;
-        max-height: 573px;
+        min-height: 574px;
+        max-height: 673px;
         border-radius: 20px; /* Optional. Rounds container corners */
         -webkit-animation-name: animate top;
         -webkit-animation-duration: 0.4s;
@@ -1359,7 +1359,7 @@
 
     .buttonPayment-order {
         display: flex;
-        width: 100%;
+        width: 98%;
         justify-content: space-between;
         margin-top: 10px;
     }
@@ -1378,7 +1378,7 @@
     }
 
     .menu-counter-order {
-        width: 50px;
+        width: 60px;
         margin-top: 10px;
         color: #aaaaaa;
     }
