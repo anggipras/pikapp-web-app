@@ -11,6 +11,7 @@ import ProfileLayout from "./Master/ProfileLayout";
 import MerchantResto from "./Master/MerchantQR";
 import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
+import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie"
 
@@ -69,6 +70,7 @@ function App() {
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
             <Route path="/profile" component={() => <ProfileLayout />} />
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
+            <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )
