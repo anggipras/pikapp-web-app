@@ -13,7 +13,7 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import { Route, Switch } from "react-router-dom";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
 export var cart = [
     {
@@ -34,6 +34,9 @@ export var cart = [
     },
 ];
 
+export var counterTime = 0;
+export var timeLeft = null;
+
 if (localStorage.getItem("cart")) {
     cart = JSON.parse(localStorage.getItem("cart"));
 } else {
@@ -48,12 +51,29 @@ if (!localStorage.getItem("storeTour")) {
     localStorage.setItem('cartMerchant', 1);
 }
 
+function countDown(){
+    let counter = Number(localStorage.getItem("counterPayment"));
+    if(counter == 0) {
+        clearInterval(timeLeft);
+        console.log("clear");
+        localStorage.setItem("counterPayment", counterTime);
+    } else {
+        counterTime = counter - 1;
+        localStorage.setItem("counterPayment", counterTime);
+    }
+}
+
 function App() {
+
     if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
         let newCart = []
         newCart.push(deleteCart[0])
         localStorage.setItem('cart', JSON.stringify(newCart))
+    }
+
+    if(localStorage.getItem("counterPayment")) {
+        timeLeft = setInterval(() => countDown(), 1000);
     }
 
     return (

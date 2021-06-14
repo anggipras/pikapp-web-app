@@ -52,6 +52,7 @@ class OrderConfirmationView extends React.Component {
             this.countDownTime()
         }
 
+
         if(Object.keys(this.props.AllRedu.dataOrder).length !== 0) {
             if (this.props.AllRedu.dataOrder.paymentType === "PAY_BY_CASHIER") {
                 this.setState({ paymentType : "PAY_BY_CASHIER" });
