@@ -14,6 +14,7 @@ import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie"
+import LogRocket from 'logrocket';
 
 export var cart = [
     {
@@ -49,6 +50,14 @@ if (!localStorage.getItem("storeTour")) {
 }
 
 function App() {
+    LogRocket.init('4lgdub/pikapp-web', {
+        console: {
+            isEnabled: {
+                log: true,
+                error: true
+            }
+        }
+    });
     if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
         let newCart = []

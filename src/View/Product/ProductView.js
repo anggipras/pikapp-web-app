@@ -26,6 +26,7 @@ import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
@@ -115,6 +116,7 @@ class ProductView extends React.Component {
   timeout = null
 
   componentDidMount() {
+    firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })

@@ -13,6 +13,7 @@ import {connect} from 'react-redux'
 import {LoadingButton, DoneLoad} from '../../Redux/Actions'
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
 import NotifModal from '../../Component/Modal/NotifModal';
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 class ProfileView extends React.Component {
   state = {
@@ -26,6 +27,7 @@ class ProfileView extends React.Component {
   };
 
   componentDidMount() {
+    firebaseAnalytics.logEvent("profile_visited")
     var auth = {
       isLogged: false,
       token: "",
