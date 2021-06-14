@@ -638,6 +638,13 @@
     text-transform: capitalize;
     letter-spacing: 0.05em;
     color: #111111;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .merchantList-storeCategory {
@@ -647,6 +654,13 @@
     font-size: 17px;
     text-transform: capitalize;
     color: #767676;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
   //merchant list end
 
@@ -1332,6 +1346,13 @@
     text-transform: capitalize;
     letter-spacing: 0.05em;
     color: #111111;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .merchantList-storeCategory {
