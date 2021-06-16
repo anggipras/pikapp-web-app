@@ -7,7 +7,8 @@ var firebaseConfig = {
   projectId: "pikapp-dev-3789c",
   storageBucket: "pikapp-dev-3789c.appspot.com",
   messagingSenderId: "865001959940",
-  appId: "1:865001959940:web:b3c636fbe71440a015fb51"
+  appId: "1:865001959940:web:b3c636fbe71440a015fb51",
+  measurementId: "G-7911H17L9R"
 };
   
 firebase.initializeApp(firebaseConfig);

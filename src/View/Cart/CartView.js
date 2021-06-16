@@ -23,7 +23,7 @@ import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
-import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebase'
 
 var currentExt = {
   detailCategory: [

@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/messaging';
+import 'firebase/analytics'
 
 var firebaseConfig = {
   apiKey: "AIzaSyAhpg4G_EANh5cM9sHUY04XZaTAJVrd0Us",
@@ -7,12 +8,15 @@ var firebaseConfig = {
   projectId: "pikapp-dev-3789c",
   storageBucket: "pikapp-dev-3789c.appspot.com",
   messagingSenderId: "865001959940",
-  appId: "1:865001959940:web:b3c636fbe71440a015fb51"
+  appId: "1:865001959940:web:b3c636fbe71440a015fb51",
+  measurementId: "G-7911H17L9R"
 };
 
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
+
+export const firebaseAnalytics = firebase.analytics();
 
 export const getToken = (setTokenFound) => {
     return messaging.getToken({vapidKey: 'BGkBTD4sOCLTqphQtyVB6EKnX1BdMABWbZV_0r2zONYzmV9T67dsP2fbPcCo11gAAOqiYD5WhezFTKDJAAsZL-M'}).then((currentToken) => {

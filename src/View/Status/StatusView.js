@@ -22,7 +22,7 @@ import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import Cookies from "js-cookie";
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
-import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebase'
 
 export class StatusView extends React.Component {
   state = {

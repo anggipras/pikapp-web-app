@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 // import {geolocated} from 'react-geolocated'
 import { connect } from 'react-redux'
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebase'
 
 class FormView extends React.Component {
   state = {
