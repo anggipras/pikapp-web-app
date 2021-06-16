@@ -4,8 +4,7 @@ import App from './App'
 import { createBrowserHistory } from "history";
 import { Router } from "react-router-dom";
 import { Provider } from "react-redux"
-import store from './Redux/Store';
-import { registerServiceWorker } from './serviceWorker';
+import store from './Redux/Store'
 
 var hist = createBrowserHistory();
 
@@ -17,5 +16,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-
-registerServiceWorker()
