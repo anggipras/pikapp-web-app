@@ -86,7 +86,7 @@ const PinDialog = (props) => {
         const data = {
             username: AuthRedu.dataLogin.email,
             pin: pin,
-            fcm_token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
+            fcm_token: AllRedu.fcmToken,
         };
         const auth = {
             isLogged: false,

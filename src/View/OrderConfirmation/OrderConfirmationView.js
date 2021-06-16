@@ -15,7 +15,9 @@ import NotifIcon from '../../Asset/Icon/bell.png';
 import ProfileIcon from '../../Asset/Icon/avatar.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
-import PaymentModal from '../../Component/Modal/PaymentModal'
+import PaymentModal from '../../Component/Modal/PaymentModal';
+import { onMessageListener } from '../../firebase';
+// import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
 
 class OrderConfirmationView extends React.Component {
     state = {
@@ -29,7 +31,9 @@ class OrderConfirmationView extends React.Component {
         paymentType: "PAY_BY_CASHIER",
         paymentImage: "",
         counterTime: 59,
-        showPayment : false
+        showPayment : false,
+        isSubmit : false,
+        showResponsePayment : false
     }
 
     componentDidMount() {
@@ -51,6 +55,7 @@ class OrderConfirmationView extends React.Component {
         } else {
             this.countDownTime()
         }
+
 
         if(Object.keys(this.props.AllRedu.dataOrder).length !== 0) {
             if (this.props.AllRedu.dataOrder.paymentType === "PAY_BY_CASHIER") {
@@ -78,9 +83,17 @@ class OrderConfirmationView extends React.Component {
 
             this.setState({ dataOrder : dataPayment});
         }
+
+        if(localStorage.getItem("responsePayment")) {
+            var resp = JSON.parse(localStorage.getItem("responsePayment"));
+
+            this.setState({ isSubmit : resp.isSubmit });
+            this.setState({ showResponsePayment : resp.showResponsePayment });
+        }
     }
 
     componentDidUpdate() {
+        this.showResponsePayment();
         if(this.state.counterTime === 0) {
             clearInterval(this.interval);
             console.log("clear");
@@ -124,6 +137,26 @@ class OrderConfirmationView extends React.Component {
         }
     }
 
+    showResponsePayment = () => {
+        onMessageListener().then(payload => {
+            console.log("payload ::: " + payload);
+            if(payload.data.payment_status === "PAID") {
+                this.setState({ isSubmit : true });
+                this.setState({ showResponsePayment : true });
+            } else if (payload.data.payment_status === "FAILED" || payload.data.payment_status === "ERROR") {
+                this.setState({ isSubmit : true });
+                this.setState({ showResponsePayment : false });
+            }
+            
+        }).catch(err => console.log('failed: ', err));
+
+        let res = {
+            isSubmit : this.state.isSubmit,
+            showResponsePayment : this.state.showResponsePayment
+        }
+        localStorage.setItem("responsePayment", JSON.stringify(res));
+    }
+
     render() {
         return (
             <div className='orderLayout'>
@@ -159,6 +192,8 @@ class OrderConfirmationView extends React.Component {
                     {
                         !this.state.isMobile ?
                         <div className='modal-content-order'>
+                            {
+                            !this.state.isSubmit ?
                             <div className='modal-header-order'>
                                 <div className='menu-name-order'>
                                     Menunggu Pembayaran 
@@ -174,7 +209,21 @@ class OrderConfirmationView extends React.Component {
                                 }
                                 </div>
                             </div>
-
+                            :
+                            this.state.showResponsePayment ?
+                                <div className='modal-header-order'>
+                                    <div className='menu-name-order'>
+                                        Transaksi Berhasil 
+                                    </div>
+                                </div>
+                                :
+                                <div className='modal-header-order'>
+                                    <div className='menu-name-order'>
+                                        Transaksi Gagal 
+                                    </div>
+                                </div>
+                            
+                            }
 
                             <div className='orderContent'>
                                 <div className='order-transaction'>
@@ -234,16 +283,31 @@ class OrderConfirmationView extends React.Component {
                                 </div>
                             </div>
 
-                            <div className='orderContent'>
-                                <div className='buttonPayment-order'>
-                                    <div className="submitPayment-order" onClick={() => this.setPaymentModal(true)}>
-                                        <div className="wordsButton-order">
-                                            CARA PEMBAYARAN
+                            {
+                            !this.state.isSubmit ?
+                            <div>
+                                <div className='orderContent'>
+                                    <div className='buttonPayment-order'>
+                                        <div className="submitPayment-order" onClick={() => this.setPaymentModal(true)}>
+                                            <div className="wordsButton-order">
+                                                CARA PEMBAYARAN
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='orderContent'>
+                                    <div className='buttonSide-order'>
+                                        <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
+                                        <div className="submitButton-order" onClick={() => this.goToStatus()}>
+                                            <div className="wordsButton-order">
+                                                LIHAT PESANAN
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            :
+                            this.state.showResponsePayment ?
                             <div className='orderContent'>
                                 <div className='buttonSide-order'>
                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
@@ -254,9 +318,22 @@ class OrderConfirmationView extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                            :
+                            <div className='orderContent'>
+                                <div className='buttonBack-order'>
+                                    <div className="submitBack-order" onClick={() => this.backToHome()}>
+                                        <div className="wordsBack-order">
+                                            KEMBALI
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
                         </div>
                         :
                         <div className='modal-content-order-mob'>
+                            {
+                            !this.state.isSubmit ?
                             <div className='modal-header-order'>
                                 <div className='menu-name-order'>
                                     Menunggu Pembayaran 
@@ -272,6 +349,20 @@ class OrderConfirmationView extends React.Component {
                                     }
                                 </div>
                             </div>
+                            :
+                            this.state.showResponsePayment ?
+                                <div className='modal-header-order'>
+                                    <div className='menu-name-order'>
+                                        Transaksi Berhasil 
+                                    </div>
+                                </div>
+                                :
+                                <div className='modal-header-order'>
+                                    <div className='menu-name-order'>
+                                        Transaksi Gagal 
+                                    </div>
+                                </div>
+                            }
 
                             <div className='orderContent'>
                                 <div className='order-transaction'>
@@ -331,16 +422,31 @@ class OrderConfirmationView extends React.Component {
                                 </div>
                             </div>
 
-                            <div className='orderContent'>
-                                <div className='buttonPayment-order'>
-                                    <div className="submitPayment-order" onClick={() => this.setPaymentModal(true)}>
-                                        <div className="wordsButton-order">
-                                            CARA PEMBAYARAN
+                            {
+                            !this.state.isSubmit ?
+                            <div>
+                                <div className='orderContent'>
+                                    <div className='buttonPayment-order'>
+                                        <div className="submitPayment-order" onClick={() => this.setPaymentModal(true)}>
+                                            <div className="wordsButton-order">
+                                                CARA PEMBAYARAN
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='orderContent'>
+                                    <div className='buttonSide-order'>
+                                        <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
+                                        <div className="submitButton-order" onClick={() => this.goToStatus()}>
+                                            <div className="wordsButton-order">
+                                                LIHAT PESANAN
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            :
+                            this.state.showResponsePayment ?
                             <div className='orderContent'>
                                 <div className='buttonSide-order'>
                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
@@ -351,6 +457,17 @@ class OrderConfirmationView extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                            :
+                            <div className='orderContent'>
+                                <div className='buttonBack-order'>
+                                    <div className="submitBack-order" onClick={() => this.backToHome()}>
+                                        <div className="wordsBack-order">
+                                            KEMBALI
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
                         </div>
                     }
                     {this.showDialogPayment()}
