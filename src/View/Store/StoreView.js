@@ -268,12 +268,11 @@ class StoreView extends React.Component {
         }
       })
         .then((res) => {
-          console.log(res.data.results);
+          // console.log(res.data.results);
           stateData = { ...this.state.data };
           let responseDatas = res.data;
           stateData.data.pop();
           responseDatas.results.forEach((data) => {
-            data.merchant_categories = ["Japanese", "Beef", "Asian"]
             let merchantCateg = ""
             data.merchant_categories.forEach((merchCat, indCat) => {
               if (merchCat) {
@@ -403,7 +402,6 @@ class StoreView extends React.Component {
               stateData = { ...this.state.data };
               let responseDatas = res.data;
               responseDatas.results.forEach((data) => {
-                data.merchant_categories = ["Japanese", "Beef", "Asian"]
                 let merchantCateg = ""
                 data.merchant_categories.forEach((merchCat, indCat) => {
                   if (merchCat) {
