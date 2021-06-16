@@ -26,7 +26,7 @@ import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
-import { firebaseAnalytics } from '../../firebase'
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
