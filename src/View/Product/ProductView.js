@@ -175,7 +175,7 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        // console.log(res.data.results);
+        console.log(res.data.results);
         var currentMerchant = {
           mid: "",
           storeName: "",
@@ -197,7 +197,7 @@ class ProductView extends React.Component {
         currentMerchant.storeRating = res.data.results.merchant_rating;
         currentMerchant.storeLogo = res.data.results.merchant_logo;
         currentMerchant.storePhone = res.data.results.merchant_phone;
-        res.data.results.merchant_categories = ["Japanese", "Beef", "Noodles"]
+        res.data.results.merchant_categories = ["Japanese", "Beef", "Asian"]
         currentMerchant.storeCateg = res.data.results.merchant_categories
 
         let selectedStore = []
