@@ -26,6 +26,7 @@ import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
@@ -64,6 +65,7 @@ class ProductView extends React.Component {
       address: "",
       rating: "",
       phone: "",
+      category: "",
       currentData: {
         productId: "",
         category: "",
@@ -115,6 +117,7 @@ class ProductView extends React.Component {
   timeout = null
 
   componentDidMount() {
+    firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
@@ -183,6 +186,7 @@ class ProductView extends React.Component {
           storeRating: "",
           storeLogo: "",
           storePhone: "",
+          storeCateg: []
         };
         currentMerchant.mid = res.data.results.mid;
         currentMerchant.storeName = res.data.results.merchant_name;
@@ -193,6 +197,8 @@ class ProductView extends React.Component {
         currentMerchant.storeRating = res.data.results.merchant_rating;
         currentMerchant.storeLogo = res.data.results.merchant_logo;
         currentMerchant.storePhone = res.data.results.merchant_phone;
+        res.data.results.merchant_categories = ["Japanese", "Beef", "Noodles"]
+        currentMerchant.storeCateg = res.data.results.merchant_categories
 
         let selectedStore = []
         selectedStore.push(res.data.results)
@@ -211,6 +217,18 @@ class ProductView extends React.Component {
         stateData.address = currentMerchant.storeAdress;
         stateData.rating = currentMerchant.storeRating;
         stateData.phone = currentMerchant.storePhone;
+        //refactor merchant categories
+        let merchantCateg = ""
+        currentMerchant.storeCateg.forEach((merchCat, indCat) => {
+          if (merchCat) {
+            if (indCat === currentMerchant.storeCateg.length - 1) {
+              merchantCateg += `${merchCat}`
+            } else {
+              merchantCateg += `${merchCat}, `
+            }
+          }
+        })
+        stateData.category = merchantCateg
         stateData.notable = notab
         var productCateg = []
         var idCateg = []
@@ -1052,7 +1070,7 @@ class ProductView extends React.Component {
                       </div>
 
                       <div className='merchant-categName'>
-                        <div className='merchant-allcateg'>Merchant Category</div>
+                        <div className='merchant-allcateg'>{this.state.data.category}</div>
                         <div className='merchant-starInfo'>
                           {
                             // this.state.data.rating ?

@@ -23,6 +23,7 @@ import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
@@ -121,6 +122,7 @@ class CartView extends React.Component {
   };
 
   componentDidMount() {
+    firebaseAnalytics.logEvent("cart_visited")
     var auth = {
       isLogged: false,
       token: "",
