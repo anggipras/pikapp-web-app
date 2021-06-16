@@ -12,7 +12,7 @@ import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
 import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
-import { firebaseAnalytics } from '../../firebase'
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 class StoreView extends React.Component {
   state = {
