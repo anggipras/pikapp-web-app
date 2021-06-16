@@ -14,6 +14,8 @@ import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie";
+import { getToken } from './firebase';
+import { useDispatch } from 'react-redux'
 
 export var cart = [
     {
@@ -64,6 +66,11 @@ function countDown(){
 }
 
 function App() {
+    const dispatch = useDispatch();
+    const [tokenFound, setTokenFound] = useState('');
+    getToken(setTokenFound);
+
+    dispatch({ type: 'FCMTOKEN', payload: tokenFound });
 
     if (Cookies.get("auth") === undefined) {
         let deleteCart = JSON.parse(localStorage.getItem("cart"))
