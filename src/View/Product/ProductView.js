@@ -197,7 +197,7 @@ class ProductView extends React.Component {
         currentMerchant.storeRating = res.data.results.merchant_rating;
         currentMerchant.storeLogo = res.data.results.merchant_logo;
         currentMerchant.storePhone = res.data.results.merchant_phone;
-        currentMerchant.storeCateg = res.data.results.merchant_categories
+        currentMerchant.storeCateg = res.data.results.merchant_categories === null ? [] : res.data.results.merchant_categories
 
         let selectedStore = []
         selectedStore.push(res.data.results)
