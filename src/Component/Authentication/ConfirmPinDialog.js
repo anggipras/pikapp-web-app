@@ -74,7 +74,7 @@ const ConfirmPinDialog = (props) => {
             email: AuthRedu.dataRegister.email,
             gender: "MALE",
             birth_day: "01011970",
-            token: AllRedu.fcmToken,
+            token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
         };
 
         let uuid = uuidV4();
@@ -120,7 +120,7 @@ const ConfirmPinDialog = (props) => {
         const data = {
             username: AuthRedu.dataRegister.email,
             pin: confirmPin,
-            fcm_token: AllRedu.fcmToken,
+            fcm_token: AllRedu.fcmToken
         };
 
         const auth = {

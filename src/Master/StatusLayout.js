@@ -1,6 +1,7 @@
 import React from "react";
 import DetailNavigation from "./DetailNavigation";
 import { StatusView } from "../View/Status/StatusView";
+// import { StatusView } from "../View/Status/StatusViewDev";
 import {
   primary_color,
 } from "../Asset/Constant/ColorConstant";
@@ -25,6 +26,7 @@ export default class StatusLayout extends React.Component {
           </Container>
         </body>
       </html>
+      // <StatusView />
     );
   }
 }

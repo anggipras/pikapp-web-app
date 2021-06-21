@@ -12,7 +12,7 @@ import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
 import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
-import { firebaseAnalytics } from '../../firebase'
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 class StoreView extends React.Component {
   state = {
@@ -202,9 +202,9 @@ class StoreView extends React.Component {
             data.merchant_categories.forEach((merchCat, indCat) => {
               if (merchCat) {
                 if (indCat === data.merchant_categories.length - 1) {
-                  merchantCateg += `${merchCat}`
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}`
                 } else {
-                  merchantCateg += `${merchCat}, `
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}, `
                 }
               }
             })
@@ -277,9 +277,9 @@ class StoreView extends React.Component {
             data.merchant_categories.forEach((merchCat, indCat) => {
               if (merchCat) {
                 if (indCat === data.merchant_categories.length - 1) {
-                  merchantCateg += `${merchCat}`
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}`
                 } else {
-                  merchantCateg += `${merchCat}, `
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}, `
                 }
               }
             })
@@ -344,9 +344,9 @@ class StoreView extends React.Component {
                 data.merchant_categories.forEach((merchCat, indCat) => {
                   if (merchCat) {
                     if (indCat === data.merchant_categories.length - 1) {
-                      merchantCateg += `${merchCat}`
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}`
                     } else {
-                      merchantCateg += `${merchCat}, `
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}, `
                     }
                   }
                 })
@@ -406,9 +406,9 @@ class StoreView extends React.Component {
                 data.merchant_categories.forEach((merchCat, indCat) => {
                   if (merchCat) {
                     if (indCat === data.merchant_categories.length - 1) {
-                      merchantCateg += `${merchCat}`
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}`
                     } else {
-                      merchantCateg += `${merchCat}, `
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}, `
                     }
                   }
                 })
@@ -458,15 +458,17 @@ class StoreView extends React.Component {
 
   loadMoreMerchant = () => {
     const wrappedElement = document.getElementById("idCol")
-    if (this.state.idCol <= this.state.page) {
-      if (this.isBottom(wrappedElement)) {
-        // console.log('testloadmore');
-        this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
+    if (wrappedElement !== null) {
+      if (this.state.idCol <= this.state.page) {
+        if (this.isBottom(wrappedElement)) {
+          // console.log('testloadmore');
+          this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
+          document.removeEventListener('scroll', this.loadMoreMerchant)
+        }
+      } else {
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
-    } else {
-      document.removeEventListener('scroll', this.loadMoreMerchant)
-    }
+    } 
   }
 
   componentWillUnmount() {
