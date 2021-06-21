@@ -312,8 +312,15 @@ class ProductView extends React.Component {
             newImage = currentMerchant.storeImage
             prominent(newImage, { amount: 3 }).then((color) => {
               // return RGB color for example [241, 221, 63]
-              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+              if (color.length < 3) {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
+              } else {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              }
+              // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)
@@ -334,8 +341,15 @@ class ProductView extends React.Component {
             newImage = Storeimg
             prominent(newImage, { amount: 3 }).then((color) => {
               // return RGB color for example [241, 221, 63]
-              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+              // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              if (color.length < 3) {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
+              } else {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              }
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)

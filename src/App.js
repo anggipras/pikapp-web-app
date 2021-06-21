@@ -68,7 +68,7 @@ function countDown(){
 function App() {
     const dispatch = useDispatch();
     const [tokenFound, setTokenFound] = useState('');
-    getToken(setTokenFound);
+    // getToken(setTokenFound);
 
     dispatch({ type: 'FCMTOKEN', payload: tokenFound });
 

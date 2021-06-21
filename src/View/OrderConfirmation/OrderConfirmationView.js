@@ -16,7 +16,7 @@ import ProfileIcon from '../../Asset/Icon/avatar.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
-import { onMessageListener } from '../../firebase';
+// import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
 
 class OrderConfirmationView extends React.Component {
@@ -138,23 +138,23 @@ class OrderConfirmationView extends React.Component {
     }
 
     showResponsePayment = () => {
-        onMessageListener().then(payload => {
-            console.log("payload ::: " + payload);
-            if(payload.data.payment_status === "PAID") {
-                this.setState({ isSubmit : true });
-                this.setState({ showResponsePayment : true });
-            } else if (payload.data.payment_status === "FAILED" || payload.data.payment_status === "ERROR") {
-                this.setState({ isSubmit : true });
-                this.setState({ showResponsePayment : false });
-            }
+        // onMessageListener().then(payload => {
+        //     console.log("payload ::: " + payload);
+        //     if(payload.data.payment_status === "PAID") {
+        //         this.setState({ isSubmit : true });
+        //         this.setState({ showResponsePayment : true });
+        //     } else if (payload.data.payment_status === "FAILED" || payload.data.payment_status === "ERROR") {
+        //         this.setState({ isSubmit : true });
+        //         this.setState({ showResponsePayment : false });
+        //     }
             
-        }).catch(err => console.log('failed: ', err));
+        // }).catch(err => console.log('failed: ', err));
 
-        let res = {
-            isSubmit : this.state.isSubmit,
-            showResponsePayment : this.state.showResponsePayment
-        }
-        localStorage.setItem("responsePayment", JSON.stringify(res));
+        // let res = {
+        //     isSubmit : this.state.isSubmit,
+        //     showResponsePayment : this.state.showResponsePayment
+        // }
+        // localStorage.setItem("responsePayment", JSON.stringify(res));
     }
 
     render() {
