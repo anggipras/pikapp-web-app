@@ -54,10 +54,7 @@
   max-width: 588px; /* Max width where it stops expanding */
   width: auto; /* Width in proportion to its parent container*/
   min-height: 625px;
-  // max-height: 573px; /* Max Height where it stops expanding */
-  // height: 90vh; /* Height in proportion to its parent container*/
   margin: auto; /* Auto margin according to the element width */
-  // margin-top: 5vh;
   border: none;
   border-radius: 20px; /* Optional. Rounds container corners */
   // overflow: auto;
@@ -72,13 +69,13 @@
   margin-bottom: 41px;
 }
 
-.logopikappCenter {
+.logopikappCenterBack {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.LogoPikappCart {
+.LogoPikappBack {
   width: 36px;
   height: 36px;
   cursor: pointer;
@@ -95,6 +92,48 @@
   margin-left: 20px;
 }
 
+.orderList-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #aaaaaa;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 5px 13px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.orderList-filterName {
+  font-size: 15px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  color: #111111;
+  margin-right: 20px;
+}
+
+.orderList-filterArrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orderList-arrowDown {
+  width: 18px;
+  height: 10px;
+}
+
+.orderListWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .orderListContent {
   min-width: 533px;
   max-width: 533px;
@@ -102,7 +141,7 @@
   width: auto;
   cursor: pointer;
   box-sizing: border-box;
-  border: 0.5px solid #C4C4C4;
+  border: 0.5px solid #c4c4c4;
   border-radius: 8px;
 }
 
@@ -145,7 +184,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  text-align: center;
+  // text-align: center;
 }
 
 .orderList-transaction-merchName {
@@ -156,6 +195,14 @@
   line-height: 20px;
   color: #111111;
   margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 
 .orderList-transaction-timeTrans {
@@ -194,7 +241,8 @@
   height: 20px;
 }
 
-.orderList-foodService-words, .orderList-paymentService-words {
+.orderList-foodService-words,
+.orderList-paymentService-words {
   font-family: "SF-Compact-Rounded", sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -216,759 +264,132 @@
   height: 20px;
 }
 
+$font768size: 13px;
 @media (max-width: 768px) {
-  .orderLayout {
+  .orderListLayout {
     width: 100vw;
-    padding: 20px 17px 26px 17px;
+    padding: 44px 15px 15px 19px;
   }
 
-  .LogoPikappOrder {
-    margin-top: 5px;
-    width: 126px;
-    height: 50px;
-  }
-
-  .orderTitle {
-    flex-direction: column;
-    align-items: flex-start;
-    height: 54px;
-    margin-bottom: 28px;
-  }
-
-  .confirmationOrder {
-    font-size: 20px;
-  }
-
-  .cartContent {
-    flex-direction: column;
-  }
-
-  .cart-LeftSide {
-    display: flex;
-    width: auto;
-    justify-content: center;
-  }
-
-  //cartList start
-  .cartList {
-    max-width: 381px;
-  }
-
-  .cartList-header {
-    height: 32px;
-    padding-top: 4px;
-    padding-left: 11px;
-  }
-
-  .cartList-title {
-    font-size: 15px;
-  }
-
-  .cartList-content {
-    display: flex;
-    justify-content: space-between;
-    background-color: #ffffff;
-    padding: 18px 12.5px 14px 13px;
-    margin-bottom: 4px;
-  }
-
-  .cartList-content-frame {
-    width: 94px;
-    height: 94px;
-  }
-
-  .cartList-content-detail {
-    width: 240px;
-  }
-
-  .cartList-content-detail-left {
-    max-width: 150px;
-    width: auto;
-  }
-
-  .cartList-content-title {
-    font-size: 15px;
-  }
-
-  .cartList-content-choice,
-  .cartList-content-notes {
-    font-size: 12px;
-  }
-
-  .cartList-content-price {
-    font-size: 15px;
-  }
-
-  .cartList-editButton {
-    width: 49.5px;
-    height: 22px;
-    border: 1px solid #4bb7ac;
-  }
-
-  .cartList-editWord {
-    font-weight: 500;
-    font-size: 12px;
-  }
-
-  .cartList-minusBox {
-    width: 23px;
-    height: 23px;
-  }
-
-  .cartList-minusSym {
-    font-size: 15px;
-  }
-
-  .cartList-numberArea {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-  .cartList-plusBox {
-    width: 23px;
-    height: 23px;
-  }
-
-  .cartList-plusSym {
-    font-size: 15px;
-  }
-  //cartList end
-
-  .cart-RightSide {
-    align-items: center;
-    width: auto;
-  }
-
-  .flex-RightSide {
-    margin-left: 0;
-  }
-
-  //cartStoreBox start
-  .cart-storeBox {
-    border: 0.5px solid #f5f6f7;
-    min-width: 381px;
-    max-width: 381px;
-    margin-bottom: 24px;
-    margin-top: 32px;
-  }
-
-  .cart-storeBox-header {
-    height: auto;
-    padding: 5px 12px 0px 12px;
-  }
-
-  .cart-storeBox-title {
-    max-width: 250px;
-    font-size: 15px;
-  }
-
-  .cart-storeBox-distance {
-    font-size: 10px;
-  }
-
-  .cart-storeBox-content {
-    padding: 8px 12px 8px 13px;
-  }
-
-  .cart-storeBox-descArea {
-    font-size: 12px;
-  }
-  //cartStoreBox end
-
-  //cartFoodService start
-  .cart-foodService {
-    min-width: 381px;
-    max-width: 381px;
-    margin-bottom: 24px;
-  }
-
-  .cart-foodService-header {
-    height: 32px;
-    padding: 0px 0px 0px 12px;
-  }
-
-  .cart-foodService-title {
-    font-size: 15px;
-  }
-
-  .cart-foodService-selectButton {
-    width: 32px;
-    height: 32px;
-  }
-
-  .cart-foodService-selectIcon {
-    width: 17px;
-    height: 10px;
-  }
-
-  .cart-foodService-logo {
-    width: 27px;
-    height: 27px;
-  }
-
-  .cart-foodService-words {
-    font-size: 15px;
-    padding-top: 7px;
-    margin-left: 7px;
-  }
-  //cartFoodService end
-
-  //cartPaymentService start
-  .cart-paymentService {
-    min-width: 381px;
-    max-width: 381px;
-    margin-bottom: 0px;
-  }
-
-  .cart-paymentService-header {
-    height: 32px;
-    padding: 0px 0px 0px 12px;
-  }
-
-  .cart-paymentService-title {
-    font-size: 15px;
-  }
-
-  .cart-paymentService-selectButton {
-    width: 32px;
-    height: 32px;
-  }
-
-  .cart-paymentService-selectIcon {
-    width: 17px;
-    height: 10px;
-  }
-
-  .cart-paymentService-content {
-    padding: 10px 10px 10px 12px;
-  }
-
-  .cart-paymentService-logo {
-    width: 21px;
-    height: 21px;
-  }
-
-  .cart-paymentService-words {
-    font-size: 15px;
-    padding-top: 4px;
-    margin-left: 7px;
-  }
-  //cartPaymentService end
-
-  //cartCheckout start
-  .cart-checkoutArea {
+  .orderListTitle {
     display: none;
   }
 
-  .orderLayout-mob {
-    display: block;
-    position: sticky;
-    bottom: 0;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f6f7;
-    // padding-bottom: 17px;
+  .modal-header-orderList {
+    margin-bottom: 32px;
   }
 
-  .cart-checkoutArea-mob {
-    display: flex;
-    justify-content: space-between;
-    width: auto;
-    background-color: #ffffff;
-    box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 0px 0px 40px 40px;
-    height: 81px;
-    padding: 14px 17px 16px 27px;
+  .menu-title-orderList {
+    font-size: 20px;
   }
 
-  .cart-TotalAmount-mob {
-    min-width: 100px;
-    max-width: 283px;
-    width: auto;
-    background-color: #ffffff;
+  .orderList-filter {
+    padding: 5px 10px;
+    margin-bottom: 22px;
+    width: fit-content;
   }
-
-  .cart-TotalAmount-title-mob {
-    display: flex;
-    font-family: "SF-Compact-Rounded", sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    text-transform: capitalize;
-    color: #111111;
+  
+  .orderList-filterName {
+    margin-right: 15px;
   }
-
-  .cart-TotalAmount-bottom-mob {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .cart-TotalAmount-price-mob {
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 17px;
-    text-transform: capitalize;
-    color: #111111;
-    margin-right: 10px;
-  }
-
-  .cart-TotalAmount-detailArrowCenter-mob {
-    display: flex;
-    justify-content: center;
-    padding-top: 5px;
-  }
-
-  .cart-TotalAmount-detailArrow-mob {
-    width: 20px;
-    height: 12px;
-  }
-
-  .cart-OrderButton-mob {
-    display: flex;
-    justify-content: space-between;
-    background-color: #4bb7ac;
-    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
-    border-radius: 10px;
-    padding: 12px 12px 13px 19px;
-    max-width: 283px;
-    min-width: 165px;
-    width: auto;
-    height: 51px;
-  }
-
-  .cart-OrderButton-content-mob {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-  }
-
-  .cart-OrderButton-Frame-mob {
-    width: 26px;
-    height: 26px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .cart-OrderButton-checklist-mob {
-    width: 14px;
+  
+  .orderList-arrowDown {
+    width: 18px;
     height: 10px;
   }
 
-  .cart-OrderButton-word-mob {
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 20px;
-    text-transform: capitalize;
-    color: #ffffff;
-    padding-top: 9px;
-    margin-left: 14px;
+  .orderListContent {
+    min-width: 381px;
+    max-width: 381px;
+    margin-bottom: 18px;
   }
 
-  .cart-OrderButton-orderArrowCenter-mob {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .orderList-transaction-header {
+    height: 32px;
+    padding: 0px 12px 0px 12px;
   }
 
-  .cart-OrderButton-orderArrow-mob {
-    width: 11px;
-    height: 18px;
-  }
-
-  .iconOrder {
-    display: flex;
-    position: absolute;
-    // gap: 15px;
-    top: 17px;
-    right: 16.5px;
-  }
-
-  .profileOrder-img {
-    width: 18.4px;
-    height: 18.4px;
-    margin-top: 7.3px;
-  }
-
-  .notifOrder-img {
-    width: 15.3px;
-    height: 15.3px;
-    margin-top: 9px;
-  }
-
-  .profileOrder-sec {
-    width: 33px;
-    height: 33px;
-    background-color: white;
-    border-radius: 10px;
-    margin-right: 13px;
-    border: 1px solid #aaaaaa;
-  }
-
-  .notifOrder-sec {
-    width: 33px;
-    height: 33px;
-    background-color: #dc6a84;
-    border-radius: 10px;
-  }
-
-  .profileOrder,
-  .notifOrder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .reactProfOrder,
-  .reactNotifOrder {
+  .orderList-transaction-title {
     font-size: 15px;
   }
 
-  .modalOrder {
-    z-index: 3; /* Overlay effect: positioned over other containers */
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    top: 0;
-    left: 0;
-    overflow: hidden; /* Enable scroll if needed */
-  }
-  /* Modal content */
-  .modal-content-order-mob {
-    background-color: white;
-    position: relative;
-    max-width: 588px;
-    width: auto; /* Width in proportion to its parent container*/
-    // height: auto; /* Height in proportion to its parent container */
-    margin: auto; /* Auto margin according to the element width */
-    border: none;
-    min-height: 574px;
-    max-height: 673px;
-    border-radius: 20px; /* Optional. Rounds container corners */
-    -webkit-animation-name: animate top;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s;
-    overflow: auto;
+  .orderList-transaction-content {
+    padding: 15px 15px 15px 15px;
   }
 
-  .menu-back-order {
-    max-width: 600px;
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    text-transform: capitalize;
-    color: #000000;
-    line-height: 20px;
-    margin-top: 15px;
-    margin-left: 5px;
+  .orderList-transaction-merchName {
+    font-size: $font768size;
+    font-weight: 600;
+    margin-bottom: 6px;
+    max-width: 200px;
   }
 
-  .order-transaction {
-    min-width: 371px;
-    max-width: 371px;
-    margin-bottom: 24px;
-    box-shadow: 0px 2px 5px 2px rgb(0 0 0 / 5%);
-    border-radius: 8px;
-    width: auto;
-    cursor: pointer;
-    margin-top: 25px;
+  .orderList-transaction-timeTrans {
+    font-size: $font768size;
   }
 
-  .order-payment {
-    min-width: 371px;
-    max-width: 371px;
-    margin-bottom: 24px;
-    box-shadow: 0px 2px 5px 2px rgb(0 0 0 / 5%);
-    border-radius: 8px;
-    width: auto;
-    cursor: pointer;
+  .orderList-transaction-centerSide {
+    font-size: $font768size;
   }
 
-  .buttonSide-order {
-    display: flex;
-    width: 98%;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-
-  .submitButton-order {
-    display: flex;
-    width: 176px;
-    background-color: #4bb7ac;
-    color: #ffffff;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
-    cursor: pointer;
-  }
-
-  .wordsButton-order {
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 1rem;
-    text-transform: capitalize;
-    color: #ffffff;
-    text-align: center;
-  }
-
-  .linkWords-order {
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 1rem;
-    line-height: 1.5;
-    text-transform: capitalize;
-    color: #4bb7ac;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-
-  .buttonPayment-order {
-    display: flex;
-    width: 98%;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-
-  .submitPayment-order {
-    display: flex;
-    width: 100%;
-    height: 50px;
-    background-color: #4bb7ac;
-    color: #ffffff;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
-    cursor: pointer;
-  }
-
-  .menu-counter-order {
-    width: 60px;
-    margin-top: 10px;
-    color: #aaaaaa;
-  }
-  //cartCheckout end
-}
-
-@media (max-width: 450px) {
-  .cart-LeftSide {
-    display: block;
-    width: auto;
-    justify-content: flex-start;
+  .orderList-foodService-words,
+  .orderList-paymentService-words {
+    font-size: $font768size;
+    padding-top: 4px;
   }
 }
 
 @media (max-width: 380px) {
-  //cartList start
-  .cartList {
+  .orderListLayout {
+    width: 100vw;
+    padding: 40px 10px 15px 10px;
+  }
+
+  .orderListContent {
+    min-width: 350px;
     max-width: 350px;
+    margin-bottom: 16px;
   }
-
-  .cartList-content-detail {
-    max-width: 300px;
-    width: auto;
-  }
-
-  .cartList-content-detail-left {
-    max-width: 130px;
-    width: auto;
-  }
-
-  .cartList-content-title {
-    font-size: 15px;
-  }
-  //cartList end
-
-  .flex-RightSide {
-    margin-left: auto;
-  }
-
-  //cartStoreBox start
-  .cart-storeBox {
-    min-width: 340px;
-    max-width: 340px;
-  }
-  //cartStoreBox end
-
-  //cartFoodService start
-  .cart-foodService {
-    min-width: 340px;
-    max-width: 340px;
-  }
-  //cartFoodService end
-
-  //cartPaymentService start
-  .cart-paymentService {
-    min-width: 340px;
-    max-width: 340px;
-  }
-  //cartPaymentService end
 }
 
+$font325size: 11px;
 @media (max-width: 325px) {
-  //cartList start
-  .cartList {
+  .orderListLayout {
+    width: 100vw;
+    padding: 36px 10px 15px 10px;
+  }
+
+  .orderListContent {
     min-width: 290px;
     max-width: 290px;
+    margin-bottom: 14px;
   }
 
-  .cartList-content-detail {
-    max-width: 150px;
-    width: auto;
+  .orderList-transaction-title {
+    font-size: 13px;
   }
 
-  .cartList-content-detail-left {
-    max-width: 100px;
-    width: auto;
+  .orderList-transaction-content {
+    padding: 12px 12px 12px 12px;
   }
 
-  .cartList-content-title {
-    font-size: 12px;
+  .orderList-transaction-merchName {
+    font-size: $font325size;
+    margin-bottom: 4px;
+    max-width: 160px;
   }
 
-  .cartList-content-choice,
-  .cartList-content-notes {
-    font-size: 12px;
-  }
-  //cartList end
-
-  .flex-RightSide {
-    margin-left: auto;
+  .orderList-transaction-timeTrans {
+    font-size: $font325size;
   }
 
-  //cartStoreBox start
-  .cart-storeBox {
-    min-width: 290px;
-    max-width: 290px;
-  }
-  //cartStoreBox end
-
-  //cartFoodService start
-  .cart-foodService {
-    min-width: 290px;
-    max-width: 290px;
-  }
-  //cartFoodService end
-
-  //cartPaymentService start
-  .cart-paymentService {
-    min-width: 290px;
-    max-width: 290px;
-  }
-  //cartPaymentService end
-
-  //cartCheckout start
-  .cart-TotalAmount-mob {
-    min-width: 100px;
-    max-width: 100px;
+  .orderList-transaction-centerSide {
+    font-size: $font325size;
   }
 
-  .cart-TotalAmount-title-mob {
-    font-size: 10px;
-  }
-
-  .cart-TotalAmount-price-mob {
-    font-size: 12px;
-    margin-right: 5px;
-  }
-
-  .cart-TotalAmount-detailArrowCenter-mob {
+  .orderList-foodService-words,
+  .orderList-paymentService-words {
+    font-size: $font325size;
     padding-top: 4px;
   }
-
-  .cart-TotalAmount-detailArrow-mob {
-    width: 15px;
-    height: 7px;
-  }
-
-  .cart-OrderButton-mob {
-    max-width: 200px;
-    min-width: 145px;
-  }
-
-  .cart-OrderButton-Frame-mob {
-    width: 24px;
-    height: 24px;
-  }
-
-  .cart-OrderButton-checklist-mob {
-    width: 12px;
-    height: 8px;
-  }
-
-  .cart-OrderButton-word-mob {
-    font-size: 14px;
-  }
-
-  .cart-OrderButton-orderArrow-mob {
-    width: 9px;
-    height: 16px;
-  }
-
-  //cartCheckout end
-}
-
-.verificationMsg {
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-  height: 50px;
-  margin-bottom: 20px;
-  background-color: #dc6a84;
-}
-
-.message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Montserrat", sans-serif;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 15px;
-  text-transform: capitalize;
-  color: #ffffff;
-  line-height: 2;
-}
-
-.messageSend {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Montserrat", sans-serif;
-  font-style: normal;
-  font-size: 12px;
-  line-height: 20px;
-  text-transform: capitalize;
-  color: #ffffff;
-}
-
-.txtUnderline {
-  text-decoration: underline;
-  cursor: pointer;
-  text-indent: 0.5em;
-}
-
-.txtDisabled {
-  cursor: none;
-  text-indent: 0.5em;
-}
-
-.txtBold {
-  font-weight: bold;
-  text-transform: lowercase;
-}
-
-.txtIndent {
-  text-indent: 0.5em;
 }
