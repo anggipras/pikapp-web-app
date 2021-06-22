@@ -65,3 +65,10 @@ export const DataOrder = (data) => {
         payload: data
     }
 }
+
+export const TransactionId = (data) => {
+    return {
+        type: 'TRANSACTIONID',
+        payload: data
+    }
+}

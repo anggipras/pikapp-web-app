@@ -22,7 +22,10 @@ import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import Cookies from "js-cookie";
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
-import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebaseConfig';
+import { LoadingButton, DoneLoad, TransactionId } from '../../Redux/Actions';
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 export class StatusView extends React.Component {
   state = {
@@ -63,6 +66,7 @@ export class StatusView extends React.Component {
         },
       ],
     },
+    continueDetail : false
   };
 
   setModal(isShow) {
@@ -70,67 +74,71 @@ export class StatusView extends React.Component {
   }
 
   handleDetail(transId) {
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
-    if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href }
-      Cookies.set("lastLink", lastLink, { expires: 1 })
-      // window.location.href = "/login"
-    }
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "txn/v2/" + transId + "/txn-detail/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
-      },
-      method: "GET",
-    })
-      .then((res) => {
-        console.log(res.data.results);
-        var results = res.data.results;
-        var resultModal = { ...this.currentModal }
-        resultModal.transactionId = results.transaction_id
-        resultModal.transactionTime = results.transaction_time
-        resultModal.storeName = results.merchant_name
-        resultModal.storeDistance = ""
-        resultModal.storeLocation = ""
-        resultModal.status = results.status
-        resultModal.biz_type = results.biz_type
-        resultModal.payment = results.payment_with
-        resultModal.food = []
-        results.detail_products.forEach((product) => {
-          resultModal.food.push({
-            name: product.product_name,
-            price: product.price,
-            quantity: product.qty,
-            image: product.image,
-            note: product.notes,
-            extraprice: product.extra_price
-          })
-        })
-        this.setState({
-          currentModal: resultModal
-        })
-      })
-      .catch((err) => {
-      });
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
+    // if (auth.isLogged === false) {
+    //   var lastLink = { value: window.location.href }
+    //   Cookies.set("lastLink", lastLink, { expires: 1 })
+    //   // window.location.href = "/login"
+    // }
+    // let uuid = uuidV4();
+    // uuid = uuid.replace(/-/g, "");
+    // const date = new Date().toISOString();
+    // let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    // Axios(address + "txn/v2/" + transId + "/txn-detail/", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //     "x-signature": signature,
+    //     "token": auth.token,
+    //   },
+    //   method: "GET",
+    // })
+    //   .then((res) => {
+    //     console.log(res.data.results);
+    //     var results = res.data.results;
+    //     var resultModal = { ...this.currentModal }
+    //     resultModal.transactionId = results.transaction_id
+    //     resultModal.transactionTime = results.transaction_time
+    //     resultModal.storeName = results.merchant_name
+    //     resultModal.storeDistance = ""
+    //     resultModal.storeLocation = ""
+    //     resultModal.status = results.status
+    //     resultModal.biz_type = results.biz_type
+    //     resultModal.payment = results.payment_with
+    //     resultModal.food = []
+    //     results.detail_products.forEach((product) => {
+    //       resultModal.food.push({
+    //         name: product.product_name,
+    //         price: product.price,
+    //         quantity: product.qty,
+    //         image: product.image,
+    //         note: product.notes,
+    //         extraprice: product.extra_price
+    //       })
+    //     })
+    //     this.setState({
+    //       currentModal: resultModal
+    //     })
+    //   })
+    //   .catch((err) => {
+    //   });
 
-    this.setModal(true);
+    // this.setModal(true);
+    // this.props.TransactionId(transId);
+    localStorage.setItem("transactionId",transId)
+    this.setState({ continueDetail : true })
+    // window.location.href = '/orderdetail';
   }
 
   handleSelect(tabIndex) {
@@ -271,6 +279,9 @@ export class StatusView extends React.Component {
   }
 
   render() {
+    if (this.state.continueDetail) {
+      return <Redirect to='/orderdetail' />
+    }
     let modal;
     let modalList = this.state.currentModal.food;
 
@@ -786,3 +797,12 @@ export class StatusView extends React.Component {
     );
   }
 }
+
+const Mapstatetoprops = (state) => {
+  return {
+    AllRedu: state.AllRedu,
+    AuthRedu: state.AuthRedu
+  }
+}
+
+export default connect(Mapstatetoprops, { LoadingButton, DoneLoad, TransactionId })(StatusView)

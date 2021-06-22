@@ -387,6 +387,6 @@ const Mapstatetoprops = (state) => {
       AllRedu: state.AllRedu,
       AuthRedu: state.AuthRedu
     }
-  }
+}
   
-  export default connect(Mapstatetoprops, { LoadingButton, DoneLoad })(OrderConfirmationView)
+export default connect(Mapstatetoprops, { LoadingButton, DoneLoad })(OrderConfirmationView)
