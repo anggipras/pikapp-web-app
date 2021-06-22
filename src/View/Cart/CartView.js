@@ -24,6 +24,7 @@ import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig'
+import moment from "moment";
 
 var currentExt = {
   detailCategory: [
@@ -432,6 +433,18 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
+            let newDate = new Date().getTime()
+            newDate += 1800000
+            let countTimer = moment(new Date(newDate)).format()
+            let pushCountDown = []
+            if (JSON.parse(localStorage.getItem("timerDown"))) {
+              pushCountDown = JSON.parse(localStorage.getItem("timerDown"))
+              pushCountDown.unshift(countTimer)
+              localStorage.setItem("timerDown", JSON.stringify(pushCountDown))
+            } else {
+              pushCountDown.push(countTimer)
+              localStorage.setItem("timerDown", JSON.stringify(pushCountDown))
+            }
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -453,6 +466,18 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
+            let newDate = new Date().getTime()
+            newDate += 60000
+            let countTimer = moment(new Date(newDate)).format()
+            let pushCountDown = []
+            if (JSON.parse(localStorage.getItem("timerDownOvo"))) {
+              pushCountDown = JSON.parse(localStorage.getItem("timerDownOvo"))
+              pushCountDown.unshift(countTimer)
+              localStorage.setItem("timerDownOvo", JSON.stringify(pushCountDown))
+            } else {
+              pushCountDown.push(countTimer)
+              localStorage.setItem("timerDownOvo", JSON.stringify(pushCountDown))
+            }
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);

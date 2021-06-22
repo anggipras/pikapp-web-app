@@ -1,31 +1,37 @@
-import React from "react";
-import { Row, Col, Nav, Card, Modal } from "react-bootstrap";
-import unpaidIcon from "../../Asset/Icon/unpaid_status.png";
-import unpaidActiveIcon from "../../Asset/Icon/unpaid_active_status.png";
-import packIcon from "../../Asset/Icon/pack_status.png";
-import packActiveIcon from "../../Asset/Icon/pack_active_status.png";
-import sendIcon from "../../Asset/Icon/send_status.png";
-import sendActiveIcon from "../../Asset/Icon/send_active_status.png";
-import reviewIcon from "../../Asset/Icon/review_status.png";
-import reviewActiveIcon from "../../Asset/Icon/review_active_status.png";
-import placeholderIcon from "../../Asset/Icon/placeholder_icon.png";
-import dineinIcon from "../../Asset/Icon/dinein_icon.png";
-import takeawayIcon from "../../Asset/Icon/takeaway_icon.png";
-import categoryFoodIcon from "../../Asset/Icon/category_food_icon.png";
-import pickupStatusIcon from "../../Asset/Icon/pickup_status_icon.png";
-import cashierStatusIcon from "../../Asset/Icon/cashier_icon.png"
-import ovoIcon from "../../Asset/Icon/ovo_icon.png";
-import PikaButton from "../../Component/Button/PikaButton";
+import React, { createRef } from "react";
+import RegisterDialog from "../../Component/Authentication/RegisterDialog";
+import { firebaseAnalytics } from "../../firebaseConfig";
 import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import Cookies from "js-cookie";
-import RegisterDialog from '../../Component/Authentication/RegisterDialog';
-import { firebaseAnalytics } from '../../firebaseConfig'
+import pikappLogo from "../../Asset/Logo/logo4x.png";
+import ArrowBack from "../../Asset/Icon/arrow-left.png";
+import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
+import diningTableColor from "../../Asset/Icon/diningTableColor.png";
+import takeawayColor from "../../Asset/Icon/takeawayColor.png";
+import CashierPayment from "../../Asset/Icon/CashierPayment.png";
+import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
+import moment from "moment";
+
+let interval = createRef();
 
 export class StatusView extends React.Component {
   state = {
+    isMobile: false,
+    statusModal: false,
+    statusList: [
+      "Semua Status",
+      "Menunggu Pembayaran",
+      "Menunggu Konfirmasi",
+      "Sedang Dimasak",
+      "Makanan Tiba",
+      "Transaksi Selesai",
+      "Transaksi Gagal",
+    ],
+    statusIndex: 0,
     showModal: false,
     activeTab: 1,
     showRegisterDialog: false,
@@ -42,103 +48,17 @@ export class StatusView extends React.Component {
         transactionTime: "",
       },
     ],
-    currentModal: {
-      transactionId: "",
-      transactionTime: "",
-      storeName: "Store",
-      storeLocation: "Location",
-      storeDistance: "Distance",
-      status: "Status",
-      payment: "Cash",
-      biz_type: "",
-      food: [
-        {
-          productId: "",
-          name: "",
-          price: 0,
-          image: "",
-          note: "",
-          quantity: 1,
-          extraprice: 0
-        },
-      ],
-    },
+    staticCountDown: false,
+    updateStatus: false,
   };
 
-  setModal(isShow) {
-    this.setState({ showModal: isShow });
-  }
-
-  handleDetail(transId) {
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
-    if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href }
-      Cookies.set("lastLink", lastLink, { expires: 1 })
-      // window.location.href = "/login"
-    }
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "txn/v2/" + transId + "/txn-detail/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
-      },
-      method: "GET",
-    })
-      .then((res) => {
-        console.log(res.data.results);
-        var results = res.data.results;
-        var resultModal = { ...this.currentModal }
-        resultModal.transactionId = results.transaction_id
-        resultModal.transactionTime = results.transaction_time
-        resultModal.storeName = results.merchant_name
-        resultModal.storeDistance = ""
-        resultModal.storeLocation = ""
-        resultModal.status = results.status
-        resultModal.biz_type = results.biz_type
-        resultModal.payment = results.payment_with
-        resultModal.food = []
-        results.detail_products.forEach((product) => {
-          resultModal.food.push({
-            name: product.product_name,
-            price: product.price,
-            quantity: product.qty,
-            image: product.image,
-            note: product.notes,
-            extraprice: product.extra_price
-          })
-        })
-        this.setState({
-          currentModal: resultModal
-        })
-      })
-      .catch((err) => {
-      });
-
-    this.setModal(true);
-  }
-
-  handleSelect(tabIndex) {
-    this.setState({ activeTab: tabIndex });
-  }
-
   componentDidMount() {
-    firebaseAnalytics.logEvent("orderlist_visited")
+    firebaseAnalytics.logEvent("orderlist_visited");
+    if (window.innerWidth < 700) {
+      this.setState({ isMobile: true });
+    } else {
+      this.setState({ isMobile: false });
+    }
     var auth = {
       isLogged: false,
       token: "",
@@ -147,44 +67,16 @@ export class StatusView extends React.Component {
       email: "",
     };
     if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
+      auth = JSON.parse(Cookies.get("auth"));
       this.setState({ isLogin: auth.isLogged });
     }
     if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href }
-      Cookies.set("lastLink", lastLink, { expires: 1 })
+      var lastLink = { value: window.location.href };
+      Cookies.set("lastLink", lastLink, { expires: 1 });
       this.setRegisterDialog(true);
-      // window.location.href = "/login"
     } else {
       this.getTransactionHistory();
     }
-    // var state = { ...this.state };
-    // state.data.pop();
-    // state.data.push({
-    //   title: "Food1",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "unpaid",
-    // });
-    // state.data.push({
-    //   title: "Food4",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "unpaid",
-    // });
-    // state.data.push({
-    //   title: "Food2",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "pick",
-    // });
-    // state.data.push({
-    //   title: "Food3",
-    //   distance: "dist1",
-    //   quantity: "qty1",
-    //   status: "send",
-    // });
-    // this.setState({ data: state.data });
   }
 
   componentDidUpdate() {
@@ -197,10 +89,18 @@ export class StatusView extends React.Component {
         email: "",
       };
       if (Cookies.get("auth") !== undefined) {
-        auth = JSON.parse(Cookies.get("auth"))
-        this.getTransactionHistory();
+        auth = JSON.parse(Cookies.get("auth"));
         this.setState({ isLogin: auth.isLogged });
       }
+    }
+
+    if (this.state.updateStatus) {
+      window.location.reload();
+    }
+
+    if (this.state.staticCountDown) {
+      this.countDownTimer();
+      this.setState({ staticCountDown: false });
     }
   }
 
@@ -213,13 +113,16 @@ export class StatusView extends React.Component {
       email: "",
     };
     if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
+      auth = JSON.parse(Cookies.get("auth"));
     }
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+    let signature = sha256(
+      clientId + ":" + auth.email + ":" + secret + ":" + date,
+      secret
+    );
     Axios(address + "txn/v1/txn-history/", {
       headers: {
         "Content-Type": "application/json",
@@ -227,36 +130,67 @@ export class StatusView extends React.Component {
         "x-request-timestamp": date,
         "x-client-id": clientId,
         "x-signature": signature,
-        "token": auth.token,
+        token: auth.token,
       },
       method: "GET",
     })
       .then((res) => {
         var results = res.data.results;
-        var stateData = { ...this.state }
-        stateData.data.pop()
+        var stateData = { ...this.state };
+        stateData.data.pop();
+        let futureTimer = [];
+        let futureTimerOvo = [];
+        futureTimer = JSON.parse(localStorage.getItem("timerDown"));
+        futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
+        let indTime = 0;
+        let indTimeOvo = 0;
         results.forEach((result) => {
-          stateData.data.push({
-            title: result.merchant_name,
-            distance: "",
-            quantity: result.total_product,
-            status: result.status,
-            biz_type: result.biz_type,
-            payment: result.payment_with,
-            transactionId: result.transaction_id,
-            transactionTime: result.transaction_time,
-          })
-        })
-        this.setState({ data: stateData.data });
+          if (result.status === "OPEN") {
+            stateData.data.push({
+              title: result.merchant_name,
+              distance: "",
+              quantity: result.total_product,
+              status: result.status,
+              biz_type: result.biz_type,
+              payment: result.payment_with,
+              transactionId: result.transaction_id,
+              transactionTime: result.transaction_time,
+              transactionCountDown:
+                result.payment_with === "WALLET_OVO"
+                  ? futureTimerOvo[indTimeOvo]
+                  : futureTimer[indTime],
+              timerMinutes: "0",
+              timerSeconds: "0",
+              stopInterval: true,
+            });
+            if (result.payment_with === "WALLET_OVO") {
+              indTimeOvo++;
+            } else {
+              indTime++;
+            }
+          } else {
+            stateData.data.push({
+              title: result.merchant_name,
+              distance: "",
+              quantity: result.total_product,
+              status: result.status,
+              biz_type: result.biz_type,
+              payment: result.payment_with,
+              transactionId: result.transaction_id,
+              transactionTime: result.transaction_time,
+            });
+          }
+        });
+        console.log(stateData.data);
+        this.setState({ data: stateData.data, staticCountDown: true });
       })
       .catch((err) => {
+        console.log(err);
       });
-
   }
 
   setRegisterDialog(isShow) {
     this.setState({ showRegisterDialog: isShow })
-    document.body.style.overflowY = ''
   }
 
   showRegisterDialog = () => {
@@ -270,519 +204,608 @@ export class StatusView extends React.Component {
     }
   }
 
-  render() {
-    let modal;
-    let modalList = this.state.currentModal.food;
+  handleStatus = (isShow) => {
+    this.setState({ statusModal: isShow });
+  };
 
-    let modalListView = modalList.map((data) => {
+  keepStatus = (status) => {
+    this.setState({ statusIndex: status });
+  };
+
+  statusDialog = () => {
+    if (this.state.statusModal) {
       return (
-        <Row>
-          <Col>
-            <Row>
-              <Col xs={2} md={1}>
-                <img src={placeholderIcon} class="statusFoodIcon" alt="food icon" />
-              </Col>
-              <Col>
-                <p class="statusFoodname">{data.name}</p>
-                <p class="statusFoodPrice">
-                  {Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                  }).format(data.price + data.extraprice)}
-                </p>
-              </Col>
-              <Col>
-                <p class="statusFoodQuantity">{data.quantity}x</p>
-              </Col>
-            </Row>
-            <Row>
-              <p class="statusFoodNote">Catatan: {data.note}</p>
-            </Row>
-          </Col>
-        </Row>
+        <OrderListStatus
+          isShowStatusModal={this.state.statusModal}
+          onHideStatusModal={() => this.handleStatus(false)}
+          sendIndexStatus={this.state.statusIndex}
+          getStatusData={(status) => this.keepStatus(status)}
+        />
       );
-    });
-    let currentTotal = 0;
-    modalList.forEach((data) => {
-      currentTotal = currentTotal + (data.price + data.extraprice) * data.quantity;
-    });
-    if (this.state.showModal === true) {
-      let payImage;
-      let payLabel;
-      if (this.state.currentModal.payment === "PAY_BY_CASHIER") {
-        payImage = cashierStatusIcon;
-        payLabel = "Cashier"
-      } else if (this.state.currentModal.payment === "WALLET") {
-        payImage = placeholderIcon;
-        payLabel = "Cash"
-      } else if (this.state.currentModal.payment === "VA") {
-        payImage = placeholderIcon;
-        payLabel = "Virtual"
-      } else if (this.state.currentModal.payment === "WALLET_OVO") {
-        payImage = ovoIcon;
-        payLabel = "OVO"
-      } else if (this.state.currentModal.payment === "WALLET_DANA") {
-        payImage = placeholderIcon;
-        payLabel = "DANA"
-      }
-      modal = (
-        <Modal
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          show={() => this.setModal(true)}
-          onHide={() => this.setModal(false)}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <p class="statusNoteLabel">No Pesanan.</p>
-              <p class="statusNoteHeader">{this.state.currentModal.transactionId}</p>
-              <p class="statusNoteLabel">{this.state.currentModal.transactionTime}</p>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Row>
-              <Col xs={2} md={1}>
-                <img src={categoryFoodIcon} class="statusStoreIcon" alt="category icon" />
-              </Col>
-              <Col>
-                <p class="statusStoreName">
-                  {this.state.currentModal.storeName}
-                </p>
-                <p class="statusStoreLabel">store location</p>
-                <p class="statusStoreLocation">
-                  {this.state.currentModal.storeLocation}
-                </p>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={2} md={1}>
-                <img src={pickupStatusIcon} class="statusStoreStatusIcon" alt="pickup status" />
-              </Col>
-              <Col>
-                <span class="statusStoreLabel">status: </span>
-                <span class="statusStoreStatus">
-                  {this.state.currentModal.status}
-                </span>
-                <span class="statusStoreDistance">
-                  {this.state.currentModal.storeDistance}
-                </span>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <p class="statusStorePaymentLabel">Metode Pembayaran</p>
-                <img src={payImage} class="statusFoodIcon" alt="status icon"></img>
-                <span class="statusStorePayment">
-                  {payLabel}
-                </span>
-              </Col>
-            </Row>
-            {modalListView}
-            <Row>
-              <Col>
-                <p class="statusStoreTotal">Total Pembayaran</p>
-              </Col>
-              <Col>
-                {Intl.NumberFormat("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                }).format(currentTotal)}
-              </Col>
-            </Row>
-          </Modal.Body>
-          <Modal.Footer />
-        </Modal>
-      );
-    } else {
-      modal = <></>;
     }
-    let notPaidImage;
-    let contentView;
+  };
 
-    let currentState = this.state.activeTab;
+  contentStatus = (value, bimg, blab, pimg, plab) => {
+    let formatDate = new Date(value.transactionTime);
+    return (
+      <div className="orderList-transaction-content">
+        <div className="orderList-transaction-topSide">
+          <h3 className="orderList-transaction-merchName">{value.title}</h3>
+
+          <h3 className="orderList-transaction-timeTrans">
+            {moment(formatDate).format("DD MMMM H:mm")}
+          </h3>
+        </div>
+
+        <div className="orderList-transaction-centerSide">
+          {value.quantity} | Rp 60.000
+        </div>
+
+        <div className="orderList-transaction-bottomSide">
+          <div className="orderList-transaction-foodService">
+            <span>
+              <img className="orderList-foodService-logo" src={bimg} alt="" />
+            </span>
+
+            <h3 className="orderList-foodService-words">{blab}</h3>
+          </div>
+
+          <div className="orderList-transaction-paymentService">
+            <span>
+              <img
+                className="orderList-paymentService-logo"
+                src={pimg}
+                alt=""
+              />
+            </span>
+
+            <h3 className="orderList-paymentService-words">{plab}</h3>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  eachStatusList = (
+    value,
+    ind,
+    thestatus,
+    backColor,
+    bizImage,
+    bizLabel,
+    payImage,
+    payLabel
+  ) => {
+    return (
+      <div key={ind} className="orderListContent">
+        <div
+          className="orderList-transaction-header"
+          style={{ backgroundColor: backColor }}
+        >
+          <div className="orderList-transaction-title">{thestatus}</div>
+        </div>
+
+        {this.contentStatus(value, bizImage, bizLabel, payImage, payLabel)}
+      </div>
+    );
+  };
+
+  countDownTimer = () => {
+    this.state.data.forEach((valTime, indTime) => {
+      if (valTime.status === "OPEN") {
+        // get future time
+        let eventTime = new Date(valTime.transactionCountDown).getTime();
+
+        interval = setInterval(() => {
+          // based on time set in user's computer time / OS
+          const currentTime = new Date().getTime();
+          const distance = eventTime - currentTime;
+
+          const minutes = Math.floor(
+            (distance % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          let newMinutes = valTime.timerMinutes;
+          newMinutes = minutes;
+
+          let newSeconds = valTime.timerSeconds;
+          newSeconds = seconds;
+
+          let changeData = [...this.state.data];
+          if (distance < 0) {
+            console.log(changeData[indTime].stopInterval, indTime);
+            if (changeData[indTime].stopInterval) {
+              clearInterval(interval.current);
+              let lastMinutes = valTime.timerMinutes;
+              lastMinutes = "0";
+              changeData[indTime].timerMinutes = lastMinutes;
+
+              let lastSeconds = valTime.timerSeconds;
+              lastSeconds = "0";
+              changeData[indTime].timerSeconds = lastSeconds;
+              changeData[indTime].stopInterval = false;
+              var auth = {
+                isLogged: false,
+                token: "",
+                new_event: true,
+                recommendation_status: false,
+                email: "",
+              };
+              auth = JSON.parse(Cookies.get("auth"));
+              let uuid = uuidV4();
+              uuid = uuid.replace(/-/g, "");
+              const date = new Date().toISOString();
+              let signature = sha256(
+                clientId + ":" + auth.email + ":" + secret + ":" + date,
+                secret
+              );
+
+              var bodyFormData = new FormData();
+              bodyFormData.append("transaction_id", valTime.transactionId);
+              bodyFormData.append("status", "FAILED");
+
+              var options = {
+                method: "post",
+                url: address + "txn/v1/txn-update/",
+                headers: {
+                  "x-client-id": clientId,
+                  token: auth.token,
+                  "x-request-id": uuid,
+                  "x-request-timestamp": date,
+                  "x-signature": signature,
+                },
+                data: bodyFormData,
+              };
+
+              Axios(options)
+                .then(() => {
+                  if (valTime.payment === "PAY_BY_CASHIER") {
+                    let futureTimer = [];
+                    futureTimer = JSON.parse(localStorage.getItem("timerDown"));
+                    futureTimer.pop();
+                    localStorage.setItem(
+                      "timerDown",
+                      JSON.stringify(futureTimer)
+                    );
+                  } else {
+                    let futureTimerOvo = [];
+                    futureTimerOvo = JSON.parse(
+                      localStorage.getItem("timerDownOvo")
+                    );
+                    futureTimerOvo.pop();
+                    localStorage.setItem(
+                      "timerDownOvo",
+                      JSON.stringify(futureTimerOvo)
+                    );
+                  }
+                  this.setState({ data: changeData, updateStatus: true });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+          } else {
+            if (valTime.payment === "WALLET_OVO") {
+              if (newSeconds < 10) {
+                clearInterval(interval.current);
+                let futureTimerOvo = [];
+                futureTimerOvo = JSON.parse(
+                  localStorage.getItem("timerDownOvo")
+                );
+                futureTimerOvo.pop();
+                localStorage.setItem(
+                  "timerDownOvo",
+                  JSON.stringify(futureTimerOvo)
+                );
+                window.location.reload();
+              }
+            }
+            changeData[indTime].timerMinutes = newMinutes;
+            changeData[indTime].timerSeconds = newSeconds;
+            this.setState({ data: changeData, staticCountDown: false });
+          }
+        }, 1000);
+      }
+    });
+  };
+
+  contentMainView = () => {
+    let bizImage;
+    let bizLabel;
+    let payImage;
+    let payLabel;
+
+    let currentState = this.state.statusIndex;
     if (currentState === 1) {
-      notPaidImage = unpaidActiveIcon;
-      contentView = this.state.data.map((value) => {
-        let bizImage;
-        let bizLabel;
-        let payImage;
-        let payLabel;
+      let filterOpenStatus = this.state.data.filter((value, ind) => {
+        return value.status === "OPEN";
+      });
+
+      return filterOpenStatus.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
-          payImage = cashierStatusIcon;
-          payLabel = "Cashier"
-        } else if (value.payment === "WALLET") {
-          payImage = placeholderIcon;
-          payLabel = "Cash"
-        } else if (value.payment === "VA") {
-          payImage = placeholderIcon;
-          payLabel = "Virtual"
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
         } else if (value.payment === "WALLET_OVO") {
-          payImage = ovoIcon;
-          payLabel = "OVO"
-        } else if (value.payment === "WALLET_DANA") {
-          payImage = placeholderIcon;
-          payLabel = "DANA"
+          payImage = OvoPayment;
+          payLabel = "Ovo";
         }
+
         if (value.biz_type === "DINE_IN") {
-          bizImage = dineinIcon
-          bizLabel = "Dine in"
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
         } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayIcon;
-          bizLabel = "Take away"
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
         }
+
+        return (
+          <div key={ind} className="orderListContent">
+            <div
+              className="orderList-transaction-header"
+              style={{ backgroundColor: "#DC6A84" }}
+            >
+              <div className="orderList-transaction-title">
+                Menunggu Pembayaran
+              </div>
+
+              <div className="orderList-transaction-counttimer">
+                {value.timerMinutes < 10
+                  ? `0${value.timerMinutes}`
+                  : value.timerMinutes}
+                :
+                {value.timerSeconds < 10
+                  ? `0${value.timerSeconds}`
+                  : value.timerSeconds}
+              </div>
+            </div>
+            {this.contentStatus(value, bizImage, bizLabel, payImage, payLabel)}
+          </div>
+        );
+      });
+    } else if (currentState === 2) {
+      let data = this.state.data;
+      return data.map((value, ind) => {
+        if (value.payment === "PAY_BY_CASHIER") {
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
+        } else if (value.payment === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payLabel = "Ovo";
+        }
+
+        if (value.biz_type === "DINE_IN") {
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
+        } else if (value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
+        }
+
+        let thestatus = "Menunggu Konfirmasi";
+        let backColor = "#FBA83C";
+        if (value.status === "PAID") {
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        }
+      });
+    } else if (currentState === 3) {
+      let data = this.state.data;
+      return data.map((value, ind) => {
+        if (value.payment === "PAY_BY_CASHIER") {
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
+        } else if (value.payment === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payLabel = "Ovo";
+        }
+
+        if (value.biz_type === "DINE_IN") {
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
+        } else if (value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
+        }
+
+        let thestatus = "Sedang Dimasak";
+        let backColor = "#FBA83C";
+        if (value.status === "ON_PROCESS") {
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        }
+      });
+    } else if (currentState === 4) {
+      let data = this.state.data;
+      return data.map((value, ind) => {
+        if (value.payment === "PAY_BY_CASHIER") {
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
+        } else if (value.payment === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payLabel = "Ovo";
+        }
+
+        if (value.biz_type === "DINE_IN") {
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
+        } else if (value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
+        }
+
+        let thestatus = "Makanan Tiba";
+        let backColor = "#4BB7AC";
+        if (value.status === "DELIVER") {
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        }
+      });
+    } else if (currentState === 5) {
+      let data = this.state.data;
+      return data.map((value, ind) => {
+        if (value.payment === "PAY_BY_CASHIER") {
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
+        } else if (value.payment === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payLabel = "Ovo";
+        }
+
+        if (value.biz_type === "DINE_IN") {
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
+        } else if (value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
+        }
+
+        let thestatus = "Transaksi Selesai";
+        let backColor = "#4BB7AC";
+        if (value.status === "CLOSE" || value.status === "FINALIZE") {
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        }
+      });
+    } else if (currentState === 6) {
+      let data = this.state.data;
+      return data.map((value, ind) => {
+        if (value.payment === "PAY_BY_CASHIER") {
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
+        } else if (value.payment === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payLabel = "Ovo";
+        }
+
+        if (value.biz_type === "DINE_IN") {
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
+        } else if (value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
+        }
+
+        let thestatus = "Transaksi Gagal";
+        let backColor = "#DC6A84";
+        if (value.status === "FAILED" || value.status === "ERROR") {
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        }
+      });
+    } else if (currentState === 0) {
+      let data = this.state.data;
+      return data.map((value, ind) => {
+        if (value.payment === "PAY_BY_CASHIER") {
+          payImage = CashierPayment;
+          payLabel = "Pembayaran Di Kasir";
+        } else if (value.payment === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payLabel = "Ovo";
+        }
+
+        if (value.biz_type === "DINE_IN") {
+          bizImage = diningTableColor;
+          bizLabel = "Makan Di Tempat";
+        } else if (value.biz_type === "TAKE_AWAY") {
+          bizImage = takeawayColor;
+          bizLabel = "Takeaway/Bungkus";
+        }
+
+        let thestatus;
+        let backColor;
         if (value.status === "OPEN") {
           return (
-            <Row className={"statusCard"}>
-              <Col xs={1} md={1} />
-              <Col>
-                <Card>
-                  <Row className={"statusCard"}>
-                    <Col xs={1} md={1}>
-                      <img
-                        src={categoryFoodIcon}
-                        class="statusIcon"
-                        alt={"statusIcon"}
-                      ></img>
-                    </Col>
-                    <Col>
-                      <p class="statusTitle">{value.title}</p>
-                      <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity} produk</p>
-                      <PikaButton
-                        title={"Detail"}
-                        buttonStyle={"statusPika"}
-                        handleClick={() => this.handleDetail(value.transactionId)}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className={"statusLeftImg"}>
-                      <img src={bizImage} alt="biz icon"></img>
-                      <span class="statusLeftText">{bizLabel}</span>
-                    </Col>
-                    <Col className={"statusRightImg"}>
-                      <img src={payImage} alt="pay icon"></img>
-                      <span class="statusRightText">{payLabel}</span>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col xs={1} md={1} />
-            </Row>
-          );
-        }
-      });
-    } else {
-      notPaidImage = unpaidIcon;
-    }
+            <div key={ind} className="orderListContent">
+              <div
+                className="orderList-transaction-header"
+                style={{ backgroundColor: "#DC6A84" }}
+              >
+                <div className="orderList-transaction-title">
+                  Menunggu Pembayaran
+                </div>
 
-    let packImage;
-    if (currentState === 2) {
-      packImage = packActiveIcon;
-      let data = this.state.data;
-      contentView = data.map((value) => {
-        let bizImage;
-        let bizLabel;
-        let payImage;
-        let payLabel;
-        if (value.payment === "PAY_BY_CASHIER") {
-          payImage = placeholderIcon;
-          payLabel = "Cashier"
-        } else if (value.payment === "WALLET") {
-          payImage = placeholderIcon;
-          payLabel = "Cash"
-        } else if (value.payment === "VA") {
-          payImage = placeholderIcon;
-          payLabel = "Virtual"
-        } else if (value.payment === "WALLET_OVO") {
-          payImage = ovoIcon;
-          payLabel = "OVO"
-        } else if (value.payment === "WALLET_DANA") {
-          payImage = placeholderIcon;
-          payLabel = "DANA"
-        }
-        if (value.biz_type === "DINE_IN") {
-          bizImage = dineinIcon
-          bizLabel = "Dine in"
-        } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayIcon;
-          bizLabel = "Take away"
-        }
-        if (value.biz_type === "DINE_IN") {
-          bizImage = dineinIcon
-          bizLabel = "Dine in"
-        } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayIcon;
-          bizLabel = "Take away"
-        }
-        if (value.status === "PAID" || value.status === "MERCHANT_CONFIRM" || value.status === "CUSTOMER_ACCEPTED") {
-          return (
-            <Row className={"statusCard"}>
-              <Col xs={1} md={1} />
-              <Col>
-                <Card>
-                  <Row className={"statusCard"}>
-                    <Col xs={1} md={1}>
-                      <img
-                        src={categoryFoodIcon}
-                        class="statusIcon"
-                        alt={"statusIcon"}
-                      ></img>
-                    </Col>
-                    <Col>
-                      <p class="statusTitle">{value.title}</p>
-                      <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity} produk</p>
-                      <PikaButton
-                        title={"Detail"}
-                        buttonStyle={"statusPika"}
-                        handleClick={() => this.handleDetail(value.transactionId)}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className={"statusLeftImg"}>
-                      <img src={bizImage} alt="biz icon"></img>
-                      <span class="statusLeftText">{bizLabel}</span>
-                    </Col>
-                    <Col className={"statusRightImg"}>
-                      <img src={payImage} alt="pay icon"></img>
-                      <span class="statusRightText">{payLabel}</span>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col xs={1} md={1} />
-            </Row>
+                <div className="orderList-transaction-counttimer">
+                  {value.timerMinutes < 10
+                    ? `0${value.timerMinutes}`
+                    : value.timerMinutes}
+                  :
+                  {value.timerSeconds < 10
+                    ? `0${value.timerSeconds}`
+                    : value.timerSeconds}
+                </div>
+              </div>
+              {this.contentStatus(
+                value,
+                bizImage,
+                bizLabel,
+                payImage,
+                payLabel
+              )}
+            </div>
+          );
+        } else if (value.status === "PAID") {
+          thestatus = "Menunggu Konfirmasi";
+          backColor = "#FBA83C";
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        } else if (value.status === "ON_PROCESS") {
+          thestatus = "Sedang Dimasak";
+          backColor = "#FBA83C";
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        } else if (value.status === "DELIVER") {
+          thestatus = "Makanan Tiba";
+          backColor = "#4BB7AC";
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        } else if (value.status === "CLOSE" || value.status === "FINALIZE") {
+          thestatus = "Transaksi Selesai";
+          backColor = "#4BB7AC";
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
+          );
+        } else if (value.status === "FAILED" || value.status === "ERROR") {
+          thestatus = "Transaksi Gagal";
+          backColor = "#DC6A84";
+          return this.eachStatusList(
+            value,
+            ind,
+            thestatus,
+            backColor,
+            bizImage,
+            bizLabel,
+            payImage,
+            payLabel
           );
         }
       });
-    } else {
-      packImage = packIcon;
     }
+  };
 
-    let sendImage;
-    if (currentState === 3) {
-      sendImage = sendActiveIcon;
-      let data = this.state.data;
-      contentView = data.map((value) => {
-        let bizImage;
-        let bizLabel;
-        let payImage;
-        let payLabel;
-        if (value.payment === "PAY_BY_CASHIER") {
-          payImage = placeholderIcon;
-          payLabel = "Cashier"
-        } else if (value.payment === "WALLET") {
-          payImage = placeholderIcon;
-          payLabel = "Cash"
-        } else if (value.payment === "VA") {
-          payImage = placeholderIcon;
-          payLabel = "Virtual"
-        } else if (value.payment === "WALLET_OVO") {
-          payImage = ovoIcon;
-          payLabel = "OVO"
-        } else if (value.payment === "WALLET_DANA") {
-          payImage = placeholderIcon;
-          payLabel = "DANA"
-        }
-        if (value.biz_type === "DINE_IN") {
-          bizImage = dineinIcon
-          bizLabel = "Dine in"
-        } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayIcon;
-          bizLabel = "Take away"
-        }
-        if (value.biz_type === "DINE_IN") {
-          bizImage = dineinIcon
-          bizLabel = "Dine in"
-        } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayIcon;
-          bizLabel = "Take away"
-        }
-        if (value.status === "DELIVER" || value.status === "ON_PROCESS") {
-          return (
-            <Row className={"statusCard"}>
-              <Col xs={1} md={1} />
-              <Col>
-                <Card>
-                  <Row className={"statusCard"}>
-                    <Col xs={1} md={1}>
-                      <img
-                        src={categoryFoodIcon}
-                        class="statusIcon"
-                        alt={"statusIcon"}
-                      ></img>
-                    </Col>
-                    <Col>
-                      <p class="statusTitle">{value.title}</p>
-                      <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity} produk</p>
-                      <PikaButton
-                        title={"Detail"}
-                        buttonStyle={"statusPika"}
-                        handleClick={() => this.handleDetail(value.transactionId)}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className={"statusLeftImg"}>
-                      <img src={bizImage} alt="biz icon"></img>
-                      <span class="statusLeftText">{bizLabel}</span>
-                    </Col>
-                    <Col className={"statusRightImg"}>
-                      <img src={payImage} alt="pay icon"></img>
-                      <span class="statusRightText">{payLabel}</span>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col xs={1} md={1} />
-            </Row>
-          );
-        }
-      });
-    } else {
-      sendImage = sendIcon;
-    }
+  componentWillUnmount() {
+    clearInterval(interval.current);
+  }
 
-    let reviewImage;
-    if (currentState === 4) {
-      reviewImage = reviewActiveIcon;
-      let data = this.state.data;
-      contentView = data.map((value) => {
-        if (value.status === "CLOSE" || value.status === "FINALIZE") {
-          let bizImage;
-          let bizLabel;
-          let payImage;
-          let payLabel;
-          if (value.payment === "PAY_BY_CASHIER") {
-            payImage = placeholderIcon;
-            payLabel = "Cashier"
-          } else if (value.payment === "WALLET") {
-            payImage = placeholderIcon;
-            payLabel = "Cash"
-          } else if (value.payment === "VA") {
-            payImage = placeholderIcon;
-            payLabel = "Virtual"
-          } else if (value.payment === "WALLET_OVO") {
-            payImage = ovoIcon;
-            payLabel = "OVO"
-          } else if (value.payment === "WALLET_DANA") {
-            payImage = placeholderIcon;
-            payLabel = "DANA"
-          }
-          if (value.biz_type === "DINE_IN") {
-            bizImage = dineinIcon
-            bizLabel = "Dine in"
-          } else if (value.biz_type === "TAKE_AWAY") {
-            bizImage = takeawayIcon;
-            bizLabel = "Take away"
-          }
-          if (value.biz_type === "DINE_IN") {
-            bizImage = dineinIcon
-            bizLabel = "Dine in"
-          } else if (value.biz_type === "TAKE_AWAY") {
-            bizImage = takeawayIcon;
-            bizLabel = "Take away"
-          }
-          return (
-            <Row className={"statusCard"}>
-              <Col xs={1} md={1} />
-              <Col>
-                <Card>
-                  <Row className={"statusCard"}>
-                    <Col xs={1} md={1}>
-                      <img
-                        src={categoryFoodIcon}
-                        class="statusIcon"
-                        alt={"statusIcon"}
-                      ></img>
-                    </Col>
-                    <Col>
-                      <p class="statusTitle">{value.title}</p>
-                      <p class="statusDistance">{value.distance}</p>
-                      <p class="statusQty">{value.quantity} produk</p>
-                      <PikaButton
-                        title={"Detail"}
-                        buttonStyle={"statusPika"}
-                        handleClick={() => this.handleDetail(value.transactionId)}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className={"statusLeftImg"}>
-                      <img src={bizImage} alt="biz icon"></img>
-                      <span class="statusLeftText">{bizLabel}</span>
-                    </Col>
-                    <Col className={"statusRightImg"}>
-                      <img src={payImage} alt="pay icon"></img>
-                      <span class="statusRightText">{payLabel}</span>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col xs={1} md={1} />
-            </Row>
-          );
-        }
-      });
-    } else {
-      reviewImage = reviewIcon;
-    }
+  render() {
+    let { statusIndex, statusList } = this.state;
+    let viewSize = (
+      <>
+        <div className="modal-header-orderList">
+          <span
+            className="logopikappCenterBack"
+            onClick={() => window.history.back()}
+          >
+            <img className="LogoPikappBack" src={ArrowBack} alt="" />
+          </span>
+
+          <div className="menu-title-orderList">Daftar Transaksi</div>
+        </div>
+
+        <div
+          className="orderList-filter"
+          onClick={() => this.handleStatus(true)}
+        >
+          <div className="orderList-filterName">{statusList[statusIndex]}</div>
+
+          <span className="orderList-filterArrow">
+            <img className="orderList-arrowDown" src={ArrowDownColor} alt="" />
+          </span>
+        </div>
+
+        <div className="orderListWrapper">{this.contentMainView()}</div>
+      </>
+    );
 
     return (
-      <>
-        <Nav variant="tabs" defaultActiveKey={"not-paid"}>
-          <Nav.Item>
-            <Nav.Link
-              eventKey={"not-paid"}
-              onClick={() => this.handleSelect(1)}
-            >
-              <Row>
-                <img
-                  src={notPaidImage}
-                  alt={"unpaid"}
-                  className={"statusTabIcon"}
-                />
-              </Row>
-              <Row className={"statusTabTitle"}>Belum Bayar</Row>
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey={"pack"} onClick={() => this.handleSelect(2)}>
-              <Row>
-                <img src={packImage} alt={"pack"} className={"statusTabIcon"} />
-              </Row>
-              <Row className={"statusTabTitle"}>Dikemas</Row>
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey={"send"} onClick={() => this.handleSelect(3)}>
-              <Row>
-                <img src={sendImage} alt={"send"} className={"statusTabIcon"} />
-              </Row>
-              <Row className={"statusTabTitle"}>Siap / Dikirim</Row>
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey={"review"} onClick={() => this.handleSelect(4)}>
-              <Row>
-                <img
-                  src={reviewImage}
-                  alt={"review"}
-                  className={"statusTabIcon"}
-                />
-              </Row>
-              <Row className={"statusTabTitle"}>Beri Penilaian</Row>
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
-        {contentView}
-        {modal}
+      <div className="orderListLayout">
+        <div className="orderListTitle">
+          <span className="logoCenterOrderList">
+            <img className="LogoPikappOrderList" src={pikappLogo} alt="" />
+          </span>
+        </div>
+
+        <div className="modalOrderList">
+          {!this.state.isMobile ? (
+            <div className="modal-content-orderList">{viewSize}</div>
+          ) : (
+            <div className="modal-content-orderList-mob">{viewSize}</div>
+          )}
+        </div>
+        {this.statusDialog()}
         {this.showRegisterDialog()}
-      </>
+      </div>
     );
   }
 }
