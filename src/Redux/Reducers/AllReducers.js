@@ -14,7 +14,7 @@ const INITIAL_STATE = {
     openMenuCart: false,
     dataOrder : {},
     fcmToken : '',
-    transactionId : '',
+    dataDetail : {},
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -51,8 +51,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, dataOrder: action.payload }
         case "FCMTOKEN":
             return { ...state, fcmToken: action.payload }
-        case "TRANSACTIONID":
-            return { ...state, transactionId: action.payload }
+        case "DATADETAIL":
+            return { ...state, dataDetail: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

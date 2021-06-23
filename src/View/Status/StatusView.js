@@ -15,6 +15,9 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
 import moment from "moment";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { DataDetail } from '../../Redux/Actions'
 
 let interval = createRef();
 
@@ -50,6 +53,7 @@ export class StatusView extends React.Component {
     ],
     staticCountDown: false,
     updateStatus: false,
+    continueDetail : false,
   };
 
   componentDidMount() {
@@ -225,10 +229,20 @@ export class StatusView extends React.Component {
     }
   };
 
+  goToOrderDetail = (transId, counterTime) => {
+    let value = {
+      transactionId : transId,
+      transactionTime : counterTime
+    }
+    this.props.DataDetail(value);
+    localStorage.setItem("dataDetail", JSON.stringify(value));
+    this.setState({ continueDetail : true });
+  }
+
   contentStatus = (value, bimg, blab, pimg, plab) => {
     let formatDate = new Date(value.transactionTime);
     return (
-      <div className="orderList-transaction-content">
+      <div className="orderList-transaction-content" onClick={() => this.goToOrderDetail(value.transactionId, value.transactionCountDown)}>
         <div className="orderList-transaction-topSide">
           <h3 className="orderList-transaction-merchName">{value.title}</h3>
 
@@ -759,6 +773,9 @@ export class StatusView extends React.Component {
   }
 
   render() {
+    if (this.state.continueDetail) {
+      return <Redirect to='/orderdetail' />
+    }
     let { statusIndex, statusList } = this.state;
     let viewSize = (
       <>
@@ -809,3 +826,12 @@ export class StatusView extends React.Component {
     );
   }
 }
+
+const Mapstatetoprops = (state) => {
+  return {
+    AllRedu: state.AllRedu,
+    AuthRedu: state.AuthRedu
+  }
+}
+
+export default connect(Mapstatetoprops, { DataDetail })(StatusView)

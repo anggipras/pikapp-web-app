@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { connect } from "react-redux";
 import Loader from 'react-loader-spinner'
 import { Redirect } from "react-router-dom";
-import { LoadingButton, DoneLoad, TransactionId } from '../../Redux/Actions'
+import { LoadingButton, DoneLoad, DataDetail } from '../../Redux/Actions'
 import Swal from 'sweetalert2';
 import { Link } from "react-router-dom";
 import pikappLogo from '../../Asset/Logo/logo4x.png';
@@ -20,13 +20,14 @@ import PaymentModal from '../../Component/Modal/PaymentModal';
 import moment from 'moment';
 import idLocale from "moment/locale/id";
 
+let interval = createRef();
+
 class OrderDetailView extends React.Component {
     state = {
         isMobile : false,
-        dataOrder : {
+        dataDetail : {
             transactionId : "",
-            totalPayment : "",
-            paymentType : "",
+            transactionTime : ""
         },
         data: [
             {
@@ -54,6 +55,9 @@ class OrderDetailView extends React.Component {
             eat_type : "",
             paymentOption : "",
             paymentImage : "",
+            transactionCounter : 0,
+            timerMinutes : 0,
+            timerSeconds : 0,
             food: [
                 {
                 productId: "",
@@ -76,16 +80,19 @@ class OrderDetailView extends React.Component {
         } else {
             this.setState({ isMobile : false });
         }
-        
+
         this.getTxnDetail();
-        if(localStorage.getItem("payment")){
-            var dataPayment = JSON.parse(localStorage.getItem("payment"));
-            this.setState({ dataOrder : dataPayment});
-        } 
     }
 
     getTxnDetail(){
-        let transactionId = localStorage.getItem("transactionId");
+        let transactionId
+        if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
+            transactionId = this.props.AllRedu.dataDetail.transactionId;
+        } else if(localStorage.getItem("dataDetail")) {
+            var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
+            transactionId = dataDetail.transactionId;
+        }
+        console.log(this.state);
         var auth = {
             isLogged: false,
             token: "",
@@ -119,13 +126,15 @@ class OrderDetailView extends React.Component {
         .then((res) => {
             console.log(res.data.results);
             var results = res.data.results;
+            let futureTimer = [];
+            let futureTimerOvo = [];
+            futureTimer = JSON.parse(localStorage.getItem("timerDown"));
+            futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
+            let indTime = 0;
+            let indTimeOvo = 0;
             var resultModal = { ...this.currentModal }
             resultModal.transactionId = results.transaction_id
             resultModal.transactionTime = results.transaction_time
-
-            // const today = Date.now();
-
-            // resultModal.transactionTime = Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(results.transaction_time)
             resultModal.storeName = results.merchant_name
             resultModal.storeDistance = ""
             resultModal.storeLocation = ""
@@ -162,14 +171,32 @@ class OrderDetailView extends React.Component {
 
             resultModal.transactionTime = moment(resultModal.transactionTime).format('Do MMMM YYYY, H:mm');
 
+            // if(results.payment === "WALLET_OVO") {
+            //     resultModal.transactionCounter = futureTimerOvo[indTimeOvo];
+            // } else {
+            //     resultModal.transactionCounter = futureTimer[indTime];
+            // }
+
             this.setState({
                 currentModal: resultModal
             })
+
+            this.countDown();
 
             // console.log(this.state.currentModal.transactionTime.toISOString());
         })
         .catch((err) => {
         });
+    }
+
+    componentDidUpdate() {
+        if (this.state.currentModal.timerMinutes == 0 && this.state.currentModal.timerSeconds == 0) {
+            clearInterval(interval.current);
+            console.log("success clear");
+            if(this.state.currentModal.status === "OPEN") {
+                this.transactionUpdate();
+            }
+        }
     }
 
     setPaymentModal(isShow) {
@@ -186,6 +213,124 @@ class OrderDetailView extends React.Component {
                 />
             );
         }
+    }
+
+    countDown = () => {
+        if (this.state.currentModal.status === "OPEN") {
+
+            let transactionTime
+            if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
+                transactionTime = this.props.AllRedu.dataDetail.transactionTime;
+            } else if(localStorage.getItem("dataDetail")) {
+                var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
+                transactionTime = dataDetail.transactionTime;
+            }
+
+            let eventTime = new Date(transactionTime).getTime();
+
+            interval = setInterval(() => {
+                // based on time set in user's computer time / OS
+                const currentTime = new Date().getTime();
+                const distance = eventTime - currentTime;
+      
+                const minutes = Math.floor(
+                  (distance % (1000 * 60 * 60)) / (1000 * 60)
+                );
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+                let newMinutes = this.state.currentModal.timerMinutes;
+                newMinutes = minutes;
+      
+                let newSeconds = this.state.currentModal.timerSeconds;
+                newSeconds = seconds;
+
+                this.setState({ currentModal : { ...this.state.currentModal, timerMinutes: newMinutes} });
+                this.setState({ currentModal : { ...this.state.currentModal, timerSeconds: newSeconds} });      
+                
+            }, 1000);
+
+        }
+    }
+
+    transactionUpdate = () => {
+        var auth = {
+            isLogged: false,
+            token: "",
+            new_event: true,
+            recommendation_status: false,
+            email: "",
+        };
+        auth = JSON.parse(Cookies.get("auth"));
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        let signature = sha256(
+            clientId + ":" + auth.email + ":" + secret + ":" + date,
+            secret
+        );
+
+        let transactionTime
+        if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
+            transactionTime = this.props.AllRedu.dataDetail.transactionTime;
+        } else if(localStorage.getItem("dataDetail")) {
+            var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
+            transactionTime = dataDetail.transactionTime;
+        }
+
+        var bodyFormData = new FormData();
+        bodyFormData.append("transaction_id", this.state.currentModal.transactionId);
+        bodyFormData.append("status", "FAILED");
+
+        var options = {
+        method: "post",
+        url: address + "txn/v1/txn-update/",
+        headers: {
+            "x-client-id": clientId,
+            token: auth.token,
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-signature": signature,
+        },
+        data: bodyFormData,
+        };
+
+        Axios(options)
+        .then(() => {
+            console.log("updated");
+            if (this.state.currentModal.payment === "PAY_BY_CASHIER") {
+                let futureTimer = [];
+                futureTimer = JSON.parse(localStorage.getItem("timerDown"));
+                futureTimer.map((value, id) => {
+                    if(value == transactionTime) {
+                        futureTimer.splice(id,1);
+                    }
+                })
+                localStorage.setItem(
+                  "timerDown",
+                  JSON.stringify(futureTimer)
+                );
+            } else {
+                let futureTimerOvo = [];
+                futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
+                futureTimerOvo.map((value, id) => {
+                    if(value == transactionTime) {
+                        futureTimerOvo.splice(id,1);
+                    }
+                })
+                localStorage.setItem(
+                    "timerDownOvo",
+                    JSON.stringify(futureTimerOvo)
+                );
+            }
+            window.location.reload();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
+    goBack = () => {
+        window.location.href = "/status";
     }
 
     render() {
@@ -213,10 +358,43 @@ class OrderDetailView extends React.Component {
         )
         });
 
+        let headerTransaction = () => {
+            let statusDesc
+            let backColor
+            if (this.state.currentModal.status === "PAID") {
+                statusDesc = "Menunggu Konfirmasi";
+                backColor = "#FBA83C";
+            } 
+            else if (this.state.currentModal.status === "ON_PROCESS") {
+                statusDesc = "Sedang Dimasak";
+                backColor = "#FBA83C";
+            }
+            else if (this.state.currentModal.status === "DELIVER") {
+                statusDesc = "Makanan Tiba";
+                backColor = "#4BB7AC";
+            }
+            else if (this.state.currentModal.status === "CLOSE" || this.state.currentModal.status === "FINALIZE") {
+                statusDesc = "Transaksi Selesai";
+                backColor = "#4BB7AC";
+            }
+            else if (this.state.currentModal.status === "FAILED" || this.state.currentModal.status === "ERROR") {
+                statusDesc = "Transaksi Gagal";
+                backColor = "#DC6A84";
+            }
+
+            return (
+                <div className='orderDetail-transaction-header-detail' style={{ backgroundColor: backColor }}>
+                    <div className='orderDetail-transaction-title-detail'>
+                        {statusDesc}
+                    </div>
+                </div>
+            )
+        }
+
         return (
             <div className='orderDetailLayout'>
                 <div className='orderDetailTitle'>
-                    <span className='logopikappCenter' onClick={() => window.history.back()} >
+                    <span className='logopikappCenter' onClick={() => this.goBack()} >
                     <img className='LogoPikapporderDetail' src={ArrowBack} alt='' />
                     </span>
 
@@ -244,21 +422,23 @@ class OrderDetailView extends React.Component {
 
                                     <div className='orderDetail-transaction-detail'>
                                     {
-                                    this.state.currentModal.status === "PAID" ?
-                                        <div className='orderDetail-transaction-header-detail'>
-                                            <div className='orderDetail-transaction-title-detail'>
-                                                Transaksi Berhasil
-                                            </div>
-                                        </div>
-                                    :
+                                    this.state.currentModal.status === "OPEN" ?
                                         <div className='orderDetail-transaction-header-unpaid'>
                                             <div className='orderDetail-transaction-title-unpaid'>
                                                 Menunggu Pembayaran
                                             </div>
                                             <div className='menu-counter-orderdetail'>
-                                                01:22
+                                                {this.state.currentModal.timerMinutes < 10
+                                                ? `0${this.state.currentModal.timerMinutes}`
+                                                : this.state.currentModal.timerMinutes}
+                                                :
+                                                {this.state.currentModal.timerSeconds < 10
+                                                ? `0${this.state.currentModal.timerSeconds}`
+                                                : this.state.currentModal.timerSeconds}
                                             </div>
                                         </div>
+                                    :
+                                    headerTransaction()
                                     }
 
                                         <div className='orderDetail-transaction-content'>
@@ -274,8 +454,6 @@ class OrderDetailView extends React.Component {
                                             </div>
                                             <div className='orderDetail-transaction-descArea-content'>
                                                 {this.state.currentModal.transactionTime}
-                                                {/* {moment(this.state.currentModal.transactionTime).format('MMMM Do YYYY, h:mm a')} */}
-                                                {/* {Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(this.state.currentModal.transactionTime)} */}
                                             </div>
 
                                             <div className='orderDetail-transaction-descArea'>
@@ -347,21 +525,23 @@ class OrderDetailView extends React.Component {
                             <div className='orderDetail-transaction-detail'>
 
                                 {
-                                this.state.currentModal.status === "PAID" ?
-                                    <div className='orderDetail-transaction-header-detail'>
-                                        <div className='orderDetail-transaction-title-detail'>
-                                            Transaksi Berhasil
-                                        </div>
-                                    </div>
-                                    :
+                                this.state.currentModal.status === "OPEN" ?
                                     <div className='orderDetail-transaction-header-unpaid'>
                                         <div className='orderDetail-transaction-title-unpaid'>
                                             Menunggu Pembayaran
                                         </div>
                                         <div className='menu-counter-orderdetail'>
-                                            01:22
+                                            {this.state.currentModal.timerMinutes < 10
+                                            ? `0${this.state.currentModal.timerMinutes}`
+                                            : this.state.currentModal.timerMinutes}
+                                            :
+                                            {this.state.currentModal.timerSeconds < 10
+                                            ? `0${this.state.currentModal.timerSeconds}`
+                                            : this.state.currentModal.timerSeconds}
                                         </div>
                                     </div>
+                                    :
+                                    headerTransaction()
                                 }
 
                                 <div className='orderDetail-transaction-content'>
@@ -442,9 +622,7 @@ class OrderDetailView extends React.Component {
                                 </div>
 
                                 {
-                                this.state.currentModal.status === "PAID" ?
-                                    <div></div>
-                                    :
+                                this.state.currentModal.status === "OPEN" ?
                                     <div className='buttonPayment-orderDetail'>
                                         <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
                                             <div className="wordsButton-orderDetail">
@@ -452,6 +630,8 @@ class OrderDetailView extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    :
+                                    <div></div>
                                 }
 
                             </div>
@@ -471,4 +651,4 @@ const Mapstatetoprops = (state) => {
     }
 }
   
-export default connect(Mapstatetoprops, { LoadingButton, DoneLoad, TransactionId })(OrderDetailView)
+export default connect(Mapstatetoprops, { LoadingButton, DoneLoad, DataDetail })(OrderDetailView)

@@ -66,9 +66,9 @@ export const DataOrder = (data) => {
     }
 }
 
-export const TransactionId = (data) => {
+export const DataDetail = (data) => {
     return {
-        type: 'TRANSACTIONID',
+        type: 'DATADETAIL',
         payload: data
     }
 }
