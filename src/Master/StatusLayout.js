@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusView } from "../View/Status/StatusView";
+import StatusView from "../View/Status/StatusView";
 
 export default class StatusLayout extends React.Component {
   componentDidMount() {

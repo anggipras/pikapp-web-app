@@ -120,7 +120,7 @@ const ConfirmPinDialog = (props) => {
         const data = {
             username: AuthRedu.dataRegister.email,
             pin: confirmPin,
-            fcm_token: "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv",
+            fcm_token: AllRedu.fcmToken
         };
 
         const auth = {
