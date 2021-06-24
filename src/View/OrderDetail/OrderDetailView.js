@@ -330,7 +330,8 @@ class OrderDetailView extends React.Component {
     }
 
     goBack = () => {
-        window.location.href = "/status";
+        // window.location.href = "/status";
+        window.history.go(-1)
     }
 
     render() {

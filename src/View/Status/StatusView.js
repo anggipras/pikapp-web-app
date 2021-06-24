@@ -15,13 +15,14 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
 import moment from "moment";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { DataDetail } from '../../Redux/Actions'
 
 let interval = createRef();
 
 export class StatusView extends React.Component {
+  _isMounted = false
   state = {
     isMobile: false,
     statusModal: false,
@@ -53,10 +54,11 @@ export class StatusView extends React.Component {
     ],
     staticCountDown: false,
     updateStatus: false,
-    continueDetail : false,
+    // continueDetail : false,
   };
 
   componentDidMount() {
+    this._isMounted = true
     firebaseAnalytics.logEvent("orderlist_visited");
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
@@ -185,7 +187,7 @@ export class StatusView extends React.Component {
             });
           }
         });
-        console.log(stateData.data);
+        // console.log(stateData.data);
         this.setState({ data: stateData.data, staticCountDown: true });
       })
       .catch((err) => {
@@ -236,47 +238,49 @@ export class StatusView extends React.Component {
     }
     this.props.DataDetail(value);
     localStorage.setItem("dataDetail", JSON.stringify(value));
-    this.setState({ continueDetail : true });
+    // this.setState({ continueDetail : true });
   }
 
   contentStatus = (value, bimg, blab, pimg, plab) => {
     let formatDate = new Date(value.transactionTime);
     return (
-      <div className="orderList-transaction-content" onClick={() => this.goToOrderDetail(value.transactionId, value.transactionCountDown)}>
-        <div className="orderList-transaction-topSide">
-          <h3 className="orderList-transaction-merchName">{value.title}</h3>
+      <Link to='/orderdetail' style={{textDecoration: 'none'}}>
+        <div className="orderList-transaction-content" onClick={() => this.goToOrderDetail(value.transactionId, value.transactionCountDown)}>
+          <div className="orderList-transaction-topSide">
+            <h3 className="orderList-transaction-merchName">{value.title}</h3>
 
-          <h3 className="orderList-transaction-timeTrans">
-            {moment(formatDate).format("DD MMMM H:mm")}
-          </h3>
-        </div>
-
-        <div className="orderList-transaction-centerSide">
-          {value.quantity} | Rp 60.000
-        </div>
-
-        <div className="orderList-transaction-bottomSide">
-          <div className="orderList-transaction-foodService">
-            <span>
-              <img className="orderList-foodService-logo" src={bimg} alt="" />
-            </span>
-
-            <h3 className="orderList-foodService-words">{blab}</h3>
+            <h3 className="orderList-transaction-timeTrans">
+              {moment(formatDate).format("DD MMMM H:mm")}
+            </h3>
           </div>
 
-          <div className="orderList-transaction-paymentService">
-            <span>
-              <img
-                className="orderList-paymentService-logo"
-                src={pimg}
-                alt=""
-              />
-            </span>
+          <div className="orderList-transaction-centerSide">
+            {value.quantity} | Rp 60.000
+          </div>
 
-            <h3 className="orderList-paymentService-words">{plab}</h3>
+          <div className="orderList-transaction-bottomSide">
+            <div className="orderList-transaction-foodService">
+              <span>
+                <img className="orderList-foodService-logo" src={bimg} alt="" />
+              </span>
+
+              <h3 className="orderList-foodService-words">{blab}</h3>
+            </div>
+
+            <div className="orderList-transaction-paymentService">
+              <span>
+                <img
+                  className="orderList-paymentService-logo"
+                  src={pimg}
+                  alt=""
+                />
+              </span>
+
+              <h3 className="orderList-paymentService-words">{plab}</h3>
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
     );
   };
 
@@ -769,13 +773,16 @@ export class StatusView extends React.Component {
   };
 
   componentWillUnmount() {
-    clearInterval(interval.current);
+    if (this._isMounted) {
+      clearInterval(interval.current);
+      this._isMounted = false
+    }
   }
 
   render() {
-    if (this.state.continueDetail) {
-      return <Redirect to='/orderdetail' />
-    }
+    // if (this.state.continueDetail) {
+    //   return <Redirect to='/orderdetail' />
+    // }
     let { statusIndex, statusList } = this.state;
     let viewSize = (
       <>
