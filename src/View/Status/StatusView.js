@@ -13,16 +13,17 @@ import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import NoTransaction from "../../Asset/Icon/notrans.png";
 import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
 import moment from "moment";
 import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { DataDetail } from '../../Redux/Actions'
+import { DataDetail } from "../../Redux/Actions";
 
 let interval = createRef();
 
 export class StatusView extends React.Component {
-  _isMounted = false
+  _isMounted = false;
   state = {
     isMobile: false,
     statusModal: false,
@@ -58,7 +59,7 @@ export class StatusView extends React.Component {
   };
 
   componentDidMount() {
-    this._isMounted = true
+    this._isMounted = true;
     firebaseAnalytics.logEvent("orderlist_visited");
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
@@ -196,7 +197,7 @@ export class StatusView extends React.Component {
   }
 
   setRegisterDialog(isShow) {
-    this.setState({ showRegisterDialog: isShow })
+    this.setState({ showRegisterDialog: isShow });
   }
 
   showRegisterDialog = () => {
@@ -206,9 +207,9 @@ export class StatusView extends React.Component {
           isShowRegister={this.state.showRegisterDialog}
           onHideRegister={() => this.setRegisterDialog(false)}
         />
-      )
+      );
     }
-  }
+  };
 
   handleStatus = (isShow) => {
     this.setState({ statusModal: isShow });
@@ -233,19 +234,27 @@ export class StatusView extends React.Component {
 
   goToOrderDetail = (transId, counterTime) => {
     let value = {
-      transactionId : transId,
-      transactionTime : counterTime
-    }
+      transactionId: transId,
+      transactionTime: counterTime,
+    };
     this.props.DataDetail(value);
     localStorage.setItem("dataDetail", JSON.stringify(value));
     // this.setState({ continueDetail : true });
-  }
+  };
 
   contentStatus = (value, bimg, blab, pimg, plab) => {
     let formatDate = new Date(value.transactionTime);
     return (
-      <Link to='/orderdetail' style={{textDecoration: 'none'}}>
-        <div className="orderList-transaction-content" onClick={() => this.goToOrderDetail(value.transactionId, value.transactionCountDown)}>
+      <Link to="/orderdetail" style={{ textDecoration: "none" }}>
+        <div
+          className="orderList-transaction-content"
+          onClick={() =>
+            this.goToOrderDetail(
+              value.transactionId,
+              value.transactionCountDown
+            )
+          }
+        >
           <div className="orderList-transaction-topSide">
             <h3 className="orderList-transaction-merchName">{value.title}</h3>
 
@@ -440,6 +449,18 @@ export class StatusView extends React.Component {
         return value.status === "OPEN";
       });
 
+      if (filterOpenStatus.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
       return filterOpenStatus.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
@@ -483,7 +504,24 @@ export class StatusView extends React.Component {
       });
     } else if (currentState === 2) {
       let data = this.state.data;
-      return data.map((value, ind) => {
+
+      let filterOpenStatus = data.filter((value) => {
+        return value.status === "PAID";
+      });
+
+      if (filterOpenStatus.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
+      return filterOpenStatus.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
           payLabel = "Pembayaran Di Kasir";
@@ -502,21 +540,36 @@ export class StatusView extends React.Component {
 
         let thestatus = "Menunggu Konfirmasi";
         let backColor = "#FBA83C";
-        if (value.status === "PAID") {
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        }
+        return this.eachStatusList(
+          value,
+          ind,
+          thestatus,
+          backColor,
+          bizImage,
+          bizLabel,
+          payImage,
+          payLabel
+        );
       });
     } else if (currentState === 3) {
       let data = this.state.data;
+
+      let filterOpenStatus = data.filter((value) => {
+        return value.status === "ON_PROCESS";
+      });
+
+      if (filterOpenStatus.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
       return data.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
@@ -536,21 +589,36 @@ export class StatusView extends React.Component {
 
         let thestatus = "Sedang Dimasak";
         let backColor = "#FBA83C";
-        if (value.status === "ON_PROCESS") {
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        }
+        return this.eachStatusList(
+          value,
+          ind,
+          thestatus,
+          backColor,
+          bizImage,
+          bizLabel,
+          payImage,
+          payLabel
+        );
       });
     } else if (currentState === 4) {
       let data = this.state.data;
+
+      let filterOpenStatus = data.filter((value) => {
+        return value.status === "DELIVER";
+      });
+
+      if (filterOpenStatus.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
       return data.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
@@ -570,21 +638,36 @@ export class StatusView extends React.Component {
 
         let thestatus = "Makanan Tiba";
         let backColor = "#4BB7AC";
-        if (value.status === "DELIVER") {
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        }
+        return this.eachStatusList(
+          value,
+          ind,
+          thestatus,
+          backColor,
+          bizImage,
+          bizLabel,
+          payImage,
+          payLabel
+        );
       });
     } else if (currentState === 5) {
       let data = this.state.data;
+
+      let filterOpenStatus = data.filter((value) => {
+        return value.status === "CLOSE" || value.status === "FINALIZE";
+      });
+
+      if (filterOpenStatus.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
       return data.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
@@ -604,21 +687,36 @@ export class StatusView extends React.Component {
 
         let thestatus = "Transaksi Selesai";
         let backColor = "#4BB7AC";
-        if (value.status === "CLOSE" || value.status === "FINALIZE") {
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        }
+        return this.eachStatusList(
+          value,
+          ind,
+          thestatus,
+          backColor,
+          bizImage,
+          bizLabel,
+          payImage,
+          payLabel
+        );
       });
     } else if (currentState === 6) {
       let data = this.state.data;
+
+      let filterOpenStatus = data.filter((value) => {
+        return value.status === "FAILED" || value.status === "ERROR";
+      });
+
+      if (filterOpenStatus.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
       return data.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
@@ -638,21 +736,32 @@ export class StatusView extends React.Component {
 
         let thestatus = "Transaksi Gagal";
         let backColor = "#DC6A84";
-        if (value.status === "FAILED" || value.status === "ERROR") {
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        }
+        return this.eachStatusList(
+          value,
+          ind,
+          thestatus,
+          backColor,
+          bizImage,
+          bizLabel,
+          payImage,
+          payLabel
+        );
       });
     } else if (currentState === 0) {
       let data = this.state.data;
+
+      if (data.length === 0) {
+        return (
+          <div className="noTrans-content">
+            <span>
+              <img src={NoTransaction} className="noTrans-img" alt="" />
+            </span>
+
+            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+          </div>
+        );
+      }
+
       return data.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
@@ -775,7 +884,7 @@ export class StatusView extends React.Component {
   componentWillUnmount() {
     if (this._isMounted) {
       clearInterval(interval.current);
-      this._isMounted = false
+      this._isMounted = false;
     }
   }
 
@@ -837,8 +946,8 @@ export class StatusView extends React.Component {
 const Mapstatetoprops = (state) => {
   return {
     AllRedu: state.AllRedu,
-    AuthRedu: state.AuthRedu
-  }
-}
+    AuthRedu: state.AuthRedu,
+  };
+};
 
-export default connect(Mapstatetoprops, { DataDetail })(StatusView)
+export default connect(Mapstatetoprops, { DataDetail })(StatusView);
