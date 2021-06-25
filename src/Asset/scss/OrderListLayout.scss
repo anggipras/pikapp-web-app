@@ -264,6 +264,32 @@
   height: 20px;
 }
 
+.noTrans-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 214px;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.noTrans-img {
+  width: 124px;
+  height: 111px;
+}
+
+.noTrans-title {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 25px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-top: 22px;
+}
+
 $font768size: 13px;
 @media (max-width: 768px) {
   .orderListLayout {
