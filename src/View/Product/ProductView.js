@@ -694,7 +694,7 @@ class ProductView extends React.Component {
       cart.push({
         mid: mid,
         storeName: currentMerchant.storeName,
-        storeDesc: currentMerchant.storeDesc,
+        storeAdress: currentMerchant.storeAdress,
         storeDistance: currentMerchant.distance,
         food: [
           {

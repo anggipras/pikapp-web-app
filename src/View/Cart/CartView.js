@@ -201,6 +201,9 @@ class CartView extends React.Component {
       this.setState({
         currentModal: finalProduct
       });
+    } else if (data === "payment-checking") {
+      this.setState({ showModal: true });
+      this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
     }
   }
 
@@ -787,7 +790,6 @@ class CartView extends React.Component {
 
   render() {
     if (this.state.loadButton) {
-      // return <Redirect to='/status' />
       return <Redirect to='/orderconfirmation' />
     }
 
@@ -832,6 +834,7 @@ class CartView extends React.Component {
           handleData={this.handleOption}
           indexOptionEat={this.state.indexOptionEat}
           indexOptionPay={this.state.indexOptionPay}
+          confirmPay={this.handlePayment}
         />
       );
     } else {
@@ -903,17 +906,21 @@ class CartView extends React.Component {
           <div key={index} className='cart-storeBox'>
             <div className='cart-storeBox-header'>
               <div className='cart-storeBox-title'>
-                {store.storeName}
+                Detail Restoran
               </div>
 
-              <div className='cart-storeBox-distance'>
+              {/* <div className='cart-storeBox-distance'>
                 {store.storeDistance}
-              </div>
+              </div> */}
             </div>
 
             <div className='cart-storeBox-content'>
-              <h4 className='cart-storeBox-descArea'>
-                {store.storeDesc}
+              <h2 className='cart-storeBox-descTitle'>
+                {store.storeName}
+              </h2>
+
+              <h4 className='cart-storeBox-descAddress'>
+                {store.storeAdress}
               </h4>
             </div>
           </div>
@@ -1065,7 +1072,7 @@ class CartView extends React.Component {
                     </div>
                   </div>
 
-                  <div className='cart-OrderButton buttonorder' onClick={() => this.handlePayment()}>
+                  <div className='cart-OrderButton buttonorder' onClick={() => this.handleDetail("payment-checking")}>
                     <div className='cart-OrderButton-content'>
                       <span className='cart-OrderButton-Frame'>
                         <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
@@ -1100,7 +1107,7 @@ class CartView extends React.Component {
               </div>
             </div>
 
-            <div className='cart-OrderButton-mob buttonorder' onClick={() => this.handlePayment()}>
+            <div className='cart-OrderButton-mob buttonorder' onClick={() => this.handleDetail("payment-checking")}>
               <div className='cart-OrderButton-content-mob'>
                 <span className='cart-OrderButton-Frame-mob'>
                   <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
