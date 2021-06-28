@@ -5,6 +5,10 @@ import pikappLogo from '../../Asset/Logo/logo4x.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
+import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import Axios from "axios";
+import { Link } from "react-router-dom";
 // import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
@@ -23,7 +27,12 @@ class OrderConfirmationView extends React.Component {
         paymentType: "PAY_BY_CASHIER",
         paymentImage: "",
         counterTime: 59,
-        showPayment : false
+        showPayment : false,
+        currentModal: {
+            transactionId: "",
+            status: "Status",
+        },
+        mid : "",
     }
 
     componentDidMount() {
@@ -72,6 +81,8 @@ class OrderConfirmationView extends React.Component {
 
             this.setState({ dataOrder : dataPayment});
         }
+
+        this.showResponsePayment();
     }
 
     componentDidUpdate() {
@@ -81,6 +92,10 @@ class OrderConfirmationView extends React.Component {
             localStorage.setItem("counterPayment", this.state.counterTime);
         } else {
             localStorage.setItem("counterPayment", this.state.counterTime);
+        }
+
+        if(this.state.currentModal.status === "OPEN"){
+            this.showResponsePayment();
         }
     }
 
@@ -103,8 +118,7 @@ class OrderConfirmationView extends React.Component {
         // localStorage.setItem("counterPayment", this.state.counterTime);
         window.location.href = '/status';
     }
-
-
+    
     countDownTime = () => {
         this.interval = setInterval(
           () => this.setState((state)=> ({ counterTime: this.state.counterTime - 1 })),
@@ -146,7 +160,36 @@ class OrderConfirmationView extends React.Component {
         //     showResponsePayment : this.state.showResponsePayment
         // }
         // localStorage.setItem("responsePayment", JSON.stringify(res));
+
+        setInterval(async () => {
+            let uuid = uuidV4();
+            uuid = uuid.replace(/-/g, "");
+            const date = new Date().toISOString();
+            Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId
+            },
+            method: "GET",
+            })
+            .then((res) => {
+                console.log(res.data.results);
+                var results = res.data.results;
+                var resultModal = { ...this.currentModal }
+                resultModal.transactionId = results.transaction_id
+                resultModal.status = results.status
+
+                this.setState({
+                    currentModal: resultModal
+                })
+            })
+            .catch((err) => {
+            });
+        }, 60000);
     }
+    
 
     render() {
         return (
@@ -271,11 +314,13 @@ class OrderConfirmationView extends React.Component {
                             <div className='orderContent'>
                                 <div className='buttonSide-order'>
                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                    <div className="submitButton-order" onClick={() => this.goToStatus()}>
-                                        <div className="wordsButton-order">
-                                            LIHAT PESANAN
+                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                        <div>
+                                            <div className="wordsButton-order">
+                                                LIHAT PESANAN
+                                            </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -368,11 +413,13 @@ class OrderConfirmationView extends React.Component {
                             <div className='orderContent'>
                                 <div className='buttonSide-order'>
                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                    <div className="submitButton-order" onClick={() => this.goToStatus()}>
-                                        <div className="wordsButton-order">
-                                            LIHAT PESANAN
+                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                        <div>
+                                            <div className="wordsButton-order">
+                                                LIHAT PESANAN
+                                            </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
