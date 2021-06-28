@@ -13,7 +13,7 @@ import Cookies from "js-cookie"
 import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
 import Productimage from '../../Asset/Illustration/storeimg.jpg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
-import NotifIcon from '../../Asset/Icon/bell.png'
+import NotifIcon from '../../Asset/Icon/status.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
 import OpenHourIcon from '../../Asset/Icon/hour.png'
 import CoinIcon from '../../Asset/Icon/coin.png'
@@ -694,7 +694,7 @@ class ProductView extends React.Component {
       cart.push({
         mid: mid,
         storeName: currentMerchant.storeName,
-        storeDesc: currentMerchant.storeDesc,
+        storeAdress: currentMerchant.storeAdress,
         storeDistance: currentMerchant.distance,
         food: [
           {
@@ -733,16 +733,16 @@ class ProductView extends React.Component {
       showConfirmButton: false,
       timer: 1500
     })
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
 
     let newNotes = ''
     currentExt.listcheckbox.forEach(val => {
@@ -761,18 +761,23 @@ class ProductView extends React.Component {
       newNotes += currentExt.note
     }
 
+    let tableNumber = ''
+    if (localStorage.getItem('table')) {
+      tableNumber = localStorage.getItem('table')
+    } else {
+      tableNumber = 0
+    }
+
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "txn/v1/cart-post/", {
+    Axios(address + "txn/v2/cart-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
         "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
+        "table-no": tableNumber.toString()
       },
       method: "POST",
       data: {
@@ -972,13 +977,13 @@ class ProductView extends React.Component {
       if (!value.table) {
         notab = localStorage.getItem('fctable')
       } else {
-        notab = value.table || ""
+        notab = value.table === undefined ? 0 : value.table
       }
     } else {
       if (localStorage.getItem('fctable')) {
         notab = localStorage.getItem('fctable')
       } else {
-        notab = value.table || ""
+        notab = value.table === undefined ? 0 : value.table
       }
     }
     if (JSON.parse(localStorage.getItem('cart'))) {
@@ -1035,9 +1040,8 @@ class ProductView extends React.Component {
               <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
           }
 
-          {
+          {/* {
             this.state.isLogin ?
-              <div className='iconBanner'>
                 <Link to={"/profile"}>
                   <div className='profileIcon-sec'>
                     <div className='profileIcon'>
@@ -1047,20 +1051,22 @@ class ProductView extends React.Component {
                     </div>
                   </div>
                 </Link>
-
-                <Link to={"/status"}>
-                  <div className='notifIcon-sec'>
-                    <div className='notifIcon'>
-                      <span className='reactNotifIcons'>
-                        <img className='notificon-img' src={NotifIcon} alt='' />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </div>
               :
               <div></div>
-          }
+          } */}
+
+          <div className='iconBanner'>
+            <Link to={"/status"}>
+              <div className='notifIcon-sec'>
+                <div className='notifIcon'>
+                  <span className='reactNotifIcons'>
+                    <img className='notificon-img' src={NotifIcon} alt='' />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
+
         </div>
         <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>
           <div className='inside-merchantSection'>
