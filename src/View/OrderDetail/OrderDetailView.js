@@ -1,18 +1,9 @@
 import React, { createRef } from "react";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
-import Cookies from "js-cookie";
 import { connect } from "react-redux";
-import Loader from 'react-loader-spinner'
-import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad, DataDetail } from '../../Redux/Actions'
-import Swal from 'sweetalert2';
-import { Link } from "react-router-dom";
-import pikappLogo from '../../Asset/Logo/logo4x.png';
-import NotifIcon from '../../Asset/Icon/bell.png';
-import ProfileIcon from '../../Asset/Icon/avatar.png';
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
@@ -93,33 +84,15 @@ class OrderDetailView extends React.Component {
             transactionId = dataDetail.transactionId;
         }
         console.log(this.state);
-        var auth = {
-            isLogged: false,
-            token: "",
-            new_event: true,
-            recommendation_status: false,
-            email: "",
-        };
-        if (Cookies.get("auth") !== undefined) {
-            auth = JSON.parse(Cookies.get("auth"))
-        }
-        if (auth.isLogged === false) {
-            var lastLink = { value: window.location.href }
-            Cookies.set("lastLink", lastLink, { expires: 1 })
-            // window.location.href = "/login"
-        }
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
-        let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-        Axios(address + "txn/v2/" + transactionId + "/txn-detail/", {
+        Axios(address + "txn/v3/" + transactionId + "/txn-detail/", {
         headers: {
             "Content-Type": "application/json",
             "x-request-id": uuid,
             "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "x-signature": signature,
-            "token": auth.token,
+            "x-client-id": clientId
         },
         method: "GET",
         })
@@ -171,19 +144,12 @@ class OrderDetailView extends React.Component {
 
             resultModal.transactionTime = moment(resultModal.transactionTime).format('Do MMMM YYYY, H:mm');
 
-            // if(results.payment === "WALLET_OVO") {
-            //     resultModal.transactionCounter = futureTimerOvo[indTimeOvo];
-            // } else {
-            //     resultModal.transactionCounter = futureTimer[indTime];
-            // }
-
             this.setState({
                 currentModal: resultModal
             })
 
             this.countDown();
 
-            // console.log(this.state.currentModal.transactionTime.toISOString());
         })
         .catch((err) => {
         });
@@ -253,21 +219,9 @@ class OrderDetailView extends React.Component {
     }
 
     transactionUpdate = () => {
-        var auth = {
-            isLogged: false,
-            token: "",
-            new_event: true,
-            recommendation_status: false,
-            email: "",
-        };
-        auth = JSON.parse(Cookies.get("auth"));
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
-        let signature = sha256(
-            clientId + ":" + auth.email + ":" + secret + ":" + date,
-            secret
-        );
 
         let transactionTime
         if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
@@ -283,13 +237,11 @@ class OrderDetailView extends React.Component {
 
         var options = {
         method: "post",
-        url: address + "txn/v1/txn-update/",
+        url: address + "txn/v2/txn-update/",
         headers: {
             "x-client-id": clientId,
-            token: auth.token,
             "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-signature": signature,
+            "x-request-timestamp": date
         },
         data: bodyFormData,
         };
@@ -297,31 +249,6 @@ class OrderDetailView extends React.Component {
         Axios(options)
         .then(() => {
             console.log("updated");
-            if (this.state.currentModal.payment === "PAY_BY_CASHIER") {
-                let futureTimer = [];
-                futureTimer = JSON.parse(localStorage.getItem("timerDown"));
-                futureTimer.map((value, id) => {
-                    if(value == transactionTime) {
-                        futureTimer.splice(id,1);
-                    }
-                })
-                localStorage.setItem(
-                  "timerDown",
-                  JSON.stringify(futureTimer)
-                );
-            } else {
-                let futureTimerOvo = [];
-                futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
-                futureTimerOvo.map((value, id) => {
-                    if(value == transactionTime) {
-                        futureTimerOvo.splice(id,1);
-                    }
-                })
-                localStorage.setItem(
-                    "timerDownOvo",
-                    JSON.stringify(futureTimerOvo)
-                );
-            }
             window.location.reload();
         })
         .catch((err) => {

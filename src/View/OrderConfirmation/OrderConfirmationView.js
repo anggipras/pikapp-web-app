@@ -1,23 +1,15 @@
 import React from "react";
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
-import Axios from "axios";
-import Cookies from "js-cookie";
 import { connect } from "react-redux";
-import Loader from 'react-loader-spinner'
-import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-import Swal from 'sweetalert2';
-import { Link } from "react-router-dom";
 import pikappLogo from '../../Asset/Logo/logo4x.png';
-import NotifIcon from '../../Asset/Icon/bell.png';
-import ProfileIcon from '../../Asset/Icon/avatar.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
+// import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
+
+// const client = new W3CWebSocket('ws://127.0.0.1:8000');
 
 class OrderConfirmationView extends React.Component {
     state = {
@@ -92,6 +84,16 @@ class OrderConfirmationView extends React.Component {
         }
     }
 
+    componentWillMount() {
+        // client.onopen = () => {
+        //     console.log('WebSocket Client Connected');
+        // };
+        // client.onmessage = (message) => {
+        //     let dataFromServer = JSON.parse(message.data);
+        //     console.log(dataFromServer);
+        // };
+    }
+
     backToHome = () => {
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
         window.location.href = '/store?mid=' + selectedMerchant[0].mid;
@@ -154,7 +156,7 @@ class OrderConfirmationView extends React.Component {
                     <img className='LogoPikappOrder' src={pikappLogo} alt='' />
                     </span>
 
-                    <div className='iconOrder'>
+                    {/* <div className='iconOrder'>
                         <Link to={"/profile"}>
                         <div className='profileOrder-sec'>
                             <div className='profileOrder'>
@@ -174,7 +176,7 @@ class OrderConfirmationView extends React.Component {
                             </div>
                         </div>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className='modalOrder'>

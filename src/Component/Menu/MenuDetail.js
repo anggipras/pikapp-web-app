@@ -108,23 +108,28 @@ const MenuDetail = (props) => {
 
     const openMenuSelect = () => {
 
-        if (Cookies.get("auth") === undefined) {
-            // props.onHide();
-            setRegister(true);
-            // showRegisterDialog();
-        } else {
-            auth = JSON.parse(Cookies.get("auth"));
-            if (auth.isLogged === false) {
-                openPinDialog();
-            } else {
-                setloadingButton(false)
-                dispatch({ type: 'LOADING' })
-                setmenuSelect(true)
-                dispatch({ type: 'FOODCATEG', payload: findCateg })
-            }
-            // openPinDialog();
+        setloadingButton(false)
+        dispatch({ type: 'LOADING' })
+        setmenuSelect(true)
+        dispatch({ type: 'FOODCATEG', payload: findCateg })
 
-        }
+        // if (Cookies.get("auth") === undefined) {
+        //     // props.onHide();
+        //     setRegister(true);
+        //     // showRegisterDialog();
+        // } else {
+        //     auth = JSON.parse(Cookies.get("auth"));
+        //     if (auth.isLogged === false) {
+        //         openPinDialog();
+        //     } else {
+        //         setloadingButton(false)
+        //         dispatch({ type: 'LOADING' })
+        //         setmenuSelect(true)
+        //         dispatch({ type: 'FOODCATEG', payload: findCateg })
+        //     }
+        //     // openPinDialog();
+
+        // }
     }
 
     let findCateg
