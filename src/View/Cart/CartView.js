@@ -438,7 +438,8 @@ class CartView extends React.Component {
             var dataOrder = {
               transactionId : res.data.results[0].transaction_id,
               totalPayment : requestData.prices,
-              paymentType : this.state.paymentType
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
             };
             this.props.DataOrder(dataOrder);
             localStorage.setItem("payment", JSON.stringify(dataOrder));
@@ -458,7 +459,8 @@ class CartView extends React.Component {
             var dataOrder = {
               transactionId : res.data.results[0].transaction_id,
               totalPayment : requestData.prices,
-              paymentType : this.state.paymentType
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
             };
             this.props.DataOrder(dataOrder);
             localStorage.setItem("payment", JSON.stringify(dataOrder));

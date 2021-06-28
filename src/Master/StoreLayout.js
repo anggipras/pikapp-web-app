@@ -13,7 +13,7 @@ export default class StoreLayout extends React.Component {
   }
 
   componentDidMount() {
-    document.body.style.backgroundColor = secondary_color;
+    document.body.style.backgroundColor = 'white';
     var auth = {
       isLogged: false,
       token: "",

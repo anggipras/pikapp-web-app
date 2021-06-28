@@ -1,23 +1,21 @@
-import React from "react";
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
-import Axios from "axios";
-import Cookies from "js-cookie";
+import React, { createRef } from "react";
 import { connect } from "react-redux";
-import Loader from 'react-loader-spinner'
-import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-import Swal from 'sweetalert2';
-import { Link } from "react-router-dom";
 import pikappLogo from '../../Asset/Logo/logo4x.png';
-import NotifIcon from '../../Asset/Icon/bell.png';
-import ProfileIcon from '../../Asset/Icon/avatar.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
+import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import Axios from "axios";
+import { Link } from "react-router-dom";
+// import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
+
+// const client = new W3CWebSocket('ws://127.0.0.1:8000');
+
+let interval = createRef();
 
 class OrderConfirmationView extends React.Component {
     state = {
@@ -26,12 +24,20 @@ class OrderConfirmationView extends React.Component {
             transactionId : "",
             totalPayment : "",
             paymentType : "",
+            transactionTime : 0,
         },
         paymentOption: "Pembayaran Di Kasir",
         paymentType: "PAY_BY_CASHIER",
         paymentImage: "",
         counterTime: 59,
-        showPayment : false
+        showPayment : false,
+        currentModal: {
+            transactionId: "",
+            status: "Status",
+        },
+        mid : "",
+        timerMinutes : 0,
+        timerSeconds : 0,
     }
 
     componentDidMount() {
@@ -46,12 +52,12 @@ class OrderConfirmationView extends React.Component {
         if(localStorage.getItem("counterPayment")){
             if(counter != 0) {
                 this.setState({ counterTime : counter});
-                this.countDownTime();
+                this.countDown();
             } else {
                 this.setState({ counterTime : counter});
             }
         } else {
-            this.countDownTime()
+            this.countDown()
         }
 
         if(Object.keys(this.props.AllRedu.dataOrder).length !== 0) {
@@ -80,16 +86,32 @@ class OrderConfirmationView extends React.Component {
 
             this.setState({ dataOrder : dataPayment});
         }
+
+        this.showResponsePayment();
     }
 
     componentDidUpdate() {
-        if(this.state.counterTime === 0) {
-            clearInterval(this.interval);
+        if(this.state.counterTime < 0) {
+            clearInterval(interval.current);
             console.log("clear");
             localStorage.setItem("counterPayment", this.state.counterTime);
         } else {
             localStorage.setItem("counterPayment", this.state.counterTime);
         }
+
+        if(this.state.currentModal.status === "OPEN"){
+            this.showResponsePayment();
+        }
+    }
+
+    componentWillMount() {
+        // client.onopen = () => {
+        //     console.log('WebSocket Client Connected');
+        // };
+        // client.onmessage = (message) => {
+        //     let dataFromServer = JSON.parse(message.data);
+        //     console.log(dataFromServer);
+        // };
     }
 
     backToHome = () => {
@@ -101,8 +123,7 @@ class OrderConfirmationView extends React.Component {
         // localStorage.setItem("counterPayment", this.state.counterTime);
         window.location.href = '/status';
     }
-
-
+    
     countDownTime = () => {
         this.interval = setInterval(
           () => this.setState((state)=> ({ counterTime: this.state.counterTime - 1 })),
@@ -144,7 +165,68 @@ class OrderConfirmationView extends React.Component {
         //     showResponsePayment : this.state.showResponsePayment
         // }
         // localStorage.setItem("responsePayment", JSON.stringify(res));
+
+        setInterval(async () => {
+            let uuid = uuidV4();
+            uuid = uuid.replace(/-/g, "");
+            const date = new Date().toISOString();
+            Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId
+            },
+            method: "GET",
+            })
+            .then((res) => {
+                console.log(res.data.results);
+                var results = res.data.results;
+                var resultModal = { ...this.currentModal }
+                resultModal.transactionId = results.transaction_id
+                resultModal.status = results.status
+
+                this.setState({
+                    currentModal: resultModal
+                })
+            })
+            .catch((err) => {
+            });
+        }, 60000);
     }
+
+    countDown = () => {
+        var dataPayment = JSON.parse(localStorage.getItem("payment"));
+        let dateTime = dataPayment.transactionTime;
+        let eventTime = new Date(dateTime).getTime();
+
+        interval = setInterval(() => {
+            // based on time set in user's computer time / OS
+            const currentTime = new Date().getTime();
+            const distance = eventTime - currentTime;
+
+            const minutes = Math.floor(
+                (distance % (1000 * 60 * 60)) / (1000 * 60)
+            );
+    
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            let newMinutes = this.state.timerMinutes;
+            newMinutes = minutes;
+    
+            let newSeconds = this.state.timerSeconds;
+            newSeconds = seconds;
+
+            if(newSeconds < 0) {
+                clearInterval(interval.current);
+            } else {
+                this.setState({ counterTime : newSeconds});
+            }     
+            
+        }, 1000);
+
+    }
+    
 
     render() {
         return (
@@ -154,7 +236,7 @@ class OrderConfirmationView extends React.Component {
                     <img className='LogoPikappOrder' src={pikappLogo} alt='' />
                     </span>
 
-                    <div className='iconOrder'>
+                    {/* <div className='iconOrder'>
                         <Link to={"/profile"}>
                         <div className='profileOrder-sec'>
                             <div className='profileOrder'>
@@ -174,7 +256,7 @@ class OrderConfirmationView extends React.Component {
                             </div>
                         </div>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className='modalOrder'>
@@ -269,11 +351,13 @@ class OrderConfirmationView extends React.Component {
                             <div className='orderContent'>
                                 <div className='buttonSide-order'>
                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                    <div className="submitButton-order" onClick={() => this.goToStatus()}>
-                                        <div className="wordsButton-order">
-                                            LIHAT PESANAN
+                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                        <div>
+                                            <div className="wordsButton-order">
+                                                LIHAT PESANAN
+                                            </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -366,11 +450,13 @@ class OrderConfirmationView extends React.Component {
                             <div className='orderContent'>
                                 <div className='buttonSide-order'>
                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                    <div className="submitButton-order" onClick={() => this.goToStatus()}>
-                                        <div className="wordsButton-order">
-                                            LIHAT PESANAN
+                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                        <div>
+                                            <div className="wordsButton-order">
+                                                LIHAT PESANAN
+                                            </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
