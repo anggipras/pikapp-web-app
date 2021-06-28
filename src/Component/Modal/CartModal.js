@@ -4,26 +4,66 @@ import diningTableColor from '../../Asset/Icon/diningTableColor.png'
 import takeawayColor from '../../Asset/Icon/takeawayColor.png'
 import CashierPayment from '../../Asset/Icon/CashierPayment.png'
 import OvoPayment from '../../Asset/Icon/ovo_icon.png'
+import Alertcircle from '../../Asset/Icon/alertcircle.png'
+import ReactTooltip from 'react-tooltip';
 import '../../Asset/scss/CartModal.scss'
 
 const CartModal = (props) => {
     const [radioNumEat, setradioNumEat] = useState(props.indexOptionEat)
     const [radioNumPay, setradioNumPay] = useState(props.indexOptionPay)
+    const [modalTitle, setmodalTitle] = useState("")
+    const [isCheckNumber, setisCheckNumber] = useState(true)
+    const [isAlertNumber, setisAlertNumber] = useState("")
 
     const closeModal = (e) => {
-        e.stopPropagation()
+        if (isCheckNumber) {
+            e.stopPropagation()
+            props.onHide()
+        }
+    }
+
+    const confirmPay = () => {
+        props.confirmPay()
         props.onHide()
+    }
+
+    const selectButton = () => {
+        if (modalTitle === 'Pilih Cara Makan Anda') {
+            props.handleData(radioNumEat)
+            props.onHide()
+        } else {
+            if (isCheckNumber) {
+                props.handleData(radioNumPay)
+                props.onHide()
+            }
+        }
     }
 
     const onChangeRadio = (num, title) => {
         if (title === 'Pilih Cara Makan Anda') {
             setradioNumEat(num)
-            props.handleData(num)
-            props.onHide()
+            setmodalTitle(title)
+            setisCheckNumber(true)
         } else if(title === 'Bayar Pakai Apa') {
             setradioNumPay(num)
-            props.handleData(num)
-            props.onHide()
+            setmodalTitle(title)
+            setisCheckNumber(true)
+        }
+    }
+
+    const onChangeNumber = (e) => {
+        let reg = /^(?!00)(?!01)(?!02)(?!03)(?!04)(?!05)(?!06)(?!07)(?!09)[0][0-9]\d{0,12}$/
+        let checkNumber = reg.test(e.target.value)
+        props.setPhoneNumber(e.target.value)
+        if (checkNumber) {
+            setisCheckNumber(checkNumber)
+            setisAlertNumber('')
+        } else if (e.target.value === '') {
+            setisCheckNumber(false)
+            setisAlertNumber('Nomor harus diisi')
+        } else {
+            setisCheckNumber(checkNumber)
+            setisAlertNumber('Masukkan nomor dengan benar')
         }
     }
 
@@ -88,6 +128,12 @@ const CartModal = (props) => {
         return choicesModal
     }
 
+    const hideTooltip = () => {
+        setTimeout(() => {
+            ReactTooltip.hide()
+        }, 3000);
+    }
+
     return (
         <>
             <div className='modalCartPage' style={{
@@ -98,11 +144,60 @@ const CartModal = (props) => {
                         <img src={closeNarrow} className='closeLogoNarrow' alt='' />
                     </span>
 
-                    <div className='modalCart-detail'>
-                        <h1 className='modalCart-title'>{props.title}</h1>
+                    {
+                        props.title !== "Pesanan yang Anda buat tidak dapat dibatalkan" ?
+                        <div className='modalCart-detail'>
+                            <h1 className='modalCart-title'>{props.title}</h1>
 
-                        {choicesCartModal()}
-                    </div>
+                            {choicesCartModal()}
+
+                            {
+                                modalTitle === 'Bayar Pakai Apa' && radioNumPay === 1 ?
+                                <div className='ovoNumber-layout'>
+                                    <div className='ovoNumber-topSide'>
+                                        <h3 className='ovoNumber-title'>
+                                           Masukkan Nomor Anda 
+                                        </h3>
+
+                                        <a data-tip='Masukkan Nomor Yang Terdaftar Di OVO Untuk Melakukan Pembayaran' data-event='click'><img src={Alertcircle} className='alertImg' alt=''/></a>
+                                        <ReactTooltip className='extraClass' effect='solid' arrowColor='#F8FAFC' globalEventOff='click' afterShow={() => hideTooltip()} />
+                                    </div>
+
+                                    <input type='number' inputMode='numeric' className='ovoNumber-bottomSide' onChange={onChangeNumber} style={{borderBottom: !isCheckNumber ? '0.5px solid #DC6A84' : '0.5px solid #D9CECE', color: !isCheckNumber ? '#DC6A84' : '#111111'}} />
+                                    {
+                                        isAlertNumber !== '' ?
+                                            <h4 className='ovoNumber-alert'>
+                                                {isAlertNumber}
+                                            </h4>
+                                            :
+                                            null
+                                    }
+                                </div>
+                                :
+                                null
+                            }
+
+                            <div className='modalCart-selectLayout'>
+                                <div className='modalCart-selectButton' onClick={selectButton}>
+                                    OK
+                                </div>
+                            </div>
+                        </div>
+                        :
+                        <div className='modalCart-paymentLayout'>
+                            <h1 className='modalCart-paymentTitle'>{props.title}</h1>
+
+                            <div className='modalCart-paymentCheck'>
+                                <div className='modalCart-cancelPay' onClick={closeModal}>
+                                    Cek Ulang
+                                </div>
+
+                                <div className='modalCart-confirmPay' onClick={confirmPay}>
+                                    Setuju
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
 
             </div>
