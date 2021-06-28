@@ -471,10 +471,20 @@
   padding: 10px 10px 10px 15px;
 }
 
-.cart-paymentService-descArea {
+.cart-paymentService-descAreaBro {
   display: flex;
   justify-content: start;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.cart-paymentService-ovo {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #AAAAAA;
 }
 
 .cart-paymentService-logo {

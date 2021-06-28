@@ -12,10 +12,14 @@ const CartModal = (props) => {
     const [radioNumEat, setradioNumEat] = useState(props.indexOptionEat)
     const [radioNumPay, setradioNumPay] = useState(props.indexOptionPay)
     const [modalTitle, setmodalTitle] = useState("")
+    const [isCheckNumber, setisCheckNumber] = useState(true)
+    const [isAlertNumber, setisAlertNumber] = useState("")
 
     const closeModal = (e) => {
-        e.stopPropagation()
-        props.onHide()
+        if (isCheckNumber) {
+            e.stopPropagation()
+            props.onHide()
+        }
     }
 
     const confirmPay = () => {
@@ -26,19 +30,40 @@ const CartModal = (props) => {
     const selectButton = () => {
         if (modalTitle === 'Pilih Cara Makan Anda') {
             props.handleData(radioNumEat)
+            props.onHide()
         } else {
-            props.handleData(radioNumPay)
+            if (isCheckNumber) {
+                props.handleData(radioNumPay)
+                props.onHide()
+            }
         }
-        props.onHide()
     }
 
     const onChangeRadio = (num, title) => {
         if (title === 'Pilih Cara Makan Anda') {
             setradioNumEat(num)
             setmodalTitle(title)
+            setisCheckNumber(true)
         } else if(title === 'Bayar Pakai Apa') {
             setradioNumPay(num)
             setmodalTitle(title)
+            setisCheckNumber(true)
+        }
+    }
+
+    const onChangeNumber = (e) => {
+        let reg = /^(?!00)(?!01)(?!02)(?!03)(?!04)(?!05)(?!06)(?!07)(?!09)[0][0-9]\d{0,12}$/
+        let checkNumber = reg.test(e.target.value)
+        props.setPhoneNumber(e.target.value)
+        if (checkNumber) {
+            setisCheckNumber(checkNumber)
+            setisAlertNumber('')
+        } else if (e.target.value === '') {
+            setisCheckNumber(false)
+            setisAlertNumber('Nomor harus diisi')
+        } else {
+            setisCheckNumber(checkNumber)
+            setisAlertNumber('Masukkan nomor dengan benar')
         }
     }
 
@@ -138,7 +163,15 @@ const CartModal = (props) => {
                                         <ReactTooltip className='extraClass' effect='solid' arrowColor='#F8FAFC' globalEventOff='click' afterShow={() => hideTooltip()} />
                                     </div>
 
-                                    <input className='ovoNumber-bottomSide' />
+                                    <input type='number' inputMode='numeric' className='ovoNumber-bottomSide' onChange={onChangeNumber} style={{borderBottom: !isCheckNumber ? '0.5px solid #DC6A84' : '0.5px solid #D9CECE', color: !isCheckNumber ? '#DC6A84' : '#111111'}} />
+                                    {
+                                        isAlertNumber !== '' ?
+                                            <h4 className='ovoNumber-alert'>
+                                                {isAlertNumber}
+                                            </h4>
+                                            :
+                                            null
+                                    }
                                 </div>
                                 :
                                 null

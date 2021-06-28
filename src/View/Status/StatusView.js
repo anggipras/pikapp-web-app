@@ -66,40 +66,41 @@ export class StatusView extends React.Component {
     } else {
       this.setState({ isMobile: false });
     }
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"));
-      this.setState({ isLogin: auth.isLogged });
-    }
-    if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href };
-      Cookies.set("lastLink", lastLink, { expires: 1 });
-      this.setRegisterDialog(true);
-    } else {
-      this.getTransactionHistory();
-    }
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"));
+    //   this.setState({ isLogin: auth.isLogged });
+    // }
+    // if (auth.isLogged === false) {
+    //   var lastLink = { value: window.location.href };
+    //   Cookies.set("lastLink", lastLink, { expires: 1 });
+    //   this.setRegisterDialog(true);
+    // } else {
+    //   this.getTransactionHistory();
+    // }
+    this.getTransactionHistory();
   }
 
   componentDidUpdate() {
-    if (this.state.isLogin === false) {
-      var auth = {
-        isLogged: false,
-        token: "",
-        new_event: true,
-        recommendation_status: false,
-        email: "",
-      };
-      if (Cookies.get("auth") !== undefined) {
-        auth = JSON.parse(Cookies.get("auth"));
-        this.setState({ isLogin: auth.isLogged });
-      }
-    }
+    // if (this.state.isLogin === false) {
+    //   var auth = {
+    //     isLogged: false,
+    //     token: "",
+    //     new_event: true,
+    //     recommendation_status: false,
+    //     email: "",
+    //   };
+    //   if (Cookies.get("auth") !== undefined) {
+    //     auth = JSON.parse(Cookies.get("auth"));
+    //     this.setState({ isLogin: auth.isLogged });
+    //   }
+    // }
 
     if (this.state.updateStatus) {
       window.location.reload();
@@ -112,47 +113,57 @@ export class StatusView extends React.Component {
   }
 
   getTransactionHistory() {
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"));
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"));
+    // }
+
+    let currentTable = ''
+    if (JSON.parse(localStorage.getItem('table'))) {
+      currentTable = JSON.parse(localStorage.getItem('table'))
+    } else {
+      currentTable = 0
     }
+    currentTable.toString()
+
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+
+    console.log(currentTable);
+    console.log(currentCartMerchant.mid);
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
-    let signature = sha256(
-      clientId + ":" + auth.email + ":" + secret + ":" + date,
-      secret
-    );
-    Axios(address + "txn/v1/txn-history/", {
+    let historyTransAPI = `${address}txn/v2/txn-history/${currentTable}/${currentCartMerchant.mid}/`
+    Axios(historyTransAPI, {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
         "x-client-id": clientId,
-        "x-signature": signature,
-        token: auth.token,
+        "table_no": currentTable,
+        "mid": currentCartMerchant.mid
       },
       method: "GET",
     })
       .then((res) => {
         var results = res.data.results;
+        console.log(results);
         var stateData = { ...this.state };
         stateData.data.pop();
-        let futureTimer = [];
-        let futureTimerOvo = [];
-        futureTimer = JSON.parse(localStorage.getItem("timerDown"));
-        futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
-        let indTime = 0;
-        let indTimeOvo = 0;
+        // let futureTimer = [];
+        // let futureTimerOvo = [];
+        // futureTimer = JSON.parse(localStorage.getItem("timerDown"));
+        // futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
+        // let indTime = 0;
+        // let indTimeOvo = 0;
         results.forEach((result) => {
-          if (result.status === "OPEN") {
             stateData.data.push({
               title: result.merchant_name,
               distance: "",
@@ -162,33 +173,19 @@ export class StatusView extends React.Component {
               payment: result.payment_with,
               transactionId: result.transaction_id,
               transactionTime: result.transaction_time,
-              transactionCountDown:
-                result.payment_with === "WALLET_OVO"
-                  ? futureTimerOvo[indTimeOvo]
-                  : futureTimer[indTime],
+              transactionCountDown: result.expiry_date,
+              totalPrice: result.total_price,
               timerMinutes: "0",
               timerSeconds: "0",
               stopInterval: true,
             });
-            if (result.payment_with === "WALLET_OVO") {
-              indTimeOvo++;
-            } else {
-              indTime++;
-            }
-          } else {
-            stateData.data.push({
-              title: result.merchant_name,
-              distance: "",
-              quantity: result.total_product,
-              status: result.status,
-              biz_type: result.biz_type,
-              payment: result.payment_with,
-              transactionId: result.transaction_id,
-              transactionTime: result.transaction_time,
-            });
-          }
+            // if (result.payment_with === "WALLET_OVO") {
+            //   indTimeOvo++;
+            // } else {
+            //   indTime++;
+            // }
         });
-        // console.log(stateData.data);
+        console.log(stateData.data);
         this.setState({ data: stateData.data, staticCountDown: true });
       })
       .catch((err) => {
@@ -264,7 +261,7 @@ export class StatusView extends React.Component {
           </div>
 
           <div className="orderList-transaction-centerSide">
-            {value.quantity} | Rp 60.000
+            {value.quantity} | Rp {Intl.NumberFormat("id-ID").format(value.totalPrice)}
           </div>
 
           <div className="orderList-transaction-bottomSide">
@@ -352,21 +349,10 @@ export class StatusView extends React.Component {
               lastSeconds = "0";
               changeData[indTime].timerSeconds = lastSeconds;
               changeData[indTime].stopInterval = false;
-              var auth = {
-                isLogged: false,
-                token: "",
-                new_event: true,
-                recommendation_status: false,
-                email: "",
-              };
-              auth = JSON.parse(Cookies.get("auth"));
+
               let uuid = uuidV4();
               uuid = uuid.replace(/-/g, "");
               const date = new Date().toISOString();
-              let signature = sha256(
-                clientId + ":" + auth.email + ":" + secret + ":" + date,
-                secret
-              );
 
               var bodyFormData = new FormData();
               bodyFormData.append("transaction_id", valTime.transactionId);
@@ -374,38 +360,17 @@ export class StatusView extends React.Component {
 
               var options = {
                 method: "post",
-                url: address + "txn/v1/txn-update/",
+                url: address + "txn/v2/txn-update/",
                 headers: {
                   "x-client-id": clientId,
-                  token: auth.token,
                   "x-request-id": uuid,
                   "x-request-timestamp": date,
-                  "x-signature": signature,
                 },
                 data: bodyFormData,
               };
 
               Axios(options)
                 .then(() => {
-                  if (valTime.payment === "PAY_BY_CASHIER") {
-                    let futureTimer = [];
-                    futureTimer = JSON.parse(localStorage.getItem("timerDown"));
-                    futureTimer.pop();
-                    localStorage.setItem(
-                      "timerDown",
-                      JSON.stringify(futureTimer)
-                    );
-                  } else {
-                    let futureTimerOvo = [];
-                    futureTimerOvo = JSON.parse(
-                      localStorage.getItem("timerDownOvo")
-                    );
-                    futureTimerOvo.pop();
-                    localStorage.setItem(
-                      "timerDownOvo",
-                      JSON.stringify(futureTimerOvo)
-                    );
-                  }
                   this.setState({ data: changeData, updateStatus: true });
                 })
                 .catch((err) => {
@@ -416,15 +381,6 @@ export class StatusView extends React.Component {
             if (valTime.payment === "WALLET_OVO") {
               if (newSeconds < 10) {
                 clearInterval(interval.current);
-                let futureTimerOvo = [];
-                futureTimerOvo = JSON.parse(
-                  localStorage.getItem("timerDownOvo")
-                );
-                futureTimerOvo.pop();
-                localStorage.setItem(
-                  "timerDownOvo",
-                  JSON.stringify(futureTimerOvo)
-                );
                 window.location.reload();
               }
             }
@@ -649,105 +605,107 @@ export class StatusView extends React.Component {
           payLabel
         );
       });
-    } else if (currentState === 5) {
-      let data = this.state.data;
+    } 
+    // else if (currentState === 5) {
+    //   let data = this.state.data;
 
-      let filterOpenStatus = data.filter((value) => {
-        return value.status === "CLOSE" || value.status === "FINALIZE";
-      });
+    //   let filterOpenStatus = data.filter((value) => {
+    //     return value.status === "CLOSE" || value.status === "FINALIZE";
+    //   });
 
-      if (filterOpenStatus.length === 0) {
-        return (
-          <div className="noTrans-content">
-            <span>
-              <img src={NoTransaction} className="noTrans-img" alt="" />
-            </span>
+    //   if (filterOpenStatus.length === 0) {
+    //     return (
+    //       <div className="noTrans-content">
+    //         <span>
+    //           <img src={NoTransaction} className="noTrans-img" alt="" />
+    //         </span>
 
-            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
-          </div>
-        );
-      }
+    //         <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+    //       </div>
+    //     );
+    //   }
 
-      return data.map((value, ind) => {
-        if (value.payment === "PAY_BY_CASHIER") {
-          payImage = CashierPayment;
-          payLabel = "Pembayaran Di Kasir";
-        } else if (value.payment === "WALLET_OVO") {
-          payImage = OvoPayment;
-          payLabel = "Ovo";
-        }
+    //   return data.map((value, ind) => {
+    //     if (value.payment === "PAY_BY_CASHIER") {
+    //       payImage = CashierPayment;
+    //       payLabel = "Pembayaran Di Kasir";
+    //     } else if (value.payment === "WALLET_OVO") {
+    //       payImage = OvoPayment;
+    //       payLabel = "Ovo";
+    //     }
 
-        if (value.biz_type === "DINE_IN") {
-          bizImage = diningTableColor;
-          bizLabel = "Makan Di Tempat";
-        } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayColor;
-          bizLabel = "Takeaway/Bungkus";
-        }
+    //     if (value.biz_type === "DINE_IN") {
+    //       bizImage = diningTableColor;
+    //       bizLabel = "Makan Di Tempat";
+    //     } else if (value.biz_type === "TAKE_AWAY") {
+    //       bizImage = takeawayColor;
+    //       bizLabel = "Takeaway/Bungkus";
+    //     }
 
-        let thestatus = "Transaksi Selesai";
-        let backColor = "#4BB7AC";
-        return this.eachStatusList(
-          value,
-          ind,
-          thestatus,
-          backColor,
-          bizImage,
-          bizLabel,
-          payImage,
-          payLabel
-        );
-      });
-    } else if (currentState === 6) {
-      let data = this.state.data;
+    //     let thestatus = "Transaksi Selesai";
+    //     let backColor = "#4BB7AC";
+    //     return this.eachStatusList(
+    //       value,
+    //       ind,
+    //       thestatus,
+    //       backColor,
+    //       bizImage,
+    //       bizLabel,
+    //       payImage,
+    //       payLabel
+    //     );
+    //   });
+    // } else if (currentState === 6) {
+    //   let data = this.state.data;
 
-      let filterOpenStatus = data.filter((value) => {
-        return value.status === "FAILED" || value.status === "ERROR";
-      });
+    //   let filterOpenStatus = data.filter((value) => {
+    //     return value.status === "FAILED" || value.status === "ERROR";
+    //   });
 
-      if (filterOpenStatus.length === 0) {
-        return (
-          <div className="noTrans-content">
-            <span>
-              <img src={NoTransaction} className="noTrans-img" alt="" />
-            </span>
+    //   if (filterOpenStatus.length === 0) {
+    //     return (
+    //       <div className="noTrans-content">
+    //         <span>
+    //           <img src={NoTransaction} className="noTrans-img" alt="" />
+    //         </span>
 
-            <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
-          </div>
-        );
-      }
+    //         <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
+    //       </div>
+    //     );
+    //   }
 
-      return data.map((value, ind) => {
-        if (value.payment === "PAY_BY_CASHIER") {
-          payImage = CashierPayment;
-          payLabel = "Pembayaran Di Kasir";
-        } else if (value.payment === "WALLET_OVO") {
-          payImage = OvoPayment;
-          payLabel = "Ovo";
-        }
+    //   return data.map((value, ind) => {
+    //     if (value.payment === "PAY_BY_CASHIER") {
+    //       payImage = CashierPayment;
+    //       payLabel = "Pembayaran Di Kasir";
+    //     } else if (value.payment === "WALLET_OVO") {
+    //       payImage = OvoPayment;
+    //       payLabel = "Ovo";
+    //     }
 
-        if (value.biz_type === "DINE_IN") {
-          bizImage = diningTableColor;
-          bizLabel = "Makan Di Tempat";
-        } else if (value.biz_type === "TAKE_AWAY") {
-          bizImage = takeawayColor;
-          bizLabel = "Takeaway/Bungkus";
-        }
+    //     if (value.biz_type === "DINE_IN") {
+    //       bizImage = diningTableColor;
+    //       bizLabel = "Makan Di Tempat";
+    //     } else if (value.biz_type === "TAKE_AWAY") {
+    //       bizImage = takeawayColor;
+    //       bizLabel = "Takeaway/Bungkus";
+    //     }
 
-        let thestatus = "Transaksi Gagal";
-        let backColor = "#DC6A84";
-        return this.eachStatusList(
-          value,
-          ind,
-          thestatus,
-          backColor,
-          bizImage,
-          bizLabel,
-          payImage,
-          payLabel
-        );
-      });
-    } else if (currentState === 0) {
+    //     let thestatus = "Transaksi Gagal";
+    //     let backColor = "#DC6A84";
+    //     return this.eachStatusList(
+    //       value,
+    //       ind,
+    //       thestatus,
+    //       backColor,
+    //       bizImage,
+    //       bizLabel,
+    //       payImage,
+    //       payLabel
+    //     );
+    //   });
+    // } 
+    else if (currentState === 0) {
       let data = this.state.data;
 
       if (data.length === 0) {
@@ -888,17 +846,23 @@ export class StatusView extends React.Component {
     }
   }
 
+  goUrl = () => {
+    let currentLocation = Cookies.get("lastProduct")
+    window.location.href = currentLocation
+  }
+
   render() {
     // if (this.state.continueDetail) {
     //   return <Redirect to='/orderdetail' />
     // }
+
     let { statusIndex, statusList } = this.state;
     let viewSize = (
       <>
         <div className="modal-header-orderList">
           <span
             className="logopikappCenterBack"
-            onClick={() => window.history.back()}
+            onClick={() => this.goUrl()}
           >
             <img className="LogoPikappBack" src={ArrowBack} alt="" />
           </span>

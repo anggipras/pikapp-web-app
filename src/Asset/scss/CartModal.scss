@@ -174,8 +174,17 @@
 .ovoNumber-bottomSide {
     border: none;
     outline: none;
-    border-bottom: 0.5px solid #D9CECE;
     width: 279px;
+}
+
+.ovoNumber-alert {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: 0.05em;
+    color: #DC6A84;
 }
 
 .modalCart-selectLayout {
@@ -290,7 +299,7 @@
         width: 384px; /* Max width where it stops expanding */
         min-height: 128px; /* Height in proportion to its parent container*/
         height: auto; /* Max Height where it stops expanding */
-        margin-top: 40vh;
+        margin-top: 10vh;
     }
     
     .iconCloseNarrow {
@@ -353,6 +362,11 @@
 
     .ovoNumber-bottomSide {
         width: 188px;
+    }
+
+    .ovoNumber-alert {
+        font-size: 12px;
+        line-height: 14px;
     }
 
     .modalCart-selectLayout {

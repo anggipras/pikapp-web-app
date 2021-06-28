@@ -48,6 +48,8 @@ var finalProduct = [
   },
 ]
 
+var phoneNumber = ''
+
 class CartView extends React.Component {
   state = {
     changeUI: true,
@@ -73,7 +75,7 @@ class CartView extends React.Component {
     indexEdit: 0,
     updateData: '',
     successMessage: '',
-    isEmailVerified : false,
+    // isEmailVerified : false,
     isShowCounterTime : false,
     countHit : 0,
     counterTime : 120,
@@ -124,18 +126,18 @@ class CartView extends React.Component {
 
   componentDidMount() {
     firebaseAnalytics.logEvent("cart_visited")
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-      is_email_verified: true
-    };
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    //   is_email_verified: true
+    // };
 
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
 
     if(window.innerWidth < 700) {
       this.state.steptour.splice(2,1);
@@ -149,11 +151,11 @@ class CartView extends React.Component {
       this.setState({ startTour : true});
     }
 
-    this.setState({ isEmailVerified: auth.is_email_verified });
+    // this.setState({ isEmailVerified: auth.is_email_verified });
 
-    if (this.state.isEmailVerified === false) {
-      this.handleReloadEmail();
-    }
+    // if (this.state.isEmailVerified === false) {
+    //   this.handleReloadEmail();
+    // }
 
   }
 
@@ -338,19 +340,19 @@ class CartView extends React.Component {
   }
 
   handlePayment = () => {
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
-    if (auth.isLogged === false) {
-      window.history.back()
-    }
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
+    // if (auth.isLogged === false) {
+    //   window.history.back()
+    // }
     this.props.LoadingButton()
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
@@ -389,30 +391,39 @@ class CartView extends React.Component {
       })
     })
 
+    let newDate = new Date().getTime()
+    let expiryDate = ''
+    if (this.state.paymentType === 'PAY_BY_CASHIER') {
+      newDate += 1800000
+      phoneNumber = ''
+    } else {
+      newDate += 60000
+    }
+    expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
+
     var requestData = {
       products: selectedProd,
       payment_with: this.state.paymentType,
       mid: currentCartMerchant.mid,
       prices: finalProduct[0].totalPrice.toString(),
       biz_type: this.state.biz_type,
-      table_no: noTab.toString()
+      table_no: noTab.toString(),
+      phone_number: phoneNumber,
+      expiry_date: expiryDate
     }
 
-    // console.log(requestData);
+    console.log(requestData);
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
     
-    Axios(address + "/txn/v2/txn-post/", {
+    Axios(address + "/txn/v3/txn-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
         "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
       },
       method: "POST",
       data: requestData,
@@ -432,22 +443,9 @@ class CartView extends React.Component {
             this.props.DataOrder(dataOrder);
             localStorage.setItem("payment", JSON.stringify(dataOrder));
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
-            let newDate = new Date().getTime()
-            newDate += 1800000
-            let countTimer = moment(new Date(newDate)).format()
-            let pushCountDown = []
-            if (JSON.parse(localStorage.getItem("timerDown"))) {
-              pushCountDown = JSON.parse(localStorage.getItem("timerDown"))
-              pushCountDown.unshift(countTimer)
-              localStorage.setItem("timerDown", JSON.stringify(pushCountDown))
-            } else {
-              pushCountDown.push(countTimer)
-              localStorage.setItem("timerDown", JSON.stringify(pushCountDown))
-            }
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -465,22 +463,9 @@ class CartView extends React.Component {
             this.props.DataOrder(dataOrder);
             localStorage.setItem("payment", JSON.stringify(dataOrder));
             localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("table")
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
-            let newDate = new Date().getTime()
-            newDate += 60000
-            let countTimer = moment(new Date(newDate)).format()
-            let pushCountDown = []
-            if (JSON.parse(localStorage.getItem("timerDownOvo"))) {
-              pushCountDown = JSON.parse(localStorage.getItem("timerDownOvo"))
-              pushCountDown.unshift(countTimer)
-              localStorage.setItem("timerDownOvo", JSON.stringify(pushCountDown))
-            } else {
-              pushCountDown.push(countTimer)
-              localStorage.setItem("timerDownOvo", JSON.stringify(pushCountDown))
-            }
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -631,20 +616,23 @@ class CartView extends React.Component {
       newNotes += currentExt.note
     }
 
-    console.log(newNotes);
+    let tableNumber = ''
+    if (localStorage.getItem('table')) {
+      tableNumber = localStorage.getItem('table')
+    } else {
+      tableNumber = 0
+    }
 
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "txn/v1/cart-post/", {
+    Axios(address + "txn/v2/cart-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
         "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
+        "table-no": tableNumber.toString()
       },
       method: "POST",
       data: {
@@ -662,101 +650,101 @@ class CartView extends React.Component {
       });
   }
 
-  handleReloadEmail = () => {
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-      is_email_verified: true
-    };
+  // handleReloadEmail = () => {
+  //   var auth = {
+  //     isLogged: false,
+  //     token: "",
+  //     new_event: true,
+  //     recommendation_status: false,
+  //     email: "",
+  //     is_email_verified: true
+  //   };
 
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
+  //   if (Cookies.get("auth") !== undefined) {
+  //     auth = JSON.parse(Cookies.get("auth"))
+  //   }
 
-    if (auth.is_email_verified === false) {
-      console.log(auth)
-      let uuid = uuidV4();
-      uuid = uuid.replace(/-/g, "");
-      const date = new Date().toISOString();
-      let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-      Axios(address + "home/v2/customer-info", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "x-signature": signature,
-          "token": auth.token,
-        },
-        method: "GET",
-      })
-        .then((res) => {
-          let data = res.data.results
-          auth.is_email_verified = data.is_email_verified;
-          Cookies.set("auth", auth, { expires: 1 });
-          this.setState({ isEmailVerified: auth.is_email_verified });
-        })
-        .catch((err) => {
-        });
-    }
-  }
+  //   if (auth.is_email_verified === false) {
+  //     console.log(auth)
+  //     let uuid = uuidV4();
+  //     uuid = uuid.replace(/-/g, "");
+  //     const date = new Date().toISOString();
+  //     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
+  //     Axios(address + "home/v2/customer-info", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "x-request-id": uuid,
+  //         "x-request-timestamp": date,
+  //         "x-client-id": clientId,
+  //         "x-signature": signature,
+  //         "token": auth.token,
+  //       },
+  //       method: "GET",
+  //     })
+  //       .then((res) => {
+  //         let data = res.data.results
+  //         auth.is_email_verified = data.is_email_verified;
+  //         Cookies.set("auth", auth, { expires: 1 });
+  //         this.setState({ isEmailVerified: auth.is_email_verified });
+  //       })
+  //       .catch((err) => {
+  //       });
+  //   }
+  // }
 
-  handleResendEmail = () => {
-    this.setState({ countHit: this.state.countHit + 1 });
+  // handleResendEmail = () => {
+  //   this.setState({ countHit: this.state.countHit + 1 });
 
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-      is_email_verified : true
-    };
+  //   var auth = {
+  //     isLogged: false,
+  //     token: "",
+  //     new_event: true,
+  //     recommendation_status: false,
+  //     email: "",
+  //     is_email_verified : true
+  //   };
 
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
+  //   if (Cookies.get("auth") !== undefined) {
+  //     auth = JSON.parse(Cookies.get("auth"))
+  //   }
 
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    Axios(address + "auth/resend-email/" + auth.email + "/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId
-      },
-      method: "GET",
-    })
-      .then((res) => {
-        Swal.fire({
-            position: 'top',
-            icon: 'success',
-            title: 'Email telah terkirim. Silahkan periksa email Anda.',
-            showConfirmButton: true,
-            confirmButtonColor: "#4bb7ac",
-            confirmButtonText: "OK",
-            closeOnConfirm: false,
-            // timer: 3000
-        }).then(() => {
-            if(this.state.countHit > 1) {
-              this.setState({ counterTime : 300});
-            } else {
-              this.setState({ counterTime : 120});
-            }
+  //   let uuid = uuidV4();
+  //   uuid = uuid.replace(/-/g, "");
+  //   const date = new Date().toISOString();
+  //   Axios(address + "auth/resend-email/" + auth.email + "/", {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "x-request-id": uuid,
+  //       "x-request-timestamp": date,
+  //       "x-client-id": clientId
+  //     },
+  //     method: "GET",
+  //   })
+  //     .then((res) => {
+  //       Swal.fire({
+  //           position: 'top',
+  //           icon: 'success',
+  //           title: 'Email telah terkirim. Silahkan periksa email Anda.',
+  //           showConfirmButton: true,
+  //           confirmButtonColor: "#4bb7ac",
+  //           confirmButtonText: "OK",
+  //           closeOnConfirm: false,
+  //           // timer: 3000
+  //       }).then(() => {
+  //           if(this.state.countHit > 1) {
+  //             this.setState({ counterTime : 300});
+  //           } else {
+  //             this.setState({ counterTime : 120});
+  //           }
             
-            this.setState({ isShowCounterTime : true });
-            this.countDownTime();
-        })
-      })
-      .catch((err) => {
-      });
+  //           this.setState({ isShowCounterTime : true });
+  //           this.countDownTime();
+  //       })
+  //     })
+  //     .catch((err) => {
+  //     });
 
-  }
+  // }
 
   countDownTime = () => {
     this.interval = setInterval(
@@ -786,6 +774,10 @@ class CartView extends React.Component {
     localStorage.setItem('cartMerchant', 0);
     localStorage.setItem('merchantFlow', 0);
     localStorage.setItem('productTour', 0);
+  }
+
+  isPhoneNum = (num) => {
+    phoneNumber = num
   }
 
   render() {
@@ -834,6 +826,7 @@ class CartView extends React.Component {
           handleData={this.handleOption}
           indexOptionEat={this.state.indexOptionEat}
           indexOptionPay={this.state.indexOptionPay}
+          setPhoneNumber={this.isPhoneNum}
           confirmPay={this.handlePayment}
         />
       );
@@ -975,7 +968,7 @@ class CartView extends React.Component {
     return (
       <>
         <div className='cartLayout'>
-          {
+          {/* {
           !this.state.isEmailVerified ?
           <div className='verificationMsg'>
             <div className='message'>Verifikasi Email Anda</div>
@@ -987,7 +980,7 @@ class CartView extends React.Component {
           </div>
           :
           <div></div>
-          }
+          } */}
           <div className='cartTitle'>
             <span className='logopikappCenter' onClick={() => window.history.back()} >
               <img className='LogoPikappCart' src={ArrowBack} alt='' />
@@ -1049,13 +1042,21 @@ class CartView extends React.Component {
                   </div>
 
                   <div className='cart-paymentService-content'>
-                    <div className='cart-paymentService-descArea'>
+                    <div className='cart-paymentService-descAreaBro'>
                       <span>
                         <img className='cart-paymentService-logo' src={paymentImage} alt='' />
                       </span>
 
                       <h3 className='cart-paymentService-words'>
                         {this.state.paymentOption}
+
+                        {
+                          this.state.paymentOption === 'Pembayaran Ovo' ?
+                            <h4 className='cart-paymentService-ovo'>
+                              No. Anda: {phoneNumber}
+                            </h4>
+                            : null
+                        }
                       </h3>
                     </div>
                   </div>
