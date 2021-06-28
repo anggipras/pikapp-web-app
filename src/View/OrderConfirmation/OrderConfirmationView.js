@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { connect } from "react-redux";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import pikappLogo from '../../Asset/Logo/logo4x.png';
@@ -15,6 +15,8 @@ import { Link } from "react-router-dom";
 
 // const client = new W3CWebSocket('ws://127.0.0.1:8000');
 
+let interval = createRef();
+
 class OrderConfirmationView extends React.Component {
     state = {
         isMobile : false,
@@ -22,6 +24,7 @@ class OrderConfirmationView extends React.Component {
             transactionId : "",
             totalPayment : "",
             paymentType : "",
+            transactionTime : 0,
         },
         paymentOption: "Pembayaran Di Kasir",
         paymentType: "PAY_BY_CASHIER",
@@ -33,6 +36,8 @@ class OrderConfirmationView extends React.Component {
             status: "Status",
         },
         mid : "",
+        timerMinutes : 0,
+        timerSeconds : 0,
     }
 
     componentDidMount() {
@@ -47,12 +52,12 @@ class OrderConfirmationView extends React.Component {
         if(localStorage.getItem("counterPayment")){
             if(counter != 0) {
                 this.setState({ counterTime : counter});
-                this.countDownTime();
+                this.countDown();
             } else {
                 this.setState({ counterTime : counter});
             }
         } else {
-            this.countDownTime()
+            this.countDown()
         }
 
         if(Object.keys(this.props.AllRedu.dataOrder).length !== 0) {
@@ -86,8 +91,8 @@ class OrderConfirmationView extends React.Component {
     }
 
     componentDidUpdate() {
-        if(this.state.counterTime === 0) {
-            clearInterval(this.interval);
+        if(this.state.counterTime < 0) {
+            clearInterval(interval.current);
             console.log("clear");
             localStorage.setItem("counterPayment", this.state.counterTime);
         } else {
@@ -188,6 +193,38 @@ class OrderConfirmationView extends React.Component {
             .catch((err) => {
             });
         }, 60000);
+    }
+
+    countDown = () => {
+        var dataPayment = JSON.parse(localStorage.getItem("payment"));
+        let dateTime = dataPayment.transactionTime;
+        let eventTime = new Date(dateTime).getTime();
+
+        interval = setInterval(() => {
+            // based on time set in user's computer time / OS
+            const currentTime = new Date().getTime();
+            const distance = eventTime - currentTime;
+
+            const minutes = Math.floor(
+                (distance % (1000 * 60 * 60)) / (1000 * 60)
+            );
+    
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            let newMinutes = this.state.timerMinutes;
+            newMinutes = minutes;
+    
+            let newSeconds = this.state.timerSeconds;
+            newSeconds = seconds;
+
+            if(newSeconds < 0) {
+                clearInterval(interval.current);
+            } else {
+                this.setState({ counterTime : newSeconds});
+            }     
+            
+        }, 1000);
+
     }
     
 
