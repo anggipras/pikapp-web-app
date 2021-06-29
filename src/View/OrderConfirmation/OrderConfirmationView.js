@@ -101,7 +101,7 @@ class OrderConfirmationView extends React.Component {
             localStorage.setItem("counterPayment", this.state.counterTime);
         }
 
-        if(this.state.currentModal.status === "PAID"){
+        if(this.state.currentModal.status === "OPEN"){
             this.showResponsePayment();
         } 
     }

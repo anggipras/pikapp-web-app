@@ -156,7 +156,7 @@ class OrderDetailView extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.currentModal.timerMinutes == 0 && this.state.currentModal.timerSeconds == 0) {
+        if (this.state.currentModal.timerMinutes < 0 && this.state.currentModal.timerSeconds < 0) {
             clearInterval(interval.current);
             console.log("success clear");
             if(this.state.currentModal.status === "OPEN") {
@@ -192,6 +192,7 @@ class OrderDetailView extends React.Component {
                 transactionTime = dataDetail.transactionTime;
             }
 
+            transactionTime = transactionTime.replace(/ /g,"T");
             let eventTime = new Date(transactionTime).getTime();
 
             interval = setInterval(() => {
