@@ -85,6 +85,13 @@ export class StatusView extends React.Component {
     //   this.getTransactionHistory();
     // }
     this.getTransactionHistory();
+    this.updateLikeWebsocket();
+  }
+
+  updateLikeWebsocket = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 120000);
   }
 
   componentDidUpdate() {
@@ -134,9 +141,6 @@ export class StatusView extends React.Component {
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
 
-    console.log(currentTable);
-    console.log(currentCartMerchant.mid);
-
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
@@ -147,8 +151,6 @@ export class StatusView extends React.Component {
         "x-request-id": uuid,
         "x-request-timestamp": date,
         "x-client-id": clientId,
-        "table_no": currentTable,
-        "mid": currentCartMerchant.mid
       },
       method: "GET",
     })
@@ -157,12 +159,6 @@ export class StatusView extends React.Component {
         console.log(results);
         var stateData = { ...this.state };
         stateData.data.pop();
-        // let futureTimer = [];
-        // let futureTimerOvo = [];
-        // futureTimer = JSON.parse(localStorage.getItem("timerDown"));
-        // futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
-        // let indTime = 0;
-        // let indTimeOvo = 0;
         results.forEach((result) => {
             stateData.data.push({
               title: result.merchant_name,
@@ -179,11 +175,6 @@ export class StatusView extends React.Component {
               timerSeconds: 0,
               stopInterval: true,
             });
-            // if (result.payment_with === "WALLET_OVO") {
-            //   indTimeOvo++;
-            // } else {
-            //   indTime++;
-            // }
         });
         console.log(stateData.data);
         this.setState({ data: stateData.data, staticCountDown: true });
@@ -607,107 +598,7 @@ export class StatusView extends React.Component {
           payLabel
         );
       });
-    } 
-    // else if (currentState === 5) {
-    //   let data = this.state.data;
-
-    //   let filterOpenStatus = data.filter((value) => {
-    //     return value.status === "CLOSE" || value.status === "FINALIZE";
-    //   });
-
-    //   if (filterOpenStatus.length === 0) {
-    //     return (
-    //       <div className="noTrans-content">
-    //         <span>
-    //           <img src={NoTransaction} className="noTrans-img" alt="" />
-    //         </span>
-
-    //         <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
-    //       </div>
-    //     );
-    //   }
-
-    //   return data.map((value, ind) => {
-    //     if (value.payment === "PAY_BY_CASHIER") {
-    //       payImage = CashierPayment;
-    //       payLabel = "Pembayaran Di Kasir";
-    //     } else if (value.payment === "WALLET_OVO") {
-    //       payImage = OvoPayment;
-    //       payLabel = "Ovo";
-    //     }
-
-    //     if (value.biz_type === "DINE_IN") {
-    //       bizImage = diningTableColor;
-    //       bizLabel = "Makan Di Tempat";
-    //     } else if (value.biz_type === "TAKE_AWAY") {
-    //       bizImage = takeawayColor;
-    //       bizLabel = "Takeaway/Bungkus";
-    //     }
-
-    //     let thestatus = "Transaksi Selesai";
-    //     let backColor = "#4BB7AC";
-    //     return this.eachStatusList(
-    //       value,
-    //       ind,
-    //       thestatus,
-    //       backColor,
-    //       bizImage,
-    //       bizLabel,
-    //       payImage,
-    //       payLabel
-    //     );
-    //   });
-    // } else if (currentState === 6) {
-    //   let data = this.state.data;
-
-    //   let filterOpenStatus = data.filter((value) => {
-    //     return value.status === "FAILED" || value.status === "ERROR";
-    //   });
-
-    //   if (filterOpenStatus.length === 0) {
-    //     return (
-    //       <div className="noTrans-content">
-    //         <span>
-    //           <img src={NoTransaction} className="noTrans-img" alt="" />
-    //         </span>
-
-    //         <div className="noTrans-title">Anda Belum Melakukan Transaksi</div>
-    //       </div>
-    //     );
-    //   }
-
-    //   return data.map((value, ind) => {
-    //     if (value.payment === "PAY_BY_CASHIER") {
-    //       payImage = CashierPayment;
-    //       payLabel = "Pembayaran Di Kasir";
-    //     } else if (value.payment === "WALLET_OVO") {
-    //       payImage = OvoPayment;
-    //       payLabel = "Ovo";
-    //     }
-
-    //     if (value.biz_type === "DINE_IN") {
-    //       bizImage = diningTableColor;
-    //       bizLabel = "Makan Di Tempat";
-    //     } else if (value.biz_type === "TAKE_AWAY") {
-    //       bizImage = takeawayColor;
-    //       bizLabel = "Takeaway/Bungkus";
-    //     }
-
-    //     let thestatus = "Transaksi Gagal";
-    //     let backColor = "#DC6A84";
-    //     return this.eachStatusList(
-    //       value,
-    //       ind,
-    //       thestatus,
-    //       backColor,
-    //       bizImage,
-    //       bizLabel,
-    //       payImage,
-    //       payLabel
-    //     );
-    //   });
-    // } 
-    else if (currentState === 0) {
+    } else if (currentState === 0) {
       let data = this.state.data;
 
       if (data.length === 0) {
@@ -800,32 +691,6 @@ export class StatusView extends React.Component {
         } else if (value.status === "DELIVER") {
           thestatus = "Makanan Tiba";
           backColor = "#4BB7AC";
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        } else if (value.status === "CLOSE" || value.status === "FINALIZE") {
-          thestatus = "Transaksi Selesai";
-          backColor = "#4BB7AC";
-          return this.eachStatusList(
-            value,
-            ind,
-            thestatus,
-            backColor,
-            bizImage,
-            bizLabel,
-            payImage,
-            payLabel
-          );
-        } else if (value.status === "FAILED" || value.status === "ERROR") {
-          thestatus = "Transaksi Gagal";
-          backColor = "#DC6A84";
           return this.eachStatusList(
             value,
             ind,
