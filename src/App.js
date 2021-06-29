@@ -14,7 +14,7 @@ import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import OrderDetailLayout from "./Master/OrderDetailLayout";
 import { Route, Switch } from "react-router-dom";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
 
 export var cart = [
@@ -73,12 +73,12 @@ function App() {
 
     dispatch({ type: 'FCMTOKEN', payload: tokenFound });
 
-    if (Cookies.get("auth") === undefined) {
-        let deleteCart = JSON.parse(localStorage.getItem("cart"))
-        let newCart = []
-        newCart.push(deleteCart[0])
-        localStorage.setItem('cart', JSON.stringify(newCart))
-    }
+    // if (Cookies.get("auth") === undefined) {
+    //     let deleteCart = JSON.parse(localStorage.getItem("cart"))
+    //     let newCart = []
+    //     newCart.push(deleteCart[0])
+    //     localStorage.setItem('cart', JSON.stringify(newCart))
+    // }
 
     if(localStorage.getItem("counterPayment")) {
         timeLeft = setInterval(() => countDown(), 1000);

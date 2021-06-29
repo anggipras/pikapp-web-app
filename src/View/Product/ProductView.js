@@ -26,7 +26,7 @@ import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
-import { firebaseAnalytics } from '../../firebaseConfig'
+// import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
@@ -117,7 +117,7 @@ class ProductView extends React.Component {
   timeout = null
 
   componentDidMount() {
-    firebaseAnalytics.logEvent("merchant_detail_visited")
+    // firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
@@ -975,15 +975,19 @@ class ProductView extends React.Component {
     let notab = ""
     if (localStorage.getItem('table')) {
       if (!value.table) {
-        notab = localStorage.getItem('fctable')
+        if (localStorage.getItem('fctable')) {
+          notab = localStorage.getItem('fctable')
+        } else {
+          notab = 0
+        }
       } else {
-        notab = value.table === undefined ? 0 : value.table
+        notab = value.table
       }
     } else {
       if (localStorage.getItem('fctable')) {
         notab = localStorage.getItem('fctable')
       } else {
-        notab = value.table === undefined ? 0 : value.table
+        notab = value.table
       }
     }
     if (JSON.parse(localStorage.getItem('cart'))) {
