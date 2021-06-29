@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import closeNarrow from '../../Asset/Icon/closeNarrow.png'
 import diningTableColor from '../../Asset/Icon/diningTableColor.png'
+import diningTableWhite from '../../Asset/Icon/diningTableWhite.png'
 import takeawayColor from '../../Asset/Icon/takeawayColor.png'
+import takeawayWhite from '../../Asset/Icon/takeawayWhite.png'
 import CashierPayment from '../../Asset/Icon/CashierPayment.png'
+import CashierPaymentWhite from '../../Asset/Icon/CashierPaymentWhite.png'
 import OvoPayment from '../../Asset/Icon/ovo_icon.png'
 import Alertcircle from '../../Asset/Icon/alertcircle.png'
 import ReactTooltip from 'react-tooltip';
@@ -72,11 +75,23 @@ const CartModal = (props) => {
         let choicesModal = optionList.map((optionVal, keyOption) => {
             let imageOption;
             if (optionVal.image === "dineIn") {
-                imageOption = diningTableColor;
+                if (radioNumEat === 1) {
+                    imageOption = diningTableColor;
+                } else {
+                    imageOption = diningTableWhite;
+                }
             } else if (optionVal.image === "takeaway") {
-                imageOption = takeawayColor;
+                if (radioNumEat === 0) {
+                    imageOption = takeawayColor;
+                } else {
+                    imageOption = takeawayWhite;
+                }
             } else if (optionVal.image === "cashier") {
-                imageOption = CashierPayment;
+                if (radioNumPay === 1) {
+                    imageOption = CashierPayment;
+                } else {
+                    imageOption = CashierPaymentWhite;
+                }
             } else if (optionVal.image === "ovo") {
                 imageOption = OvoPayment;
             }

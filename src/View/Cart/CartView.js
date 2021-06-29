@@ -21,9 +21,9 @@ import { EditMenuCart, IsMerchantQR, DataOrder } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
-import { firebaseAnalytics } from '../../firebaseConfig'
+// import { firebaseAnalytics } from '../../firebaseConfig'
 import moment from "moment";
 
 var currentExt = {
@@ -125,7 +125,7 @@ class CartView extends React.Component {
   };
 
   componentDidMount() {
-    firebaseAnalytics.logEvent("cart_visited")
+    // firebaseAnalytics.logEvent("cart_visited")
     // var auth = {
     //   isLogged: false,
     //   token: "",
@@ -193,7 +193,7 @@ class CartView extends React.Component {
           },
           {
             image: "ovo",
-            option: "Pembayaran Ovo",
+            option: "OVO",
           },
         ],
       });
@@ -334,7 +334,7 @@ class CartView extends React.Component {
       if (data === 0) {
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
       } else {
-        this.setState({ paymentType: "WALLET_OVO", paymentOption: "Pembayaran Ovo", indexOptionPay: data })
+        this.setState({ paymentType: "WALLET_OVO", paymentOption: "OVO", indexOptionPay: data })
       }
     }
   }
@@ -412,7 +412,7 @@ class CartView extends React.Component {
       expiry_date: expiryDate
     }
 
-    console.log(requestData);
+    // console.log(requestData);
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
@@ -590,16 +590,16 @@ class CartView extends React.Component {
     localStorage.setItem('cart', JSON.stringify(allCart))
     this.setState({ updateData: 'updated' })
 
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
 
     let newNotes = ''
     currentExt.listcheckbox.forEach(val => {
@@ -800,22 +800,21 @@ class CartView extends React.Component {
       }
     }
 
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-      is_email_verified: true
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
-    if (auth.isLogged === false) {
-      var lastLink = { value: window.location.href }
-      Cookies.set("lastLink", lastLink, { expires: 1 })
-      // window.location.href = "/login"
-    }
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    //   is_email_verified: true
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
+    // if (auth.isLogged === false) {
+    //   var lastLink = { value: window.location.href }
+    //   Cookies.set("lastLink", lastLink, { expires: 1 })
+    // }
 
     let modal;
     if (this.state.showModal === true) {
@@ -1053,10 +1052,10 @@ class CartView extends React.Component {
                         {this.state.paymentOption}
 
                         {
-                          this.state.paymentOption === 'Pembayaran Ovo' ?
-                            <h4 className='cart-paymentService-ovo'>
+                          this.state.paymentOption === 'OVO' ?
+                            <div className='cart-paymentService-ovo'>
                               No. Anda: {phoneNumber}
-                            </h4>
+                            </div>
                             : null
                         }
                       </h3>
