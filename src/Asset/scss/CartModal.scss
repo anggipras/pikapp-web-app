@@ -33,7 +33,7 @@
     min-height: 213px; /* Height in proportion to its parent container*/
     height: auto; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */
-    margin-top: 181px;
+    margin-top: 5vh;
     border: none;
     border-radius: 20px; /* Optional. Rounds container corners */
     -webkit-animation-name: animacartmove;
@@ -232,10 +232,6 @@
 
 .modalCart-radioSection input[type="radio"]:checked + label .modalCart-radioTitle {
     color: #ffffff;
-}
-
-.modalCart-radioSection input[type="radio"]:checked + label .modalCartradio-image {
-    filter: brightness(0) invert(1);
 }
 
 .modalCart-radioSide {
