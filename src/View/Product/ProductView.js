@@ -13,7 +13,7 @@ import Cookies from "js-cookie"
 import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
 import Productimage from '../../Asset/Illustration/storeimg.jpg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
-import NotifIcon from '../../Asset/Icon/bell.png'
+import NotifIcon from '../../Asset/Icon/status.png'
 import ProfileIcon from '../../Asset/Icon/avatar.png'
 import OpenHourIcon from '../../Asset/Icon/hour.png'
 import CoinIcon from '../../Asset/Icon/coin.png'
@@ -26,6 +26,7 @@ import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
+// import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
@@ -64,6 +65,7 @@ class ProductView extends React.Component {
       address: "",
       rating: "",
       phone: "",
+      category: "",
       currentData: {
         productId: "",
         category: "",
@@ -115,6 +117,7 @@ class ProductView extends React.Component {
   timeout = null
 
   componentDidMount() {
+    // firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
@@ -183,6 +186,7 @@ class ProductView extends React.Component {
           storeRating: "",
           storeLogo: "",
           storePhone: "",
+          storeCateg: []
         };
         currentMerchant.mid = res.data.results.mid;
         currentMerchant.storeName = res.data.results.merchant_name;
@@ -193,6 +197,7 @@ class ProductView extends React.Component {
         currentMerchant.storeRating = res.data.results.merchant_rating;
         currentMerchant.storeLogo = res.data.results.merchant_logo;
         currentMerchant.storePhone = res.data.results.merchant_phone;
+        currentMerchant.storeCateg = res.data.results.merchant_categories === null ? [] : res.data.results.merchant_categories
 
         let selectedStore = []
         selectedStore.push(res.data.results)
@@ -211,6 +216,18 @@ class ProductView extends React.Component {
         stateData.address = currentMerchant.storeAdress;
         stateData.rating = currentMerchant.storeRating;
         stateData.phone = currentMerchant.storePhone;
+        //refactor merchant categories
+        let merchantCateg = ""
+        currentMerchant.storeCateg.forEach((merchCat, indCat) => {
+          if (merchCat) {
+            if (indCat === currentMerchant.storeCateg.length - 1) {
+              merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}`
+            } else {
+              merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}, `
+            }
+          }
+        })
+        stateData.category = merchantCateg
         stateData.notable = notab
         var productCateg = []
         var idCateg = []
@@ -295,8 +312,15 @@ class ProductView extends React.Component {
             newImage = currentMerchant.storeImage
             prominent(newImage, { amount: 3 }).then((color) => {
               // return RGB color for example [241, 221, 63]
-              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+              if (color.length < 3) {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
+              } else {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              }
+              // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)
@@ -317,8 +341,15 @@ class ProductView extends React.Component {
             newImage = Storeimg
             prominent(newImage, { amount: 3 }).then((color) => {
               // return RGB color for example [241, 221, 63]
-              var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+              // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              if (color.length < 3) {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
+              } else {
+                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+                var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+              }
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
               document.addEventListener('scroll', this.loadMoreMerchant)
@@ -457,7 +488,7 @@ class ProductView extends React.Component {
     if (cart.length > 1) {
       if (cart[1].mid !== currentMerchant.mid) {
         let newCart = []
-        newCart.push(cart[0]) 
+        newCart.push(cart[0])
         cart = newCart
       }
     }
@@ -663,7 +694,7 @@ class ProductView extends React.Component {
       cart.push({
         mid: mid,
         storeName: currentMerchant.storeName,
-        storeDesc: currentMerchant.storeDesc,
+        storeAdress: currentMerchant.storeAdress,
         storeDistance: currentMerchant.distance,
         food: [
           {
@@ -702,16 +733,16 @@ class ProductView extends React.Component {
       showConfirmButton: false,
       timer: 1500
     })
-    var auth = {
-      isLogged: false,
-      token: "",
-      new_event: true,
-      recommendation_status: false,
-      email: "",
-    };
-    if (Cookies.get("auth") !== undefined) {
-      auth = JSON.parse(Cookies.get("auth"))
-    }
+    // var auth = {
+    //   isLogged: false,
+    //   token: "",
+    //   new_event: true,
+    //   recommendation_status: false,
+    //   email: "",
+    // };
+    // if (Cookies.get("auth") !== undefined) {
+    //   auth = JSON.parse(Cookies.get("auth"))
+    // }
 
     let newNotes = ''
     currentExt.listcheckbox.forEach(val => {
@@ -730,18 +761,23 @@ class ProductView extends React.Component {
       newNotes += currentExt.note
     }
 
+    let tableNumber = ''
+    if (localStorage.getItem('table')) {
+      tableNumber = localStorage.getItem('table')
+    } else {
+      tableNumber = 0
+    }
+
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
-    let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-    Axios(address + "txn/v1/cart-post/", {
+    Axios(address + "txn/v2/cart-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
         "x-request-timestamp": date,
         "x-client-id": clientId,
-        "x-signature": signature,
-        "token": auth.token,
+        "table-no": tableNumber.toString()
       },
       method: "POST",
       data: {
@@ -939,15 +975,19 @@ class ProductView extends React.Component {
     let notab = ""
     if (localStorage.getItem('table')) {
       if (!value.table) {
-        notab = localStorage.getItem('fctable')
+        if (localStorage.getItem('fctable')) {
+          notab = localStorage.getItem('fctable')
+        } else {
+          notab = 0
+        }
       } else {
-        notab = value.table || ""
+        notab = value.table
       }
     } else {
       if (localStorage.getItem('fctable')) {
         notab = localStorage.getItem('fctable')
       } else {
-        notab = value.table || ""
+        notab = value.table
       }
     }
     if (JSON.parse(localStorage.getItem('cart'))) {
@@ -1004,32 +1044,25 @@ class ProductView extends React.Component {
               <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
           }
 
-          {
+          {/* {
             this.state.isLogin ?
-              <div className='iconBanner'>
-                <Link to={"/profile"}>
-                  <div className='profileIcon-sec'>
-                    <div className='profileIcon'>
-                      <span className='reactProfIcons'>
-                        <img className='profileicon-img' src={ProfileIcon} alt='' />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-
-                <Link to={"/status"}>
-                  <div className='notifIcon-sec'>
-                    <div className='notifIcon'>
-                      <span className='reactNotifIcons'>
-                        <img className='notificon-img' src={NotifIcon} alt='' />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </div>
+              <Link to={"/profile"}>
+                <div className='profileIcon-sec'>
+                  <img className='profileicon-img' src={ProfileIcon} alt='' />
+                </div>
+              </Link>
               :
               <div></div>
-          }
+          } */}
+
+          <div className='iconBanner'>
+            <Link to={"/status"}>
+              <div className='notifIcon-sec'>
+                <img className='notificon-img' src={NotifIcon} alt='' />
+              </div>
+            </Link>
+          </div>
+
         </div>
         <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>
           <div className='inside-merchantSection'>
@@ -1052,7 +1085,7 @@ class ProductView extends React.Component {
                       </div>
 
                       <div className='merchant-categName'>
-                        <div className='merchant-allcateg'>Merchant Category</div>
+                        <div className='merchant-allcateg'>{this.state.data.category}</div>
                         <div className='merchant-starInfo'>
                           {
                             // this.state.data.rating ?

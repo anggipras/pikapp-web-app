@@ -12,6 +12,7 @@ import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
 import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
+// import { firebaseAnalytics } from '../../firebaseConfig'
 
 class StoreView extends React.Component {
   state = {
@@ -32,6 +33,7 @@ class StoreView extends React.Component {
           storeName: "",
           storeDesc: "",
           storeImage: "",
+          storeCateg: ""
         },
       ],
     },
@@ -68,6 +70,7 @@ class StoreView extends React.Component {
   };
 
   async componentDidMount() {
+    // firebaseAnalytics.logEvent("merchant_list_visited")
     this.props.DoneLoad()
     this.props.IsMerchantQR(false);
     Cookies.set("homePage", window.location.search)
@@ -181,7 +184,6 @@ class StoreView extends React.Component {
           "x-request-timestamp": date,
           "x-client-id": clientId,
           "token": "PUBLIC",
-          "category": "1",
         },
         method: "GET",
         params: {
@@ -190,11 +192,22 @@ class StoreView extends React.Component {
         }
       })
         .then((res) => {
-          console.log(res.data.results);
+          // console.log(res.data.results);
           stateDataFC = { ...this.state.data };
           let responseDatas = res.data;
           stateDataFC.data.pop();
           responseDatas.results.forEach((data) => {
+            let merchantCateg = ""
+            data.merchant_categories.forEach((merchCat, indCat) => {
+              if (merchCat) {
+                if (indCat === data.merchant_categories.length - 1) {
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}`
+                } else {
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}, `
+                }
+              }
+            })
+
             stateDataFC.data.push({
               address: data.merchant_address,
               rating: data.merchant_rating,
@@ -204,6 +217,7 @@ class StoreView extends React.Component {
               storeName: data.merchant_name,
               storeDesc: "",
               storeImage: data.merchant_pict,
+              storeCateg: merchantCateg
             })
           })
 
@@ -214,6 +228,7 @@ class StoreView extends React.Component {
           }
         })
         .catch((err) => {
+          console.log(err);
         });
 
     } else {
@@ -252,11 +267,22 @@ class StoreView extends React.Component {
         }
       })
         .then((res) => {
-          console.log(res.data.results);
+          // console.log(res.data.results);
           stateData = { ...this.state.data };
           let responseDatas = res.data;
           stateData.data.pop();
           responseDatas.results.forEach((data) => {
+            let merchantCateg = ""
+            data.merchant_categories.forEach((merchCat, indCat) => {
+              if (merchCat) {
+                if (indCat === data.merchant_categories.length - 1) {
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}`
+                } else {
+                  merchantCateg += `${merchCat.toLocaleLowerCase()}, `
+                }
+              }
+            })
+
             stateData.data.push({
               address: data.merchant_address,
               rating: data.merchant_rating,
@@ -266,21 +292,9 @@ class StoreView extends React.Component {
               storeName: data.merchant_name,
               storeDesc: "",
               storeImage: data.merchant_pict,
+              storeCateg: merchantCateg
             })
           })
-          // if (Cookies.get("fcaddress") !== undefined) {
-          //   let foodcourtadd = Cookies.get("fcaddress")
-          //   let filterMerchantDetail = stateData.data.filter(fcVal => {
-          //     return fcVal.address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
-          //   })
-          //   stateData.data = filterMerchantDetail
-          //   let filterMerchantMain = res.data.results.filter(fcVal => {
-          //     return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
-          //   })
-          //   this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: filterMerchantMain });
-          // } else {
-          //   this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
-          // }
 
           this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
           document.addEventListener('scroll', this.loadMoreMerchant)
@@ -313,7 +327,6 @@ class StoreView extends React.Component {
               "x-request-timestamp": date,
               "x-client-id": clientId,
               "token": "PUBLIC",
-              "category": "1",
             },
             method: "GET",
             params: {
@@ -325,6 +338,17 @@ class StoreView extends React.Component {
               stateDataFC = { ...this.state.data };
               let responseDatas = res.data;
               responseDatas.results.forEach((data) => {
+                let merchantCateg = ""
+                data.merchant_categories.forEach((merchCat, indCat) => {
+                  if (merchCat) {
+                    if (indCat === data.merchant_categories.length - 1) {
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}`
+                    } else {
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}, `
+                    }
+                  }
+                })
+
                 stateDataFC.data.push({
                   address: data.merchant_address,
                   rating: data.merchant_rating,
@@ -334,6 +358,7 @@ class StoreView extends React.Component {
                   storeName: data.merchant_name,
                   storeDesc: "",
                   storeImage: data.merchant_pict,
+                  storeCateg: merchantCateg
                 })
               })
               let updateMerchant = [...this.state.allMerchantAPI]
@@ -348,6 +373,7 @@ class StoreView extends React.Component {
               }
             })
             .catch((err) => {
+              console.log(err);
             });
         } else {
           let addressRoute = address + "home/v2/merchant/" + this.state.lon + "/" + this.state.lat + "/ALL/";
@@ -373,51 +399,18 @@ class StoreView extends React.Component {
             .then((res) => {
               stateData = { ...this.state.data };
               let responseDatas = res.data;
-              // if (Cookies.get("fcaddress") !== undefined) {
-              //   let foodcourtadd = Cookies.get("fcaddress")
-              //   let filterMerchantMain = res.data.results.filter(fcVal => {
-              //     return fcVal.merchant_address.toLocaleLowerCase().includes(foodcourtadd.toLocaleLowerCase())
-              //   })
-
-              //   filterMerchantMain.forEach((data) => {
-              //     stateData.data.push({
-              //       address: data.merchant_address,
-              //       rating: data.merchant_rating,
-              //       logo: data.merchant_logo,
-              //       distance: data.merchant_distance,
-              //       storeId: data.mid,
-              //       storeName: data.merchant_name,
-              //       storeDesc: "",
-              //       storeImage: data.merchant_pict,
-              //     })
-              //   })
-
-              //   let updateMerchant = [...this.state.allMerchantAPI]
-              //   filterMerchantMain.forEach((data) => {
-              //     updateMerchant.push(data)
-              //   })
-              //   this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
-              // } else {
-              //   responseDatas.results.forEach((data) => {
-              //     stateData.data.push({
-              //       address: data.merchant_address,
-              //       rating: data.merchant_rating,
-              //       logo: data.merchant_logo,
-              //       distance: data.merchant_distance,
-              //       storeId: data.mid,
-              //       storeName: data.merchant_name,
-              //       storeDesc: "",
-              //       storeImage: data.merchant_pict,
-              //     })
-              //   })
-              //   let updateMerchant = [...this.state.allMerchantAPI]
-              //   responseDatas.results.forEach((data) => {
-              //     updateMerchant.push(data)
-              //   })
-              //   this.setState({ boolpage: false, allMerchantAPI: updateMerchant })
-              // }
-
               responseDatas.results.forEach((data) => {
+                let merchantCateg = ""
+                data.merchant_categories.forEach((merchCat, indCat) => {
+                  if (merchCat) {
+                    if (indCat === data.merchant_categories.length - 1) {
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}`
+                    } else {
+                      merchantCateg += `${merchCat.toLocaleLowerCase()}, `
+                    }
+                  }
+                })
+
                 stateData.data.push({
                   address: data.merchant_address,
                   rating: data.merchant_rating,
@@ -427,6 +420,7 @@ class StoreView extends React.Component {
                   storeName: data.merchant_name,
                   storeDesc: "",
                   storeImage: data.merchant_pict,
+                  storeCateg: merchantCateg
                 })
               })
               let updateMerchant = [...this.state.allMerchantAPI]
@@ -441,6 +435,7 @@ class StoreView extends React.Component {
               }
             })
             .catch((err) => {
+              console.log(err);
             });
         }
 
@@ -461,14 +456,16 @@ class StoreView extends React.Component {
 
   loadMoreMerchant = () => {
     const wrappedElement = document.getElementById("idCol")
-    if (this.state.idCol <= this.state.page) {
-      if (this.isBottom(wrappedElement)) {
-        // console.log('testloadmore');
-        this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
+    if (wrappedElement !== null) {
+      if (this.state.idCol <= this.state.page) {
+        if (this.isBottom(wrappedElement)) {
+          // console.log('testloadmore');
+          this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
+          document.removeEventListener('scroll', this.loadMoreMerchant)
+        }
+      } else {
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
-    } else {
-      document.removeEventListener('scroll', this.loadMoreMerchant)
     }
   }
 
@@ -507,6 +504,11 @@ class StoreView extends React.Component {
         localStorage.setItem('page', JSON.stringify(0))
         window.location.reload()
       }
+    }
+
+    if (!(localStorage.getItem('table'))) {
+      localStorage.setItem('table', 0)
+        localStorage.setItem('lastTable', 0)
     }
     // console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {
@@ -550,7 +552,13 @@ class StoreView extends React.Component {
                   <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
               }
 
-              {/* <div className='merchantList-storeCategory'>Merchant Categories</div> */}
+              {
+                cardData.storeCateg ?
+                  <div className='merchantList-storeCategory'>{cardData.storeCateg}</div>
+                  :
+                  null
+                // <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
+              }
             </div>
           </div>
         </Link>

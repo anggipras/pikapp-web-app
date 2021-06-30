@@ -65,3 +65,10 @@ export const DataOrder = (data) => {
         payload: data
     }
 }
+
+export const DataDetail = (data) => {
+    return {
+        type: 'DATADETAIL',
+        payload: data
+    }
+}
