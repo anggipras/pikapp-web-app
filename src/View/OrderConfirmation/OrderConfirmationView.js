@@ -93,7 +93,7 @@ class OrderConfirmationView extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.counterTime < 0) {
+        if (this.state.timerMinutes < 0 && this.state.timerSeconds < 0) {
             clearInterval(interval.current);
             console.log("clear");
             localStorage.setItem("counterPayment", this.state.counterTime);
@@ -228,9 +228,11 @@ class OrderConfirmationView extends React.Component {
             let newSeconds = this.state.timerSeconds;
             newSeconds = seconds;
 
-            if (newSeconds < 0) {
+            if (newMinutes < 0 && newSeconds < 0) {
                 clearInterval(interval.current);
             } else {
+                this.setState({ timerMinutes : newMinutes });
+                this.setState({ timerSeconds : newSeconds });
                 this.setState({ counterTime: newSeconds });
             }
 
@@ -281,13 +283,20 @@ class OrderConfirmationView extends React.Component {
                                                 Menunggu Pembayaran
                                             </div>
                                             <div className='menu-counter-order'>
-                                                {this.state.paymentType === "WALLET_OVO" ?
-                                                    this.state.counterTime < 10 ?
-                                                        <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
-                                                        :
-                                                        <span className="txtIndent"> 00 : {this.state.counterTime} </span>
+                                                {
+                                                // this.state.counterTime < 10 ?
+                                                //     <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
+                                                //     :
+                                                //     <span className="txtIndent"> 00 : {this.state.counterTime} </span>
+                                                <span className="txtIndent">
+                                                    {this.state.timerMinutes < 10
+                                                        ? `0${this.state.timerMinutes}`
+                                                        : this.state.timerMinutes}
                                                     :
-                                                    <div></div>
+                                                    {this.state.timerSeconds < 10
+                                                        ? `0${this.state.timerSeconds}`
+                                                        : this.state.timerSeconds}
+                                                </span>
                                                 }
                                             </div>
                                         </div>
@@ -426,13 +435,21 @@ class OrderConfirmationView extends React.Component {
                                                 Menunggu Pembayaran
                                             </div>
                                             <div className='menu-counter-order'>
-                                                {this.state.paymentType === "WALLET_OVO" ?
-                                                    this.state.counterTime < 10 ?
-                                                        <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
-                                                        :
-                                                        <span className="txtIndent"> 00 : {this.state.counterTime} </span>
+                                                {
+                                                    // this.state.counterTime < 10 ?
+                                                    //     <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
+                                                    //     :
+                                                    //     <span className="txtIndent"> 00 : {this.state.counterTime} </span>
+
+                                                    <span className="txtIndent">
+                                                        {this.state.timerMinutes < 10
+                                                        ? `0${this.state.timerMinutes}`
+                                                        : this.state.timerMinutes}
                                                     :
-                                                    <div></div>
+                                                    {this.state.timerSeconds < 10
+                                                        ? `0${this.state.timerSeconds}`
+                                                        : this.state.timerSeconds}
+                                                    </span>
                                                 }
                                             </div>
                                         </div>
