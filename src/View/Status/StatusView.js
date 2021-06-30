@@ -568,7 +568,7 @@ export class StatusView extends React.Component {
         );
       }
 
-      return data.map((value, ind) => {
+      return filterOpenStatus.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
           payLabel = "Pembayaran Di Kasir";
