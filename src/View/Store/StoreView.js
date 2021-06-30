@@ -184,7 +184,6 @@ class StoreView extends React.Component {
           "x-request-timestamp": date,
           "x-client-id": clientId,
           "token": "PUBLIC",
-          "category": "1",
         },
         method: "GET",
         params: {
@@ -328,7 +327,6 @@ class StoreView extends React.Component {
               "x-request-timestamp": date,
               "x-client-id": clientId,
               "token": "PUBLIC",
-              "category": "1",
             },
             method: "GET",
             params: {
@@ -468,7 +466,7 @@ class StoreView extends React.Component {
       } else {
         document.removeEventListener('scroll', this.loadMoreMerchant)
       }
-    } 
+    }
   }
 
   componentWillUnmount() {
@@ -506,6 +504,11 @@ class StoreView extends React.Component {
         localStorage.setItem('page', JSON.stringify(0))
         window.location.reload()
       }
+    }
+
+    if (!(localStorage.getItem('table'))) {
+      localStorage.setItem('table', 0)
+        localStorage.setItem('lastTable', 0)
     }
     // console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {

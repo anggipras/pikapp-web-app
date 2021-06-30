@@ -42,23 +42,14 @@
   }
 
   .notifIcon-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 66px;
     height: 66px;
     background-color: #FEC814;
     border-radius: 15px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  }
-
-  .profileIcon,
-  .notifIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .reactProfIcons,
-  .reactNotifIcons {
-    font-size: 37px;
   }
   //Banner End
 
@@ -726,7 +717,6 @@
   .iconBanner {
     display: flex;
     position: absolute;
-    // gap: 15px;
     top: 17px;
     right: 16.5px;
   }
@@ -740,7 +730,6 @@
   .notificon-img {
     width: 14px;
     height: 18px;
-    margin-top: 9px;
   }
 
   .profileIcon-sec {
@@ -752,23 +741,14 @@
   }
 
   .notifIcon-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 33px;
     height: 33px;
     background-color: #FEC814;
     border-radius: 10px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  }
-
-  .profileIcon,
-  .notifIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .reactProfIcons,
-  .reactNotifIcons {
-    font-size: 15px;
   }
   //Banner End
 
@@ -1417,6 +1397,11 @@
   }
 
   //Product Start
+  .product-img {
+    width: 114px;
+    height: auto;
+  }
+
   .product-detail-mob {
     width: 200px;
     margin-left: 20px;

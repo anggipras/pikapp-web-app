@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import RegisterDialog from "../../Component/Authentication/RegisterDialog";
-import { firebaseAnalytics } from "../../firebaseConfig";
+// import { firebaseAnalytics } from "../../firebaseConfig";
 import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
@@ -60,7 +60,7 @@ export class StatusView extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    firebaseAnalytics.logEvent("orderlist_visited");
+    // firebaseAnalytics.logEvent("orderlist_visited");
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
     } else {
@@ -132,14 +132,19 @@ export class StatusView extends React.Component {
     // }
 
     let currentTable = ''
-    if (JSON.parse(localStorage.getItem('table'))) {
-      currentTable = JSON.parse(localStorage.getItem('table'))
+    if (localStorage.getItem('table')) {
+      currentTable = (localStorage.getItem('table'))
     } else {
       currentTable = 0
     }
     currentTable.toString()
 
-    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let currentCartMerchant
+    if (Cookies.get("currentMerchant")) {
+      currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    } else {
+      currentCartMerchant = { mid: 'M0' }
+    }
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
@@ -156,27 +161,26 @@ export class StatusView extends React.Component {
     })
       .then((res) => {
         var results = res.data.results;
-        console.log(results);
         var stateData = { ...this.state };
         stateData.data.pop();
         results.forEach((result) => {
-            stateData.data.push({
-              title: result.merchant_name,
-              distance: "",
-              quantity: result.total_product,
-              status: result.status,
-              biz_type: result.biz_type,
-              payment: result.payment_with,
-              transactionId: result.transaction_id,
-              transactionTime: result.transaction_time,
-              transactionCountDown: result.expiry_date,
-              totalPrice: result.total_price,
-              timerMinutes: 0,
-              timerSeconds: 0,
-              stopInterval: true,
-            });
+          stateData.data.push({
+            title: result.merchant_name,
+            distance: "",
+            quantity: result.total_product,
+            status: result.status,
+            biz_type: result.biz_type,
+            payment: result.payment_with,
+            transactionId: result.transaction_id,
+            transactionTime: result.transaction_time,
+            transactionCountDown: result.expiry_date,
+            totalPrice: result.total_price,
+            timerMinutes: 0,
+            timerSeconds: 0,
+            stopInterval: true,
+          });
         });
-        console.log(stateData.data);
+        // console.log(stateData.data);
         this.setState({ data: stateData.data, staticCountDown: true });
       })
       .catch((err) => {
@@ -310,7 +314,7 @@ export class StatusView extends React.Component {
       if (valTime.status === "OPEN") {
         // get future time
 
-        valTime.transactionCountDown = valTime.transactionCountDown.replace(/ /g,"T");
+        valTime.transactionCountDown = valTime.transactionCountDown.replace(/ /g, "T");
         let eventTime = new Date(valTime.transactionCountDown).getTime();
 
         interval = setInterval(() => {
@@ -568,7 +572,7 @@ export class StatusView extends React.Component {
         );
       }
 
-      return data.map((value, ind) => {
+      return filterOpenStatus.map((value, ind) => {
         if (value.payment === "PAY_BY_CASHIER") {
           payImage = CashierPayment;
           payLabel = "Pembayaran Di Kasir";
@@ -713,10 +717,10 @@ export class StatusView extends React.Component {
     }
   }
 
-  goUrl = () => {
-    let currentLocation = Cookies.get("lastProduct")
-    window.location.href = currentLocation
-  }
+  // goUrl = () => {
+  //   let currentLocation = Cookies.get("lastProduct")
+  //   window.location.href = currentLocation
+  // }
 
   render() {
     // if (this.state.continueDetail) {
@@ -729,7 +733,7 @@ export class StatusView extends React.Component {
         <div className="modal-header-orderList">
           <span
             className="logopikappCenterBack"
-            onClick={() => this.goUrl()}
+            onClick={() => window.history.back()}
           >
             <img className="LogoPikappBack" src={ArrowBack} alt="" />
           </span>
