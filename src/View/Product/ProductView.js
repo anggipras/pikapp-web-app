@@ -221,9 +221,9 @@ class ProductView extends React.Component {
         currentMerchant.storeCateg.forEach((merchCat, indCat) => {
           if (merchCat) {
             if (indCat === currentMerchant.storeCateg.length - 1) {
-              merchantCateg += `${merchCat}`
+              merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}`
             } else {
-              merchantCateg += `${merchCat}, `
+              merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}, `
             }
           }
         })
