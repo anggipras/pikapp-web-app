@@ -33,7 +33,7 @@
     min-height: 213px; /* Height in proportion to its parent container*/
     height: auto; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */
-    margin-top: 181px;
+    margin-top: 5vh;
     border: none;
     border-radius: 20px; /* Optional. Rounds container corners */
     -webkit-animation-name: animacartmove;
@@ -62,6 +62,65 @@
     padding: 40.5px 27px 35px 28px;
 }
 
+.modalCart-paymentLayout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 73px 27px 60px 28px;
+}
+
+.modalCart-paymentTitle {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 20px;
+    color: #111111;
+    mix-blend-mode: normal;
+    text-align: center;
+}
+
+.modalCart-paymentCheck {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 55px;
+}
+
+@mixin buttonModalCart {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 57px;
+    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+}
+
+.modalCart-cancelPay {
+    @include buttonModalCart();
+    width: 195px;
+    background: #F8FAFC;
+    color: #4BB7AC;
+}
+
+.modalCart-confirmPay {
+    @include buttonModalCart();
+    width: 195px;
+    background: #4BB7AC;
+    color: #FFFFFF;
+    margin-left: 18px;
+}
+
 .modalCart-title {
     font-family: "Montserrat", sans-serif;
     font-style: normal;
@@ -70,6 +129,73 @@
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
+}
+
+.ovoNumber-topSide {
+    display: flex;
+}
+
+.ovoNumber-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    color: #767676;
+    margin-right: 10px;
+}
+
+.alertImg {
+    position: relative;
+    top: -5px;
+    width: 18px;
+    height: 18px;
+}
+
+.extraClass {
+    font-family: "SF-Compact-Rounded", sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    line-height: 15px !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0.05em !important;
+    color: #767676 !important;
+    pointer-events: auto !important;
+    width: 268px !important;
+    background: #F8FAFC !important;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+}
+
+.ovoNumber-bottomSide {
+    border: none;
+    outline: none;
+    width: 279px;
+}
+
+.ovoNumber-alert {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: 0.05em;
+    color: #DC6A84;
+}
+
+.modalCart-selectLayout {
+    padding: 0px 50px;
+    margin-top: 24px
+}
+
+.modalCart-selectButton {
+    @include buttonModalCart();
+    background: #F8FAFC;
+    color: #4BB7AC;
 }
 
 .modalCart-detailContent {
@@ -106,10 +232,6 @@
 
 .modalCart-radioSection input[type="radio"]:checked + label .modalCart-radioTitle {
     color: #ffffff;
-}
-
-.modalCart-radioSection input[type="radio"]:checked + label .modalCartradio-image {
-    filter: brightness(0) invert(1);
 }
 
 .modalCart-radioSide {
@@ -173,7 +295,7 @@
         width: 384px; /* Max width where it stops expanding */
         min-height: 128px; /* Height in proportion to its parent container*/
         height: auto; /* Max Height where it stops expanding */
-        margin-top: 40vh;
+        margin-top: 10vh;
     }
     
     .iconCloseNarrow {
@@ -184,12 +306,72 @@
         height: 12px;
         width: 12px;
     }
+
+    .modalCart-paymentLayout {
+        padding: 50px 43px 35px 36px;
+    }
+    
+    .modalCart-paymentTitle {
+        font-size: 15px;
+    }
+    
+    .modalCart-paymentCheck {
+        margin-top: 37px;
+    }
+    
+    .modalCart-cancelPay {
+        width: 143px;
+        height: 38px;
+        font-size: 15px;
+    }
+    
+    .modalCart-confirmPay {
+        width: 143px;
+        height: 38px;
+        font-size: 15px;
+    }
     
     .modalCart-detail {
         padding: 23px 16px 24px 17px;
     }
     
     .modalCart-title {
+        font-size: 15px;
+    }
+    
+    .ovoNumber-title {
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    .alertImg {
+        top: -6px;
+        width: 16px;
+        height: 16px;
+    }
+    
+    .extraClass {
+        font-size: 10px !important;
+        line-height: 12px !important;
+        width: 200px !important;
+    }
+
+    .ovoNumber-bottomSide {
+        width: 188px;
+    }
+
+    .ovoNumber-alert {
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .modalCart-selectLayout {
+        padding: 0px 110px;
+    }
+    
+    .modalCart-selectButton {
+        height: 38px;
+        border-radius: 8px;
         font-size: 15px;
     }
     

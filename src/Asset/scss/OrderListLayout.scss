@@ -1,0 +1,421 @@
+@font-face {
+  font-family: "SF-Compact-Rounded";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
+@font-face {
+  font-family: "SF-Compact-Rounded-Medium";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+  font-family: "SF-Compact-Rounded-Semibold";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+.orderListLayout {
+  width: 100vw;
+  padding: 20px 117px 20px 107px;
+  background-color: #ffffff;
+}
+
+.orderListTitle {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 54px;
+  margin-bottom: 6px;
+}
+
+.logoCenterOrderList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.LogoPikappOrderList {
+  width: 135px;
+  height: 54px;
+  cursor: pointer;
+}
+
+.modalOrderList {
+  z-index: 3; /* Overlay effect: positioned over other containers */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  top: 0;
+  left: 0;
+}
+
+.modal-content-orderList {
+  background-color: #fefefe;
+  position: relative;
+  max-width: 588px; /* Max width where it stops expanding */
+  width: auto; /* Width in proportion to its parent container*/
+  min-height: 625px;
+  margin: auto; /* Auto margin according to the element width */
+  border: none;
+  border-radius: 20px; /* Optional. Rounds container corners */
+  // overflow: auto;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  padding: 32px 26px 32px 27px;
+}
+
+.modal-header-orderList {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 41px;
+}
+
+.logopikappCenterBack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.LogoPikappBack {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.menu-title-orderList {
+  font-size: 25px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-left: 20px;
+}
+
+.orderList-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #aaaaaa;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 5px 13px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.orderList-filterName {
+  font-size: 15px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  color: #111111;
+  margin-right: 20px;
+}
+
+.orderList-filterArrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orderList-arrowDown {
+  width: 18px;
+  height: 10px;
+}
+
+.orderListWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.orderListContent {
+  min-width: 533px;
+  max-width: 533px;
+  margin-bottom: 20px;
+  width: auto;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 0.5px solid #c4c4c4;
+  border-radius: 8px;
+}
+
+.orderList-transaction-header {
+  height: 32px;
+  padding: 0px 12px 0px 12px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 8px 8px 0px 0px;
+}
+
+.orderList-transaction-title {
+  font-size: 17px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #ffffff;
+}
+
+.orderList-transaction-counttimer {
+  font-size: 15px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #ffffff;
+}
+
+.orderList-transaction-content {
+  padding: 15px 20px 15px 20px;
+}
+
+.orderList-transaction-topSide {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // text-align: center;
+}
+
+.orderList-transaction-merchName {
+  font-size: 17px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.orderList-transaction-timeTrans {
+  font-size: 15px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 15px;
+  color: #767676;
+}
+
+.orderList-transaction-centerSide {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 15px;
+  color: #767676;
+  margin-bottom: 15px;
+}
+
+.orderList-transaction-bottomSide {
+  display: flex;
+}
+
+.orderList-transaction-foodService {
+  display: flex;
+  width: 50%;
+}
+
+.orderList-foodService-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.orderList-foodService-words,
+.orderList-paymentService-words {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  padding-top: 3px;
+  margin-left: 7px;
+}
+
+.orderList-transaction-paymentService {
+  display: flex;
+  width: 50%;
+}
+
+.orderList-paymentService-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.noTrans-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 214px;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.noTrans-img {
+  width: 124px;
+  height: 111px;
+}
+
+.noTrans-title {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 25px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-top: 22px;
+}
+
+$font768size: 13px;
+@media (max-width: 768px) {
+  .orderListLayout {
+    width: 100vw;
+    padding: 44px 15px 15px 19px;
+  }
+
+  .orderListTitle {
+    display: none;
+  }
+
+  .modal-header-orderList {
+    margin-bottom: 32px;
+  }
+
+  .menu-title-orderList {
+    font-size: 20px;
+  }
+
+  .orderList-filter {
+    padding: 5px 10px;
+    margin-bottom: 22px;
+    width: fit-content;
+  }
+  
+  .orderList-filterName {
+    margin-right: 15px;
+  }
+  
+  .orderList-arrowDown {
+    width: 18px;
+    height: 10px;
+  }
+
+  .orderListContent {
+    min-width: 381px;
+    max-width: 381px;
+    margin-bottom: 18px;
+  }
+
+  .orderList-transaction-header {
+    height: 32px;
+    padding: 0px 12px 0px 12px;
+  }
+
+  .orderList-transaction-title {
+    font-size: 15px;
+  }
+
+  .orderList-transaction-content {
+    padding: 15px 15px 15px 15px;
+  }
+
+  .orderList-transaction-merchName {
+    font-size: $font768size;
+    font-weight: 600;
+    margin-bottom: 6px;
+    max-width: 200px;
+  }
+
+  .orderList-transaction-timeTrans {
+    font-size: $font768size;
+  }
+
+  .orderList-transaction-centerSide {
+    font-size: $font768size;
+  }
+
+  .orderList-foodService-words,
+  .orderList-paymentService-words {
+    font-size: $font768size;
+    padding-top: 4px;
+  }
+}
+
+@media (max-width: 380px) {
+  .orderListLayout {
+    width: 100vw;
+    padding: 40px 10px 15px 10px;
+  }
+
+  .orderListContent {
+    min-width: 350px;
+    max-width: 350px;
+    margin-bottom: 16px;
+  }
+}
+
+$font325size: 11px;
+@media (max-width: 325px) {
+  .orderListLayout {
+    width: 100vw;
+    padding: 36px 10px 15px 10px;
+  }
+
+  .orderListContent {
+    min-width: 290px;
+    max-width: 290px;
+    margin-bottom: 14px;
+  }
+
+  .orderList-transaction-title {
+    font-size: 13px;
+  }
+
+  .orderList-transaction-content {
+    padding: 12px 12px 12px 12px;
+  }
+
+  .orderList-transaction-merchName {
+    font-size: $font325size;
+    margin-bottom: 4px;
+    max-width: 160px;
+  }
+
+  .orderList-transaction-timeTrans {
+    font-size: $font325size;
+  }
+
+  .orderList-transaction-centerSide {
+    font-size: $font325size;
+  }
+
+  .orderList-foodService-words,
+  .orderList-paymentService-words {
+    font-size: $font325size;
+    padding-top: 4px;
+  }
+}

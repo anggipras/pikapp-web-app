@@ -1,9 +1,42 @@
 .icon {
   vertical-align: middle;
-  width: 80%;
-  height: 80%;
+  width: 60%;
+  height: 60%;
   max-width: 220px;
   max-height: 100px;
+}
+
+.iconStatus {
+  vertical-align: middle;
+  width: 70%;
+  height: 70%;
+  max-width: 220px;
+  max-height: 100px;
+  margin-top: 10px;
+}
+
+.listTitle {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 54px;
+  padding: 3rem 1rem 0.5rem 6rem;
+}
+
+.listTitleContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 25px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-left: 20px;
 }
 
 @media (min-width: 768px) {
@@ -52,5 +85,19 @@
     width: 150px;
     height: 35px;
     margin-left: -5%;
+  }
+  .navbar {
+    width: 100%;
+    padding : 0.5rem 0rem 0.5rem 0.5rem;
+  }
+  .listTitle {
+    padding : 0.5rem 0rem 0.5rem 0rem;
+  }
+  .iconStatus {
+    width: 60%;
+    height: 60%;
+  }
+  .listTitleContent {
+    font-size: 20px;
   }
 }

@@ -29,8 +29,8 @@
   }
 
   .notificon-img {
-    width: 30.5px;
-    height: 30.5px;
+    width: 32px;
+    height: 42px;
   }
 
   .profileIcon-sec {
@@ -42,22 +42,14 @@
   }
 
   .notifIcon-sec {
-    width: 66px;
-    height: 66px;
-    background-color: #dc6a84;
-    border-radius: 17px;
-  }
-
-  .profileIcon,
-  .notifIcon {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .reactProfIcons,
-  .reactNotifIcons {
-    font-size: 37px;
+    width: 66px;
+    height: 66px;
+    background-color: #FEC814;
+    border-radius: 15px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   }
   //Banner End
 
@@ -638,6 +630,13 @@
     text-transform: capitalize;
     letter-spacing: 0.05em;
     color: #111111;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .merchantList-storeCategory {
@@ -647,6 +646,13 @@
     font-size: 17px;
     text-transform: capitalize;
     color: #767676;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
   //merchant list end
 
@@ -711,7 +717,6 @@
   .iconBanner {
     display: flex;
     position: absolute;
-    // gap: 15px;
     top: 17px;
     right: 16.5px;
   }
@@ -723,9 +728,8 @@
   }
 
   .notificon-img {
-    width: 15.3px;
-    height: 15.3px;
-    margin-top: 9px;
+    width: 14px;
+    height: 18px;
   }
 
   .profileIcon-sec {
@@ -737,22 +741,14 @@
   }
 
   .notifIcon-sec {
-    width: 33px;
-    height: 33px;
-    background-color: #dc6a84;
-    border-radius: 10px;
-  }
-
-  .profileIcon,
-  .notifIcon {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .reactProfIcons,
-  .reactNotifIcons {
-    font-size: 15px;
+    width: 33px;
+    height: 33px;
+    background-color: #FEC814;
+    border-radius: 10px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   }
   //Banner End
 
@@ -1332,6 +1328,13 @@
     text-transform: capitalize;
     letter-spacing: 0.05em;
     color: #111111;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .merchantList-storeCategory {
@@ -1394,6 +1397,11 @@
   }
 
   //Product Start
+  .product-img {
+    width: 114px;
+    height: auto;
+  }
+
   .product-detail-mob {
     width: 200px;
     margin-left: 20px;
