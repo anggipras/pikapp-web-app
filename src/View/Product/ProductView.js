@@ -488,7 +488,7 @@ class ProductView extends React.Component {
     if (cart.length > 1) {
       if (cart[1].mid !== currentMerchant.mid) {
         let newCart = []
-        newCart.push(cart[0]) 
+        newCart.push(cart[0])
         cart = newCart
       }
     }
@@ -1046,15 +1046,11 @@ class ProductView extends React.Component {
 
           {/* {
             this.state.isLogin ?
-                <Link to={"/profile"}>
-                  <div className='profileIcon-sec'>
-                    <div className='profileIcon'>
-                      <span className='reactProfIcons'>
-                        <img className='profileicon-img' src={ProfileIcon} alt='' />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+              <Link to={"/profile"}>
+                <div className='profileIcon-sec'>
+                  <img className='profileicon-img' src={ProfileIcon} alt='' />
+                </div>
+              </Link>
               :
               <div></div>
           } */}
@@ -1062,11 +1058,7 @@ class ProductView extends React.Component {
           <div className='iconBanner'>
             <Link to={"/status"}>
               <div className='notifIcon-sec'>
-                <div className='notifIcon'>
-                  <span className='reactNotifIcons'>
-                    <img className='notificon-img' src={NotifIcon} alt='' />
-                  </span>
-                </div>
+                <img className='notificon-img' src={NotifIcon} alt='' />
               </div>
             </Link>
           </div>

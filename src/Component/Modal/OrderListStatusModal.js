@@ -4,7 +4,7 @@ import closeLogo from '../../Asset/Icon/closeNarrow.png';
 import checkListLogo from '../../Asset/Icon/checklistIcon.png'
 
 const OrderListStatus = (props) => {
-    const statusName = ['Semua Status', 'Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Sedang Dimasak']
+    const statusName = ['Semua Status', 'Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Sedang Dimasak', 'Makanan Tiba']
     const [radioStatus, setradioStatus] = useState(props.sendIndexStatus)
 
     const closeModal = (e) => {

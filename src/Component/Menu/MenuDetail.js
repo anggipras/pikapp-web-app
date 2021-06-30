@@ -328,7 +328,7 @@ const MenuDetail = (props) => {
                         display: props.isShow ? 'block' : 'none'
                     }} onClick={closeModal}
                     >
-                        <div className='mob-modal-content-menudetail' onClick={e => e.stopPropagation()} style={{ height: menuSelect ? '88vh' : 'auto' }}>
+                        <div className='mob-modal-content-menudetail' onClick={e => e.stopPropagation()}>
                             <div className='mob-menuBanner'>
                                 <img className='mob-menuimg' src={props.datas.foodImage} alt='' />
                                 {

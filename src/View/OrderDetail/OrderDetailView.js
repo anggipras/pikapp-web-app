@@ -15,10 +15,10 @@ let interval = createRef();
 
 class OrderDetailView extends React.Component {
     state = {
-        isMobile : false,
-        dataDetail : {
-            transactionId : "",
-            transactionTime : ""
+        isMobile: false,
+        dataDetail: {
+            transactionId: "",
+            transactionTime: ""
         },
         data: [
             {
@@ -41,45 +41,45 @@ class OrderDetailView extends React.Component {
             status: "Status",
             payment: "Cash",
             biz_type: "",
-            total_price : 0,
-            productQty : 0,
-            eat_type : "",
-            paymentOption : "",
-            paymentImage : "",
-            transactionCounter : 0,
-            timerMinutes : 0,
-            timerSeconds : 0,
+            total_price: 0,
+            productQty: 0,
+            eat_type: "",
+            paymentOption: "",
+            paymentImage: "",
+            transactionCounter: 0,
+            timerMinutes: 0,
+            timerSeconds: 0,
             food: [
                 {
-                productId: "",
-                name: "",
-                price: 0,
-                image: "",
-                note: "",
-                quantity: 1,
-                extraprice: 0
+                    productId: "",
+                    name: "",
+                    price: 0,
+                    image: "",
+                    note: "",
+                    quantity: 1,
+                    extraprice: 0
                 },
             ],
         },
-        showPayment : false,
+        showPayment: false,
     }
 
     componentDidMount() {
         moment.updateLocale('id', idLocale);
-        if(window.innerWidth < 700) {
-            this.setState({ isMobile : true });
+        if (window.innerWidth < 700) {
+            this.setState({ isMobile: true });
         } else {
-            this.setState({ isMobile : false });
+            this.setState({ isMobile: false });
         }
 
         this.getTxnDetail();
     }
 
-    getTxnDetail(){
+    getTxnDetail() {
         let transactionId
-        if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
+        if (Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
             transactionId = this.props.AllRedu.dataDetail.transactionId;
-        } else if(localStorage.getItem("dataDetail")) {
+        } else if (localStorage.getItem("dataDetail")) {
             var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
             transactionId = dataDetail.transactionId;
         }
@@ -88,78 +88,72 @@ class OrderDetailView extends React.Component {
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
         Axios(address + "txn/v3/" + transactionId + "/txn-detail/", {
-        headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId
-        },
-        method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId
+            },
+            method: "GET",
         })
-        .then((res) => {
-            console.log(res.data.results);
-            var results = res.data.results;
-            let futureTimer = [];
-            let futureTimerOvo = [];
-            futureTimer = JSON.parse(localStorage.getItem("timerDown"));
-            futureTimerOvo = JSON.parse(localStorage.getItem("timerDownOvo"));
-            let indTime = 0;
-            let indTimeOvo = 0;
-            var resultModal = { ...this.currentModal }
-            resultModal.transactionId = results.transaction_id
-            resultModal.transactionTime = results.transaction_time
-            resultModal.storeName = results.merchant_name
-            resultModal.storeDistance = ""
-            resultModal.storeLocation = ""
-            resultModal.status = results.status
-            resultModal.biz_type = results.biz_type
-            resultModal.payment = results.payment_with
-            resultModal.total_price = results.total_price
-            resultModal.productQty = results.detail_products.length
-            resultModal.food = []
-            results.detail_products.forEach((product) => {
-                resultModal.food.push({
-                    name: product.product_name,
-                    price: product.price,
-                    quantity: product.qty,
-                    image: product.image,
-                    note: product.notes,
-                    extraprice: product.extra_price
+            .then((res) => {
+                console.log(res.data.results);
+                var results = res.data.results;
+                var resultModal = { ...this.currentModal }
+                resultModal.transactionId = results.transaction_id
+                resultModal.transactionTime = results.transaction_time
+                resultModal.storeName = results.merchant_name
+                resultModal.storeDistance = ""
+                resultModal.storeLocation = ""
+                resultModal.status = results.status
+                resultModal.biz_type = results.biz_type
+                resultModal.payment = results.payment_with
+                resultModal.total_price = results.total_price
+                resultModal.productQty = results.detail_products.length
+                resultModal.food = []
+                results.detail_products.forEach((product) => {
+                    resultModal.food.push({
+                        name: product.product_name,
+                        price: product.price,
+                        quantity: product.qty,
+                        image: product.image,
+                        note: product.notes,
+                        extraprice: product.extra_price
+                    })
                 })
+
+                if (resultModal.biz_type === "DINE_IN") {
+                    resultModal.eat_type = "Makan Di Tempat";
+                } else {
+                    resultModal.eat_type = "Bungkus / Takeaway";
+                }
+
+                if (resultModal.payment === "PAY_BY_CASHIER") {
+                    resultModal.paymentOption = "Pembayaran Di Kasir";
+                    resultModal.paymentImage = CashierPayment;
+                } else {
+                    resultModal.paymentOption = "OVO";
+                    resultModal.paymentImage = OvoPayment;
+                }
+
+                resultModal.transactionTime = moment(resultModal.transactionTime).format('Do MMMM YYYY, H:mm');
+
+                this.setState({
+                    currentModal: resultModal
+                })
+
+                this.countDown();
+
             })
-
-            if(resultModal.biz_type === "DINE_IN") {
-                resultModal.eat_type = "Makan Di Tempat";
-            } else {
-                resultModal.eat_type = "Bungkus / Takeaway";
-            }
-
-            if(resultModal.payment === "PAY_BY_CASHIER") {
-                resultModal.paymentOption = "Pembayaran Di Kasir";
-                resultModal.paymentImage = CashierPayment;
-            } else {
-                resultModal.paymentOption = "OVO";
-                resultModal.paymentImage = OvoPayment;
-            }
-
-            resultModal.transactionTime = moment(resultModal.transactionTime).format('Do MMMM YYYY, H:mm');
-
-            this.setState({
-                currentModal: resultModal
-            })
-
-            this.countDown();
-
-        })
-        .catch((err) => {
-        });
+            .catch((err) => {
+            });
     }
 
     componentDidUpdate() {
         if (this.state.currentModal.timerMinutes < 0 && this.state.currentModal.timerSeconds < 0) {
             clearInterval(interval.current);
             console.log("success clear");
-            if(this.state.currentModal.status === "OPEN") {
+            if (this.state.currentModal.status === "OPEN") {
                 this.transactionUpdate();
             }
         }
@@ -171,11 +165,11 @@ class OrderDetailView extends React.Component {
     }
 
     showDialogPayment = () => {
-        if(this.state.showPayment === true) {
+        if (this.state.showPayment === true) {
             return (
                 <PaymentModal
-                  isShowPaymentModal={this.state.showPayment}
-                  onHidePaymentModal={() => this.setPaymentModal(false)}
+                    isShowPaymentModal={this.state.showPayment}
+                    onHidePaymentModal={() => this.setPaymentModal(false)}
                 />
             );
         }
@@ -185,35 +179,35 @@ class OrderDetailView extends React.Component {
         if (this.state.currentModal.status === "OPEN") {
 
             let transactionTime
-            if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
+            if (Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
                 transactionTime = this.props.AllRedu.dataDetail.transactionTime;
-            } else if(localStorage.getItem("dataDetail")) {
+            } else if (localStorage.getItem("dataDetail")) {
                 var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
                 transactionTime = dataDetail.transactionTime;
             }
 
-            transactionTime = transactionTime.replace(/ /g,"T");
+            transactionTime = transactionTime.replace(/ /g, "T");
             let eventTime = new Date(transactionTime).getTime();
 
             interval = setInterval(() => {
                 // based on time set in user's computer time / OS
                 const currentTime = new Date().getTime();
                 const distance = eventTime - currentTime;
-      
+
                 const minutes = Math.floor(
-                  (distance % (1000 * 60 * 60)) / (1000 * 60)
+                    (distance % (1000 * 60 * 60)) / (1000 * 60)
                 );
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      
+
                 let newMinutes = this.state.currentModal.timerMinutes;
                 newMinutes = minutes;
-      
+
                 let newSeconds = this.state.currentModal.timerSeconds;
                 newSeconds = seconds;
 
-                this.setState({ currentModal : { ...this.state.currentModal, timerMinutes: newMinutes} });
-                this.setState({ currentModal : { ...this.state.currentModal, timerSeconds: newSeconds} });      
-                
+                this.setState({ currentModal: { ...this.state.currentModal, timerMinutes: newMinutes } });
+                this.setState({ currentModal: { ...this.state.currentModal, timerSeconds: newSeconds } });
+
             }, 1000);
 
         }
@@ -225,9 +219,9 @@ class OrderDetailView extends React.Component {
         const date = new Date().toISOString();
 
         let transactionTime
-        if(Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
+        if (Object.keys(this.props.AllRedu.dataDetail).length !== 0) {
             transactionTime = this.props.AllRedu.dataDetail.transactionTime;
-        } else if(localStorage.getItem("dataDetail")) {
+        } else if (localStorage.getItem("dataDetail")) {
             var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
             transactionTime = dataDetail.transactionTime;
         }
@@ -237,24 +231,24 @@ class OrderDetailView extends React.Component {
         bodyFormData.append("status", "FAILED");
 
         var options = {
-        method: "post",
-        url: address + "txn/v2/txn-update/",
-        headers: {
-            "x-client-id": clientId,
-            "x-request-id": uuid,
-            "x-request-timestamp": date
-        },
-        data: bodyFormData,
+            method: "post",
+            url: address + "txn/v2/txn-update/",
+            headers: {
+                "x-client-id": clientId,
+                "x-request-id": uuid,
+                "x-request-timestamp": date
+            },
+            data: bodyFormData,
         };
 
         Axios(options)
-        .then(() => {
-            console.log("updated");
-            window.location.reload();
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+            .then(() => {
+                console.log("updated");
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     goBack = () => {
@@ -266,25 +260,25 @@ class OrderDetailView extends React.Component {
         let productList = this.state.currentModal.food;
         let storeFood
         storeFood = productList.map((food, index) => {
-        return (
-            <div key={index} className='orderDetailList-content'>
-            <div className='orderDetailList-content-frame'>
-                <img className='orderDetailList-content-image' src={food.image} alt='' />
-            </div>
+            return (
+                <div key={index} className='orderDetailList-content'>
+                    <div className='orderDetailList-content-frame'>
+                        <img className='orderDetailList-content-image' src={food.image} alt='' />
+                    </div>
 
-            <div className='orderDetailList-content-detail'>
-                <div className='orderDetailList-content-detail-left'>
-                <h2 className='orderDetailList-content-title'>{food.name}</h2>
-                <h5 className='orderDetailList-content-notes'>{food.quantity} Item</h5>
-                <h5 className='orderDetailList-content-notes'>{food.note}</h5>
-                </div>
+                    <div className='orderDetailList-content-detail'>
+                        <div className='orderDetailList-content-detail-left'>
+                            <h2 className='orderDetailList-content-title'>{food.name}</h2>
+                            <h5 className='orderDetailList-content-notes'>{food.quantity} Item</h5>
+                            <h5 className='orderDetailList-content-notes'>{food.note}</h5>
+                        </div>
 
-                <div className='orderDetailList-amountBox'>
-                <h3 className='orderDetailList-content-price'>Rp. {Intl.NumberFormat("id-ID").format(food.price)}</h3>
+                        <div className='orderDetailList-amountBox'>
+                            <h3 className='orderDetailList-content-price'>Rp. {Intl.NumberFormat("id-ID").format(food.price)}</h3>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            </div>
-        )
+            )
         });
 
         let headerTransaction = () => {
@@ -293,7 +287,7 @@ class OrderDetailView extends React.Component {
             if (this.state.currentModal.status === "PAID") {
                 statusDesc = "Menunggu Konfirmasi";
                 backColor = "#FBA83C";
-            } 
+            }
             else if (this.state.currentModal.status === "ON_PROCESS") {
                 statusDesc = "Sedang Dimasak";
                 backColor = "#FBA83C";
@@ -324,22 +318,22 @@ class OrderDetailView extends React.Component {
             <div className='orderDetailLayout'>
                 <div className='orderDetailTitle'>
                     <span className='logopikappCenter' onClick={() => this.goBack()} >
-                    <img className='LogoPikapporderDetail' src={ArrowBack} alt='' />
+                        <img className='LogoPikapporderDetail' src={ArrowBack} alt='' />
                     </span>
 
                     <h2 className='confirmationOrderDetail'>Detail Transaksi</h2>
                 </div>
 
                 {
-                        !this.state.isMobile ?
+                    !this.state.isMobile ?
 
                         <div className='orderDetailContent'>
                             <div className='orderDetail-LeftSide'>
                                 <div className='orderDetailList'>
                                     <div className='orderDetailList-header'>
-                                    <h4 className='orderDetailList-title'>
-                                        Item Yang Dibeli
-                                    </h4>
+                                        <h4 className='orderDetailList-title'>
+                                            Item Yang Dibeli
+                                        </h4>
                                     </div>
 
                                     {storeFood}
@@ -350,25 +344,25 @@ class OrderDetailView extends React.Component {
                                 <div className='flex-RightSide-orderDetail'>
 
                                     <div className='orderDetail-transaction-detail'>
-                                    {
-                                    this.state.currentModal.status === "OPEN" ?
-                                        <div className='orderDetail-transaction-header-unpaid'>
-                                            <div className='orderDetail-transaction-title-unpaid'>
-                                                Menunggu Pembayaran
-                                            </div>
-                                            <div className='menu-counter-orderdetail'>
-                                                {this.state.currentModal.timerMinutes < 10
-                                                ? `0${this.state.currentModal.timerMinutes}`
-                                                : this.state.currentModal.timerMinutes}
+                                        {
+                                            this.state.currentModal.status === "OPEN" ?
+                                                <div className='orderDetail-transaction-header-unpaid'>
+                                                    <div className='orderDetail-transaction-title-unpaid'>
+                                                        Menunggu Pembayaran
+                                                    </div>
+                                                    <div className='menu-counter-orderdetail'>
+                                                        {this.state.currentModal.timerMinutes < 10
+                                                            ? `0${this.state.currentModal.timerMinutes}`
+                                                            : this.state.currentModal.timerMinutes}
+                                                        :
+                                                        {this.state.currentModal.timerSeconds < 10
+                                                            ? `0${this.state.currentModal.timerSeconds}`
+                                                            : this.state.currentModal.timerSeconds}
+                                                    </div>
+                                                </div>
                                                 :
-                                                {this.state.currentModal.timerSeconds < 10
-                                                ? `0${this.state.currentModal.timerSeconds}`
-                                                : this.state.currentModal.timerSeconds}
-                                            </div>
-                                        </div>
-                                    :
-                                    headerTransaction()
-                                    }
+                                                headerTransaction()
+                                        }
 
                                         <div className='orderDetail-transaction-content'>
                                             <div className='orderDetail-transaction-descArea'>
@@ -404,7 +398,7 @@ class OrderDetailView extends React.Component {
                                     <div className='orderDetail-transaction'>
                                         <div className='orderDetail-transaction-header'>
                                             <div className='orderDetail-transaction-title'>
-                                            Informasi Pembayaran
+                                                Informasi Pembayaran
                                             </div>
                                         </div>
 
@@ -433,139 +427,139 @@ class OrderDetailView extends React.Component {
                                         </div>
                                     </div>
                                     {
-                                    this.state.currentModal.status === "PAID" ?
-                                        <div></div>
-                                        :
-                                        <div className='buttonPayment-orderDetail'>
-                                            <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
-                                                <div className="wordsButton-orderDetail">
-                                                    CARA PEMBAYARAN
+                                        this.state.currentModal.status === "PAID" ?
+                                            <div></div>
+                                            :
+                                            <div className='buttonPayment-orderDetail'>
+                                                <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
+                                                    <div className="wordsButton-orderDetail">
+                                                        CARA PEMBAYARAN
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
                                     }
                                 </div>
                             </div>
                         </div>
-                    :
+                        :
 
-                    <div className='orderDetailContent'>
-                        <div className='orderDetail-LeftSide'>
-                            <div className='orderDetail-transaction-detail'>
+                        <div className='orderDetailContent'>
+                            <div className='orderDetail-LeftSide'>
+                                <div className='orderDetail-transaction-detail'>
 
-                                {
-                                this.state.currentModal.status === "OPEN" ?
-                                    <div className='orderDetail-transaction-header-unpaid'>
-                                        <div className='orderDetail-transaction-title-unpaid'>
-                                            Menunggu Pembayaran
-                                        </div>
-                                        <div className='menu-counter-orderdetail'>
-                                            {this.state.currentModal.timerMinutes < 10
-                                            ? `0${this.state.currentModal.timerMinutes}`
-                                            : this.state.currentModal.timerMinutes}
+                                    {
+                                        this.state.currentModal.status === "OPEN" ?
+                                            <div className='orderDetail-transaction-header-unpaid'>
+                                                <div className='orderDetail-transaction-title-unpaid'>
+                                                    Menunggu Pembayaran
+                                                </div>
+                                                <div className='menu-counter-orderdetail'>
+                                                    {this.state.currentModal.timerMinutes < 10
+                                                        ? `0${this.state.currentModal.timerMinutes}`
+                                                        : this.state.currentModal.timerMinutes}
+                                                    :
+                                                    {this.state.currentModal.timerSeconds < 10
+                                                        ? `0${this.state.currentModal.timerSeconds}`
+                                                        : this.state.currentModal.timerSeconds}
+                                                </div>
+                                            </div>
                                             :
-                                            {this.state.currentModal.timerSeconds < 10
-                                            ? `0${this.state.currentModal.timerSeconds}`
-                                            : this.state.currentModal.timerSeconds}
-                                        </div>
-                                    </div>
-                                    :
-                                    headerTransaction()
-                                }
-
-                                <div className='orderDetail-transaction-content'>
-                                    <div className='orderDetail-transaction-descArea'>
-                                        ID Transaksi
-                                    </div>
-                                    <div className='orderDetail-transaction-descArea-content'>
-                                        {this.state.currentModal.transactionId}
-                                    </div>
-
-                                    <div className='orderDetail-transaction-descArea'>
-                                        Waktu Transaksi
-                                    </div>
-                                    <div className='orderDetail-transaction-descArea-content'>
-                                        {this.state.currentModal.transactionTime}
-                                    </div>
-
-                                    <div className='orderDetail-transaction-descArea'>
-                                        Nama Restoran
-                                    </div>
-                                    <div className='orderDetail-transaction-descArea-content'>
-                                        {this.state.currentModal.storeName}
-                                    </div>
-
-                                    <div className='orderDetail-transaction-descArea'>
-                                        Cara Makan
-                                    </div>
-                                    <div className='orderDetail-transaction-descArea-content'>
-                                        {this.state.currentModal.eat_type}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className='orderDetailList'>
-                                <div className='orderDetailList-header'>
-                                <h4 className='orderDetailList-title'>
-                                    Item Yang Dibeli
-                                </h4>
-                                </div>
-
-                                {storeFood}
-                            </div>
-                        </div>
-
-                        <div className='orderDetail-RightSide'>
-                            <div className='flex-RightSide-orderDetail'>
-
-                                <div className='orderDetail-transaction'>
-                                    <div className='orderDetail-transaction-header'>
-                                        <div className='orderDetail-transaction-title'>
-                                        Informasi Pembayaran
-                                        </div>
-                                    </div>
+                                            headerTransaction()
+                                    }
 
                                     <div className='orderDetail-transaction-content'>
-                                        <div className='orderDetail-transaction-paymentoption'>
-                                            <div>Metode Pembayaran</div>
-                                            <div>
-                                                <span>
-                                                    <img className='orderdetail-transaction-logo' src={this.state.currentModal.paymentImage} alt='' />
-                                                </span>
-                                                {this.state.currentModal.paymentOption}
-                                            </div>
+                                        <div className='orderDetail-transaction-descArea'>
+                                            ID Transaksi
+                                        </div>
+                                        <div className='orderDetail-transaction-descArea-content'>
+                                            {this.state.currentModal.transactionId}
                                         </div>
 
-                                        <div className="orderDetail-payment-border"></div>
-
-                                        <div className='orderDetail-transaction-payment-price'>
-                                            <div>Total Harga ( {this.state.currentModal.productQty} Item )</div>
-                                            <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
+                                        <div className='orderDetail-transaction-descArea'>
+                                            Waktu Transaksi
+                                        </div>
+                                        <div className='orderDetail-transaction-descArea-content'>
+                                            {this.state.currentModal.transactionTime}
                                         </div>
 
-                                        <div className='orderDetail-transaction-payment-detail'>
-                                            <div>Total Bayar</div>
-                                            <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
+                                        <div className='orderDetail-transaction-descArea'>
+                                            Nama Restoran
+                                        </div>
+                                        <div className='orderDetail-transaction-descArea-content'>
+                                            {this.state.currentModal.storeName}
+                                        </div>
+
+                                        <div className='orderDetail-transaction-descArea'>
+                                            Cara Makan
+                                        </div>
+                                        <div className='orderDetail-transaction-descArea-content'>
+                                            {this.state.currentModal.eat_type}
                                         </div>
                                     </div>
                                 </div>
 
-                                {
-                                this.state.currentModal.status === "OPEN" ?
-                                    <div className='buttonPayment-orderDetail'>
-                                        <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
-                                            <div className="wordsButton-orderDetail">
-                                                CARA PEMBAYARAN
+                                <div className='orderDetailList'>
+                                    <div className='orderDetailList-header'>
+                                        <h4 className='orderDetailList-title'>
+                                            Item Yang Dibeli
+                                        </h4>
+                                    </div>
+
+                                    {storeFood}
+                                </div>
+                            </div>
+
+                            <div className='orderDetail-RightSide'>
+                                <div className='flex-RightSide-orderDetail'>
+
+                                    <div className='orderDetail-transaction'>
+                                        <div className='orderDetail-transaction-header'>
+                                            <div className='orderDetail-transaction-title'>
+                                                Informasi Pembayaran
+                                            </div>
+                                        </div>
+
+                                        <div className='orderDetail-transaction-content'>
+                                            <div className='orderDetail-transaction-paymentoption'>
+                                                <div>Metode Pembayaran</div>
+                                                <div>
+                                                    <span>
+                                                        <img className='orderdetail-transaction-logo' src={this.state.currentModal.paymentImage} alt='' />
+                                                    </span>
+                                                    {this.state.currentModal.paymentOption}
+                                                </div>
+                                            </div>
+
+                                            <div className="orderDetail-payment-border"></div>
+
+                                            <div className='orderDetail-transaction-payment-price'>
+                                                <div>Total Harga ( {this.state.currentModal.productQty} Item )</div>
+                                                <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
+                                            </div>
+
+                                            <div className='orderDetail-transaction-payment-detail'>
+                                                <div>Total Bayar</div>
+                                                <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
                                             </div>
                                         </div>
                                     </div>
-                                    :
-                                    <div></div>
-                                }
 
+                                    {
+                                        this.state.currentModal.status === "OPEN" ?
+                                            <div className='buttonPayment-orderDetail'>
+                                                <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
+                                                    <div className="wordsButton-orderDetail">
+                                                        CARA PEMBAYARAN
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div></div>
+                                    }
+
+                                </div>
                             </div>
                         </div>
-                    </div>
                 }
                 {this.showDialogPayment()}
             </div>
@@ -575,9 +569,9 @@ class OrderDetailView extends React.Component {
 
 const Mapstatetoprops = (state) => {
     return {
-      AllRedu: state.AllRedu,
-      AuthRedu: state.AuthRedu
+        AllRedu: state.AllRedu,
+        AuthRedu: state.AuthRedu
     }
 }
-  
+
 export default connect(Mapstatetoprops, { LoadingButton, DoneLoad, DataDetail })(OrderDetailView)

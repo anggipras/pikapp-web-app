@@ -47,7 +47,7 @@ const CartModal = (props) => {
             setradioNumEat(num)
             setmodalTitle(title)
             setisCheckNumber(true)
-        } else if(title === 'Bayar Pakai Apa') {
+        } else if (title === 'Bayar Pakai Apa') {
             setradioNumPay(num)
             setmodalTitle(title)
             setisCheckNumber(true)
@@ -161,57 +161,57 @@ const CartModal = (props) => {
 
                     {
                         props.title !== "Pesanan yang Anda buat tidak dapat dibatalkan" ?
-                        <div className='modalCart-detail'>
-                            <h1 className='modalCart-title'>{props.title}</h1>
+                            <div className='modalCart-detail'>
+                                <h1 className='modalCart-title'>{props.title}</h1>
 
-                            {choicesCartModal()}
+                                {choicesCartModal()}
 
-                            {
-                                modalTitle === 'Bayar Pakai Apa' && radioNumPay === 1 ?
-                                <div className='ovoNumber-layout'>
-                                    <div className='ovoNumber-topSide'>
-                                        <h3 className='ovoNumber-title'>
-                                           Masukkan Nomor Anda 
-                                        </h3>
+                                {
+                                    modalTitle === 'Bayar Pakai Apa' && radioNumPay === 1 ?
+                                        <div className='ovoNumber-layout'>
+                                            <div className='ovoNumber-topSide'>
+                                                <h3 className='ovoNumber-title'>
+                                                    Masukkan Nomor Anda
+                                                </h3>
 
-                                        <a data-tip='Masukkan Nomor Yang Terdaftar Di OVO Untuk Melakukan Pembayaran' data-event='click'><img src={Alertcircle} className='alertImg' alt=''/></a>
-                                        <ReactTooltip className='extraClass' effect='solid' arrowColor='#F8FAFC' globalEventOff='click' afterShow={() => hideTooltip()} />
+                                                <a data-tip='Masukkan Nomor Yang Terdaftar Di OVO Untuk Melakukan Pembayaran' data-event='click'><img src={Alertcircle} className='alertImg' alt='' /></a>
+                                                <ReactTooltip className='extraClass' effect='solid' arrowColor='#F8FAFC' globalEventOff='click' afterShow={() => hideTooltip()} />
+                                            </div>
+
+                                            <input type='number' inputMode='numeric' className='ovoNumber-bottomSide' onChange={onChangeNumber} style={{ borderBottom: !isCheckNumber ? '0.5px solid #DC6A84' : '0.5px solid #D9CECE', color: !isCheckNumber ? '#DC6A84' : '#111111' }} />
+                                            {
+                                                isAlertNumber !== '' ?
+                                                    <h4 className='ovoNumber-alert'>
+                                                        {isAlertNumber}
+                                                    </h4>
+                                                    :
+                                                    null
+                                            }
+                                        </div>
+                                        :
+                                        null
+                                }
+
+                                <div className='modalCart-selectLayout'>
+                                    <div className='modalCart-selectButton' onClick={selectButton}>
+                                        OK
+                                    </div>
+                                </div>
+                            </div>
+                            :
+                            <div className='modalCart-paymentLayout'>
+                                <h1 className='modalCart-paymentTitle'>{props.title}</h1>
+
+                                <div className='modalCart-paymentCheck'>
+                                    <div className='modalCart-cancelPay' onClick={closeModal}>
+                                        Cek Ulang
                                     </div>
 
-                                    <input type='number' inputMode='numeric' className='ovoNumber-bottomSide' onChange={onChangeNumber} style={{borderBottom: !isCheckNumber ? '0.5px solid #DC6A84' : '0.5px solid #D9CECE', color: !isCheckNumber ? '#DC6A84' : '#111111'}} />
-                                    {
-                                        isAlertNumber !== '' ?
-                                            <h4 className='ovoNumber-alert'>
-                                                {isAlertNumber}
-                                            </h4>
-                                            :
-                                            null
-                                    }
-                                </div>
-                                :
-                                null
-                            }
-
-                            <div className='modalCart-selectLayout'>
-                                <div className='modalCart-selectButton' onClick={selectButton}>
-                                    OK
+                                    <div className='modalCart-confirmPay' onClick={confirmPay}>
+                                        Setuju
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        :
-                        <div className='modalCart-paymentLayout'>
-                            <h1 className='modalCart-paymentTitle'>{props.title}</h1>
-
-                            <div className='modalCart-paymentCheck'>
-                                <div className='modalCart-cancelPay' onClick={closeModal}>
-                                    Cek Ulang
-                                </div>
-
-                                <div className='modalCart-confirmPay' onClick={confirmPay}>
-                                    Setuju
-                                </div>
-                            </div>
-                        </div>
                     }
                 </div>
 
