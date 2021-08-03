@@ -206,6 +206,7 @@
 }
 
 .menuDesc-content {
+    white-space: pre-line;
     width: 100%;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
@@ -378,6 +379,7 @@
     }
 
     .mob-menu-desc {
+        white-space: pre-line;
         font-family: "SF-Compact-Rounded", sans-serif;
         font-style: normal;
         font-weight: normal;

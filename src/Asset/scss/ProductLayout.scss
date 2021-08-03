@@ -475,6 +475,7 @@
   }
 
   .product-desc {
+    white-space: pre-line;
     width: 181px;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
@@ -1179,6 +1180,7 @@
   }
 
   .product-desc-mob {
+    white-space: pre-line;
     width: 179px;
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
