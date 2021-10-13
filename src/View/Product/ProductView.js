@@ -24,8 +24,9 @@ import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
-import { ValidQty, OpenSelect } from '../../Redux/Actions'
+import { ValidQty, OpenSelect, LoadingButton, DoneLoad } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
+import FailedModal from "../../Component/Modal/FailedModal";
 // import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
@@ -111,7 +112,8 @@ class ProductView extends React.Component {
           </div>
         )
       }
-    ]
+    ],
+    showFailed : false
   };
 
   timeout = null
@@ -364,7 +366,13 @@ class ProductView extends React.Component {
             }
           })
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        console.log(this.state);
+        if(err.toJSON().message === 'Network Error'){
+          this.setState({ showFailed: true })
+        }
+      });
   }
 
   componentDidUpdate() {
@@ -967,6 +975,22 @@ class ProductView extends React.Component {
     // }
   }
 
+  hideFailedModal(isShow){
+    this.setState({ showFailed: isShow })
+    document.body.style.overflowY = ''
+  }
+
+  showFailedModal = () => {
+    if (this.state.showFailed === true) {
+      return (
+        <FailedModal
+          isShow={this.state.showFailed}
+          onHide={() => this.hideFailedModal(false)}
+        />
+      );
+    }
+  }
+
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
@@ -1184,6 +1208,7 @@ class ProductView extends React.Component {
         {cartButton}
         {this.menuDetail()}
         {this.tourPage()}
+        {this.showFailedModal()}
       </>
     );
   }
@@ -1196,4 +1221,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { ValidQty, OpenSelect })(ProductView)
+export default connect(Mapstatetoprops, { ValidQty, OpenSelect, })(ProductView)
