@@ -13,6 +13,8 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import OrderDetailLayout from "./Master/OrderDetailLayout";
+import ManualTxn from "./Master/ManualTransaction";
+import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
 // import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
@@ -95,11 +97,13 @@ function App() {
             <Route path="/status" component={() => <StatusLayout />} />
             <Route path="/store" component={() => <ProductLayout />} />
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
+            <Route exact path="/merchant/:username" component={ManualTxn} />
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
             <Route path="/profile" component={() => <ProfileLayout />} />
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
+            <Route path="/cartmanual" component={() => <CartManualLayout />} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )

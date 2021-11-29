@@ -22,7 +22,7 @@ import sha256 from "crypto-js/hmac-sha256";
 import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
 import Cookies from "js-cookie";
 import RegisterDialog from '../../Component/Authentication/RegisterDialog';
-import { firebaseAnalytics } from '../../firebaseConfig'
+// import { firebaseAnalytics } from '../../firebaseConfig'
 
 export class StatusView extends React.Component {
   state = {
@@ -138,7 +138,7 @@ export class StatusView extends React.Component {
   }
 
   componentDidMount() {
-    firebaseAnalytics.logEvent("orderlist_visited")
+    // firebaseAnalytics.logEvent("orderlist_visited")
     var auth = {
       isLogged: false,
       token: "",

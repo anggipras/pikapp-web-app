@@ -30,7 +30,7 @@ export default class MainNavigation extends React.Component {
   render() {
     let homePage = "/" + Cookies.get("homePage")
     return (
-      <div>
+      <div className={"resize-mobile-nav"}>
         <Navbar>
           <Navbar>
             <Link to={homePage}> <img src={logo} alt={"logo"} class="icon"></img> </Link>

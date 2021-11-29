@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     dataPin : '',
     dataPinToken: '',
     isMerchantQR: false,
+    isManualTxn : false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -24,6 +25,8 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, dataPinToken: action.payload}
         case "ISMERCHANTQR":
             return { ...state, isMerchantQR: action.payload }
+        case "ISMANUALTXN":
+            return { ...state, isManualTxn: action.payload }
         default:
             return state
     }
