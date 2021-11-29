@@ -18,6 +18,7 @@ import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
 // import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
+import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
 
 export var cart = [
     {
@@ -103,6 +104,7 @@ function App() {
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
+            <Route path="/cartmanual/pickup" component={PickupSelectionView} />
             <Route path="/cartmanual" component={() => <CartManualLayout />} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
