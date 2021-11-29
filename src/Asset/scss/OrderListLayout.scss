@@ -20,7 +20,8 @@
 }
 
 .orderListTitle {
-  display: flex;
+  // display: flex;
+  display: none;
   justify-content: flex-start;
   position: relative;
   width: 100%;
@@ -51,7 +52,8 @@
 .modal-content-orderList {
   background-color: #fefefe;
   position: relative;
-  max-width: 588px; /* Max width where it stops expanding */
+  // max-width: 588px; /* Max width where it stops expanding */
+  max-width: 480px; /* Max width where it stops expanding */
   width: auto; /* Width in proportion to its parent container*/
   min-height: 625px;
   margin: auto; /* Auto margin according to the element width */
@@ -135,8 +137,10 @@
 }
 
 .orderListContent {
-  min-width: 533px;
-  max-width: 533px;
+  // min-width: 533px;
+  // max-width: 533px;
+  min-width: 450px;
+  max-width: 450px;
   margin-bottom: 20px;
   width: auto;
   cursor: pointer;

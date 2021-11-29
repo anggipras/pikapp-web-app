@@ -325,124 +325,123 @@ class OrderDetailView extends React.Component {
                 </div>
 
                 {
-                    !this.state.isMobile ?
+                    // !this.state.isMobile ?
 
-                        <div className='orderDetailContent'>
-                            <div className='orderDetail-LeftSide'>
-                                <div className='orderDetailList'>
-                                    <div className='orderDetailList-header'>
-                                        <h4 className='orderDetailList-title'>
-                                            Item Yang Dibeli
-                                        </h4>
-                                    </div>
+                    //     <div className='orderDetailContent'>
+                    //         <div className='orderDetail-LeftSide'>
+                    //             <div className='orderDetailList'>
+                    //                 <div className='orderDetailList-header'>
+                    //                     <h4 className='orderDetailList-title'>
+                    //                         Item Yang Dibeli
+                    //                     </h4>
+                    //                 </div>
 
-                                    {storeFood}
-                                </div>
-                            </div>
+                    //                 {storeFood}
+                    //             </div>
+                    //         </div>
 
-                            <div className='orderDetail-RightSide'>
-                                <div className='flex-RightSide-orderDetail'>
+                    //         <div className='orderDetail-RightSide'>
+                    //             <div className='flex-RightSide-orderDetail'>
 
-                                    <div className='orderDetail-transaction-detail'>
-                                        {
-                                            this.state.currentModal.status === "OPEN" ?
-                                                <div className='orderDetail-transaction-header-unpaid'>
-                                                    <div className='orderDetail-transaction-title-unpaid'>
-                                                        Menunggu Pembayaran
-                                                    </div>
-                                                    <div className='menu-counter-orderdetail'>
-                                                        {this.state.currentModal.timerMinutes < 10
-                                                            ? `0${this.state.currentModal.timerMinutes}`
-                                                            : this.state.currentModal.timerMinutes}
-                                                        :
-                                                        {this.state.currentModal.timerSeconds < 10
-                                                            ? `0${this.state.currentModal.timerSeconds}`
-                                                            : this.state.currentModal.timerSeconds}
-                                                    </div>
-                                                </div>
-                                                :
-                                                headerTransaction()
-                                        }
+                    //                 <div className='orderDetail-transaction-detail'>
+                    //                     {
+                    //                         this.state.currentModal.status === "OPEN" ?
+                    //                             <div className='orderDetail-transaction-header-unpaid'>
+                    //                                 <div className='orderDetail-transaction-title-unpaid'>
+                    //                                     Menunggu Pembayaran
+                    //                                 </div>
+                    //                                 <div className='menu-counter-orderdetail'>
+                    //                                     {this.state.currentModal.timerMinutes < 10
+                    //                                         ? `0${this.state.currentModal.timerMinutes}`
+                    //                                         : this.state.currentModal.timerMinutes}
+                    //                                     :
+                    //                                     {this.state.currentModal.timerSeconds < 10
+                    //                                         ? `0${this.state.currentModal.timerSeconds}`
+                    //                                         : this.state.currentModal.timerSeconds}
+                    //                                 </div>
+                    //                             </div>
+                    //                             :
+                    //                             headerTransaction()
+                    //                     }
 
-                                        <div className='orderDetail-transaction-content'>
-                                            <div className='orderDetail-transaction-descArea'>
-                                                ID Transaksi
-                                            </div>
-                                            <div className='orderDetail-transaction-descArea-content'>
-                                                {this.state.currentModal.transactionId}
-                                            </div>
+                    //                     <div className='orderDetail-transaction-content'>
+                    //                         <div className='orderDetail-transaction-descArea'>
+                    //                             ID Transaksi
+                    //                         </div>
+                    //                         <div className='orderDetail-transaction-descArea-content'>
+                    //                             {this.state.currentModal.transactionId}
+                    //                         </div>
 
-                                            <div className='orderDetail-transaction-descArea'>
-                                                Waktu Transaksi
-                                            </div>
-                                            <div className='orderDetail-transaction-descArea-content'>
-                                                {this.state.currentModal.transactionTime}
-                                            </div>
+                    //                         <div className='orderDetail-transaction-descArea'>
+                    //                             Waktu Transaksi
+                    //                         </div>
+                    //                         <div className='orderDetail-transaction-descArea-content'>
+                    //                             {this.state.currentModal.transactionTime}
+                    //                         </div>
 
-                                            <div className='orderDetail-transaction-descArea'>
-                                                Nama Restoran
-                                            </div>
-                                            <div className='orderDetail-transaction-descArea-content'>
-                                                {this.state.currentModal.storeName}
-                                            </div>
+                    //                         <div className='orderDetail-transaction-descArea'>
+                    //                             Nama Restoran
+                    //                         </div>
+                    //                         <div className='orderDetail-transaction-descArea-content'>
+                    //                             {this.state.currentModal.storeName}
+                    //                         </div>
 
-                                            <div className='orderDetail-transaction-descArea'>
-                                                Cara Makan
-                                            </div>
-                                            <div className='orderDetail-transaction-descArea-content'>
-                                                {this.state.currentModal.eat_type}
-                                            </div>
-                                        </div>
-                                    </div>
+                    //                         <div className='orderDetail-transaction-descArea'>
+                    //                             Cara Makan
+                    //                         </div>
+                    //                         <div className='orderDetail-transaction-descArea-content'>
+                    //                             {this.state.currentModal.eat_type}
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>
 
-                                    <div className='orderDetail-transaction'>
-                                        <div className='orderDetail-transaction-header'>
-                                            <div className='orderDetail-transaction-title'>
-                                                Informasi Pembayaran
-                                            </div>
-                                        </div>
+                    //                 <div className='orderDetail-transaction'>
+                    //                     <div className='orderDetail-transaction-header'>
+                    //                         <div className='orderDetail-transaction-title'>
+                    //                             Informasi Pembayaran
+                    //                         </div>
+                    //                     </div>
 
-                                        <div className='orderDetail-transaction-content'>
-                                            <div className='orderDetail-transaction-paymentoption'>
-                                                <div>Metode Pembayaran</div>
-                                                <div>
-                                                    <span>
-                                                        <img className='orderdetail-transaction-logo' src={this.state.currentModal.paymentImage} alt='' />
-                                                    </span>
-                                                    {this.state.currentModal.paymentOption}
-                                                </div>
-                                            </div>
+                    //                     <div className='orderDetail-transaction-content'>
+                    //                         <div className='orderDetail-transaction-paymentoption'>
+                    //                             <div>Metode Pembayaran</div>
+                    //                             <div>
+                    //                                 <span>
+                    //                                     <img className='orderdetail-transaction-logo' src={this.state.currentModal.paymentImage} alt='' />
+                    //                                 </span>
+                    //                                 {this.state.currentModal.paymentOption}
+                    //                             </div>
+                    //                         </div>
 
-                                            <div className="orderDetail-payment-border"></div>
+                    //                         <div className="orderDetail-payment-border"></div>
 
-                                            <div className='orderDetail-transaction-payment-price'>
-                                                <div>Total Harga ( {this.state.currentModal.productQty} Item )</div>
-                                                <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
-                                            </div>
+                    //                         <div className='orderDetail-transaction-payment-price'>
+                    //                             <div>Total Harga ( {this.state.currentModal.productQty} Item )</div>
+                    //                             <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
+                    //                         </div>
 
-                                            <div className='orderDetail-transaction-payment-detail'>
-                                                <div>Total Bayar</div>
-                                                <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {
-                                        this.state.currentModal.status === "PAID" ?
-                                            <div></div>
-                                            :
-                                            <div className='buttonPayment-orderDetail'>
-                                                <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
-                                                    <div className="wordsButton-orderDetail">
-                                                        CARA PEMBAYARAN
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        :
-
+                    //                         <div className='orderDetail-transaction-payment-detail'>
+                    //                             <div>Total Bayar</div>
+                    //                             <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.currentModal.total_price)}</div>
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>
+                    //                 {
+                    //                     this.state.currentModal.status === "PAID" ?
+                    //                         <div></div>
+                    //                         :
+                    //                         <div className='buttonPayment-orderDetail'>
+                    //                             <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
+                    //                                 <div className="wordsButton-orderDetail">
+                    //                                     CARA PEMBAYARAN
+                    //                                 </div>
+                    //                             </div>
+                    //                         </div>
+                    //                 }
+                    //             </div>
+                    //         </div>
+                    //     </div>
+                    //     :
                         <div className='orderDetailContent'>
                             <div className='orderDetail-LeftSide'>
                                 <div className='orderDetail-transaction-detail'>

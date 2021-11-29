@@ -29,7 +29,8 @@
     background-color: white;
     position: relative;
     // max-width: 675px; /* Width in proportion to its parent container*/
-    width: 675px; /* Max width where it stops expanding */
+    // width: 675px; /* Max width where it stops expanding */
+    width: 540px; /* Max width where it stops expanding */
     min-height: 213px; /* Height in proportion to its parent container*/
     height: auto; /* Max Height where it stops expanding */
     margin: auto; /* Auto margin according to the element width */

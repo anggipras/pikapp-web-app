@@ -27,6 +27,7 @@ import { connect } from 'react-redux'
 import { ValidQty, OpenSelect, LoadingButton, DoneLoad } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import FailedModal from "../../Component/Modal/FailedModal";
+import { Redirect } from "react-router-dom";
 // import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
@@ -140,8 +141,14 @@ class ProductView extends React.Component {
       Cookies.set("lastLink", lastLink, { expires: 1 })
     }
     const value = queryString.parse(window.location.search);
-    const mid = value.mid;
-    const notab = value.table || ""
+    var mid = "";
+    var notab = "";
+    if(value.mid) {
+      mid = value.mid;
+      notab = value.table || ""
+    } else {
+      mid = "M00000009";
+    }
 
     // let longlatAddress
     let addressRoute
@@ -487,7 +494,8 @@ class ProductView extends React.Component {
   handleAddCart = () => {
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
-    const mid = value.mid;
+    // const mid = value.mid;
+    const mid = this.state.data.mid;
     this.setModal(false);
     var isStorePresent = false;
     let cart = JSON.parse(localStorage.getItem('cart'))
@@ -873,18 +881,39 @@ class ProductView extends React.Component {
                     </div>
 
                     {/* desktop view */}
-                    <div className='product-detail'>
+                    {/* <div className='product-detail'> */}
                       {/* <div className='product-star'>
                         <img className='product-star-img' src={StarIcon} alt='' />
                         <h6 className='product-star-rating'>{product.foodRating}</h6>
                       </div> */}
 
-                      <div className='product-name'>
+                      {/* <div className='product-name'>
                         {product.foodName}
                       </div>
 
                       <div className='product-desc'>
                         {product.foodDesc}
+                      </div>
+
+                      <div className='product-price'>
+                        {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
+                    </div> */}
+
+                    <div className='product-detail'>
+                      <div className='product-detailInfo'>
+                        {/* <div className='product-star-mob'>
+                          <img className='product-star-img-mob' src={StarIcon} alt='' />
+                          <h6 className='product-star-rating-mob'>{product.foodRating}</h6>
+                        </div> */}
+
+                        <div className='product-name'>
+                          {product.foodName}
+                        </div>
+
+                        <div className='product-desc'>
+                          {product.foodDesc}
+                        </div>
                       </div>
 
                       <div className='product-price'>
@@ -991,6 +1020,19 @@ class ProductView extends React.Component {
     }
   }
 
+  cartRedirect() {
+    const value = queryString.parse(window.location.search);
+    if(value.mid) {
+      // return <Link to={"/cart"}></Link>;
+      // return <Redirect push to='/cart' />;
+      window.location.href = "/cart";
+    } else {
+      // return <Link to={"/cartmanual"}></Link>;
+      // return <Redirect push to='/cartmanual' />;
+      window.location.href = "/cartmanual";
+    }
+  }
+
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
@@ -1029,14 +1071,14 @@ class ProductView extends React.Component {
             cartButton = <></>
           } else {
             cartButton = (
-              <Link to={"/cart"}>
+              // <Link to={"/cart"}>
                 <div className='cartIcon-layout'>
-                  <div className='cartIcon-content'>
+                  <div className='cartIcon-content' onClick={() => this.cartRedirect()}>
                     <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
                     <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
                   </div>
                 </div>
-              </Link>
+              // </Link>
             );
           }
         } else {
@@ -1092,14 +1134,14 @@ class ProductView extends React.Component {
               <div className='top-merchantInfo'>
                 <div className='inside-topMerchantInfo'>
                   <div className='merchant-title'>
-                    <div className='merchant-logo'>
+                    {/* <div className='merchant-logo'>
                       {
                         this.state.data.logo ?
                           <img src={this.state.data.logo} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                           :
                           <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
                       }
-                    </div>
+                    </div> */}
 
                     <div className='merchant-name'>
                       <div className='merchant-mainName'>
