@@ -3,11 +3,17 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
+.product-table {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 @media (min-width: 768px) {
   .mainLayout {
     max-width: 480px !important;
     width: 100vw;
-    margin-left: 31%;
+    // margin-left: 31%;
   }
 
   //Banner Start

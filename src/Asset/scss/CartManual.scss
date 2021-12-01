@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "SF-Compact-Rounded";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
+@font-face {
+  font-family: "SF-Compact-Rounded-Medium";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+  font-family: "SF-Compact-Rounded-Semibold";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+.cartmanual-table {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .cartmanual-main {
+    max-width: 480px !important;
+    width: 100vw;
+    // margin-left: 31%;
+  }
+}

@@ -97,13 +97,14 @@ function App() {
             <Route path="/status" component={() => <StatusLayout />} />
             <Route path="/store" component={() => <ProductLayout />} />
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
-            <Route exact path="/merchant/:username" component={ManualTxn} />
+            {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
             <Route path="/profile" component={() => <ProfileLayout />} />
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
             <Route path="/cartmanual" component={() => <CartManualLayout />} />
+            <Route exact path="/:username" component={ManualTxn} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )
