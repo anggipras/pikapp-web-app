@@ -99,7 +99,7 @@ const PickupSelectionView = () => {
                     <div className="deliverySelection-shipperPrice-title">Ongkos Kirim <span style={{color: "red"}}>*</span></div>
                     <div className="deliverySelection-shipperPrice-layout">
                         <div className="deliverySelection-shipperPrice-currency">Rp</div>
-                        <input onChange={handleShipperPrice} className="deliverySelection-shipperPrice-inputArea" placeholder="Masukkan ongkos kirim disini..." defaultValue={CartRedu.shipperPrice}/>
+                        <input onChange={handleShipperPrice} type='number' inputMode='numeric' className="deliverySelection-shipperPrice-inputArea" placeholder="Masukkan ongkos kirim disini..." defaultValue={CartRedu.shipperPrice}/>
                     </div>
                 </div>
             </div>

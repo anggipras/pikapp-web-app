@@ -20,6 +20,7 @@ import { Route, Switch } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
 import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
+import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 
 export var cart = [
     {
@@ -107,6 +108,7 @@ function App() {
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
             <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
             <Route path="/cartmanual/pickup" component={PickupSelectionView} />
+            <Route path="/cartmanual/payment" component={PaymentMethodView} />
             <Route path="/cartmanual" component={() => <CartManualLayout />} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>

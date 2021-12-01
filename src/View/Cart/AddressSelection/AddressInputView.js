@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,17 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 const AddressInputView = () => {
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
-    // const [fullAddress, setFullAddress] = useState("")
-    // const [shipperNotes, setShipperNotes] = useState("")
 
     const handleFullAddress = (e) => {
-        // setFullAddress(e.target.value)
         dispatch({ type: 'FULLADDRESS', payload: e.target.value })
-
     }
 
     const handleShipperNotes = (e) => {
-        // setShipperNotes(e.target.value)
         dispatch({ type: 'SHIPPERNOTES', payload: e.target.value })
     }
 
