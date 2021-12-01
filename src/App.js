@@ -105,8 +105,8 @@ function App() {
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
-            <Route exact path="/cartmanual/pickup" component={PickupSelectionView} />
-            <Route exact path="/cartmanual/address" component={AddressInputView} />
+            <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
+            <Route path="/cartmanual/pickup" component={PickupSelectionView} />
             <Route path="/cartmanual" component={() => <CartManualLayout />} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
