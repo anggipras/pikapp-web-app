@@ -17,7 +17,7 @@ import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
 import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
-import { EditMenuCart, IsMerchantQR, DataOrder } from '../../Redux/Actions'
+import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
@@ -148,7 +148,14 @@ class CartManualView extends React.Component {
       }
       
       if(this.props.CartRedu.shippingDate) {
-        this.setState({ customerShippingDate : moment(new Date(this.props.CartRedu.shippingDate)).format("d MMMM yyyy HH:mm")})
+        this.setState({ customerShippingDate : moment(new Date(this.props.CartRedu.shippingDate)).format("Do MMMM YYYY, H:mm")})
+      }
+
+      if(this.props.CartRedu.customerName) {
+        this.setState({ customerName : this.props.CartRedu.customerName })
+      }
+      if(this.props.CartRedu.customerPhoneNumber) {
+        this.setState({ customerPhoneNumber : this.props.CartRedu.customerPhoneNumber })
       }
     }
 
@@ -666,10 +673,12 @@ class CartManualView extends React.Component {
 
     handleCustomerName = (e) =>{
       this.setState({ customerName: e.target.value});
+      this.props.CustomerName(e.target.value);
     }
 
     handleCustomerPhoneNumber = (e) =>{
       this.setState({ customerPhoneNumber: e.target.value});
+      this.props.CustomerPhoneNumber(e.target.value);
     }
 
     handleShowMenu = (status) => {
@@ -894,14 +903,14 @@ class CartManualView extends React.Component {
                     <div className='cartmanual-customerinfo-content'>
                       <div className="cartmanual-infoname">
                         <div className="cartmanual-infoname-title">Nama <span style={{color: "red"}}>*</span></div>
-                        <input className="cartmanual-infoname-inputArea" placeholder="Masukkan nama Anda disini..." onChange={this.handleCustomerName}/>
+                        <input className="cartmanual-infoname-inputArea" placeholder="Masukkan nama Anda disini..." onChange={this.handleCustomerName} value={this.state.customerName} />
                       </div>
 
                       <div className="cartmanual-phonenumber">
                         <div className="cartmanual-phonenumber-title">No. Handphone <span style={{color: "red"}}>*</span></div>
                         <div className="cartmanual-phonenumber-layout">
                           <div className="cartmanual-phonenumber-code">+62</div>
-                          <input className="cartmanual-phonenumber-inputArea" placeholder="Masukkan nomor HP Anda disini" onChange={this.handleCustomerPhoneNumber}/>
+                          <input className="cartmanual-phonenumber-inputArea" placeholder="Masukkan nomor HP Anda disini" onChange={this.handleCustomerPhoneNumber} value={this.state.customerPhoneNumber}/>
                         </div>
                       </div>
                     </div>
@@ -1103,4 +1112,4 @@ const Mapstatetoprops = (state) => {
     }
   }
   
-  export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder })(CartManualView)
+  export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber })(CartManualView)
