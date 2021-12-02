@@ -911,6 +911,7 @@ class CartManualView extends React.Component {
                     <div className='cartmanual-detailContent'>
                       <div className='cartmanual-radioSection'>
                         <div>
+                        <Link to={"/cartmanual/pickup"} style={{ textDecoration: "none" }}>
                         <label>
                           <div className='cartmanual-radioSide'>
                             <img className='cartmanual-radio-image' src={DeliveryIcon} alt='' />
@@ -920,14 +921,38 @@ class CartManualView extends React.Component {
                             <img className="cartmanual-arrowright-icon" src={ArrowRight} />
                           </span>
                         </label>
+                        </Link>
                         </div>
+                        {
+                          this.props.CartRedu.pickupType != -1 ?
                           <div className='cartmanual-deliverydetail'>
                             <div className="cartmanual-deliverydetail-border"></div>
 
                             <div className='cartmanual-deliverydetail-desc'>
-                                <div>Dikirim ke</div>
+                              {
+                                this.props.CartRedu.pickupType === 1 ?
+                                <>
+                                  <div className='cartmanual-deliverydetail-title'>Dikirim ke</div>
+                                  <div className='cartmanual-deliverydetail-address'>{this.props.CartRedu.fullAddress}</div>
+                                  {
+                                    this.props.CartRedu.shipperNotes != "" ?
+                                    <div className='cartmanual-deliverydetail-shipperNotesTitle'>Catatan : <span className='cartmanual-deliverydetail-shipperNotes'>{this.props.CartRedu.shipperNotes}</span></div>
+                                    :
+                                    null
+                                  }
+                                  <div className='cartmanual-deliverydetail-shipperLayout'>
+                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperName'>{this.props.CartRedu.shipperName}</div>
+                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shipperPrice)}</div>
+                                  </div>
+                                </>
+                                :
+                                <div className='cartmanual-deliverydetail-title'>Pickup Sendiri</div>
+                              }
                             </div>
-                          </div>  
+                          </div> 
+                          :
+                          null
+                        } 
                       </div>
                     </div>
                   </div>
@@ -968,6 +993,7 @@ class CartManualView extends React.Component {
                     <div className='cartmanual-detailContent'>
                       <div className='cartmanual-radioSection'>
                         <div>
+                        <Link to={"/cartmanual/payment"} style={{ textDecoration: "none" }}>
                         <label>
                           <div className='cartmanual-radioSide'>
                             <img className='cartmanual-radio-image' src={PaymentMethod} alt='' />
@@ -977,14 +1003,24 @@ class CartManualView extends React.Component {
                             <img className="cartmanual-arrowright-icon" src={ArrowRight} />
                           </span>
                         </label>
+                        </Link>
                         </div>
+                        {
+                          this.props.CartRedu.phoneNumber != "" ?
                           <div className='cartmanual-paymentdetail'>
-                          <div className="cartmanual-paymentdetail-border"></div>
+                            <div className="cartmanual-paymentdetail-border"></div>
 
-                          <div className='cartmanual-paymentdetail-desc'>
-                              <div>Gopay</div>
+                            <div className='cartmanual-paymentdetail-desc'>
+                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                  <img style={{height: '25px', width: '25px'}} src={OvoPayment} />
+                                  <div style={{marginLeft: '10px'}}>OVO</div>
+                                </div>
+                                <div>{this.props.CartRedu.phoneNumber}</div>
+                            </div>
                           </div>
-                        </div>
+                          :
+                          null
+                        }
                       </div>
                     </div>
                   </div>

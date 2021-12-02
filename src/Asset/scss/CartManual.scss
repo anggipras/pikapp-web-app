@@ -959,14 +959,62 @@ body {
 }
 
 .cartmanual-deliverydetail-desc {
+  margin-top: 10px;
+}
+
+.cartmanual-deliverydetail-title {
   font-family: "SF-Compact-Rounded", sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-style: normal;
+  font-size: 18px;
+  font-weight: bolder;
   color: #111111;
-  margin-top: 10px;
-  font-weight: bold;
-  // border-top: 1px solid #c4c4c4;
+}
+
+.cartmanual-deliverydetail-address {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #aaaaaa;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: flex;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.cartmanual-deliverydetail-shipperNotesTitle {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #4bb7ac;
+}
+
+.cartmanual-deliverydetail-shipperNotes {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #aaaaaa;
+}
+
+.cartmanual-deliverydetail-shipperLayout {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cartmanual-deliverydetail-shipperLayout-shipperName, .cartmanual-deliverydetail-shipperLayout-shipperPrice {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 17px;
+  color: #111111;
 }
 
 .cartmanual-deliveryinfo {
