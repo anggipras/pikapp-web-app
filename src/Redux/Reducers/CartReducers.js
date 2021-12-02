@@ -1,14 +1,15 @@
 const INITIAL_STATE = {
-    pickupType: 0, //PICKUP PAGE
+    pickupType: -1, //PICKUP PAGE
     fullAddress: "",
     shipperNotes: "",
-    indexPickup: 0,
     shipperName: "",
     shipperPrice: "",
-    shippingDateType : "",
+    shippingDateType : "", //SHIPPING DATE PAGE
     shippingDate : "",
     paymentType: -1, //PAYMENT PAGE
-    phoneNumber: ""
+    phoneNumber: "",
+    customerName: "",
+    customerPhoneNumber: "",
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -19,8 +20,6 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, fullAddress: action.payload }
         case "SHIPPERNOTES":
             return { ...state, shipperNotes: action.payload }
-        case "PICKUPPOINT":
-            return { ...state, indexPickup: action.payload }
         case "SHIPPERNAME":
             return { ...state, shipperName: action.payload }
         case "SHIPPERPRICE":
@@ -33,6 +32,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, paymentType: action.payload }
         case "PHONENUMBER":
             return { ...state, phoneNumber: action.payload }
+        case "CUSTOMERNAME":
+            return { ...state, customerName: action.payload }
+        case "CUSTOMERPHONENUMBER":
+            return { ...state, customerPhoneNumber: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

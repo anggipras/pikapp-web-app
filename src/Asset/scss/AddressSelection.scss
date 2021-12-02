@@ -188,10 +188,26 @@ body {
 
     text-overflow: ellipsis;
     overflow: hidden;
-    display: block;
+    display: flex;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+}
+
+.deliverySelection-grayNotes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: #aaaaaa;
+    font-size: 12px;
+}
+
+.deliverySelection-greenNotes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: #4bb7ac;
+    font-size: 12px;
 }
 
 .address-open-icon {

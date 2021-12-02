@@ -46,15 +46,17 @@ const ShippingDateView = () => {
             dispatch({ type: 'SHIPPINGDATE', payload: today});
         } else {
             setChoiceDate(false);
-            var currentDateTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
-            dispatch({ type: 'SHIPPINGDATE', payload: currentDateTime})
+            var today = new Date();
+            today.setHours(today.getHours() + 2);
+            // var currentDateTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
+            dispatch({ type: 'SHIPPINGDATE', payload: today})
         }
         
     }
 
     const handleShippingDate = (e) => {
         setSelectedDate(e);
-        var date = moment(new Date(e.target.value)).format("yyyy-MM-DD HH:mm:ss");
+        // var date = moment(new Date(e.target.value)).format("yyyy-MM-DD HH:mm:ss");
         dispatch({ type: 'SHIPPINGDATE', payload: e});
     }
 
