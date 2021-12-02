@@ -982,10 +982,8 @@ class CartManualView extends React.Component {
                             <div className="cartmanual-paymentdetail-border"></div>
 
                             <div className='cartmanual-paymentdetail-desc'>
-                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                  <span>
-                                    <img style={{height: '25px', width: '25px'}} src={OvoPayment} />
-                                  </span>
+                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                  <img style={{height: '25px', width: '25px'}} src={OvoPayment} />
                                   <div style={{marginLeft: '10px'}}>OVO</div>
                                 </div>
                                 <div>{this.props.CartRedu.phoneNumber}</div>
