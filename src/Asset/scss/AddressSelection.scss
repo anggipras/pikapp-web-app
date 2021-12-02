@@ -81,8 +81,6 @@ body {
     width: 100%;
     align-items: center;
     border-radius: 8px;
-    // border-bottom-left-radius: 0px;
-    // border-bottom-right-radius: 0px;
     height: 100%;
     padding: 12px 12px 11px 12px;
 }
@@ -187,6 +185,13 @@ body {
     font-weight: bolder;
     color: gray;
     font-size: 12px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .address-open-icon {
@@ -274,4 +279,197 @@ body {
     border-color: #aaaaaa;
     border-radius: 8px;
     outline: none;
+}
+
+// Payment Method View
+.paymentMethod-layout {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    width: 100vw;
+    height: 100vh;
+    background-color: #eeeeee;
+}
+
+.paymentMethod-header {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    padding: 14px 14px 14px 14px;
+}
+
+.backArrow-icon {
+    width: 23px;
+    height: 23px;
+}
+
+.paymentMethod-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    font-size: 20px;
+    color: #111111;
+    margin-left: 16px;
+}
+
+.ewallet-layout {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 14px;
+    margin-top: 14px;
+    height: fit-content;
+}
+
+.ewallet-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: #aaaaaa;
+}
+
+.payment-detailContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.payment-radioSection {
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.payment-radioSection input[type="radio"] {
+    display: none;
+}
+
+.payment-radioSection label {
+    display: flex;
+    justify-content: space-between;
+    border: 0.5px solid #aaaaaa;
+    box-sizing: border-box;
+    width: 100%;
+    align-items: center;
+    border-radius: 8px;
+    height: 100%;
+    padding: 12px 12px 11px 12px;
+}
+
+.payment-radioSection input[type="radio"]:checked + label {
+    border-color: #4bb7ac;
+    background-color: #E6FBF9;
+}
+
+.payment-radioSection input[type="radio"]:checked + label .payment-radioTitle {
+    color: #4bb7ac;
+}
+
+.payment-radioSide {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.paymentradio-image {
+    width: 23px;
+    height: 23px;
+}
+
+.payment-radioTitle {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: #111111;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+//payment ovo number
+.payment-ovoNumber-topSide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+.payment-ovoNumber-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    color: #767676;
+    margin-right: 5px;
+}
+
+.payment-alertImg {
+    position: relative;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+}
+
+.payment-extraClass {
+    font-family: "SF-Compact-Rounded", sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 10px !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0.05em !important;
+    color: #767676 !important;
+    pointer-events: auto !important;
+    width: 250px !important;
+    background: #F8FAFC !important;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+}
+
+.payment-ovoNumber-bottomSide {
+    border: none;
+    outline: none;
+    width: 250px;
+}
+
+.payment-ovoNumber-alert {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: #DC6A84;
+}
+
+//payment method
+.paymentMethod-buttonLayout {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    max-width: 480px;
+    width: 100vw;
+    padding: 14px 0px 14px 0px;
+    background-color: #ffffff;
+}
+
+.paymentMethod-selectButton {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 100%;
+    border-radius: 8px;
+    margin-left: 14px;
+    margin-right: 14px;
+
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    text-align: center;
+    font-size: 18px;
+    color: white;
 }
