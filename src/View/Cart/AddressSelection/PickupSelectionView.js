@@ -24,7 +24,7 @@ const PickupSelectionView = () => {
     ])
 
     const onChangeRadio = (ind) => {
-        dispatch({ type: 'PICKUPPOINT', payload: ind })
+        dispatch({ type: 'PICKUPTYPE', payload: ind })
     }
 
     const goToAddress = () => {
@@ -51,8 +51,8 @@ const PickupSelectionView = () => {
             return (
                 <div key={keyOption} className='pickup-detailContent'>
                     <div className='pickup-radioSection'>
-                        <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption)} name={'PICKUPMETHOD'} />
-                        <label htmlFor={optionVal.image} style={{ borderBottomLeftRadius: CartRedu.indexPickup === 1 ? "0px" : "8px", borderBottomRightRadius: CartRedu.indexPickup === 1 ? "0px" : "8px" }}>
+                        <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption)} name={'PICKUPMETHOD'} defaultChecked={CartRedu.pickupType === keyOption ? true : false} />
+                        <label htmlFor={optionVal.image} style={{ borderBottomLeftRadius: CartRedu.pickupType === 1 ? "0px" : "8px", borderBottomRightRadius: CartRedu.pickupType === 1 ? "0px" : "8px" }}>
                             <div className='pickup-radioSide'>
                                 <img className='pickupradio-image' src={imageOption} alt='' />
                                 <div className='pickup-radioTitle'>{optionVal.option}</div>
@@ -80,7 +80,7 @@ const PickupSelectionView = () => {
                                 Alamat Pengiriman
                             </div>
                             <div className="deliverySelection-addressInputted">
-                                { CartRedu.fullAddress ? CartRedu.fullAddress : "Masukkan alamat pengiriman sekarang" }
+                                { CartRedu.fullAddress ? <span className="deliverySelection-greenNotes">Catatan : <span className="deliverySelection-grayNotes">{CartRedu.fullAddress}</span></span> : "Masukkan alamat pengiriman sekarang" }
                             </div>
                         </div>
                     </div>
@@ -107,14 +107,19 @@ const PickupSelectionView = () => {
     }
 
     const handleSave = () => {
-        if(CartRedu.indexPickup === 0) {
+        if(CartRedu.pickupType === 0) {
             // Save pickup takeaway data
-            dispatch({ type: 'PICKUPTYPE', payload: 0 })
+            window.history.go(-1)
         } else if(CartRedu.fullAddress && CartRedu.shipperName && CartRedu.shipperPrice) {
             // Save pickup delivery data
             dispatch({ type: 'PICKUPTYPE', payload: 1 })
+            window.history.go(-1)
         }
-        // THEN GO BACK TO CART
+    }
+
+    const goBack = () => {
+        dispatch({ type: 'PICKUPTYPE', payload: -1 })
+        window.history.go(-1)
     }
 
     return (
@@ -122,21 +127,21 @@ const PickupSelectionView = () => {
             <div className="pickupSelection-layout">
                 <div className="pickupSelection-topSide">
                     <div className="pickupSelection-header">
-                        <span className="pickupSelection-backArrow">
+                        <span className="pickupSelection-backArrow" onClick={goBack}>
                             <img className="backArrow-icon" src={ArrowBack} alt='' />
                         </span>
                         <div className="pickupSelection-title">Pilih Pengiriman</div>
                     </div>
 
                     {pickUpSelection()}
-                    {CartRedu.indexPickup === 1 ? shipperArea() : null}
+                    {CartRedu.pickupType === 1 ? shipperArea() : null}
                 </div>
 
                 <div 
                     onClick={handleSave} 
                     className="pickupSelection-selectButton" 
                     style={{backgroundColor: 
-                        CartRedu.indexPickup === 0 ? '#4bb7ac' 
+                        CartRedu.pickupType === 0 ? '#4bb7ac' 
                         : 
                         CartRedu.fullAddress && CartRedu.shipperName && CartRedu.shipperPrice ? '#4bb7ac'
                         : 

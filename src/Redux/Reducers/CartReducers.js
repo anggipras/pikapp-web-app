@@ -1,11 +1,10 @@
 const INITIAL_STATE = {
-    pickupType: 0, //PICKUP PAGE
+    pickupType: -1, //PICKUP PAGE
     fullAddress: "",
     shipperNotes: "",
-    indexPickup: 0,
     shipperName: "",
     shipperPrice: "",
-    shippingDateType : "",
+    shippingDateType : "", //SHIPPING DATE PAGE
     shippingDate : "",
     paymentType: -1, //PAYMENT PAGE
     phoneNumber: ""
@@ -19,8 +18,6 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, fullAddress: action.payload }
         case "SHIPPERNOTES":
             return { ...state, shipperNotes: action.payload }
-        case "PICKUPPOINT":
-            return { ...state, indexPickup: action.payload }
         case "SHIPPERNAME":
             return { ...state, shipperName: action.payload }
         case "SHIPPERPRICE":
