@@ -28,6 +28,7 @@ import { ValidQty, OpenSelect, LoadingButton, DoneLoad } from '../../Redux/Actio
 import TourPage from '../../Component/Tour/TourPage';
 import FailedModal from "../../Component/Modal/FailedModal";
 import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
@@ -114,7 +115,8 @@ class ProductView extends React.Component {
         )
       }
     ],
-    showFailed : false
+    showFailed : false,
+    isManualTxn : false
   };
 
   timeout = null
@@ -144,9 +146,11 @@ class ProductView extends React.Component {
     var mid = "";
     var notab = "";
     if(value.mid) {
+      // this.setState({ isManualTxn : false });
       mid = value.mid;
       notab = value.table || ""
     } else {
+      // this.setState({ isManualTxn : true });
       mid = "M00000009";
     }
 
@@ -342,6 +346,12 @@ class ProductView extends React.Component {
             }
             else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
               this.setState({ startTour: true });
+            }
+
+            if(value.mid) {
+              this.setState({ isManualTxn : false });
+            } else {
+              this.setState({ isManualTxn : true });
             }
           }).catch(err => {
             console.log(err)
@@ -1020,17 +1030,36 @@ class ProductView extends React.Component {
     }
   }
 
-  cartRedirect() {
+  cartRedirect = () => {
     const value = queryString.parse(window.location.search);
+    var url = "";
     if(value.mid) {
+      url = "/cart";
+      // this.setState({ isManualTxn : false });
       // return <Link to={"/cart"}></Link>;
       // return <Redirect push to='/cart' />;
-      window.location.href = "/cart";
+      // window.location.href = "/cart";
+      // history.push()
+      // this.props.history.push("/cart");
     } else {
+      url = "/cartmanual";
+      // this.setState({ isManualTxn : true });
       // return <Link to={"/cartmanual"}></Link>;
       // return <Redirect push to='/cartmanual' />;
-      window.location.href = "/cartmanual";
+      // window.location.href = "/cartmanual";
+      // this.props.history.push("/cartmanual");
     }
+
+    // return (
+    //   <Link to={url}>
+    //     <div className='cartIcon-layout'>
+    //       <div className='cartIcon-content'>
+    //         <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+    //         <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+    //       </div>
+    //     </div>
+    //   </Link>
+    // )
   }
 
   render() {
@@ -1071,14 +1100,24 @@ class ProductView extends React.Component {
             cartButton = <></>
           } else {
             cartButton = (
-              // <Link to={"/cart"}>
+              this.state.isManualTxn ?
+              <Link to={"/cartmanual"}>
                 <div className='cartIcon-layout'>
-                  <div className='cartIcon-content' onClick={() => this.cartRedirect()}>
+                  <div className='cartIcon-content'>
                     <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
                     <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
                   </div>
                 </div>
-              // </Link>
+              </Link>
+              :
+              <Link to={"/cart"}>
+                <div className='cartIcon-layout'>
+                  <div className='cartIcon-content'>
+                    <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+                    <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                  </div>
+                </div>
+              </Link>
             );
           }
         } else {
