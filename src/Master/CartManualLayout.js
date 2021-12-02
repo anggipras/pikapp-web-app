@@ -9,13 +9,7 @@ export default class CartManualLayout extends React.Component {
 
   render() {
     return (
-      <div className='cartmanual-table'>
-        <div></div>
-        <div className='cartmanual-main'>
-          <CartManualView />
-        </div>
-        <div></div>
-      </div>
+      <CartManualView />
     );
   }
 }

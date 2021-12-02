@@ -5,6 +5,8 @@ const INITIAL_STATE = {
     indexPickup: 0,
     shipperName: "",
     shipperPrice: "",
+    shippingDateType : "",
+    shippingDate : ""
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,6 +23,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, shipperName: action.payload }
         case "SHIPPERPRICE":
             return { ...state, shipperPrice: action.payload }
+        case "SHIPPINGDATETYPE":
+            return { ...state, shippingDateType: action.payload }
+        case "SHIPPINGDATE":
+            return { ...state, shippingDate: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

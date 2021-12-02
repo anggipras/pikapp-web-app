@@ -5,15 +5,18 @@ export default class MainLayout extends React.Component {
 
   render() {
     return (
-      <div className='product-table'>
-        <div>
-        </div>
+      // <div className='product-table'>
+      //   <div>
+      //   </div>
+      //   <div className='mainLayout'>
+      //     <ProductView />
+      //   </div>
+      //   <div>
+      //   </div>
+      // </div>
         <div className='mainLayout'>
           <ProductView />
         </div>
-        <div>
-        </div>
-      </div>
     );
   }
 }

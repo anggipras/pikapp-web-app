@@ -3,6 +3,10 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
+body {
+  background-color: white !important;
+}
+
 .product-table {
   width: 100%;
   display: flex;
@@ -670,6 +674,7 @@
 
   .merchantList-layout:nth-child(odd) {
     margin-right: 20px;
+    margin-left: 20px;
   }
 
   .merchantList-banner {
