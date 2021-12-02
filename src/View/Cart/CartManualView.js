@@ -29,6 +29,8 @@ import DeliveryIcon from "../../Asset/Icon/delivery.png";
 import ShippingDate from "../../Asset/Icon/shipping-date.png";
 import PaymentMethod from "../../Asset/Icon/payment-method.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
+import ArrowUp from "../../Asset/Icon/item-arrowup.png";
+import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
 
 var currentExt = {
   detailCategory: [
@@ -129,6 +131,7 @@ class CartManualView extends React.Component {
       customerName : "",
       customerPhoneNumber : "",
       customerShippingDate : "",
+      isShowItem : undefined
     };
 
     componentDidMount() {
@@ -669,6 +672,10 @@ class CartManualView extends React.Component {
       this.setState({ customerPhoneNumber: e.target.value});
     }
 
+    handleShowMenu = (status) => {
+      this.setState({ isShowItem: status });
+    }
+
     render() {
       if (this.state.loadButton) {
         return <Redirect to='/orderconfirmation' />
@@ -732,8 +739,14 @@ class CartManualView extends React.Component {
   
       let contentView = storeList.map((store) => {
         let storeFood
+        let diffFood = [];
+        if(this.state.isShowItem === false || this.state.isShowItem === undefined) {
+          diffFood.push(store.food[0]);
+        } else {
+          diffFood = store.food;
+        }
         if (store.mid === currentCartMerchant.mid) {
-          storeFood = store.food.map((food, index) => {
+          storeFood = diffFood.map((food, index) => {
             return (
               <div key={index} className='cartmanual-List-content'>
                 <div className='cartmanual-List-content-frame'>
@@ -744,8 +757,8 @@ class CartManualView extends React.Component {
                   <div className='cartmanual-List-content-detail-left'>
                     <h2 className='cartmanual-List-content-title'>{food.foodName}</h2>
                     {this.newListAllChoices(food)}
-                    <h5 className='cartmanual-List-content-notes'>{food.foodNote}</h5>
-                    <h3 className='cartmanual-List-content-price'>{Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                    <h5 className='cartmanual-List-content-notes'>Tambahan : {food.foodNote}</h5>
+                    <h3 className='cartmanual-List-content-price'>Rp. {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
                   </div>
   
                   <div className='cartmanual-List-content-detail-right'>
@@ -782,10 +795,12 @@ class CartManualView extends React.Component {
       });
   
       let totalPaymentShow = 0
+      let totalItem = 0
       let selectedMerch = storeList.filter(store => {
         return store.mid === currentCartMerchant.mid
       });
-  
+      
+      totalItem = selectedMerch[0].food.length;
       selectedMerch[0].food.forEach(thefood => {
         totalPaymentShow += thefood.foodTotalPrice
       })
@@ -842,9 +857,27 @@ class CartManualView extends React.Component {
                     <h4 className='cartmanual-List-title'>
                       Keranjang
                     </h4>
+                    <h4 className='cartmanual-List-itembox'>
+                      {totalItem} Item
+                    </h4>
                   </div>
   
                   {contentView}
+
+                  {/* <div className='cartmanual-List-itemaction' onClick={() => this.handleShowMenu(true)} style={{ width: this.state.isShowItem ? "160px" : "210px" }}> */}
+                    {
+                      this.state.isShowItem ? 
+                      <div className='cartmanual-List-itemaction' onClick={() => this.handleShowMenu(false)} style={{ width: this.state.isShowItem ? "160px" : "210px" }}>
+                        <div className='cartmanual-List-hidemenu-word'>Sembunyikan</div>
+                        <img className='cartmanual-List-hidemenu-icon' src={ArrowUp}></img>
+                      </div>
+                      :
+                      <div className='cartmanual-List-itemaction' onClick={() => this.handleShowMenu(true)} style={{ width: this.state.isShowItem ? "160px" : "210px" }}>
+                        <div className='cartmanual-List-showmenu-word'>Lihat {totalItem-1} pesanan lagi</div>
+                        <img className='cartmanual-List-showmenu-icon' src={ArrowDown}></img>
+                      </div>
+                    }
+                  {/* </div> */}
                 </div>
               </div>
   
@@ -963,14 +996,34 @@ class CartManualView extends React.Component {
           </div>
   
           <div className='cartmanual-Layout-mob'>
-            {/* <div>
-              <div className='cartmanual-delivery-desc'>
+            <div>
+              {/* <div className='cartmanual-delivery-desc'>
                 <div>Dikirim ke</div>
+              </div> */}
+              <div className='cartmanual-detailprice-header'>
+                <div className='cartmanual-detailprice-title'>
+                  Ringkasan Belanja
+                </div>
               </div>
-            </div> */}
+
+              <div className='cartmanual-detailprice-desc'>
+                <div className='orderDetail-detailprice-word'>
+                  <div>Total Harga ({totalItem} Item(s))</div>
+                  <div>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</div>
+                </div>
+              </div>
+
+              <div className='cartmanual-detailprice-desc'>
+                <div className='orderDetail-detailprice-word'>
+                  <div>Total Diskon Item</div>
+                  <div>Rp. 0</div>
+                </div>
+              </div>
+
+            </div>
             <div className='cartmanual-checkoutArea-mob'>
   
-              <div className='cartmanual-TotalAmount-mob' onClick={() => this.handleDetail("payment-detail")}>
+              <div className='cartmanual-TotalAmount-mob'>
                 <h3 className='cartmanual-TotalAmount-title-mob'>Total Harga</h3>
   
                 <div className='cartmanual-TotalAmount-bottom-mob'>
