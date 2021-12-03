@@ -43,13 +43,14 @@ const ShippingDateView = () => {
             var convertDate = moment(new Date(today)).format("yyyy-MM-DD HH:mm:ss");
             setCurrentDate(convertDate);
             setSelectedDate(convertDate);
-            dispatch({ type: 'SHIPPINGDATE', payload: today});
+            // dispatch({ type: 'SHIPPINGDATE', payload: today});
         } else {
             setChoiceDate(false);
             var today = new Date();
             today.setHours(today.getHours() + 2);
+            setSelectedDate(today);
             // var currentDateTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
-            dispatch({ type: 'SHIPPINGDATE', payload: today})
+            // dispatch({ type: 'SHIPPINGDATE', payload: today})
         }
         
     }
@@ -57,7 +58,7 @@ const ShippingDateView = () => {
     const handleShippingDate = (e) => {
         setSelectedDate(e);
         // var date = moment(new Date(e.target.value)).format("yyyy-MM-DD HH:mm:ss");
-        dispatch({ type: 'SHIPPINGDATE', payload: e});
+        // dispatch({ type: 'SHIPPINGDATE', payload: e});
     }
 
     const shippingSelection = () => {
@@ -144,6 +145,7 @@ const ShippingDateView = () => {
                         minDate={currentDate}
                         value={selectedDate}
                         ampm={false}
+                        disablePast={true}
                     />
                     </MuiPickersUtilsProvider>
                 </div>
@@ -152,6 +154,7 @@ const ShippingDateView = () => {
     }
 
     const handleSave = () => {
+        dispatch({ type: 'SHIPPINGDATE', payload: selectedDate});
         window.history.back();
     }
 
@@ -178,7 +181,7 @@ const ShippingDateView = () => {
                     onClick={handleSave} 
                     className="shippingdate-selectButton" 
                     style={{backgroundColor: 
-                        CartRedu.shippingDate ? '#4bb7ac' 
+                        selectedDate ? '#4bb7ac' 
                         : 
                         '#aaaaaa'}}
                 >Pilih</div>

@@ -151,7 +151,7 @@ class ProductView extends React.Component {
       notab = value.table || ""
     } else {
       // this.setState({ isManualTxn : true });
-      mid = "M00000009";
+      mid = value.username;
     }
 
     // let longlatAddress
