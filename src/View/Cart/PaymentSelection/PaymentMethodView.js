@@ -19,9 +19,11 @@ const PaymentMethodView = () => {
         ])
     const [isCheckNumber, setisCheckNumber] = useState(true)
     const [isAlertNumber, setisAlertNumber] = useState("")
+    const [phoneNum, setphoneNum] = useState(CartRedu.phoneNumber)
 
     const handleSave = () => {
-        if (CartRedu.paymentType === 0 && CartRedu.phoneNumber && isAlertNumber === "") {
+        if (CartRedu.paymentType === 0 && phoneNum && isAlertNumber === "") {
+            dispatch({ type: 'PHONENUMBER', payload: phoneNum })
             window.history.go(-1)
         } else if(CartRedu.paymentType === -1) {
             console.log("CANNOT GO THROUGH")
@@ -31,6 +33,10 @@ const PaymentMethodView = () => {
     }
 
     const goBack = () => {
+        if (!CartRedu.phoneNumber) {
+            dispatch({ type: 'PHONENUMBER', payload: "" })
+            dispatch({ type: 'PAYMENTTYPE', payload: -1 })
+        }
         window.history.go(-1)
     }
 
@@ -47,16 +53,18 @@ const PaymentMethodView = () => {
     const onChangeNumber = (e) => {
         let reg = /^(?!00)(?!01)(?!02)(?!03)(?!04)(?!05)(?!06)(?!07)(?!09)[0][0-9]\d{0,12}$/
         let checkNumber = reg.test(e.target.value)
-        dispatch({ type: 'PHONENUMBER', payload: e.target.value })
+        setphoneNum(e.target.value)
         if (checkNumber) {
             setisCheckNumber(checkNumber)
             setisAlertNumber('')
         } else if (e.target.value === '') {
             setisCheckNumber(false)
             setisAlertNumber('Nomor harus diisi')
+            dispatch({ type: 'PHONENUMBER', payload: "" })
         } else {
             setisCheckNumber(checkNumber)
             setisAlertNumber('Masukkan nomor dengan benar')
+            dispatch({ type: 'PHONENUMBER', payload: "" })
         }
     }
 
@@ -74,7 +82,7 @@ const PaymentMethodView = () => {
             return (
                 <div key={keyOption} className='payment-detailContent'>
                     <div className='payment-radioSection'>
-                        <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption)} name={'PAYMENTMETHOD'} />
+                        <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption)} name={'PAYMENTMETHOD'} defaultChecked={CartRedu.paymentType === keyOption ? true : false} />
                         <label htmlFor={optionVal.image}>
                             <div className='payment-radioSide'>
                                 <img className='paymentradio-image' src={imageOption} alt='' />
@@ -94,7 +102,7 @@ const PaymentMethodView = () => {
                                 <ReactTooltip className='payment-extraClass' effect='solid' arrowColor='#F8FAFC' globalEventOff='click' afterShow={() => hideTooltip()} />
                             </div>
 
-                            <input type='number' inputMode='numeric' className='payment-ovoNumber-bottomSide' onChange={onChangeNumber} style={{ borderBottom: !isCheckNumber ? '0.5px solid #DC6A84' : '0.5px solid #D9CECE', color: !isCheckNumber ? '#DC6A84' : '#111111' }} />
+                            <input defaultValue={CartRedu.phoneNumber} type='number' inputMode='numeric' className='payment-ovoNumber-bottomSide' onChange={onChangeNumber} style={{ borderBottom: !isCheckNumber ? '0.5px solid #DC6A84' : '0.5px solid #D9CECE', color: !isCheckNumber ? '#DC6A84' : '#111111' }} />
                             {
                                 isAlertNumber !== '' ?
                                     <h4 className='payment-ovoNumber-alert'>
