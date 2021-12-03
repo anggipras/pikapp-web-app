@@ -875,6 +875,7 @@ class CartManualView extends React.Component {
 
                   {/* <div className='cartmanual-List-itemaction' onClick={() => this.handleShowMenu(true)} style={{ width: this.state.isShowItem ? "160px" : "210px" }}> */}
                     {
+                      totalItem > 1 ?
                       this.state.isShowItem ? 
                       <div className='cartmanual-List-itemaction' onClick={() => this.handleShowMenu(false)} style={{ width: this.state.isShowItem ? "160px" : "210px" }}>
                         <div className='cartmanual-List-hidemenu-word'>Sembunyikan</div>
@@ -885,6 +886,8 @@ class CartManualView extends React.Component {
                         <div className='cartmanual-List-showmenu-word'>Lihat {totalItem-1} pesanan lagi</div>
                         <img className='cartmanual-List-showmenu-icon' src={ArrowDown}></img>
                       </div>
+                      :
+                      <></>
                     }
                   {/* </div> */}
                 </div>
