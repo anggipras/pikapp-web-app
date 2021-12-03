@@ -80,7 +80,10 @@ const PickupSelectionView = () => {
                                 Alamat Pengiriman
                             </div>
                             <div className="deliverySelection-addressInputted">
-                                { CartRedu.fullAddress ? <span className="deliverySelection-greenNotes">Catatan : <span className="deliverySelection-grayNotes">{CartRedu.fullAddress}</span></span> : "Masukkan alamat pengiriman sekarang" }
+                                { CartRedu.fullAddress ? <span className="deliverySelection-grayNotes">{CartRedu.fullAddress}</span> : "Masukkan alamat pengiriman sekarang" }
+                            </div>
+                            <div className="deliverySelection-addressInputted">
+                                { CartRedu.shipperNotes ? <span className="deliverySelection-greenNotes">Catatan : <span className="deliverySelection-grayNotes">{CartRedu.shipperNotes}</span></span> : null}
                             </div>
                         </div>
                     </div>
