@@ -62,7 +62,7 @@ class CartManualView extends React.Component {
       showModal: false,
       currentModalTitle: "",
       paymentOption: "Pembayaran Di Kasir",
-      paymentType: "PAY_BY_CASHIER",
+      paymentType: "WALLET_OVO",
       biz_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
       eat_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "Makan Di Tempat" : "Bungkus / Takeaway" : "Makan Di Tempat",
       indexOptionEat: this.props.noTable !== undefined ? this.props.noTable > 0 ? 0 : 1 : 0,
@@ -301,7 +301,7 @@ class CartManualView extends React.Component {
       localStorage.setItem('cart', JSON.stringify(allCart))
       this.setState({ updateData: 'updated' })
     }
-  
+
     handleOption = (data) => {
       let valueTab
       if (this.props.noTable !== undefined) {
@@ -378,9 +378,13 @@ class CartManualView extends React.Component {
   
         selectedProd.push({
           product_id: selectMenu.productId,
+          product_name: selectMenu.foodName,
+          product_price: selectMenu.foodPrice,
           notes: newlistArr,
-          qty: selectMenu.foodAmount,
-          extra_price: extraprice
+          quantity: selectMenu.foodAmount,
+          discount: 0,
+          extra_price: extraprice,
+          extra_menus: [],
         })
       })
   
@@ -392,16 +396,37 @@ class CartManualView extends React.Component {
       } else {
         newDate += 60000
       }
-      expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
+      expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
+
+      let shippingMethod = {
+        shipping_method: this.props.CartRedu.shipperName,
+        shipping_cost: this.props.CartRedu.shipperPrice,
+        shipping_time: moment(new Date(this.state.customerShippingDate)).format("yyyy-MM-DD HH:mm:ss")
+      }
+
+      let customerInfo = {
+        customer_name: this.state.customerName,
+        customer_address: this.props.CartRedu.fullAddress,
+        customer_address_detail: this.props.CartRedu.shipperNotes,
+        customer_phone_number: this.state.customerPhoneNumber
+      }
+
+      let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shipperPrice)
   
       var requestData = {
         products: selectedProd,
-        payment_with: this.state.paymentType,
+        shipping : shippingMethod,
+        customer : customerInfo,
         mid: currentCartMerchant.mid,
-        prices: finalProduct[0].totalPrice.toString(),
-        biz_type: this.state.biz_type,
-        table_no: noTab.toString(),
-        phone_number: phoneNumber,
+        order_type: this.props.CartRedu.pickupType,
+        order_platform: "PIKAPP",
+        total_product_price: finalProduct[0].totalPrice.toString(),
+        payment_status: "PAID",
+        payment_method: this.state.paymentType,
+        billing_phone_number: this.props.CartRedu.phoneNumber,
+        order_status: "OPEN",
+        total_discount: 0,
+        total_payment: totalPayment.toString(),
         expiry_date: expiryDate
       }
   
@@ -411,7 +436,7 @@ class CartManualView extends React.Component {
       uuid = uuid.replace(/-/g, "");
       const date = new Date().toISOString();
       
-      Axios(address + "/txn/v3/txn-post/", {
+      Axios(address + "/txn/v3/txn-post2/", {
         headers: {
           "Content-Type": "application/json",
           "x-request-id": uuid,
@@ -422,49 +447,26 @@ class CartManualView extends React.Component {
         data: requestData,
       })
         .then((res) => {
-          if (this.state.paymentType === 'PAY_BY_CASHIER') {
-            this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-            setTimeout(() => {
-              let filterOtherCart = storageData.filter(valFilter => {
-                return valFilter.mid !== currentCartMerchant.mid
-              })
-              var dataOrder = {
-                transactionId : res.data.results[0].transaction_id,
-                totalPayment : requestData.prices,
-                paymentType : this.state.paymentType,
-                transactionTime : newDate
-              };
-              this.props.DataOrder(dataOrder);
-              localStorage.setItem("payment", JSON.stringify(dataOrder));
-              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-              localStorage.removeItem("lastTable")
-              localStorage.removeItem("fctable")
-              localStorage.removeItem("counterPayment");
-              this.setState({ loadButton: true })
-              this.props.DoneLoad()
-            }, 1000);
-          } else {
-            this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-            setTimeout(() => {
-              let filterOtherCart = storageData.filter(valFilter => {
-                return valFilter.mid !== currentCartMerchant.mid
-              })
-              var dataOrder = {
-                transactionId : res.data.results[0].transaction_id,
-                totalPayment : requestData.prices,
-                paymentType : this.state.paymentType,
-                transactionTime : newDate
-              };
-              this.props.DataOrder(dataOrder);
-              localStorage.setItem("payment", JSON.stringify(dataOrder));
-              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-              localStorage.removeItem("lastTable")
-              localStorage.removeItem("fctable")
-              localStorage.removeItem("counterPayment");
-              this.setState({ loadButton: true })
-              this.props.DoneLoad()
-            }, 1000);
-          }
+          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            this.setState({ loadButton: true })
+            this.props.DoneLoad()
+          }, 1000);
         })
         .catch((err) => {
           if (err.response.data !== undefined) {
@@ -702,23 +704,7 @@ class CartManualView extends React.Component {
           this.setState({ changeUI: false })
         }
       }
-  
-      // var auth = {
-      //   isLogged: false,
-      //   token: "",
-      //   new_event: true,
-      //   recommendation_status: false,
-      //   email: "",
-      //   is_email_verified: true
-      // };
-      // if (Cookies.get("auth") !== undefined) {
-      //   auth = JSON.parse(Cookies.get("auth"))
-      // }
-      // if (auth.isLogged === false) {
-      //   var lastLink = { value: window.location.href }
-      //   Cookies.set("lastLink", lastLink, { expires: 1 })
-      // }
-  
+
       let modal;
       if (this.state.showModal === true) {
         modal = (
@@ -820,6 +806,8 @@ class CartManualView extends React.Component {
           discountPrice: 0,
         },
       ]
+
+      let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shipperPrice);
   
       let paymentImage;
       let eatImage;
@@ -1037,6 +1025,39 @@ class CartManualView extends React.Component {
                     </div>
                   </div>
 
+                  <div className='cartmanual-summarypayment'>
+                    <div className='cartmanual-detailcontent-payment'>
+                      <div>
+                      <div className='cartmanual-detailprice-header'>
+                        <div className='cartmanual-detailprice-title'>
+                          Ringkasan Belanja
+                        </div>
+                      </div>
+
+                      <div className='cartmanual-detailprice-desc'>
+                        <div className='orderDetail-detailprice-word'>
+                          <div>Total Harga ({totalItem} Item(s))</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</div>
+                        </div>
+                      </div>
+
+                      <div className='cartmanual-detailprice-desc'>
+                        <div className='orderDetail-detailprice-word'>
+                          <div>Total Diskon Item</div>
+                          <div>Rp. 0</div>
+                        </div>
+                      </div>
+
+                      <div className='cartmanual-detailprice-desc'>
+                        <div className='orderDetail-detailprice-word'>
+                          <div>Total Ongkos Kirim</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shipperPrice)}</div>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
   
               </div>
@@ -1044,10 +1065,7 @@ class CartManualView extends React.Component {
           </div>
   
           <div className='cartmanual-Layout-mob'>
-            <div>
-              {/* <div className='cartmanual-delivery-desc'>
-                <div>Dikirim ke</div>
-              </div> */}
+            {/* <div>
               <div className='cartmanual-detailprice-header'>
                 <div className='cartmanual-detailprice-title'>
                   Ringkasan Belanja
@@ -1068,14 +1086,14 @@ class CartManualView extends React.Component {
                 </div>
               </div>
 
-            </div>
+            </div> */}
             <div className='cartmanual-checkoutArea-mob'>
   
               <div className='cartmanual-TotalAmount-mob'>
                 <h3 className='cartmanual-TotalAmount-title-mob'>Total Harga</h3>
   
                 <div className='cartmanual-TotalAmount-bottom-mob'>
-                  <h2 className='cartmanual-TotalAmount-price-mob'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
+                  <h2 className='cartmanual-TotalAmount-price-mob'>Rp. {Intl.NumberFormat("id-ID").format(totalFinalProduct)}</h2>
   
                   {/* <span className='cartmanual-TotalAmount-detailArrowCenter-mob'>
                     <img className='cartmanual-TotalAmount-detailArrow-mob' src={ArrowDownColor} alt='' />
