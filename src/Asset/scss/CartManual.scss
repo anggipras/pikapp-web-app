@@ -19,17 +19,19 @@ body {
   justify-content: center;
 }
 
-@media (min-width: 768px) {
-  .cartmanual-main {
-    max-width: 480px !important;
-    width: 100vw;
-    // margin-left: 31%;
-  }
-}
+// @media (min-width: 768px) {
+//   .cartmanual-main {
+//     max-width: 480px !important;
+//     width: 100vw;
+//     margin-left: 31%;
+//   }
+// }
 
 .cartmanual-Layout {
-  // width: 100vw;
-  // max-width: 480px !important;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  width: 100vw;
   // margin-left: 31%;
   // padding: 20px 117px 20px 107px;
   // padding: 20px 17px 26px 17px;
@@ -73,7 +75,7 @@ body {
 //cartmanual-List start
 .cartmanual-List {
   // max-width: 477px;
-  max-width: 480px;
+  // max-width: 480px;
   width: auto;
   // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -121,6 +123,7 @@ body {
   height: 100px;
   border-radius: 20px;
   overflow: hidden;
+  margin-right: 10px;
 }
 
 .cartmanual-List-content-image {
@@ -304,7 +307,7 @@ body {
   // margin-left: auto;
   // width: 477px;
   margin-left: 0;
-  width: auto;
+  width: 100%;
 }
 
 //cartmanual-StoreBox start
@@ -393,9 +396,9 @@ body {
 
 //cartmanualcustomerinfo start
 .cartmanual-customerinfo {
-  min-width: 480px;
-  max-width: 480px;
-  width: auto;
+  // min-width: 480px;
+  // max-width: 480px;
+  // width: auto;
   margin-bottom: 10px;
   margin-top: 10px;
   cursor: pointer;
@@ -484,9 +487,9 @@ body {
   // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   // min-width: 477px;
-  min-width: 480px;
-  max-width: 480px;
-  width: auto;
+  // min-width: 480px;
+  // max-width: 480px;
+  // width: auto;
   // margin-bottom: 42px;
   margin-bottom: 0px;
   cursor: pointer;
@@ -711,7 +714,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f5f6f7;
-  width: 480px;
+  // width: 480px;
   // margin-left: 31%;
   // padding-bottom: 17px;
 }
@@ -1018,9 +1021,9 @@ body {
 }
 
 .cartmanual-deliveryinfo {
-  min-width: 480px;
-  max-width: 480px;
-  width: auto;
+  // min-width: 480px;
+  // max-width: 480px;
+  // width: auto;
   margin-bottom: 10px;
   margin-top: 10px;
   cursor: pointer;
@@ -1028,9 +1031,9 @@ body {
 }
 
 .cartmanual-shippingdate {
-  min-width: 480px;
-  max-width: 480px;
-  width: auto;
+  // min-width: 480px;
+  // max-width: 480px;
+  // width: auto;
   margin-bottom: 10px;
   margin-top: 10px;
   cursor: pointer;
@@ -1038,9 +1041,9 @@ body {
 }
 
 .cartmanual-paymentmethod {
-  min-width: 480px;
-  max-width: 480px;
-  width: auto;
+  // min-width: 480px;
+  // max-width: 480px;
+  // width: auto;
   margin-bottom: 10px;
   margin-top: 10px;
   cursor: pointer;
