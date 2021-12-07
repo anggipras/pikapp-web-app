@@ -3,7 +3,7 @@ import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import ShippingDate from "../../../Asset/Icon/shipping-date.png";
 // import TextField from '@material-ui/core/TextField';
-import { MuiPickersUtilsProvider, DateTimePicker, KeyboardDateTimePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DateTimePicker, KeyboardDateTimePicker, KeyboardTimePicker } from '@material-ui/pickers';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 // import { alpha } from '@material-ui/core/styles';
@@ -146,6 +146,16 @@ const ShippingDateView = () => {
                         value={selectedDate}
                         ampm={false}
                         disablePast={true}
+                    />
+                    <KeyboardTimePicker
+                        autoOk 
+                        ampm={false}
+                        placeholder="08:00 AM"
+                        mask="__:__ _M"
+                        disablePast={true}
+                        minTime={new Date(0, 0, 0, 8)}
+                    // value={selectedDate}
+                    // onChange={date => handleDateChange(date)}
                     />
                     </MuiPickersUtilsProvider>
                 </div>
