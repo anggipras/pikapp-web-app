@@ -333,6 +333,7 @@ class CartManualView extends React.Component {
     }
 
     handlePayment = () => {
+      // alert(window.React.version);
       // var auth = {
       //   isLogged: false,
       //   token: "",
@@ -401,27 +402,35 @@ class CartManualView extends React.Component {
       let shippingMethod = {
         shipping_method: this.props.CartRedu.shipperName,
         shipping_cost: this.props.CartRedu.shipperPrice,
-        shipping_time: moment(new Date(this.state.customerShippingDate)).format("yyyy-MM-DD HH:mm:ss")
+        shipping_time: moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss")
       }
 
       let customerInfo = {
         customer_name: this.state.customerName,
         customer_address: this.props.CartRedu.fullAddress,
         customer_address_detail: this.props.CartRedu.shipperNotes,
-        customer_phone_number: this.state.customerPhoneNumber
+        customer_phone_number: "0" + this.state.customerPhoneNumber
       }
 
       let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shipperPrice)
+
+      let pickupType = ''
+      if(this.props.CartRedu.pickupType === 0) {
+        pickupType = "PICKUP"
+      } else {
+        pickupType = "DELIVERY"
+      }
+
   
       var requestData = {
         products: selectedProd,
         shipping : shippingMethod,
         customer : customerInfo,
         mid: currentCartMerchant.mid,
-        order_type: this.props.CartRedu.pickupType,
+        order_type: pickupType,
         order_platform: "PIKAPP",
         total_product_price: finalProduct[0].totalPrice.toString(),
-        payment_status: "PAID",
+        // payment_status: "OPEN",
         payment_method: this.state.paymentType,
         billing_phone_number: this.props.CartRedu.phoneNumber,
         order_status: "OPEN",
@@ -436,7 +445,7 @@ class CartManualView extends React.Component {
       uuid = uuid.replace(/-/g, "");
       const date = new Date().toISOString();
       
-      Axios(address + "/txn/v3/txn-post2/", {
+      Axios(address + "pos/v1/web/transaction/add/", {
         headers: {
           "Content-Type": "application/json",
           "x-request-id": uuid,
@@ -454,7 +463,7 @@ class CartManualView extends React.Component {
             })
             var dataOrder = {
               transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.prices,
+              totalPayment : requestData.total_payment,
               paymentType : this.state.paymentType,
               transactionTime : newDate
             };

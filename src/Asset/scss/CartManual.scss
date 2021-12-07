@@ -1215,3 +1215,32 @@ body {
   height: 100%;
   padding: 10px 8px 10px 8px;
 }
+
+@media (max-width: 768px) {
+  // .cartmanual-main {
+  //   // max-width: 480px !important;
+  //   width: 100vw;
+  //   // margin-left: 31%;
+  // }
+
+  .cartmanual-Layout {
+    // width: fit-content;
+    // max-width: 768px;
+    margin: 0 auto;
+    // display: block;
+    // width: auto;
+    // display: block;
+    // position: sticky;
+    // bottom: 0;
+    // margin: 0;
+    // padding: 0;
+    // padding: 20px 17px 26px 17px;
+  }
+
+  body {
+    background-color: #f0f1f2 !important;
+    display: flex;
+    justify-content: left !important;
+    width: 100vw;
+  }
+}
