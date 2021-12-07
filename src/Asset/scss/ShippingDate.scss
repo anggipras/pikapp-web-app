@@ -277,11 +277,23 @@ body {
 }
 
 .shippingdate-datetimepicker {
-    width : 425px;
+    width: 422px;
+    margin-bottom: 10px !important;
+    padding-right: 0px !important;
 }
 
 @media (max-width: 768px) {
     .shippingdate-datetimepicker {
-        width : 350px;
+        width : 355px;
     }
+}
+
+.shippingdate-timepicker {
+    height: 55px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.MuiOutlinedInput-adornedEnd {
+    padding-right: 0px !important;
 }

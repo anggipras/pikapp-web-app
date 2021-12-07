@@ -3,7 +3,7 @@ import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import ShippingDate from "../../../Asset/Icon/shipping-date.png";
 // import TextField from '@material-ui/core/TextField';
-import { MuiPickersUtilsProvider, DateTimePicker, KeyboardDateTimePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 // import { alpha } from '@material-ui/core/styles';
@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from "moment";
 import idLocale from "moment/locale/id";
+import TimePicker from 'react-bootstrap-time-picker';
 
 const ShippingDateView = () => {
     const ref = useRef();
@@ -20,7 +21,10 @@ const ShippingDateView = () => {
     const CartRedu = useSelector(state => state.CartRedu)
     const [choiceDate, setChoiceDate] = useState(false)
     const [currentDate, setCurrentDate] = useState("");
+    const [currentTime, setCurrentTime] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
+    const [selectedTime, setSelectedTime] = useState("");
+    const [isTomorrow, setIsTomorrow] = useState(false);
     const [pickUpChoice, setPickUpChoice] = useState([
     {
         image: "now",
@@ -40,9 +44,12 @@ const ShippingDateView = () => {
             var today = new Date();
             today.setHours(today.getHours() + 2);
             console.log(today);
-            var convertDate = moment(new Date(today)).format("yyyy-MM-DD HH:mm:ss");
+            var convertDate = moment(new Date(today)).format("yyyy-MM-DD");
+            var convertTime = moment(new Date(today)).format("HH");
             setCurrentDate(convertDate);
+            setCurrentTime(convertTime);
             setSelectedDate(convertDate);
+            setSelectedTime(convertTime);
             // dispatch({ type: 'SHIPPINGDATE', payload: today});
         } else {
             setChoiceDate(false);
@@ -56,9 +63,32 @@ const ShippingDateView = () => {
     }
 
     const handleShippingDate = (e) => {
-        setSelectedDate(e);
+        var today = new Date();
+        today = moment(new Date(today)).format("yyyy-MM-DD");
+        var pickDate = moment(new Date(e)).format("yyyy-MM-DD");
+
+        if(pickDate !== today) {
+            setIsTomorrow(true);
+            e.setHours(e.getHours() + 1);
+            var convertTime = moment(new Date(e)).format("HH");
+            setCurrentTime(convertTime);
+            setSelectedTime(convertTime);
+        } else {
+            setIsTomorrow(false);
+        }
+
+        var date = moment(new Date(e)).format("yyyy-MM-DD");
+        setSelectedDate(date);
         // var date = moment(new Date(e.target.value)).format("yyyy-MM-DD HH:mm:ss");
         // dispatch({ type: 'SHIPPINGDATE', payload: e});
+    }
+
+    const handleShippingTime = (e) => {
+        var hours   = Math.floor(e / 3600);
+        var minutes = Math.floor((e - (hours * 3600)) / 60);
+        var time = hours + ":" + minutes;
+
+        setSelectedTime(time);
     }
 
     const shippingSelection = () => {
@@ -135,13 +165,13 @@ const ShippingDateView = () => {
                     /> */}
                     
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDateTimePicker
+                    <KeyboardDatePicker
                         autoOk
                         id="registerDate"
                         onChange={handleShippingDate}
-                        inputVariant="standard" 
+                        inputVariant="outlined" 
                         className={"shippingdate-datetimepicker"}
-                        format={"d MMMM yyyy HH:mm"}
+                        format={"d MMMM yyyy"}
                         minDate={currentDate}
                         value={selectedDate}
                         ampm={false}
@@ -149,12 +179,30 @@ const ShippingDateView = () => {
                     />
                     </MuiPickersUtilsProvider>
                 </div>
+                <div>
+                <TimePicker 
+                    className={"shippingdate-timepicker"}
+                    format={24}
+                    start={currentTime} 
+                    end="18:00" 
+                    step={120}
+                    // initialValue={currentTime} 
+                    value={selectedTime}
+                    onChange={handleShippingTime}
+                />
+                </div>
             </div>
         )
     }
 
     const handleSave = () => {
-        dispatch({ type: 'SHIPPINGDATE', payload: selectedDate});
+        if(CartRedu.shippingDateType === 1) {
+            const dateTime = moment(`${selectedDate} ${selectedTime}`, 'yyyy-MM-DD HH:mm:ss').format();
+            dispatch({ type: 'SHIPPINGDATE', payload: Date.parse(dateTime)});
+        } else {
+            dispatch({ type: 'SHIPPINGDATE', payload: selectedDate});
+        }
+        
         window.history.back();
     }
 
