@@ -140,7 +140,7 @@ const ShippingDateView = () => {
                         id="registerDate"
                         onChange={handleShippingDate}
                         inputVariant="standard" 
-                        style={{ width : "425px"}}
+                        className={"shippingdate-datetimepicker"}
                         format={"d MMMM yyyy HH:mm"}
                         minDate={currentDate}
                         value={selectedDate}

@@ -275,3 +275,13 @@ body {
     border-radius: 8px;
     outline: none;
 }
+
+.shippingdate-datetimepicker {
+    width : 425px;
+}
+
+@media (max-width: 768px) {
+    .shippingdate-datetimepicker {
+        width : 350px;
+    }
+}
