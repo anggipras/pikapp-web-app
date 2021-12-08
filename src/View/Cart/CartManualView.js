@@ -131,7 +131,8 @@ class CartManualView extends React.Component {
       customerName : "",
       customerPhoneNumber : "",
       customerShippingDate : "",
-      isShowItem : undefined
+      isShowItem : undefined,
+      disabledSubmitButton : true,
     };
 
     componentDidMount() {
@@ -141,11 +142,11 @@ class CartManualView extends React.Component {
         this.state.steptour.pop();
       }
 
-      if (localStorage.getItem("cartTour") == 1) {
-        this.setState({ startTour : true});
-      } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-        this.setState({ startTour : true});
-      }
+      // if (localStorage.getItem("cartTour") == 1) {
+      //   this.setState({ startTour : true});
+      // } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+      //   this.setState({ startTour : true});
+      // }
       
       if(this.props.CartRedu.shippingDate) {
         this.setState({ customerShippingDate : moment(new Date(this.props.CartRedu.shippingDate)).format("Do MMMM YYYY, H:mm")})
@@ -156,6 +157,10 @@ class CartManualView extends React.Component {
       }
       if(this.props.CartRedu.customerPhoneNumber) {
         this.setState({ customerPhoneNumber : this.props.CartRedu.customerPhoneNumber })
+      }
+
+      if(this.props.CartRedu.customerName !== "" && this.props.CartRedu.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+        this.setState({ disabledSubmitButton : false})
       }
     }
 
@@ -399,12 +404,6 @@ class CartManualView extends React.Component {
       }
       expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
 
-      let shippingMethod = {
-        shipping_method: this.props.CartRedu.shipperName,
-        shipping_cost: this.props.CartRedu.shipperPrice,
-        shipping_time: moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss")
-      }
-
       let customerInfo = {
         customer_name: this.state.customerName,
         customer_address: this.props.CartRedu.fullAddress,
@@ -415,10 +414,21 @@ class CartManualView extends React.Component {
       let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shipperPrice)
 
       let pickupType = ''
+      let shipperName = ''
+      let shipperPrice = 0
       if(this.props.CartRedu.pickupType === 0) {
-        pickupType = "PICKUP"
+        pickupType = "PICKUP";
+        shipperName = "Pickup Sendiri";
       } else {
-        pickupType = "DELIVERY"
+        pickupType = "DELIVERY";
+        shipperName = this.props.CartRedu.shipperName;
+        shipperPrice = this.props.CartRedu.shipperPrice
+      }
+
+      let shippingMethod = {
+        shipping_method: shipperName,
+        shipping_cost: shipperPrice,
+        shipping_time: moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss")
       }
 
   
@@ -685,11 +695,17 @@ class CartManualView extends React.Component {
     handleCustomerName = (e) =>{
       this.setState({ customerName: e.target.value});
       this.props.CustomerName(e.target.value);
+      if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+        this.setState({ disabledSubmitButton : false})
+      }
     }
 
     handleCustomerPhoneNumber = (e) =>{
       this.setState({ customerPhoneNumber: e.target.value});
       this.props.CustomerPhoneNumber(e.target.value);
+      if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+        this.setState({ disabledSubmitButton : false})
+      }
     }
 
     handleShowMenu = (status) => {
@@ -910,7 +926,7 @@ class CartManualView extends React.Component {
                         <div className="cartmanual-phonenumber-title">No. Handphone <span style={{color: "red"}}>*</span></div>
                         <div className="cartmanual-phonenumber-layout">
                           <div className="cartmanual-phonenumber-code">+62</div>
-                          <input className="cartmanual-phonenumber-inputArea" placeholder="Masukkan nomor HP Anda disini" onChange={this.handleCustomerPhoneNumber} value={this.state.customerPhoneNumber}/>
+                          <input className="cartmanual-phonenumber-inputArea" type='number' inputMode='numeric' placeholder="Masukkan nomor HP Anda disini" onChange={this.handleCustomerPhoneNumber} value={this.state.customerPhoneNumber}/>
                         </div>
                       </div>
                     </div>
@@ -1074,28 +1090,6 @@ class CartManualView extends React.Component {
           </div>
   
           <div className='cartmanual-Layout-mob'>
-            {/* <div>
-              <div className='cartmanual-detailprice-header'>
-                <div className='cartmanual-detailprice-title'>
-                  Ringkasan Belanja
-                </div>
-              </div>
-
-              <div className='cartmanual-detailprice-desc'>
-                <div className='orderDetail-detailprice-word'>
-                  <div>Total Harga ({totalItem} Item(s))</div>
-                  <div>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</div>
-                </div>
-              </div>
-
-              <div className='cartmanual-detailprice-desc'>
-                <div className='orderDetail-detailprice-word'>
-                  <div>Total Diskon Item</div>
-                  <div>Rp. 0</div>
-                </div>
-              </div>
-
-            </div> */}
             <div className='cartmanual-checkoutArea-mob'>
   
               <div className='cartmanual-TotalAmount-mob'>
@@ -1103,25 +1097,15 @@ class CartManualView extends React.Component {
   
                 <div className='cartmanual-TotalAmount-bottom-mob'>
                   <h2 className='cartmanual-TotalAmount-price-mob'>Rp. {Intl.NumberFormat("id-ID").format(totalFinalProduct)}</h2>
-  
-                  {/* <span className='cartmanual-TotalAmount-detailArrowCenter-mob'>
-                    <img className='cartmanual-TotalAmount-detailArrow-mob' src={ArrowDownColor} alt='' />
-                  </span> */}
                 </div>
               </div>
-  
-              <div className='cartmanual-OrderButton-mob buttonorder' onClick={() => this.handleDetail("payment-checking")}>
+              
+              <div className='cartmanual-OrderButton-mob buttonorder' onClick={() => this.handleDetail("payment-checking")} 
+              style={{ backgroundColor: this.state.disabledSubmitButton ? '#aaaaaa' : '#4bb7ac', pointerEvents: this.state.disabledSubmitButton ? 'none' : 'auto' }}
+              >
                 <div className='cartmanual-OrderButton-content-mob'>
-                  {/* <span className='cartmanual-OrderButton-Frame-mob'>
-                    <img className='cartmanual-OrderButton-checklist-mob' src={checklistLogo} alt='' />
-                  </span> */}
-  
                   <h1 className='cartmanual-OrderButton-word-mob'>Buat Pesanan</h1>
                 </div>
-  
-                {/* <span className='cartmanual-OrderButton-orderArrowCenter-mob'>
-                  <img className='cartmanual-OrderButton-orderArrow-mob' src={ArrowRightWhite} alt='' />
-                </span> */}
               </div>
             </div>
           </div>
