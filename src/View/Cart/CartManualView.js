@@ -426,16 +426,20 @@ class CartManualView extends React.Component {
       }
 
       let shippingTime = '';
+      let shippingType = '';
       if(this.props.CartRedu.shippingDateType === 0) {
-        shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
+        shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
+        shippingType = "NOW";
       } else {
-        shippingTime = moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss")
+        shippingTime = moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss");
+        shippingType = "CUSTOM";
       }
 
       let shippingMethod = {
         shipping_method: shipperName,
         shipping_cost: shipperPrice,
-        shipping_time: shippingTime
+        shipping_time: shippingTime,
+        shipping_time_type : shippingType
       }
 
   
