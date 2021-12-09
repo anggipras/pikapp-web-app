@@ -400,7 +400,7 @@ class CartManualView extends React.Component {
         newDate += 1800000
         phoneNumber = ''
       } else {
-        newDate += 60000
+        newDate += 1800000
       }
       expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
 
