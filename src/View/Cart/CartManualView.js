@@ -400,7 +400,7 @@ class CartManualView extends React.Component {
         newDate += 1800000
         phoneNumber = ''
       } else {
-        newDate += 1800000
+        newDate += 60000
       }
       expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
 
@@ -425,10 +425,17 @@ class CartManualView extends React.Component {
         shipperPrice = this.props.CartRedu.shipperPrice
       }
 
+      let shippingTime = '';
+      if(this.props.CartRedu.shippingDateType === 0) {
+        shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
+      } else {
+        shippingTime = moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss")
+      }
+
       let shippingMethod = {
         shipping_method: shipperName,
         shipping_cost: shipperPrice,
-        shipping_time: moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss")
+        shipping_time: shippingTime
       }
 
   
@@ -1003,9 +1010,16 @@ class CartManualView extends React.Component {
                           <div className='cartmanual-shippingdatedetail'>
                             <div className="cartmanual-shippingdatedetail-border"></div>
 
-                            <div className='cartmanual-shippingdatedetail-desc'>
+                            {
+                              this.props.CartRedu.shippingDateType === 1 ?
+                              <div className='cartmanual-shippingdatedetail-desc'>
                                 <div>{this.state.customerShippingDate}</div>
-                            </div>
+                              </div>
+                              :
+                              <div className='cartmanual-shippingdatedetail-desc'>
+                                <div>Sekarang</div>
+                              </div>
+                            }
                           </div>
                           :
                           <></>
