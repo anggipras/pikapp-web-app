@@ -24,8 +24,11 @@ import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
-import { ValidQty, OpenSelect } from '../../Redux/Actions'
+import { ValidQty, OpenSelect, LoadingButton, DoneLoad } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
+import FailedModal from "../../Component/Modal/FailedModal";
+import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
@@ -111,7 +114,9 @@ class ProductView extends React.Component {
           </div>
         )
       }
-    ]
+    ],
+    showFailed : false,
+    isManualTxn : false
   };
 
   timeout = null
@@ -138,8 +143,16 @@ class ProductView extends React.Component {
       Cookies.set("lastLink", lastLink, { expires: 1 })
     }
     const value = queryString.parse(window.location.search);
-    const mid = value.mid;
-    const notab = value.table || ""
+    var mid = "";
+    var notab = "";
+    if(value.mid) {
+      // this.setState({ isManualTxn : false });
+      mid = value.mid;
+      notab = value.table || ""
+    } else {
+      // this.setState({ isManualTxn : true });
+      mid = value.username;
+    }
 
     // let longlatAddress
     let addressRoute
@@ -334,6 +347,12 @@ class ProductView extends React.Component {
             else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
               this.setState({ startTour: true });
             }
+
+            if(value.mid) {
+              this.setState({ isManualTxn : false });
+            } else {
+              this.setState({ isManualTxn : true });
+            }
           }).catch(err => {
             console.log(err)
             newImage = Storeimg
@@ -364,7 +383,13 @@ class ProductView extends React.Component {
             }
           })
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        console.log(this.state);
+        if(err.toJSON().message === 'Network Error'){
+          this.setState({ showFailed: true })
+        }
+      });
   }
 
   componentDidUpdate() {
@@ -479,7 +504,8 @@ class ProductView extends React.Component {
   handleAddCart = () => {
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
-    const mid = value.mid;
+    // const mid = value.mid;
+    const mid = this.state.data.mid;
     this.setModal(false);
     var isStorePresent = false;
     let cart = JSON.parse(localStorage.getItem('cart'))
@@ -865,18 +891,39 @@ class ProductView extends React.Component {
                     </div>
 
                     {/* desktop view */}
-                    <div className='product-detail'>
+                    {/* <div className='product-detail'> */}
                       {/* <div className='product-star'>
                         <img className='product-star-img' src={StarIcon} alt='' />
                         <h6 className='product-star-rating'>{product.foodRating}</h6>
                       </div> */}
 
-                      <div className='product-name'>
+                      {/* <div className='product-name'>
                         {product.foodName}
                       </div>
 
                       <div className='product-desc'>
                         {product.foodDesc}
+                      </div>
+
+                      <div className='product-price'>
+                        {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
+                    </div> */}
+
+                    <div className='product-detail'>
+                      <div className='product-detailInfo'>
+                        {/* <div className='product-star-mob'>
+                          <img className='product-star-img-mob' src={StarIcon} alt='' />
+                          <h6 className='product-star-rating-mob'>{product.foodRating}</h6>
+                        </div> */}
+
+                        <div className='product-name'>
+                          {product.foodName}
+                        </div>
+
+                        <div className='product-desc'>
+                          {product.foodDesc}
+                        </div>
                       </div>
 
                       <div className='product-price'>
@@ -967,6 +1014,54 @@ class ProductView extends React.Component {
     // }
   }
 
+  hideFailedModal(isShow){
+    this.setState({ showFailed: isShow })
+    document.body.style.overflowY = ''
+  }
+
+  showFailedModal = () => {
+    if (this.state.showFailed === true) {
+      return (
+        <FailedModal
+          isShow={this.state.showFailed}
+          onHide={() => this.hideFailedModal(false)}
+        />
+      );
+    }
+  }
+
+  cartRedirect = () => {
+    const value = queryString.parse(window.location.search);
+    var url = "";
+    if(value.mid) {
+      url = "/cart";
+      // this.setState({ isManualTxn : false });
+      // return <Link to={"/cart"}></Link>;
+      // return <Redirect push to='/cart' />;
+      // window.location.href = "/cart";
+      // history.push()
+      // this.props.history.push("/cart");
+    } else {
+      url = "/cartmanual";
+      // this.setState({ isManualTxn : true });
+      // return <Link to={"/cartmanual"}></Link>;
+      // return <Redirect push to='/cartmanual' />;
+      // window.location.href = "/cartmanual";
+      // this.props.history.push("/cartmanual");
+    }
+
+    // return (
+    //   <Link to={url}>
+    //     <div className='cartIcon-layout'>
+    //       <div className='cartIcon-content'>
+    //         <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+    //         <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+    //       </div>
+    //     </div>
+    //   </Link>
+    // )
+  }
+
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
@@ -1005,6 +1100,16 @@ class ProductView extends React.Component {
             cartButton = <></>
           } else {
             cartButton = (
+              this.state.isManualTxn ?
+              <Link to={"/cartmanual"}>
+                <div className='cartIcon-layout'>
+                  <div className='cartIcon-content'>
+                    <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
+                    <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                  </div>
+                </div>
+              </Link>
+              :
               <Link to={"/cart"}>
                 <div className='cartIcon-layout'>
                   <div className='cartIcon-content'>
@@ -1068,14 +1173,14 @@ class ProductView extends React.Component {
               <div className='top-merchantInfo'>
                 <div className='inside-topMerchantInfo'>
                   <div className='merchant-title'>
-                    <div className='merchant-logo'>
+                    {/* <div className='merchant-logo'>
                       {
                         this.state.data.logo ?
                           <img src={this.state.data.logo} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
                           :
                           <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
                       }
-                    </div>
+                    </div> */}
 
                     <div className='merchant-name'>
                       <div className='merchant-mainName'>
@@ -1184,6 +1289,7 @@ class ProductView extends React.Component {
         {cartButton}
         {this.menuDetail()}
         {this.tourPage()}
+        {this.showFailedModal()}
       </>
     );
   }
@@ -1196,4 +1302,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { ValidQty, OpenSelect })(ProductView)
+export default connect(Mapstatetoprops, { ValidQty, OpenSelect, })(ProductView)

@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 // import {geolocated} from 'react-geolocated'
 import { connect } from 'react-redux'
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-import { firebaseAnalytics } from '../../firebaseConfig'
+// import { firebaseAnalytics } from '../../firebaseConfig'
 
 class FormView extends React.Component {
   state = {
@@ -29,7 +29,7 @@ class FormView extends React.Component {
   };
 
   componentDidMount() {
-    firebaseAnalytics.logEvent("auth_visited")
+    // firebaseAnalytics.logEvent("auth_visited")
     // if(this.props.coords) {
     //   let latitude = this.props.coords.latitude
     //   let longitude = this.props.coords.longitude

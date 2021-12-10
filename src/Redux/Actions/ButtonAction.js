@@ -72,3 +72,17 @@ export const DataDetail = (data) => {
         payload: data
     }
 }
+
+export const CustomerName = (data) => {
+    return {
+        type: 'CUSTOMERNAME',
+        payload: data
+    }
+}
+
+export const CustomerPhoneNumber = (data) => {
+    return {
+        type: 'CUSTOMERPHONENUMBER',
+        payload: data
+    }
+}

@@ -39,6 +39,7 @@ export default class StoreLayout extends React.Component {
               </div>
             </Container>
             :
+            // <Container className={"resize-mobile-store"}>
             <Container>
               <div className='container2'>
                 <StoreView />

@@ -13,9 +13,15 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import OrderDetailLayout from "./Master/OrderDetailLayout";
+import ManualTxn from "./Master/ManualTransaction";
+import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
 // import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
+import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
+import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
+import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
+import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 
 export var cart = [
     {
@@ -95,11 +101,18 @@ function App() {
             <Route path="/status" component={() => <StatusLayout />} />
             <Route path="/store" component={() => <ProductLayout />} />
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
+            {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
             <Route path="/profile" component={() => <ProfileLayout />} />
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
+            <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
+            <Route path="/cartmanual/pickup" component={PickupSelectionView} />
+            <Route path="/cartmanual/shipping" component={ShippingDateView} />
+            <Route path="/cartmanual/payment" component={PaymentMethodView} />
+            <Route path="/cartmanual" component={() => <CartManualLayout />} />
+            <Route exact path="/:username" component={ManualTxn} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )

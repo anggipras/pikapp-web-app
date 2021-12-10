@@ -453,3 +453,182 @@
         opacity: 1;
     }
 }
+
+@media (min-width: 768px) {
+    .mob-modalMenuDetail {
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
+        z-index: 3; /* Overlay effect: positioned over other containers */
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        position: fixed; /* Fix position on the top-left corner*/
+        top: 0;
+        left: 0;
+        overflow: hidden; /* Enable scroll if needed */
+        padding-top: 25px; /* Location of the content container */
+    }
+
+    .mob-modal-content-menudetail {
+        background-color: white;
+        width: 540px; /* Width in proportion to its parent container*/
+        height: auto; /* Height in proportion to its parent container */
+        margin: auto; /* Auto margin according to the element width */
+        border: none;
+        border-radius: 20px; /* Optional. Rounds container corners */
+        -webkit-animation-name: animamenumove;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animamenumove;
+        animation-duration: 0.4s;
+        overflow: auto;
+    }
+
+    .mob-menuBanner {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 169px;
+        border-radius: 20px;
+    }
+
+    .mob-menuimg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px 20px 0px 0px;
+    }
+
+    .mob-iconClose {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 20px;
+    }
+
+    .mob-closeLogo {
+        height: 15px;
+        width: 15px;
+    }
+
+    .mob-menuContain {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        height: auto;
+    }
+
+    .mob-inside-menuContain {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 19px 14px 18px;
+    }
+
+    .mob-menu-detail {
+        margin: 0;
+        padding: 0;
+    }
+
+    .mob-menu-star {
+        display: flex;
+        justify-content: center;
+        height: auto;
+        padding-top: 6px;
+        padding-bottom: 0px;
+        max-width: 51px;
+        background-color: #f5f6f7;
+        border-radius: 20px;
+        margin-bottom: 16px;
+    }
+
+    .mob-menu-star-img {
+        width: 12px;
+        height: 12px;
+    }
+
+    .mob-menu-star-rating {
+        font-family: "SF-Compact-Rounded", sans-serif;
+        font-weight: 600;
+        font-style: normal;
+        color: #111111;
+        text-transform: capitalize;
+        font-size: 12px;
+        margin-left: 4.5px;
+    }
+
+    .mob-menu-name {
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        text-transform: capitalize;
+        color: #111111;
+        max-width: 181px;
+        font-size: 18px;
+        line-height: 20px;
+    }
+
+    .mob-menu-category {
+        font-family: "SF-Compact-Rounded", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        color: #767676;
+        text-transform: capitalize;
+        line-height: 20px;
+        font-size: 14px;
+    }
+
+    .mob-menuDesc {
+        height: auto;
+        padding: 0px 19px 21px 18px;
+    }
+
+    .mob-menu-desc {
+        font-family: "SF-Compact-Rounded", sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        text-transform: capitalize;
+        color: #767676;
+        // max-width: 320px;
+        width: 100%;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    .mob-menu-price {
+        width: auto;
+        font-family: "SF-Compact-Rounded", sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        letter-spacing: 0.05em;
+        text-transform: capitalize;
+        color: #111111;
+        min-width: 78px;
+        font-size: 22px;
+        margin-top: 45px;
+    }
+
+    .mob-menuButton {
+        padding: 9px 19px 15px 17px;
+    }
+
+    .mob-openMenuSelection {
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: auto;
+        height: 50px;
+        border-radius: 10px;
+    }
+
+    .mob-add-words {
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        text-transform: capitalize;
+        color: #ffffff;
+        line-height: 20px;
+        font-size: 18px;
+    }
+}

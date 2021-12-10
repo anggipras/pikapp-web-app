@@ -13,9 +13,18 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@media (min-width: 768px) {
+  .orderDetailLayout {
+    width: 480px !important;
+    // margin-left: 31%;
+    padding: 20px 17px 26px 17px;
+    background-color: #ffffff;
+  }
+}
+
 .orderDetailLayout {
-  width: 98vw;
-  padding: 20px 117px 20px 107px;
+  // width: 98vw;
+  // padding: 20px 117px 20px 107px;
   background-color: #ffffff;
 }
 
@@ -25,7 +34,8 @@
   position: relative;
   width: 100%;
   height: 54px;
-  margin-bottom: 41px;
+  // margin-bottom: 41px;
+  margin-bottom: 10px;
 }
 
 .logopikappCenter {
@@ -35,8 +45,10 @@
 }
 
 .LogoPikapporderDetail {
-  width: 46px;
-  height: 43px;
+  // width: 46px;
+  // height: 43px;
+  width: 36px;
+  height: 33px;
   cursor: pointer;
 }
 
@@ -48,7 +60,8 @@
   font-family: "Montserrat", sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 25px;
+  // font-size: 25px;
+  font-size: 20px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
@@ -57,10 +70,15 @@
 
 .orderDetailContent {
   display: flex;
+  flex-direction: column;
 }
 
 .orderDetail-LeftSide {
-  width: 50%;
+  // width: 50%;
+  width: 100%;
+  // display: flex;
+  // width: auto;
+  // justify-content: center;
 }
 
 //orderDetailList start
@@ -70,6 +88,7 @@
   box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   background-color: #e5e5e5;
+  margin-bottom: 30px;
 }
 
 .orderDetailList-header {
@@ -261,11 +280,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 50%;
+  // width: 50%;
+  width: auto;
 }
 
 .flex-RightSide-orderDetail {
-  margin-left: auto;
+  // margin-left: auto;
+  margin-left: 0;
 }
 
 //orderDetailStoreBox start
@@ -334,7 +355,7 @@
 .orderDetail-transaction-detail {
   // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  min-width: 477px;
+  // min-width: 477px;
   width: auto;
   margin-bottom: 30px;
   cursor: pointer;
@@ -345,7 +366,7 @@
 .orderDetail-transaction {
   // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  min-width: 477px;
+  min-width: 450px;
   width: auto;
   margin-bottom: 30px;
   cursor: pointer;

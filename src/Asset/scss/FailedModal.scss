@@ -1,0 +1,158 @@
+@font-face {
+    font-family: "SF-Compact-Rounded";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Medium";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Semibold";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+.modalFailedPage {
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
+    z-index: 3; /* Overlay effect: positioned over other containers */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    position: fixed; /* Fix position on the top-left corner*/
+    top: 0;
+    left: 0;
+    overflow: hidden; /* Enable scroll if needed */
+}
+
+.modalFailedContent {
+    background-color: white;
+    position: relative;
+    // max-width: 675px; /* Width in proportion to its parent container*/
+    width: 675px; /* Max width where it stops expanding */
+    min-height: 213px; /* Height in proportion to its parent container*/
+    height: auto; /* Max Height where it stops expanding */
+    margin: auto; /* Auto margin according to the element width */
+    margin-top: 5vh;
+    border: none;
+    border-radius: 20px; /* Optional. Rounds container corners */
+    -webkit-animation-name: animacartmove;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animacartmove;
+    animation-duration: 0.4s;
+    overflow: auto;
+}
+
+.iconCloseNarrow-failed {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    cursor: pointer;
+    padding: 26.4px;
+}
+
+.closeLogoNarrow-failed {
+    height: 22px;
+    width: 22px;
+}
+
+.modalFailed-Layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 73px 27px 60px 28px;
+}
+
+.modalFailed-Title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 20px;
+    color: #111111;
+    mix-blend-mode: normal;
+    text-align: center;
+}
+
+.modalFailed-Check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 55px;
+}
+
+@mixin buttonModalCart {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 57px;
+    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+}
+
+.modalFailed-cancel {
+    @include buttonModalCart();
+    width: 195px;
+    background: #F8FAFC;
+    color: #4BB7AC;
+}
+
+@media (max-width: 768px) {
+    .modalFailedContent {
+        width: 384px; /* Max width where it stops expanding */
+        min-height: 128px; /* Height in proportion to its parent container*/
+        height: auto; /* Max Height where it stops expanding */
+        margin-top: 10vh;
+    }
+    
+    .iconCloseNarrow-failed {
+        padding: 15px;
+    }
+
+    .closeLogoNarrow-failed {
+        height: 12px;
+        width: 12px;
+    }
+
+    .modalFailed-Layout {
+        padding: 50px 43px 35px 36px;
+    }
+
+    .modalFailed-Title {
+        font-size: 15px;
+    }
+
+    .modalFailed-Check {
+        margin-top: 37px;
+    }
+
+    .modalFailed-cancel {
+        width: 143px;
+        height: 38px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 380px) {
+    .modalFailedContent {
+        width: 350px; /* Max width where it stops expanding */
+    }
+}
+
+@media (max-width: 325px) {
+    .modalFailedContent {
+        width: 300px; /* Max width where it stops expanding */
+    }
+}

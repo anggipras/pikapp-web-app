@@ -102,7 +102,7 @@ class CartView extends React.Component {
         )
       },
       {
-        selector: '.cart-OrderButton',
+        selector: '.cart-OrderButton-mob',
         content : () => (
           <div>
             <h4>Sudah siap makan?</h4>
@@ -1063,7 +1063,7 @@ class CartView extends React.Component {
                   </div>
                 </div>
 
-                <div className='cart-checkoutArea'>
+                {/* <div className='cart-checkoutArea'>
                   <div className='cart-TotalAmount' onClick={() => this.handleDetail("payment-detail")}>
                     <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
 
@@ -1087,7 +1087,7 @@ class CartView extends React.Component {
                       <img className='cart-OrderButton-orderArrow' src={ArrowRightWhite} alt='' />
                     </span>
                   </div>
-                </div>
+                </div> */}
               </div>
 
             </div>
