@@ -1069,6 +1069,7 @@ class ProductView extends React.Component {
 
   linktreeView = () => {
       return (
+        this.state.linkTreeData.length !== 0 ?
         <div className='merchantdetail-link-section'>
           {
             this.state.linkTreeData.map((link, ind) => {
@@ -1080,6 +1081,8 @@ class ProductView extends React.Component {
             })
           }
         </div>
+        :
+        <></>
       );
   }
 
