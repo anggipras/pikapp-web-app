@@ -116,7 +116,8 @@ class ProductView extends React.Component {
       }
     ],
     showFailed : false,
-    isManualTxn : false
+    isManualTxn : false,
+    linkTreeData : []
   };
 
   timeout = null
@@ -153,6 +154,8 @@ class ProductView extends React.Component {
       // this.setState({ isManualTxn : true });
       mid = value.username;
     }
+
+    this.getLinkTree(mid);
 
     // let longlatAddress
     let addressRoute
@@ -1030,36 +1033,62 @@ class ProductView extends React.Component {
     }
   }
 
-  cartRedirect = () => {
-    const value = queryString.parse(window.location.search);
-    var url = "";
-    if(value.mid) {
-      url = "/cart";
-      // this.setState({ isManualTxn : false });
-      // return <Link to={"/cart"}></Link>;
-      // return <Redirect push to='/cart' />;
-      // window.location.href = "/cart";
-      // history.push()
-      // this.props.history.push("/cart");
-    } else {
-      url = "/cartmanual";
-      // this.setState({ isManualTxn : true });
-      // return <Link to={"/cartmanual"}></Link>;
-      // return <Redirect push to='/cartmanual' />;
-      // window.location.href = "/cartmanual";
-      // this.props.history.push("/cartmanual");
-    }
+  getLinkTree = (mid) => {
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
 
-    // return (
-    //   <Link to={url}>
-    //     <div className='cartIcon-layout'>
-    //       <div className='cartIcon-content'>
-    //         <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
-    //         <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
-    //       </div>
-    //     </div>
-    //   </Link>
-    // )
+    Axios(address + "home/v1/link-tree-list/" + mid, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token" : "PUBLIC"
+      },
+      method: "GET",  
+    })
+    .then((res) => {
+      console.log(res.data.results);
+      var linkData = [];
+
+      res.data.results.forEach((data, index) => {
+        linkData.push({
+          url : data.url,
+          title : data.title,
+          image : data.image
+        });
+      })
+
+      this.setState({ linkTreeData : linkData });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  linktreeView = () => {
+      return (
+        this.state.linkTreeData.length !== 0 ?
+        <div className='merchantdetail-link-section'>
+          {
+            this.state.linkTreeData.map((link, ind) => {
+              return (
+                <div key={ind} className='merchantdetail-link-itembox' onClick={() => this.goToExternalLink(link.url)}>
+                  <img className='merchantdetail-link-icon' src={link.image}></img>
+                </div>
+              )
+            })
+          }
+        </div>
+        :
+        <></>
+      );
+  }
+
+  goToExternalLink = (link) => {
+    // window.location.href = link;
+    window.open(link, '_blank');
   }
 
   render() {
@@ -1246,7 +1275,13 @@ class ProductView extends React.Component {
                       <div className='bottom-detail-info'>{this.state.data.address || <Skeleton style={{ paddingTop: 30, width: 100 }} />}</div>
                     </div>
                   </div>
+                  
                 </div>
+                { this.state.isManualTxn ?
+                  this.linktreeView()
+                  :
+                  <></>
+                }
               </div>
             </div>
             <div className='merchant-category'>
