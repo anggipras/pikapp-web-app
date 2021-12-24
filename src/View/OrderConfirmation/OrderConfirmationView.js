@@ -9,6 +9,7 @@ import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import { Link } from "react-router-dom";
+import { firebaseAnalytics } from '../../firebaseConfig';
 // import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
@@ -43,6 +44,7 @@ class OrderConfirmationView extends React.Component {
     }
 
     componentDidMount() {
+        firebaseAnalytics.logEvent("orderconfirmation_visited");
         if (window.innerWidth < 700) {
             this.setState({ isMobile: true });
         } else {

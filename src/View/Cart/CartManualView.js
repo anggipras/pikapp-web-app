@@ -23,7 +23,7 @@ import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 // import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
-// import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebaseConfig';
 import moment from "moment";
 import DeliveryIcon from "../../Asset/Icon/delivery.png";
 import ShippingDate from "../../Asset/Icon/shipping-date.png";
@@ -136,6 +136,7 @@ class CartManualView extends React.Component {
     };
 
     componentDidMount() {
+      firebaseAnalytics.logEvent("cartmanual_visited");
       if(window.innerWidth < 700) {
         this.state.steptour.splice(2,1);
       } else {
