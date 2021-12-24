@@ -1,12 +1,12 @@
 import firebase from 'firebase'
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyBbLM1-27VK0e65peGPQgdKH5TGlRnaeio",
-    authDomain: "pikapp-web-dev.firebaseapp.com",
-    projectId: "pikapp-web-dev",
-    storageBucket: "pikapp-web-dev.appspot.com",
-    messagingSenderId: "250434670815",
-    appId: "1:250434670815:web:5d1043e82d9da3cde9d96a",
+    apiKey: "AIzaSyAhpg4G_EANh5cM9sHUY04XZaTAJVrd0Us",
+    authDomain: "pikapp-dev-3789c.firebaseapp.com",
+    projectId: "pikapp-dev-3789c",
+    storageBucket: "pikapp-dev-3789c.appspot.com",
+    messagingSenderId: "865001959940",
+    appId: "1:865001959940:web:b3c636fbe71440a015fb51",
     measurementId: "G-7911H17L9R"
   };
 

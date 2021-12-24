@@ -10,6 +10,7 @@ import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
 import moment from 'moment';
 import idLocale from "moment/locale/id";
+import { firebaseAnalytics } from '../../firebaseConfig';
 
 let interval = createRef();
 
@@ -65,6 +66,7 @@ class OrderDetailView extends React.Component {
     }
 
     componentDidMount() {
+        firebaseAnalytics.logEvent("orderdetail_visited");
         moment.updateLocale('id', idLocale);
         if (window.innerWidth < 700) {
             this.setState({ isMobile: true });

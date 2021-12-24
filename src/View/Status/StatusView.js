@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import RegisterDialog from "../../Component/Authentication/RegisterDialog";
-// import { firebaseAnalytics } from "../../firebaseConfig";
+import { firebaseAnalytics } from "../../firebaseConfig";
 import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import sha256 from "crypto-js/hmac-sha256";
@@ -60,7 +60,7 @@ export class StatusView extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    // firebaseAnalytics.logEvent("orderlist_visited");
+    firebaseAnalytics.logEvent("orderlist_visited");
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
     } else {

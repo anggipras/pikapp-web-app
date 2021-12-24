@@ -12,7 +12,7 @@ import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
 import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
-// import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 class StoreView extends React.Component {
   state = {
@@ -70,7 +70,7 @@ class StoreView extends React.Component {
   };
 
   async componentDidMount() {
-    // firebaseAnalytics.logEvent("merchant_list_visited")
+    firebaseAnalytics.logEvent("merchant_list_visited")
     this.props.DoneLoad()
     this.props.IsMerchantQR(false);
     Cookies.set("homePage", window.location.search)

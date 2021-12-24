@@ -29,7 +29,7 @@ import TourPage from '../../Component/Tour/TourPage';
 import FailedModal from "../../Component/Modal/FailedModal";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-// import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebaseConfig'
 
 var currentExt = {
   detailCategory: [
@@ -123,7 +123,7 @@ class ProductView extends React.Component {
   timeout = null
 
   componentDidMount() {
-    // firebaseAnalytics.logEvent("merchant_detail_visited")
+    firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
