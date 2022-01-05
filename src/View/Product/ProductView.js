@@ -21,15 +21,22 @@ import LocationIcon from '../../Asset/Icon/location.png'
 import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
+import OrderStatusIcon from '../../Asset/Icon/order-icon.png'
+import HeaderLogo from '../../Asset/Icon/pikapp-logo.png'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
-import { ValidQty, OpenSelect, LoadingButton, DoneLoad } from '../../Redux/Actions'
+import { ValidQty, OpenSelect, LoadingButton, DoneLoad, IsManualTxn } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import FailedModal from "../../Component/Modal/FailedModal";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { firebaseAnalytics } from '../../firebaseConfig'
+import { firebaseAnalytics } from '../../firebaseConfig';
+// import Slider from 'react-slick';
+// import '../../Asset/scss/slick/slick.scss';
+// import '../../Asset/scss/slick/slick-theme.scss';
+// import 'slick-carousel/slick/slick.css';
+// import 'slick-carousel/slick/slick-theme.css';
 
 var currentExt = {
   detailCategory: [
@@ -117,7 +124,14 @@ class ProductView extends React.Component {
     ],
     showFailed : false,
     isManualTxn : false,
-    linkTreeData : []
+    linkTreeData : [],
+    settings : {
+      dots: true,
+      autoplay: true,
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 1
+    }
   };
 
   timeout = null
@@ -353,8 +367,11 @@ class ProductView extends React.Component {
 
             if(value.mid) {
               this.setState({ isManualTxn : false });
+              this.props.IsManualTxn(false);
             } else {
               this.setState({ isManualTxn : true });
+              this.props.IsManualTxn(true);
+              console.log("aaa" + this.props.AuthRedu.isManualTxn);
             }
           }).catch(err => {
             console.log(err)
@@ -888,7 +905,7 @@ class ProductView extends React.Component {
             {
               categ.category_products.map((product, indprod) => {
                 return (
-                  <div key={indprod} className='product-merchant' onClick={() => this.handleDetail(product)}>
+                  <div key={indprod} className='product-merchant'>
                     <div className='product-img'>
                       <img src={product.foodImage} className='product-imgContent' alt='' />
                     </div>
@@ -924,13 +941,17 @@ class ProductView extends React.Component {
                           {product.foodName}
                         </div>
 
-                        <div className='product-desc'>
+                        {/* <div className='product-desc'>
                           {product.foodDesc}
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className='product-price'>
-                        {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                        Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
+
+                      <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
+                        <span className="merchantdetail-cart-text">+ Keranjang</span>
                       </div>
                     </div>
 
@@ -946,13 +967,17 @@ class ProductView extends React.Component {
                           {product.foodName}
                         </div>
 
-                        <div className='product-desc-mob'>
+                        {/* <div className='product-desc-mob'>
                           {product.foodDesc}
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className='product-price-mob'>
-                        {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                        Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
+
+                      <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
+                        <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
                       </div>
                     </div>
                   </div>
@@ -1168,6 +1193,118 @@ class ProductView extends React.Component {
 
     return (
       <>
+        <div className="product-search-inputarea">
+          <div className="product-search-checkbutton">
+            <img className="product-search-headerimg" src={HeaderLogo}></img>
+          </div>
+          <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.handleTransactionId} value={this.state.transactionId} />
+          {
+            this.state.isManualTxn ?
+            <Link to={"/statuscartmanual"}>
+              <div className="product-search-checkbutton">
+                <img className="product-search-checkbuttonimg" src={OrderStatusIcon}></img>
+              </div>
+            </Link>
+            :
+            <Link to={"/status"}>
+              <div className="product-search-checkbutton">
+                <img className="product-search-checkbuttonimg" src={OrderStatusIcon}></img>
+              </div>
+            </Link>
+          }
+        </div>
+        <div className='merchant-info'>
+          <div className='top-merchantInfo'>
+            <div className='inside-topMerchantInfo'>
+              <div className='merchant-title'>
+                {/* <div className='merchant-logo'>
+                  {
+                    this.state.data.logo ?
+                      <img src={this.state.data.logo} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
+                      :
+                      <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
+                  }
+                </div> */}
+                <img className='merchant-storeimg-logo' src={this.state.data.image} alt='' />
+                <div className='merchant-name'>
+                  <div className='merchant-mainName'>
+                    {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}
+                  </div>
+
+                  <div className='merchant-categName'>
+                    <div className='merchant-allcateg'>{this.state.data.category}</div>
+                    <div className='merchant-starInfo'>
+                      {
+                        // this.state.data.rating ?
+                        //   <>
+                        //     <img className='star-img' src={StarIcon} alt='' />
+                        //     <div className='merchant-star'>{this.state.data.rating}</div>
+                        //   </>
+                        //   :
+                        //   null
+                        // <Skeleton width={50} />
+                      }
+                      {/* <div className='star-votes'>(50+ Upvotes)</div> */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='merchant-call-sec' onClick={() => this.handlePhone(this.state.data.phone)}>
+                <div className='merchant-call'>
+                  <span className='merchantCall-icon'>
+                    <img className='merchantCall-img' src={PhoneIcon} alt='' />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+            {/* <Slider {...this.state.settings}>
+              <div><img src={require(this.state.data.image)} alt="Credit to Joshua Earle on Unsplash"/></div>
+              <div><img src={require(this.state.data.image)} alt="Credit to Alisa Anton on Unsplash"/></div>
+            </Slider> */}
+            </div>
+          </div>
+          <div className='bottom-merchantInfo'>
+            {/* <div className='inside-bottomMerchantInfo'> */}
+              {/* <div className='merchantdetail-section'>
+                <div className='icon-based'>
+                  <img className='openhouricon' src={OpenHourIcon} alt='' />
+                </div>
+
+                <div className='detail-info'>
+                  <div className='top-detail-info'>Open</div>
+                  <div className='bottom-detail-info'>Jum (08.00 - 20.00)</div>
+                </div>
+              </div>
+              <div className='merchantdetail-section'>
+                <div className='icon-based'>
+                  <img className='coinicon' src={CoinIcon} alt='' />
+                </div>
+
+                <div className='detail-info'>
+                  <div className='top-detail-info'>$$$</div>
+                  <div className='bottom-detail-info'>50 K - 100 K</div>
+                </div>
+              </div> */}
+              {/* <div className='merchantdetail-section'>
+                <div className='icon-based'>
+                  <img className='locationicon' src={LocationIcon} alt='' />
+                </div>
+
+                <div className='detail-info'>
+                  <div className='top-detail-info'>Store Address</div>
+                  <div className='bottom-detail-info'>{this.state.data.address || <Skeleton style={{ paddingTop: 30, width: 100 }} />}</div>
+                </div>
+              </div>
+              
+            </div> */}
+            { this.state.isManualTxn ?
+              this.linktreeView()
+              :
+              <></>
+            }
+          </div>
+        </div>            
         <div className='storeBanner'>
           {
             this.state.data.image ?
@@ -1187,103 +1324,26 @@ class ProductView extends React.Component {
               <div></div>
           } */}
 
-          <div className='iconBanner'>
-            <Link to={"/status"}>
-              <div className='notifIcon-sec'>
-                <img className='notificon-img' src={NotifIcon} alt='' />
-              </div>
-            </Link>
-          </div>
+          {/* <div className='iconBanner'>
+            {
+              this.state.isManualTxn ?
+              <Link to={"/statuscartmanual"}>
+                <div className='notifIcon-sec'>
+                  <img className='notificon-img' src={NotifIcon} alt='' />
+                </div>
+              </Link>
+              :
+              <Link to={"/status"}>
+                <div className='notifIcon-sec'>
+                  <img className='notificon-img' src={NotifIcon} alt='' />
+                </div>
+              </Link>
+            }
+          </div> */}
 
         </div>
-        <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>
+        {/* <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>
           <div className='inside-merchantSection'>
-            <div className='merchant-info'>
-              <div className='top-merchantInfo'>
-                <div className='inside-topMerchantInfo'>
-                  <div className='merchant-title'>
-                    {/* <div className='merchant-logo'>
-                      {
-                        this.state.data.logo ?
-                          <img src={this.state.data.logo} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
-                          :
-                          <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
-                      }
-                    </div> */}
-
-                    <div className='merchant-name'>
-                      <div className='merchant-mainName'>
-                        {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}
-                      </div>
-
-                      <div className='merchant-categName'>
-                        <div className='merchant-allcateg'>{this.state.data.category}</div>
-                        <div className='merchant-starInfo'>
-                          {
-                            // this.state.data.rating ?
-                            //   <>
-                            //     <img className='star-img' src={StarIcon} alt='' />
-                            //     <div className='merchant-star'>{this.state.data.rating}</div>
-                            //   </>
-                            //   :
-                            //   null
-                            // <Skeleton width={50} />
-                          }
-                          {/* <div className='star-votes'>(50+ Upvotes)</div> */}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='merchant-call-sec' onClick={() => this.handlePhone(this.state.data.phone)}>
-                    <div className='merchant-call'>
-                      <span className='merchantCall-icon'>
-                        <img className='merchantCall-img' src={PhoneIcon} alt='' />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='bottom-merchantInfo'>
-                <div className='inside-bottomMerchantInfo'>
-                  {/* <div className='merchantdetail-section'>
-                    <div className='icon-based'>
-                      <img className='openhouricon' src={OpenHourIcon} alt='' />
-                    </div>
-
-                    <div className='detail-info'>
-                      <div className='top-detail-info'>Open</div>
-                      <div className='bottom-detail-info'>Jum (08.00 - 20.00)</div>
-                    </div>
-                  </div>
-                  <div className='merchantdetail-section'>
-                    <div className='icon-based'>
-                      <img className='coinicon' src={CoinIcon} alt='' />
-                    </div>
-
-                    <div className='detail-info'>
-                      <div className='top-detail-info'>$$$</div>
-                      <div className='bottom-detail-info'>50 K - 100 K</div>
-                    </div>
-                  </div> */}
-                  <div className='merchantdetail-section'>
-                    <div className='icon-based'>
-                      <img className='locationicon' src={LocationIcon} alt='' />
-                    </div>
-
-                    <div className='detail-info'>
-                      <div className='top-detail-info'>Store Address</div>
-                      <div className='bottom-detail-info'>{this.state.data.address || <Skeleton style={{ paddingTop: 30, width: 100 }} />}</div>
-                    </div>
-                  </div>
-                  
-                </div>
-                { this.state.isManualTxn ?
-                  this.linktreeView()
-                  :
-                  <></>
-                }
-              </div>
-            </div>
             <div className='merchant-category'>
               <div className='select-category'>
                 <div className='listCategory'>
@@ -1310,8 +1370,8 @@ class ProductView extends React.Component {
               </div>
             </div>
           </div>
-        </div>
-        <div className='product-layout' style={{ backgroundColor: this.state.backColor2 }}>
+        </div> */}
+        <div className='product-layout' style={{ backgroundColor: "#f0f1f2" }}>
           <div className='mainproduct-sec'>
             {this.contentView()}
 
@@ -1337,4 +1397,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { ValidQty, OpenSelect, })(ProductView)
+export default connect(Mapstatetoprops, { ValidQty, OpenSelect, IsManualTxn })(ProductView)
