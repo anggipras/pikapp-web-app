@@ -392,13 +392,25 @@ class OrderConfirmationView extends React.Component {
                                             <div className='orderContent'>
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <div>
-                                                            <div className="wordsButton-order">
-                                                                LIHAT PESANAN
+                                                    {
+                                                        this.props.AuthRedu.isManualTxn ?
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </Link>
+                                                        </Link>
+                                                        :
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    }
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -407,13 +419,24 @@ class OrderConfirmationView extends React.Component {
                                             <div className='orderContent'>
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <div>
-                                                            <div className="wordsButton-order">
-                                                                LIHAT PESANAN
+                                                    {
+                                                        this.props.AuthRedu.isManualTxn ?
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </Link>
+                                                        </Link>
+                                                        :
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    }
                                                 </div>
                                             </div>
                                             :
@@ -544,13 +567,24 @@ class OrderConfirmationView extends React.Component {
                                             <div className='orderContent'>
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <div>
-                                                            <div className="wordsButton-order">
-                                                                LIHAT PESANAN
+                                                    {
+                                                        this.props.AuthRedu.isManualTxn ?
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </Link>
+                                                        </Link>
+                                                        :
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -559,13 +593,24 @@ class OrderConfirmationView extends React.Component {
                                             <div className='orderContent'>
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
-                                                    <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <div>
-                                                            <div className="wordsButton-order">
-                                                                LIHAT PESANAN
+                                                    {
+                                                        this.props.AuthRedu.isManualTxn ?
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </Link>
+                                                        </Link>
+                                                        :
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                            <div>
+                                                                <div className="wordsButton-order">
+                                                                    LIHAT PESANAN
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    }
                                                 </div>
                                             </div>
                                             :
