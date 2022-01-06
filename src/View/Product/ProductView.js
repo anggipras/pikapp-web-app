@@ -1320,12 +1320,14 @@ class ProductView extends React.Component {
               <img
                 className="storeBanner"
                 src={this.state.data.image}
+                style={{ objectFit: 'cover' }}
               />
             </Carousel.Item>
             <Carousel.Item>
               <img
                 className="storeBanner"
                 src={this.state.data.image}
+                style={{ objectFit: 'cover' }}
               />
             </Carousel.Item>
           </Carousel>
