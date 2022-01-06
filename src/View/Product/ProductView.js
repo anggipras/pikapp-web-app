@@ -23,6 +23,8 @@ import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import OrderStatusIcon from '../../Asset/Icon/order-icon.png'
 import HeaderLogo from '../../Asset/Icon/pikapp-logo.png'
+import ShoppingBagLogo from '../../Asset/Icon/shopping-bag.png'
+import ProductListIcon from '../../Asset/Icon/product-list.png'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
@@ -37,6 +39,7 @@ import { firebaseAnalytics } from '../../firebaseConfig';
 // import '../../Asset/scss/slick/slick-theme.scss';
 // import 'slick-carousel/slick/slick.css';
 // import 'slick-carousel/slick/slick-theme.css';
+import Carousel from 'react-bootstrap/Carousel';
 
 var currentExt = {
   detailCategory: [
@@ -131,7 +134,8 @@ class ProductView extends React.Component {
       infinite: true,
       slidesToShow: 3,
       slidesToScroll: 1
-    }
+    },
+    totalProduct : 0
   };
 
   timeout = null
@@ -373,6 +377,8 @@ class ProductView extends React.Component {
               this.props.IsManualTxn(true);
               console.log("aaa" + this.props.AuthRedu.isManualTxn);
             }
+
+            this.setState({ totalProduct : res.data.results.products.length });
           }).catch(err => {
             console.log(err)
             newImage = Storeimg
@@ -1158,8 +1164,11 @@ class ProductView extends React.Component {
               <Link to={"/cartmanual"}>
                 <div className='cartIcon-layout'>
                   <div className='cartIcon-content'>
-                    <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
-                    <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                    <div>
+                      <div className='cartItem-total'>{filterMerchantCart[0].food.length} Items</div>
+                      <div className="cartItem-merchantname">Dari {this.state.data.title}</div>
+                    </div>
+                    <div className='cartItem-price'>Rp. {Intl.NumberFormat("id-ID").format(totalCartIcon)} <img className="cartItem-icon" src={ShoppingBagLogo}></img></div>
                   </div>
                 </div>
               </Link>
@@ -1167,8 +1176,8 @@ class ProductView extends React.Component {
               <Link to={"/cart"}>
                 <div className='cartIcon-layout'>
                   <div className='cartIcon-content'>
-                    <div className='cartItem-total'>Checkout {filterMerchantCart[0].food.length} Items</div>
-                    <div className='cartItem-price'>{Intl.NumberFormat("id-ID").format(totalCartIcon)}</div>
+                    <div className='cartItem-total'>{filterMerchantCart[0].food.length} Items</div>
+                    <div className='cartItem-price'>Rp. {Intl.NumberFormat("id-ID").format(totalCartIcon)} <img className="cartItem-icon" src={ShoppingBagLogo}></img></div>
                   </div>
                 </div>
               </Link>
@@ -1304,8 +1313,24 @@ class ProductView extends React.Component {
               <></>
             }
           </div>
-        </div>            
-        <div className='storeBanner'>
+        </div>     
+        <div>
+          <Carousel>
+            <Carousel.Item>
+              <img
+                className="storeBanner"
+                src={this.state.data.image}
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="storeBanner"
+                src={this.state.data.image}
+              />
+            </Carousel.Item>
+          </Carousel>
+        </div>       
+        {/* <div className='storeBanner'>
           {
             this.state.data.image ?
               <img src={this.state.data.image} style={{ objectFit: 'cover' }} width='100%' height='100%' alt='' />
@@ -1313,18 +1338,7 @@ class ProductView extends React.Component {
               <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
           }
 
-          {/* {
-            this.state.isLogin ?
-              <Link to={"/profile"}>
-                <div className='profileIcon-sec'>
-                  <img className='profileicon-img' src={ProfileIcon} alt='' />
-                </div>
-              </Link>
-              :
-              <div></div>
-          } */}
-
-          {/* <div className='iconBanner'>
+          <div className='iconBanner'>
             {
               this.state.isManualTxn ?
               <Link to={"/statuscartmanual"}>
@@ -1339,13 +1353,12 @@ class ProductView extends React.Component {
                 </div>
               </Link>
             }
-          </div> */}
-
-        </div>
-        {/* <div className='merchant-section' style={{ backgroundColor: this.state.backColor1 }}>
+          </div>
+        </div> */}
+        <div className='merchant-section' style={{ backgroundColor: "white" }}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>
-              <div className='select-category'>
+              {/* <div className='select-category'>
                 <div className='listCategory'>
                   <h2 className='categoryName'>{this.state.categName}</h2>
 
@@ -1367,10 +1380,27 @@ class ProductView extends React.Component {
                     :
                     null
                 }
+              </div> */}
+              <div className='merchantdetail-category-section'>
+                {
+                  this.state.productCategpersize.map((menuCategory, index) => (
+                      <div key={index} className='merchantdetail-category-itembox' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>
+                        <span className="merchantdetail-category-text">{menuCategory.category_name.toLocaleLowerCase()}</span>
+                      </div>
+                  ))
+                }
+              </div>
+              <div className="merchant-totalmenu-section">
+                <div className="merchant-totalmenu-text">{this.state.totalProduct} Menu</div>
+                <div className="merchant-changelist-section">
+                  <span className="merchant-totalmenu-text">Tampilan</span>
+                  <img className="merchant-totalmenu-icon" src={ProductListIcon}></img>
+                </div>
               </div>
             </div>
+            
           </div>
-        </div> */}
+        </div>
         <div className='product-layout' style={{ backgroundColor: "#f0f1f2" }}>
           <div className='mainproduct-sec'>
             {this.contentView()}
