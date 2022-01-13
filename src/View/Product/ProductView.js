@@ -34,11 +34,6 @@ import FailedModal from "../../Component/Modal/FailedModal";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
-// import Slider from 'react-slick';
-// import '../../Asset/scss/slick/slick.scss';
-// import '../../Asset/scss/slick/slick-theme.scss';
-// import 'slick-carousel/slick/slick.css';
-// import 'slick-carousel/slick/slick-theme.css';
 import Carousel from 'react-bootstrap/Carousel';
 
 var currentExt = {
@@ -135,7 +130,25 @@ class ProductView extends React.Component {
       slidesToShow: 3,
       slidesToScroll: 1
     },
-    totalProduct : 0
+    totalProduct : 0,
+    productAllPage : [{
+      productId: "",
+      category: "",
+      foodName: "",
+      foodDesc: "",
+      foodPrice: 0,
+      foodRating: "",
+      foodImage: "",
+      foodExt: [
+        {
+          name: "",
+          amount: 0,
+        },
+      ],
+    }],
+    productCategpersizeOri: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
+    searchProduct : "",
+    hiddenBanner : false
   };
 
   timeout = null
@@ -143,6 +156,8 @@ class ProductView extends React.Component {
   componentDidMount() {
     firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
+    this.setState({ hiddenBanner : false });
+    this.sendTracking();
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
     var auth = {
@@ -339,6 +354,27 @@ class ProductView extends React.Component {
           firstShownProduct[indexcategProd].category_products = newFilter
         })
 
+        var allProduct = []
+        res.data.results.products.forEach((product) => {
+          allProduct.push({
+            productId: product.product_id,
+            category: product.product_category,
+            foodName: product.product_name,
+            foodDesc: product.product_desc,
+            foodPrice: product.product_price,
+            foodRating: product.rating,
+            foodImage: product.product_picture1,
+            foodExt: [
+              {
+                name: "",
+                amount: 0,
+              },
+            ],
+          })
+        })
+
+        this.setState({ productAllPage : allProduct });
+        // this.setState({ productAllPage : res.data.results.products });
 
         let newImage = Storeimg
         Axios.get(currentMerchant.storeImage)
@@ -355,6 +391,8 @@ class ProductView extends React.Component {
               }
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+              this.setState({ productCategpersizeOri : this.state.productCategpersize });
+              console.log(this.state);
               document.addEventListener('scroll', this.loadMoreMerchant)
               document.addEventListener('scroll', this.onScrollCart)
             });
@@ -395,6 +433,7 @@ class ProductView extends React.Component {
               }
               this.brightenColor(merchantColor, 70, productColor, 60)
               this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+              this.setState({ productCategpersizeOri : this.state.productCategpersize });
               document.addEventListener('scroll', this.loadMoreMerchant)
             });
 
@@ -499,6 +538,7 @@ class ProductView extends React.Component {
     })
 
     this.setState({ boolpage: false, productCategpersize: updatedProduct })
+    this.setState({ productCategpersizeOri : this.state.productCategpersize });
     document.addEventListener('scroll', this.loadMoreMerchant)
   }
 
@@ -896,10 +936,31 @@ class ProductView extends React.Component {
     })
   }
 
+  componentWillMount() {
+    // When this component mounts, begin listening for scroll changes
+    document.addEventListener('scroll', this.handleScroll);
+  }
+
   componentWillUnmount() {
     document.removeEventListener('scroll', this.loadMoreMerchant)
     document.removeEventListener('scroll', this.onScrollCart)
+    document.removeEventListener('scroll', this.handleScroll);
   }
+
+  handleScroll = (e) => {
+    let lastScrollTop = 0;
+    let currentScrollTop = window.scrollY;
+
+    // Set the state of hidden depending on scroll position
+    // We only change the state if it needs to be changed
+    if (currentScrollTop > 70) {
+      this.setState({ hiddenBanner: true });
+    } else {
+      this.setState({ hiddenBanner: false });
+    }
+    lastScrollTop = currentScrollTop;
+  }
+
 
   contentView = () => {
     return this.state.productCategpersize.map((categ, indcateg) => {
@@ -1120,6 +1181,98 @@ class ProductView extends React.Component {
   goToExternalLink = (link) => {
     // window.location.href = link;
     window.open(link, '_blank');
+
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
+
+    Axios(address + "home/v1/event/add", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token" : "PUBLIC"
+      },
+      method: "POST",  
+      data: {
+        merchant_id: this.state.data.mid,
+        event_type: "LINK_TREE_DETAIL",
+        page_name: window.location.pathname
+      }
+    })
+    .then((res) => {
+      console.log(res.data.results);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  searchTable = (e) =>{
+    this.setState({ searchProduct : e.target.value})
+    var searchVal = String(e.target.value);
+    if(searchVal !== "") {
+        var productAll = this.state.productAllPage
+        var categoryId = []
+        var categoryName = []
+        var dataSearch = productAll.filter((row) => {
+          return row.foodName.toLowerCase().includes(searchVal.toLowerCase());
+        });
+
+        let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+
+        let productSize = filtersizeMerchant[0].categories.map((categ) => {
+          return categ
+        })
+
+        productSize.forEach((val) => {
+          val.category_products = []
+        })
+
+        productSize.forEach((categProd) => {
+          dataSearch.forEach((allprod) => {
+            if (categProd.category_id == String(allprod.category)) { 
+              // productPerCateg.push(allprod)
+              categProd.category_products.push(allprod);
+            }
+            categoryId.push(categProd.category_id);
+            categoryName.push(dataSearch.length);
+          })
+        })
+
+        this.setState({ productCategpersize: productSize, categoryId, categoryName });
+    } else {
+        this.setState({ productCategpersize : this.state.productCategpersizeOri });
+    }
+  }
+
+  sendTracking() {
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
+
+    Axios(address + "home/v1/event/add", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token" : "PUBLIC"
+      },
+      method: "POST",  
+      data: {
+        merchant_id: this.state.data.mid,
+        event_type: "VIEW_DETAIL",
+        page_name: window.location.pathname
+      }
+    })
+    .then((res) => {
+      console.log(res.data.results);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   render() {
@@ -1206,7 +1359,7 @@ class ProductView extends React.Component {
           <div className="product-search-checkbutton">
             <img className="product-search-headerimg" src={HeaderLogo}></img>
           </div>
-          <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.handleTransactionId} value={this.state.transactionId} />
+          <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.searchTable} value={this.state.searchProduct} />
           {
             this.state.isManualTxn ?
             <Link to={"/statuscartmanual"}>
@@ -1221,8 +1374,19 @@ class ProductView extends React.Component {
               </div>
             </Link>
           }
-        </div>
-        <div className='merchant-info'>
+        </div>     
+        <div className="merchant-carousel" style={{ visibility: this.state.hiddenBanner ? "hidden" : "visible"}}>
+          <Carousel className="merchant-carousel">
+            <Carousel.Item className="merchant-carousel">
+              <img
+                className="storeBanner"
+                src={this.state.data.image}
+                style={{ objectFit: 'cover' }}
+              />
+            </Carousel.Item>
+          </Carousel>
+        </div>  
+        <div className='merchant-info' style={{ visibility: this.state.hiddenBanner ? "hidden" : "visible"}}>
           <div className='top-merchantInfo'>
             <div className='inside-topMerchantInfo'>
               <div className='merchant-title'>
@@ -1266,12 +1430,6 @@ class ProductView extends React.Component {
                 </div>
               </div>
             </div>
-            <div>
-            {/* <Slider {...this.state.settings}>
-              <div><img src={require(this.state.data.image)} alt="Credit to Joshua Earle on Unsplash"/></div>
-              <div><img src={require(this.state.data.image)} alt="Credit to Alisa Anton on Unsplash"/></div>
-            </Slider> */}
-            </div>
           </div>
           <div className='bottom-merchantInfo'>
             {/* <div className='inside-bottomMerchantInfo'> */}
@@ -1314,24 +1472,6 @@ class ProductView extends React.Component {
             }
           </div>
         </div>     
-        <div>
-          <Carousel>
-            <Carousel.Item>
-              <img
-                className="storeBanner"
-                src={this.state.data.image}
-                style={{ objectFit: 'cover' }}
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="storeBanner"
-                src={this.state.data.image}
-                style={{ objectFit: 'cover' }}
-              />
-            </Carousel.Item>
-          </Carousel>
-        </div>       
         {/* <div className='storeBanner'>
           {
             this.state.data.image ?
@@ -1392,15 +1532,16 @@ class ProductView extends React.Component {
                   ))
                 }
               </div>
+            </div>
+          </div>
+        </div>
+        <div className='merchant-section-menu' style={{ backgroundColor: "white", visibility: this.state.hiddenBanner ? "hidden" : "visible" }}>
+          <div className='inside-merchantSection-menu'>
+            <div className='merchant-category-menu'>
               <div className="merchant-totalmenu-section">
                 <div className="merchant-totalmenu-text">{this.state.totalProduct} Menu</div>
-                <div className="merchant-changelist-section">
-                  <span className="merchant-totalmenu-text">Tampilan</span>
-                  <img className="merchant-totalmenu-icon" src={ProductListIcon}></img>
-                </div>
               </div>
             </div>
-            
           </div>
         </div>
         <div className='product-layout' style={{ backgroundColor: "#f0f1f2" }}>
