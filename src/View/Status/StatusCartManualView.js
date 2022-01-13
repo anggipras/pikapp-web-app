@@ -85,6 +85,7 @@ export class StatusCartManualView extends React.Component {
   componentDidMount() {
     this._isMounted = true;
     firebaseAnalytics.logEvent("orderlist_visited");
+    this.sendTracking();
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
     } else {
@@ -464,6 +465,34 @@ export class StatusCartManualView extends React.Component {
 
   handleTransactionId = (e) =>{
     this.setState({ transactionId: e.target.value});
+  }
+
+  sendTracking() {
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
+
+    Axios(address + "home/v1/event/add", {
+        headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "token" : "PUBLIC"
+        },
+        method: "POST",  
+        data: { 
+            merchant_id: "-",
+            event_type: "VIEW_DETAIL",
+            page_name: window.location.pathname
+        }
+    })
+    .then((res) => {
+        console.log(res.data.results);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
   }
 
   render() {

@@ -68,6 +68,7 @@ class OrderDetailView extends React.Component {
     componentDidMount() {
         firebaseAnalytics.logEvent("orderdetail_visited");
         moment.updateLocale('id', idLocale);
+        this.sendTracking();
         if (window.innerWidth < 700) {
             this.setState({ isMobile: true });
         } else {
@@ -257,6 +258,34 @@ class OrderDetailView extends React.Component {
         // window.location.href = "/status";
         window.history.go(-1)
     }
+
+    sendTracking() {
+        let uuid = uuidV4();
+        const date = new Date().toISOString();
+        uuid = uuid.replace(/-/g, "");
+    
+        Axios(address + "home/v1/event/add", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId,
+                "token" : "PUBLIC"
+            },
+            method: "POST",  
+            data: { 
+                merchant_id: "-",
+                event_type: "VIEW_DETAIL",
+                page_name: window.location.pathname
+            }
+        })
+        .then((res) => {
+            console.log(res.data.results);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+      }
 
     render() {
         let productList = this.state.currentModal.food;

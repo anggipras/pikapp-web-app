@@ -45,6 +45,7 @@ class OrderConfirmationView extends React.Component {
 
     componentDidMount() {
         firebaseAnalytics.logEvent("orderconfirmation_visited");
+        this.sendTracking();
         if (window.innerWidth < 700) {
             this.setState({ isMobile: true });
         } else {
@@ -242,6 +243,33 @@ class OrderConfirmationView extends React.Component {
 
     }
 
+    sendTracking() {
+        let uuid = uuidV4();
+        const date = new Date().toISOString();
+        uuid = uuid.replace(/-/g, "");
+    
+        Axios(address + "home/v1/event/add", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId,
+                "token" : "PUBLIC"
+            },
+            method: "POST",  
+            data: { 
+                merchant_id: this.state.mid,
+                event_type: "ORDER_DETAIL",
+                page_name: window.location.pathname
+            }
+        })
+        .then((res) => {
+            console.log(res.data.results);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
 
     render() {
         return (
