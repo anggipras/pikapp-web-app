@@ -1348,7 +1348,21 @@ class ProductView extends React.Component {
       if (this.props.AllRedu.openSelect === false) {
         //scroll to selected menu
         document.addEventListener('scroll', this.loadMoreMerchant)
-        document.getElementById(this.state.categName).scrollIntoView({ behavior: "smooth" })
+
+        const el = document.getElementById(this.state.categName);
+        el.scrollIntoView(true);
+
+        var heightHeader = 140;
+        // const y = el.getBoundingClientRect().top - 800;
+        // el.scrollIntoView({ top :y, block: "start", inline: "nearest", behavior: "smooth" })
+
+        var scrollY = window.scrollY;
+
+        if(scrollY) {
+          // window.scroll(0, scrollY - heightHeader);
+          window.scroll({top: scrollY - heightHeader, left: 0, behavior: 'smooth' });
+        }
+
         this.setState({ categName: 'All Categories' })
       }
     }
@@ -1375,7 +1389,7 @@ class ProductView extends React.Component {
             </Link>
           }
         </div>     
-        <div className="merchant-carousel" style={{ visibility: this.state.hiddenBanner ? "hidden" : "visible"}}>
+        <div className="merchant-carousel" style={{ opacity: this.state.hiddenBanner ? "0.5" : "1", animation: this.state.hiddenBanner ? "all 2s" : "all 2s" }}>
           <Carousel className="merchant-carousel">
             <Carousel.Item className="merchant-carousel">
               <img
@@ -1386,7 +1400,7 @@ class ProductView extends React.Component {
             </Carousel.Item>
           </Carousel>
         </div>  
-        <div className='merchant-info' style={{ visibility: this.state.hiddenBanner ? "hidden" : "visible"}}>
+        <div className='merchant-info' style={{ opacity: this.state.hiddenBanner ? "0.5" : "1", animation: this.state.hiddenBanner ? "all 2s" : "all 2s" }}>
           <div className='top-merchantInfo'>
             <div className='inside-topMerchantInfo'>
               <div className='merchant-title'>
@@ -1535,7 +1549,7 @@ class ProductView extends React.Component {
             </div>
           </div>
         </div>
-        <div className='merchant-section-menu' style={{ backgroundColor: "white", visibility: this.state.hiddenBanner ? "hidden" : "visible" }}>
+        <div className='merchant-section-menu' style={{ backgroundColor: "white", opacity: this.state.hiddenBanner ? "0.5" : "1", animation: this.state.hiddenBanner ? "all 2s" : "all 2s" }}>
           <div className='inside-merchantSection-menu'>
             <div className='merchant-category-menu'>
               <div className="merchant-totalmenu-section">
