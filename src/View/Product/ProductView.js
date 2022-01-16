@@ -1011,12 +1011,19 @@ class ProductView extends React.Component {
                         {/* <div className='product-desc'>
                           {product.foodDesc}
                         </div> */}
+
+                        {/* <div className='product-price'>
+                          Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                        </div> */}
                       </div>
 
+                    </div>
+                    <div className="merchantdetail-cart-button-sec">
                       <div className='product-price'>
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
-
+                    </div>
+                    <div className="merchantdetail-cart-button-sec">
                       <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
                         <span className="merchantdetail-cart-text">+ Keranjang</span>
                       </div>
@@ -1039,10 +1046,16 @@ class ProductView extends React.Component {
                         </div> */}
                       </div>
 
+                      {/* <div className='product-price-mob'>
+                        Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div> */}
+                    </div>
+                    <div className='merchantdetail-cart-button-secmob'>
                       <div className='product-price-mob'>
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
-
+                    </div>
+                    <div className='merchantdetail-cart-button-secmob'>
                       <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
                         <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
                       </div>
@@ -1554,6 +1567,10 @@ class ProductView extends React.Component {
             <div className='merchant-category-menu'>
               <div className="merchant-totalmenu-section">
                 <div className="merchant-totalmenu-text">{this.state.totalProduct} Menu</div>
+                {/* <div className="merchant-changelist-section">
+                  <span className="merchant-totalmenu-text">Tampilan</span>
+                  <img className="merchant-totalmenu-icon" src={ProductListIcon}></img>
+                </div> */}
               </div>
             </div>
           </div>
