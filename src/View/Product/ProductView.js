@@ -1012,17 +1012,17 @@ class ProductView extends React.Component {
                           {product.foodDesc}
                         </div> */}
 
-                        {/* <div className='product-price'>
+                        <div className='product-price'>
                           Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
-                        </div> */}
+                        </div>
                       </div>
 
                     </div>
-                    <div className="merchantdetail-cart-button-sec">
+                    {/* <div className="merchantdetail-cart-button-sec">
                       <div className='product-price'>
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
-                    </div>
+                    </div> */}
                     <div className="merchantdetail-cart-button-sec">
                       <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
                         <span className="merchantdetail-cart-text">+ Keranjang</span>
@@ -1046,15 +1046,15 @@ class ProductView extends React.Component {
                         </div> */}
                       </div>
 
-                      {/* <div className='product-price-mob'>
-                        Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
-                      </div> */}
-                    </div>
-                    <div className='merchantdetail-cart-button-secmob'>
                       <div className='product-price-mob'>
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
                     </div>
+                    {/* <div className='merchantdetail-cart-button-secmob'>
+                      <div className='product-price-mob'>
+                        Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
+                      </div>
+                    </div> */}
                     <div className='merchantdetail-cart-button-secmob'>
                       <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
                         <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
