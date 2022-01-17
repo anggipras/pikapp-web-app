@@ -138,6 +138,7 @@ class CartView extends React.Component {
     // if (Cookies.get("auth") !== undefined) {
     //   auth = JSON.parse(Cookies.get("auth"))
     // }
+    this.sendTracking();
 
     if(window.innerWidth < 700) {
       this.state.steptour.splice(2,1);
@@ -780,6 +781,36 @@ class CartView extends React.Component {
 
   isPhoneNum = (num) => {
     phoneNumber = num
+  }
+
+  sendTracking() {
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
+
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+
+    Axios(address + "home/v1/event/add", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token" : "PUBLIC"
+      },
+      method: "POST",  
+      data: { 
+        merchant_id: currentCartMerchant.mid,
+        event_type: "ORDER_DETAIL",
+        page_name: window.location.pathname
+      }
+    })
+    .then((res) => {
+      console.log(res.data.results);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   render() {

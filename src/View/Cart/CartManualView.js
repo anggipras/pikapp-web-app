@@ -137,6 +137,7 @@ class CartManualView extends React.Component {
 
     componentDidMount() {
       firebaseAnalytics.logEvent("cartmanual_visited");
+      this.sendTracking();
       if(window.innerWidth < 700) {
         this.state.steptour.splice(2,1);
       } else {
@@ -722,6 +723,36 @@ class CartManualView extends React.Component {
 
     handleShowMenu = (status) => {
       this.setState({ isShowItem: status });
+    }
+
+    sendTracking() {
+      let uuid = uuidV4();
+      const date = new Date().toISOString();
+      uuid = uuid.replace(/-/g, "");
+  
+      const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+  
+      Axios(address + "home/v1/event/add", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "token" : "PUBLIC"
+        },
+        method: "POST",  
+        data: { 
+          merchant_id: currentCartMerchant.mid,
+          event_type: "ORDER_DETAIL",
+          page_name: window.location.pathname
+        }
+      })
+      .then((res) => {
+        console.log(res.data.results);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     }
 
     render() {
