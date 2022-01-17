@@ -73,6 +73,7 @@ class StoreView extends React.Component {
     firebaseAnalytics.logEvent("merchant_list_visited")
     this.props.DoneLoad()
     this.props.IsMerchantQR(false);
+    this.sendTracking();
     Cookies.set("homePage", window.location.search)
     var auth = {
       isLogged: false,
@@ -495,6 +496,34 @@ class StoreView extends React.Component {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
     localStorage.setItem('storeTour', 0);
+  }
+
+  sendTracking() {
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
+
+    Axios(address + "home/v1/event/add", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token" : "PUBLIC"
+      },
+      method: "POST",  
+      data: { 
+        merchant_id: "-",
+        event_type: "VIEW_DETAIL",
+        page_name: window.location.pathname
+      }
+    })
+    .then((res) => {
+      console.log(res.data.results);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   render() {
