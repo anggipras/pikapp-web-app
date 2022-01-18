@@ -125,7 +125,6 @@ class ProductView extends React.Component {
   componentDidMount() {
     firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
-    this.sendTracking();
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
     var auth = {
@@ -155,6 +154,8 @@ class ProductView extends React.Component {
       // this.setState({ isManualTxn : true });
       mid = value.username;
     }
+
+    this.sendTracking(mid);
 
     this.getLinkTree(mid);
 
@@ -1092,12 +1093,12 @@ class ProductView extends React.Component {
     window.open(link, '_blank');
   }
 
-  sendTracking() {
+  sendTracking(mid) {
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
 
-    const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    // const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
 
     Axios(address + "home/v1/event/add", {
       headers: {
@@ -1109,7 +1110,7 @@ class ProductView extends React.Component {
       },
       method: "POST",  
       data: {
-        merchant_id: currentMerchant.mid,
+        merchant_id: mid,
         event_type: "VIEW_DETAIL",
         page_name: window.location.pathname
       }
