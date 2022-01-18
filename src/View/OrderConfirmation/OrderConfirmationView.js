@@ -10,6 +10,7 @@ import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import { Link } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
+import Cookies from "js-cookie"
 // import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
@@ -247,6 +248,8 @@ class OrderConfirmationView extends React.Component {
         let uuid = uuidV4();
         const date = new Date().toISOString();
         uuid = uuid.replace(/-/g, "");
+
+        const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     
         Axios(address + "home/v1/event/add", {
             headers: {
@@ -258,7 +261,7 @@ class OrderConfirmationView extends React.Component {
             },
             method: "POST",  
             data: { 
-                merchant_id: this.state.mid,
+                merchant_id: currentMerchant.mid,
                 event_type: "ORDER_DETAIL",
                 page_name: window.location.pathname
             }
