@@ -21,7 +21,7 @@ import LocationIcon from '../../Asset/Icon/location.png'
 import PhoneIcon from '../../Asset/Icon/phone.png'
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
-import OrderStatusIcon from '../../Asset/Icon/order-icon.png'
+import OrderStatusIcon from '../../Asset/Icon/order-icon-green.png'
 import HeaderLogo from '../../Asset/Icon/pikapp-logo.png'
 import ShoppingBagLogo from '../../Asset/Icon/shopping-bag.png'
 import ProductListIcon from '../../Asset/Icon/product-list.png'
@@ -1384,9 +1384,9 @@ class ProductView extends React.Component {
       <>
         <div className="product-search-inputarea">
           <div className="product-search-checkbutton">
-            <img className="product-search-headerimg" src={HeaderLogo}></img>
+            <img className="product-search-headerimg" src={Logopikapp}></img>
           </div>
-          <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.searchTable} value={this.state.searchProduct} />
+          {/* <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.searchTable} value={this.state.searchProduct} /> */}
           {
             this.state.isManualTxn ?
             <Link to={"/statuscartmanual"}>
@@ -1410,6 +1410,22 @@ class ProductView extends React.Component {
                 src={this.state.data.image}
                 style={{ objectFit: 'cover' }}
               />
+              {/* <div className='iconBanner'>
+                {
+                  this.state.isManualTxn ?
+                  <Link to={"/statuscartmanual"}>
+                    <div className='notifIcon-sec'>
+                      <img className='notificon-img' src={NotifIcon} alt='' />
+                    </div>
+                  </Link>
+                  :
+                  <Link to={"/status"}>
+                    <div className='notifIcon-sec'>
+                      <img className='notificon-img' src={NotifIcon} alt='' />
+                    </div>
+                  </Link>
+                }
+              </div> */}
             </Carousel.Item>
           </Carousel>
         </div>  
