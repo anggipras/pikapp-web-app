@@ -1097,6 +1097,8 @@ class ProductView extends React.Component {
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
 
+    const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+
     Axios(address + "home/v1/event/add", {
       headers: {
         "Content-Type": "application/json",
@@ -1107,7 +1109,7 @@ class ProductView extends React.Component {
       },
       method: "POST",  
       data: {
-        merchant_id: this.state.data.mid,
+        merchant_id: currentMerchant.mid,
         event_type: "VIEW_DETAIL",
         page_name: window.location.pathname
       }
