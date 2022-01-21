@@ -93,3 +93,52 @@ export const IsManualTxn = (bool) => {
         payload: bool
     }
 }
+
+export const MapInstance = (data) => {
+    return {
+        type: 'MAPINSTANCE',
+        payload: data
+    }
+}
+
+export const MapApi = (data) => {
+    return {
+        type: 'MAPAPI',
+        payload: data
+    }
+}
+
+export const District = (data) => {
+    return {
+        type: 'DISTRICT',
+        payload: data
+    }
+}
+
+export const FormattedAddress = (data) => {
+    return {
+        type: 'FORMATTEDADDRESS',
+        payload: data
+    }
+}
+
+export const Places = (data) => {
+    return {
+        type: 'PLACES',
+        payload: data
+    }
+}
+
+export const Lat = (data) => {
+    return {
+        type: 'LAT',
+        payload: data
+    }
+}
+
+export const Lng = (data) => {
+    return {
+        type: 'LNG',
+        payload: data
+    }
+}

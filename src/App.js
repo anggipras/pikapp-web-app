@@ -20,6 +20,10 @@ import { Route, Switch } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
 import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
+import AddressMapsView from "./View/Cart/AddressSelection/AddressMapsView";
+import AddressSearchView from "./View/Cart/AddressSelection/AddressSearchView";
+import ShippingTypeView from "./View/Cart/ShippingSelection/ShippingTypeView";
+import ShippingDetailView from "./View/Cart/ShippingSelection/ShippingDetailView";
 import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
 import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 import StatusCartManualLayout from "./Master/StatusCartManualLayout";
@@ -110,6 +114,10 @@ function App() {
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
             <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
+            <Route exact path="/cartmanual/pickup/location" component={AddressMapsView} />
+            <Route exact path="/cartmanual/pickup/search" component={AddressSearchView} />
+            <Route exact path="/cartmanual/pickup/shipping" component={ShippingTypeView} />
+            <Route exact path="/cartmanual/pickup/detail" component={ShippingDetailView} />
             <Route path="/cartmanual/pickup" component={PickupSelectionView} />
             <Route path="/cartmanual/shipping" component={ShippingDateView} />
             <Route path="/cartmanual/payment" component={PaymentMethodView} />
