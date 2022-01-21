@@ -157,7 +157,6 @@ class ProductView extends React.Component {
     firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     this.setState({ hiddenBanner : false });
-    this.sendTracking();
     document.body.style.backgroundColor = 'white'
     Cookies.set("lastProduct", window.location.href, { expires: 1 })
     var auth = {
@@ -188,6 +187,7 @@ class ProductView extends React.Component {
       mid = value.username;
     }
 
+    this.sendTracking(mid);
     this.getLinkTree(mid);
 
     // let longlatAddress
@@ -1260,7 +1260,7 @@ class ProductView extends React.Component {
     }
   }
 
-  sendTracking() {
+  sendTracking(mid) {
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
@@ -1275,7 +1275,7 @@ class ProductView extends React.Component {
       },
       method: "POST",  
       data: {
-        merchant_id: this.state.data.mid,
+        merchant_id: mid,
         event_type: "VIEW_DETAIL",
         page_name: window.location.pathname
       }
@@ -1389,7 +1389,7 @@ class ProductView extends React.Component {
           {/* <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.searchTable} value={this.state.searchProduct} /> */}
           {
             this.state.isManualTxn ?
-            <Link to={"/statuscartmanual"}>
+            <Link to={"/status"}>
               <div className="product-search-checkbutton">
                 <img className="product-search-checkbuttonimg" src={OrderStatusIcon}></img>
               </div>

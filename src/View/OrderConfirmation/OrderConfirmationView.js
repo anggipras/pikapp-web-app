@@ -4,12 +4,15 @@ import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import pikappLogo from '../../Asset/Logo/logo4x.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import CopyIcon from "../../Asset/Icon/copy-icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import { Link } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
+import copy from 'copy-to-clipboard';
+import Cookies from "js-cookie"
 // import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
@@ -247,6 +250,8 @@ class OrderConfirmationView extends React.Component {
         let uuid = uuidV4();
         const date = new Date().toISOString();
         uuid = uuid.replace(/-/g, "");
+
+        const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     
         Axios(address + "home/v1/event/add", {
             headers: {
@@ -258,7 +263,7 @@ class OrderConfirmationView extends React.Component {
             },
             method: "POST",  
             data: { 
-                merchant_id: this.state.mid,
+                merchant_id: currentMerchant.mid,
                 event_type: "ORDER_DETAIL",
                 page_name: window.location.pathname
             }
@@ -268,6 +273,14 @@ class OrderConfirmationView extends React.Component {
         })
         .catch((err) => {
             console.log(err);
+        });
+    }
+
+    copyTxnId = () => {
+        // window.clipboardData.setData("Text", this.state.dataOrder.transactionId);
+        copy(this.state.dataOrder.transactionId, {
+            debug: true,
+            message: 'Transaction ID Copy to Clipboard',
         });
     }
 
@@ -355,10 +368,12 @@ class OrderConfirmationView extends React.Component {
                                         </div>
 
                                         <div className='order-transaction-content'>
-                                            <div className='order-transaction-descArea'>
+                                            <div className='order-transaction-transactionId'>
                                                 <h3 className='order-transaction-words'>
                                                     {this.state.dataOrder.transactionId}
                                                 </h3>
+                                                {/* <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => {navigator.clipboard.writeText(this.state.dataOrder.transactionId)}}></img> */}
+                                                <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => this.copyTxnId()}></img>
                                             </div>
                                         </div>
                                     </div>
@@ -422,7 +437,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -449,7 +465,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -530,10 +547,12 @@ class OrderConfirmationView extends React.Component {
                                         </div>
 
                                         <div className='order-transaction-content'>
-                                            <div className='order-transaction-descArea'>
+                                            <div className='order-transaction-transactionId'>
                                                 <h3 className='order-transaction-words'>
                                                     {this.state.dataOrder.transactionId}
                                                 </h3>
+                                                {/* <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => {navigator.clipboard.writeText(this.state.dataOrder.transactionId)}}></img> */}
+                                                <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => this.copyTxnId()}></img>
                                             </div>
                                         </div>
                                     </div>
@@ -597,7 +616,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -623,7 +643,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
