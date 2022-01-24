@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import AutoComplete from './AutoCompleteComponent';
 import Marker from './MarkerComponent';
 
-import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng } from '../../Redux/Actions'
+import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center } from '../../Redux/Actions'
 import { connect } from "react-redux";
 
 const Wrapper = styled.main`
@@ -44,6 +44,9 @@ class MapsComponent extends Component {
             lat: mouse.lat,
             lng: mouse.lng
         });
+
+        this.props.Lat(mouse.lat);
+        this.props.Lng(mouse.lng);
     }
     onMarkerInteractionMouseUp = (childKey, childProps, mouse) => {
         this.setState({ draggable: true });
@@ -63,6 +66,7 @@ class MapsComponent extends Component {
             lat: value.lat,
             lng: value.lng
         });
+        
         this.props.Lat(value.lat);
         this.props.Lng(value.lng);
         this._generateAddress();
@@ -96,15 +100,15 @@ class MapsComponent extends Component {
 
         const geocoder = new mapApi.Geocoder;
 
-        if(this.props.CartRedu.lat !== 0) {
-            this.setState({
-                places: this.props.CartRedu.places,
-                lat: this.props.CartRedu.lat,
-                lng: this.props.CartRedu.lng
-            });
-        }
+        // if(this.props.CartRedu.lat !== 0) {
+        //     this.setState({
+        //         places: this.props.CartRedu.places,
+        //         lat: this.props.CartRedu.lat,
+        //         lng: this.props.CartRedu.lng
+        //     });
+        // }
 
-        geocoder.geocode({ 'location': { lat: this.state.lat, lng: this.state.lng } }, (results, status) => {
+        geocoder.geocode({ 'location': { lat: this.props.CartRedu.lat, lng: this.props.CartRedu.lng } }, (results, status) => {
             console.log(results);
             console.log(status);
             if (status === 'OK') {
@@ -136,6 +140,10 @@ class MapsComponent extends Component {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 });
+
+                this.props.Center([position.coords.latitude, position.coords.longitude]);
+                this.props.Lat(position.coords.latitude);
+                this.props.Lng(position.coords.longitude);
             });
         }
     }
@@ -167,9 +175,9 @@ class MapsComponent extends Component {
                 >
 
                     <Marker
-                        text={this.state.address}
-                        lat={this.state.lat}
-                        lng={this.state.lng}
+                        text={this.props.CartRedu.formattedAddress}
+                        lat={this.props.CartRedu.lat}
+                        lng={this.props.CartRedu.lng}
                     />
 
 
@@ -201,6 +209,6 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng })(MapsComponent)
+export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center })(MapsComponent)
 
 // export default MapsComponent;

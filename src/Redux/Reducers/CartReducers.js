@@ -16,6 +16,7 @@ const INITIAL_STATE = {
     places : [],
     lat : 0,
     lng : 0,
+    center : [],
     district : "",
     formattedAddress : "",
     shippingType : "",
@@ -61,6 +62,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, lat: action.payload }
         case "LNG":
             return { ...state, lng: action.payload }
+        case "CENTER":
+            return { ...state, center: action.payload }
         case "DISTRICT":
             return { ...state, district: action.payload }
         case "FORMATTEDADDRESS":

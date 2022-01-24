@@ -142,3 +142,10 @@ export const Lng = (data) => {
         payload: data
     }
 }
+
+export const Center = (data) => {
+    return {
+        type: 'CENTER',
+        payload: data
+    }
+}
