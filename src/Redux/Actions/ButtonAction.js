@@ -86,3 +86,10 @@ export const CustomerPhoneNumber = (data) => {
         payload: data
     }
 }
+
+export const IsManualTxn = (bool) => {
+    return {
+        type: 'ISMANUALTXN',
+        payload: bool
+    }
+}

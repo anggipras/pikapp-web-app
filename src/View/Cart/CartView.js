@@ -140,6 +140,8 @@ class CartView extends React.Component {
     // }
     this.sendTracking();
 
+    this.sendTracking();
+
     if(window.innerWidth < 700) {
       this.state.steptour.splice(2,1);
     } else {

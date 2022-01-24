@@ -22,6 +22,7 @@ import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionVie
 import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
 import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
 import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
+import StatusCartManualLayout from "./Master/StatusCartManualLayout";
 
 export var cart = [
     {
@@ -99,6 +100,7 @@ function App() {
             />
             <Route path="/cart" component={() => <CartLayout />} />
             <Route path="/status" component={() => <StatusLayout />} />
+            <Route path="/statuscartmanual" component={() => <StatusCartManualLayout />} />
             <Route path="/store" component={() => <ProductLayout />} />
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
             {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
