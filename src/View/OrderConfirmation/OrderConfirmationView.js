@@ -437,8 +437,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -465,8 +465,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -616,8 +616,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -643,8 +643,8 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
-                                                        // <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN

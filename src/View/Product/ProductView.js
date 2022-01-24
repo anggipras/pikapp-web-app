@@ -1389,7 +1389,7 @@ class ProductView extends React.Component {
           {/* <input className="product-search-textbox" placeholder={"Cari di Toko " + this.state.data.title} onChange={this.searchTable} value={this.state.searchProduct} /> */}
           {
             this.state.isManualTxn ?
-            <Link to={"/status"}>
+            <Link to={"/statuscartmanual"}>
               <div className="product-search-checkbutton">
                 <img className="product-search-checkbuttonimg" src={OrderStatusIcon}></img>
               </div>
