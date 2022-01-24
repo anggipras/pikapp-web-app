@@ -98,7 +98,8 @@ const PickupSelectionView = () => {
                     </span>
                 </div>
 
-                <div style={{display: CartRedu.formattedAddress ? 'flex': 'none'}} className="deliverySelection-input" onClick={goToShipping}>
+                {/* <div style={{display: CartRedu.formattedAddress ? 'flex': 'none'}} className="deliverySelection-input" onClick={goToShipping}> */}
+                <div className="deliverySelection-input" onClick={goToShipping}>
                     <div className="deliverySelection-input-leftSide">
                         <span className="deliverySelection-locationIcon">
                             <img className="address-location-icon" src={KurirIcon} />
@@ -109,7 +110,7 @@ const PickupSelectionView = () => {
                                 { CartRedu.shippingType ? <></> : "Pilih Pengiriman" }
                             </div>
                             <div className="deliverySelection-addressInputted">
-                                { CartRedu.shippingType ? <span className="deliverySelection-blackNotes">{CartRedu.shippingType} - {CartRedu.shippingName} (Rp {CartRedu.shippingPrice})</span> : null}
+                                { CartRedu.shippingType ? <span className="deliverySelection-blackNotes">{CartRedu.shippingType} - {CartRedu.shippingName} (Rp {Intl.NumberFormat("id-ID").format(CartRedu.shippingPrice)})</span> : null}
                             </div>
                             <div className="deliverySelection-addressInputted">
                                 { CartRedu.shippingDesc ? <span className="deliverySelection-greenNotes"><span className="deliverySelection-grayNotes">{CartRedu.shippingDesc}</span></span> : null}

@@ -63,6 +63,9 @@ class MapsComponent extends Component {
             lat: value.lat,
             lng: value.lng
         });
+        this.props.Lat(value.lat);
+        this.props.Lng(value.lng);
+        this._generateAddress();
     }
 
     apiHasLoaded = (map, maps) => {

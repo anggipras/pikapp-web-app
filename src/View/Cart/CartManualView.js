@@ -774,6 +774,7 @@ class CartManualView extends React.Component {
         this.setState({ insurancePrice: finalNumber});
         this.setState({ insuranceCheckbox: e.target.checked });
       } else {
+        this.setState({ insurancePrice: 0});
         this.setState({ insuranceCheckbox: e.target.checked });
       }
     }

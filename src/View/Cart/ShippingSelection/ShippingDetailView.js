@@ -18,22 +18,24 @@ const ShippingDetailView = () => {
         }
     }
 
-    const onChangeRadio = (ind) => {
+    const onChangeRadio = (ind, courier) => {
         setradioStatus(ind)
-        dispatch({ type: 'SHIPPINGNAME', payload: "Gojek" });
-        dispatch({ type: 'SHIPPINGPRICE', payload: 20000 });
-        dispatch({ type: 'SHIPPINGDESC', payload: "Same day service. Available from 08:00 to 15:00." });
+        dispatch({ type: 'SHIPPINGNAME', payload: courier.name });
+        dispatch({ type: 'SHIPPINGPRICE', payload: courier.price });
+        dispatch({ type: 'SHIPPINGDESC', payload: courier.description });
     }
 
     const goBack = () => {
         dispatch({ type: 'SHIPPINGNAME', payload: "" })
+        dispatch({ type: 'SHIPPINGPRICE', payload: "" });
+        dispatch({ type: 'SHIPPINGDESC', payload: "" });
         window.history.go(-1)
     }
 
     const shippingDetailList = () => {
-        // return statusName.map((statName, ind) => {
+        return CartRedu.courierList.map((courier, ind) => {
             return (
-                <div className='shippingDetail-eachList'>
+                <div key={ind} className='shippingDetail-eachList'>
 
                     <div className="shippingDetail-titleLayout">
                         <div>
@@ -41,17 +43,17 @@ const ShippingDetailView = () => {
                         </div>
                         <div>
                         <div className="shippingDetail-shippingName">
-                            <span className="shippingDetail-blackNotes">Gojek (Rp 20.000)</span>
+                            <span className="shippingDetail-blackNotes">{courier.name} (Rp {Intl.NumberFormat("id-ID").format(courier.price)})</span>
                         </div>
                         <div className="shippingDetail-shippingDetail">
-                            <span className="shippingDetail-grayNotes">Same day service. Available from 08:00 to 15:00.</span>
+                            <span className="shippingDetail-grayNotes">{courier.description}</span>
                         </div>
                         </div>
                     </div>
 
                     <div className='shippingDetail-radioButton'>
                         <div class="pretty p-image p-round p-jelly">
-                            <input type="radio" name="icon_solid" onChange={() => onChangeRadio(1)} defaultChecked={radioStatus === 1 ? true : false} />
+                            <input type="radio" name="icon_solid" onChange={() => onChangeRadio(1, courier)} defaultChecked={radioStatus === 1 ? true : false} />
                             <div class="state">
                                 <img class="image" src={CheckIcon} />
                                 <label></label>
@@ -60,7 +62,7 @@ const ShippingDetailView = () => {
                     </div>
                 </div>
             )
-        // })
+        })
     }
 
     return (

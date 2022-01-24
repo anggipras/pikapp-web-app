@@ -21,7 +21,8 @@ const INITIAL_STATE = {
     shippingType : "",
     shippingName : "",
     shippingPrice : 0,
-    shippingDesc : ""
+    shippingDesc : "",
+    courierList : []
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -72,6 +73,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, shippingPrice: action.payload }
         case "SHIPPINGDESC":
             return { ...state, shippingDesc: action.payload }
+        case "COURIERLIST":
+            return { ...state, courierList: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:
