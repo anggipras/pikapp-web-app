@@ -412,7 +412,7 @@ export class StatusCartManualView extends React.Component {
               payLabel
             );
         }
-        else if (value.order_status === "DONE") {
+        else if (value.order_status === "CLOSE") {
             thestatus = "Selesai";
             backColor = "#4BB7AC";
             return this.eachStatusList(
