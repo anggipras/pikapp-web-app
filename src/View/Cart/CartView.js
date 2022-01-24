@@ -138,6 +138,7 @@ class CartView extends React.Component {
     // if (Cookies.get("auth") !== undefined) {
     //   auth = JSON.parse(Cookies.get("auth"))
     // }
+    this.sendTracking();
 
     this.sendTracking();
 

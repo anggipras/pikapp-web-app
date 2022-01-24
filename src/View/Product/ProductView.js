@@ -1288,6 +1288,36 @@ class ProductView extends React.Component {
     });
   }
 
+  sendTracking(mid) {
+    let uuid = uuidV4();
+    const date = new Date().toISOString();
+    uuid = uuid.replace(/-/g, "");
+
+    // const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+
+    Axios(address + "home/v1/event/add", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token" : "PUBLIC"
+      },
+      method: "POST",  
+      data: {
+        merchant_id: mid,
+        event_type: "VIEW_DETAIL",
+        page_name: window.location.pathname
+      }
+    })
+    .then((res) => {
+      console.log(res.data.results);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
