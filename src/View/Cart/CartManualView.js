@@ -7,6 +7,7 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
+import InfoIcon from "../../Asset/Icon/info-icon.png";
 import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -133,6 +134,8 @@ class CartManualView extends React.Component {
       customerShippingDate : "",
       isShowItem : undefined,
       disabledSubmitButton : true,
+      insuranceCheckbox : false,
+      insurancePrice : 0
     };
 
     componentDidMount() {
@@ -413,7 +416,7 @@ class CartManualView extends React.Component {
         customer_phone_number: "0" + this.state.customerPhoneNumber
       }
 
-      let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shipperPrice)
+      let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shippingPrice)
 
       let pickupType = ''
       let shipperName = ''
@@ -424,7 +427,7 @@ class CartManualView extends React.Component {
       } else {
         pickupType = "DELIVERY";
         shipperName = this.props.CartRedu.shipperName;
-        shipperPrice = this.props.CartRedu.shipperPrice
+        shipperPrice = this.props.CartRedu.shippingPrice
       }
 
       let shippingTime = '';
@@ -755,6 +758,27 @@ class CartManualView extends React.Component {
       });
     }
 
+    handleInsurancePrice = (e) => {
+      if (e.target.checked) {
+        let totalPayment = finalProduct[0].totalPrice
+        let insurance = totalPayment * 0.5 / 100;
+
+        let finalNumber = 0;
+
+        if(insurance % 0.5 === 0) {
+          finalNumber = Math.ceil(insurance);
+        } else {
+          finalNumber = Math.floor(insurance);
+        }
+
+        this.setState({ insurancePrice: finalNumber});
+        this.setState({ insuranceCheckbox: e.target.checked });
+      } else {
+        this.setState({ insurancePrice: 0});
+        this.setState({ insuranceCheckbox: e.target.checked });
+      }
+    }
+
     render() {
       if (this.state.loadButton) {
         return <Redirect to='/orderconfirmation' />
@@ -875,7 +899,7 @@ class CartManualView extends React.Component {
         },
       ]
 
-      let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shipperPrice);
+      let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shippingPrice) + this.state.insurancePrice;
   
       let paymentImage;
       let eatImage;
@@ -1001,7 +1025,7 @@ class CartManualView extends React.Component {
                                 this.props.CartRedu.pickupType === 1 ?
                                 <>
                                   <div className='cartmanual-deliverydetail-title'>Dikirim ke</div>
-                                  <div className='cartmanual-deliverydetail-address'>{this.props.CartRedu.fullAddress}</div>
+                                  <div className='cartmanual-deliverydetail-address'>{this.props.CartRedu.formattedAddress}</div>
                                   {
                                     this.props.CartRedu.shipperNotes != "" ?
                                     <div className='cartmanual-deliverydetail-shipperNotesTitle'>Catatan : <span className='cartmanual-deliverydetail-shipperNotes'>{this.props.CartRedu.shipperNotes}</span></div>
@@ -1009,8 +1033,13 @@ class CartManualView extends React.Component {
                                     null
                                   }
                                   <div className='cartmanual-deliverydetail-shipperLayout'>
-                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperName'>{this.props.CartRedu.shipperName}</div>
-                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shipperPrice)}</div>
+                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperName'>{this.props.CartRedu.shippingType} - {this.props.CartRedu.shippingName}</div>
+                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shippingPrice)}</div>
+                                  </div>
+                                  <div className='cartmanual-deliverydetail-insurance'>
+                                    <input className="cartmanual-deliverydetail-insurance-check" type="checkbox" defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} style={{ backgroundColor: this.state.insuranceCheckbox ? '#4bb7ac' : '#ffffff'}}/>
+                                    <div className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</div>
+                                    <img className='cartmanual-deliverydetail-insuranceicon' src={InfoIcon}></img>
                                   </div>
                                 </>
                                 :
@@ -1126,9 +1155,22 @@ class CartManualView extends React.Component {
                       <div className='cartmanual-detailprice-desc'>
                         <div className='orderDetail-detailprice-word'>
                           <div>Total Ongkos Kirim</div>
-                          <div>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shipperPrice)}</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shippingPrice)}</div>
                         </div>
                       </div>
+                      
+                      {
+                        this.state.insuranceCheckbox ?
+                        <div className='cartmanual-detailprice-desc'>
+                          <div className='orderDetail-detailprice-word'>
+                            <div>Asuransi Pengiriman</div>
+                            <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.insurancePrice)}</div>
+                          </div>
+                        </div>
+                        : 
+                        <></>
+                      }
+                      
                       </div>
                     </div>
                   </div>
