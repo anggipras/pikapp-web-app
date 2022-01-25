@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import AutoComplete from './AutoCompleteComponent';
 import Marker from './MarkerComponent';
 
-import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center } from '../../Redux/Actions'
+import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode } from '../../Redux/Actions'
 import { connect } from "react-redux";
 
 const Wrapper = styled.main`
@@ -34,6 +34,11 @@ class MapsComponent extends Component {
     };
 
     componentWillMount() {
+        // if(this.props.CartRedu.lat === 0) {
+        //     this.setCurrentLocation();
+        // } else {
+        //     this._generateAddress()
+        // }
         this.setCurrentLocation();
     }
 
@@ -118,9 +123,14 @@ class MapsComponent extends Component {
                         if(res.types[0] == "administrative_area_level_3") {
                             this.props.District(res.short_name);
                         }
+                        if(res.types[0] == "postal_code") {
+                            this.props.PostalCode(res.short_name);
+                        }
                     })
+                    this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
                     this.setState({ address: results[0].formatted_address });
                     this.props.FormattedAddress(results[0].formatted_address);
+                    this.props.Center([this.props.CartRedu.lat, this.props.CartRedu.lng]);
                 } else {
                     window.alert('No results found');
                 }
@@ -135,15 +145,17 @@ class MapsComponent extends Component {
     setCurrentLocation() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
-                this.setState({
-                    center: [position.coords.latitude, position.coords.longitude],
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                });
+                // this.setState({
+                //     center: [position.coords.latitude, position.coords.longitude],
+                //     lat: position.coords.latitude,
+                //     lng: position.coords.longitude
+                // });
 
-                this.props.Center([position.coords.latitude, position.coords.longitude]);
-                this.props.Lat(position.coords.latitude);
-                this.props.Lng(position.coords.longitude);
+                if(this.props.CartRedu.lat === 0) {
+                    this.props.Center([position.coords.latitude, position.coords.longitude]);
+                    this.props.Lat(position.coords.latitude);
+                    this.props.Lng(position.coords.longitude);
+                }
             });
         }
     }
@@ -157,7 +169,7 @@ class MapsComponent extends Component {
         return (
             <Wrapper>
                 <GoogleMapReact
-                    center={this.state.center}
+                    center={this.props.CartRedu.center}
                     zoom={this.state.zoom}
                     draggable={this.state.draggable}
                     onChange={this._onChange}
@@ -209,6 +221,6 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center })(MapsComponent)
+export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode })(MapsComponent)
 
 // export default MapsComponent;

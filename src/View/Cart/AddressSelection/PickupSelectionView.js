@@ -29,7 +29,7 @@ const PickupSelectionView = () => {
     }
 
     const goToAddress = () => {
-        history.push('./pickup/location')
+        history.push('./pickup/address')
     }
 
     const goToShipping = () => {
@@ -98,8 +98,8 @@ const PickupSelectionView = () => {
                     </span>
                 </div>
 
-                {/* <div style={{display: CartRedu.formattedAddress ? 'flex': 'none'}} className="deliverySelection-input" onClick={goToShipping}> */}
-                <div className="deliverySelection-input" onClick={goToShipping}>
+                <div style={{display: CartRedu.formattedAddress ? 'flex': 'none'}} className="deliverySelection-input" onClick={goToShipping}>
+                {/* <div className="deliverySelection-input" onClick={goToShipping}> */}
                     <div className="deliverySelection-input-leftSide">
                         <span className="deliverySelection-locationIcon">
                             <img className="address-location-icon" src={KurirIcon} />

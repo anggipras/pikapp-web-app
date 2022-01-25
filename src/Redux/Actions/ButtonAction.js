@@ -149,3 +149,10 @@ export const Center = (data) => {
         payload: data
     }
 }
+
+export const PostalCode = (data) => {
+    return {
+        type: 'POSTALCODE',
+        payload: data
+    }
+}

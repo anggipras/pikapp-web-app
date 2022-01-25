@@ -16,6 +16,7 @@ const ShippingTypeView = () => {
     const [courierlist, setCourierList] = useState([])
 
     useEffect(() => {
+        dispatch({ type: 'LOADING' });
         let allProduct = [];
         let currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"));
 

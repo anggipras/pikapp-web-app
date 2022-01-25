@@ -13,12 +13,13 @@ const AddressMapsView = () => {
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
-            history.push('./address')
+            // history.push('./address')
+            window.history.go(-1)
         }
     }
 
     const goBack = () => {
-        dispatch({ type: 'FULLADDRESS', payload: "" })
+        dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
         window.history.go(-1)
     }
 
