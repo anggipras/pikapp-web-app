@@ -285,7 +285,7 @@ class OrderDetailView extends React.Component {
         .catch((err) => {
             console.log(err);
         });
-      }
+    }
 
     render() {
         let productList = this.state.currentModal.food;
