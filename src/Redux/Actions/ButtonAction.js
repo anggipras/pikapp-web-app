@@ -156,3 +156,17 @@ export const PostalCode = (data) => {
         payload: data
     }
 }
+
+export const IsMarkerChange = (bool) => {
+    return {
+        type: 'ISMARKERCHANGE',
+        payload: bool
+    }
+}
+
+export const SearchInput = (data) => {
+    return {
+        type: 'SEARCHINPUT',
+        payload: data
+    }
+}

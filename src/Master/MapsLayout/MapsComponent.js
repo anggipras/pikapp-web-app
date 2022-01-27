@@ -8,8 +8,12 @@ import styled from 'styled-components';
 import AutoComplete from './AutoCompleteComponent';
 import Marker from './MarkerComponent';
 
-import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode } from '../../Redux/Actions'
+import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, IsMarkerChange } from '../../Redux/Actions'
 import { connect } from "react-redux";
+
+import Button from "react-bootstrap/Button";
+
+import CurrentLocationIcon from  "../../Asset/Icon/current-location.png"
 
 const Wrapper = styled.main`
   width: 100%;
@@ -52,9 +56,11 @@ class MapsComponent extends Component {
 
         this.props.Lat(mouse.lat);
         this.props.Lng(mouse.lng);
+        this.props.IsMarkerChange(true);
     }
     onMarkerInteractionMouseUp = (childKey, childProps, mouse) => {
         this.setState({ draggable: true });
+        this.props.IsMarkerChange(true);
         this._generateAddress();
     }
 
@@ -63,7 +69,12 @@ class MapsComponent extends Component {
             center: center,
             zoom: zoom,
         });
-
+        // this.props.Center(center);
+        // this.props.Lat(center.lat);
+        // this.props.Lng(center.lng);
+        // if(this.props.CartRedu.mapApi !== "") {
+        //     this._generateAddress();
+        // }
     }
 
     _onClick = (value) => {
@@ -74,6 +85,7 @@ class MapsComponent extends Component {
         
         this.props.Lat(value.lat);
         this.props.Lng(value.lng);
+        this.props.IsMarkerChange(true);
         this._generateAddress();
     }
 
@@ -184,6 +196,8 @@ class MapsComponent extends Component {
                     }}
                     yesIWantToUseGoogleMapApiInternals
                     onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}
                 >
 
                     <Marker
@@ -191,6 +205,16 @@ class MapsComponent extends Component {
                         lat={this.props.CartRedu.lat}
                         lng={this.props.CartRedu.lng}
                     />
+
+                    {/* <Button className="addressmaps-currentlocation" variant="outline-secondary" onPress={()=>this.setCurrentLocation()} title="Get Location"/> */}
+
+                    {/* <div className='addressmaps-location-sec' onClick={() => this.setCurrentLocation()}>
+                        <div className='addressmaps-location-current'>
+                        <span className='addressmaps-location-icon'>
+                            <img className='addressmaps-location-img' src={CurrentLocationIcon} alt='' />
+                        </span>
+                        </div>
+                    </div> */}
 
 
                 </GoogleMapReact>
@@ -221,6 +245,6 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode })(MapsComponent)
+export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, IsMarkerChange })(MapsComponent)
 
 // export default MapsComponent;

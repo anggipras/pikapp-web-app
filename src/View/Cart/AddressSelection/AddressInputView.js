@@ -86,12 +86,12 @@ const AddressInputView = () => {
                     </div>
 
                     <div className="addressInput-shipperNotes">
-                        <div className="addressInput-shipperNotes-title">Catatan untuk Kurir <span style={{color: "red"}}>*</span></div>
+                        <div className="addressInput-shipperNotes-title">Catatan untuk Kurir</div>
                         <textarea id="note" className="addressInput-shipperNotes-inputArea" placeholder="Masukkan catatan untuk kurir" onChange={handleShipperNotes} defaultValue={CartRedu.shipperNotes}/>
                     </div>
                 </div>
 
-                <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress && CartRedu.fullAddress &&  CartRedu.postalCode && CartRedu.shipperNotes ? '#4bb7ac' : '#aaaaaa'}}>Simpan</div>
+                <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress && CartRedu.fullAddress &&  CartRedu.postalCode ? '#4bb7ac' : '#aaaaaa'}}>Simpan</div>
             </div>
         </>
     )

@@ -2,10 +2,32 @@ import React, { useEffect, useState } from "react";
 import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import LocationPoint from "../../../Asset/Icon/location-point.png";
+import NoDataCourier from "../../../Asset/Icon/nodata-courier.png";
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Cookies from "js-cookie"
 import Axios from "axios";
+import { address, clientId } from "../../../Asset/Constant/APIConstant";
+import { v4 as uuidV4 } from "uuid";
+import Loader from 'react-loader';
+
+const options = {
+    lines: 13,
+    length: 20,
+    width: 10,
+    radius: 30,
+    scale: 0.25,
+    corners: 1,
+    color: '#000',
+    opacity: 0.25,
+    rotate: 0,
+    direction: 1,
+    speed: 1,
+    trail: 60,
+    fps: 20,
+    shadow: false,
+    hwaccel: false,
+};
 
 const ShippingTypeView = () => {
     let history = useHistory()
@@ -14,9 +36,12 @@ const ShippingTypeView = () => {
     const [product, setProduct] = useState([])
     const [shippinglist, setShippingList] = useState([])
     const [courierlist, setCourierList] = useState([])
+    const [noDataCourier, setNoDataCourier] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         dispatch({ type: 'LOADING' });
+        // setIsLoading(true);
         let allProduct = [];
         let currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"));
 
@@ -37,32 +62,49 @@ const ShippingTypeView = () => {
             destination_longitude : CartRedu.lng,
             items : allProduct
         }
+
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
         
         Axios(`http://dev-api.pikapp.id:9006/api/transaction/courier-pricing`, {
             headers: {
                 "Content-Type": "application/json",
                 "merchant-id": currentCartMerchant.mid,
+                "x-request-id": uuid,
+                "x-timestamp": date,
+                "x-client-id": clientId,
+                "x-token" : "PUBLIC"
             },
             method: 'POST',
             data : req
         }).then(res => {
             let response = []
-            res.data.result.map((ship, ind) => {
-                response.push({
-                    categShip : ship.name,
-                    lowerLimit : ship.lower_limit,
-                    upperLimit : ship.upper_limit,
-                    description : ship.description,
-                    shipId : ind,
-                    courierList : ship.courier_list 
+            if(res.data.err_code !== "404") {
+                res.data.result.map((ship, ind) => {
+                    response.push({
+                        categShip : ship.name,
+                        lowerLimit : ship.lower_limit,
+                        upperLimit : ship.upper_limit,
+                        description : ship.description,
+                        shipId : ind,
+                        courierList : ship.courier_list 
+                    })
                 })
-            })
-
-            setShippingList(response);
+    
+                setShippingList(response);
+            } else {
+                setNoDataCourier(true);
+            }
             
             dispatch({ type: 'DONELOAD' })
+            setIsLoading(true);
             // props.loadingButton()
-        }).catch(err => console.log(err))
+        }).catch(err => { 
+            console.log(err);
+            setNoDataCourier(true);
+            setIsLoading(true);
+        })
 
     }, [])
 
@@ -100,7 +142,14 @@ const ShippingTypeView = () => {
     }
 
     return (
-        <>
+        <>  
+            {/* {
+                isLoading ?
+                
+                :
+                <></>
+            } */}
+            <Loader loaded={isLoading} options={options} className="spinner"/>
             <div className="shippingSelection-layout">
                 <div className="shippingSelection-topSide">
                     <div className="shippingSelection-header">
@@ -109,8 +158,12 @@ const ShippingTypeView = () => {
                         </span>
                         <div className="shippingSelection-title">Pilih Kurir</div>
                     </div>
-                    <div className='shippingSelection-section'>
-                        {shippingTypeList()}
+                    <div style={{display: noDataCourier ? 'flex' : 'block'}} className='shippingSelection-section'>
+                        { noDataCourier ?
+                        <img src={NoDataCourier} className="shippingSelection-nodata"></img>
+                        :
+                        shippingTypeList()
+                        }
                     </div>
                 </div>
                 

@@ -1044,6 +1044,7 @@ body {
   justify-content: start;
   align-items: center;
   margin-top: 10px;
+  background-color: #ffffff;
 }
 
 .cartmanual-deliverydetail-insuranceicon {
@@ -1054,11 +1055,32 @@ body {
 .cartmanual-deliverydetail-insurance-check {
   width: 15px;
   height: 15px;
+  background-color: #ffffff;
 }
 
-.cartmanual-deliverydetail-insurance input[type="checkbox"]:checked {
-  background-color: #4bb7ac !important;
+.cartmanual-deliverydetail-insurance input[type="checkbox"]:checked{
+  // background-color: #4bb7ac !important;
+  // filter: hue-rotate(100deg);
+  // filter: invert(66%) sepia(51%) saturate(425%) hue-rotate(125deg) brightness(88%) contrast(86%);
+  filter: invert(0%) sepia(93%) saturate(425%) hue-rotate(125deg) brightness(108%) contrast(116%);
+  // filter: brightness(50%) sepia(1);
 }
+
+// .cartmanual-deliverydetail-insurance:checked {
+//   background-color: #4bb7ac !important;
+// }
+
+// input[type='checkbox']:checked {
+  // background-color: #4bb7ac !important;
+  // filter: hue-rotate(140deg);
+// }
+
+// .cartmanual-deliverydetail-insurance input[type="checkbox"] {
+//   background-color: #4bb7ac !important;
+//   &:checked{
+//     background-color: #ff0000;
+//   }
+// }
 
 .cartmanual-deliveryinfo {
   // min-width: 480px;

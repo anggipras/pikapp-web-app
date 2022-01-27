@@ -56,9 +56,12 @@ body {
     margin-left: 16px;
 }
 
-// .shippingSelection-section {
-//     padding: 22px 42px;
-// }
+.shippingSelection-section {
+    // padding: 22px 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .shippingSelection-eachList {
     display: flex;
@@ -149,6 +152,11 @@ body {
     font-weight: normal;
     color: #111111;
     font-size: 12px;
+}
+
+.shippingSelection-nodata {
+    width: 50%;
+    margin-top: 150px;
 }
 
 // detail
