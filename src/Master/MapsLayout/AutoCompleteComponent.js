@@ -1,6 +1,8 @@
 // Autocomplete.js
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { SearchInput } from '../../Redux/Actions'
+import { connect } from "react-redux";
 
 const Wrapper = styled.div`
   position: relative;
@@ -30,10 +32,20 @@ class AutoComplete extends Component {
         );
         this.autoComplete.addListener('place_changed', this.onPlaceChanged);
         this.autoComplete.bindTo('bounds', map);
+        if(this.props.CartRedu.searchInput !== "") {
+            this.searchInput.value = this.props.CartRedu.searchInput;
+        }
     }
 
     componentWillUnmount({ mapApi } = this.props) {
         mapApi.event.clearInstanceListeners(this.searchInput);
+    }
+
+    componentDidUpdate() {
+        if(this.props.CartRedu.searchInput !== "") {
+            this.searchInput.value = this.props.CartRedu.searchInput;
+            this.props.SearchInput("");
+        }
     }
 
     onPlaceChanged = ({ map, addplace } = this.props) => {
@@ -53,6 +65,7 @@ class AutoComplete extends Component {
 
     clearSearchBox() {
         this.searchInput.value = '';
+        // this.props.SearchInput.value('')
     }
 
     render() {
@@ -62,6 +75,7 @@ class AutoComplete extends Component {
                     className="search-input"
                     ref={(ref) => {
                         this.searchInput = ref;
+                        // this.props.CartRedu.searchInput = ref;
                     }}
                     type="text"
                     onFocus={this.clearSearchBox}
@@ -72,4 +86,14 @@ class AutoComplete extends Component {
     }
 }
 
-export default AutoComplete;
+const Mapstatetoprops = (state) => {
+    return {
+      AllRedu: state.AllRedu,
+      AuthRedu: state.AuthRedu,
+      CartRedu: state.CartRedu
+    }
+}
+
+export default connect(Mapstatetoprops, { SearchInput })(AutoComplete)
+
+// export default AutoComplete;

@@ -5,6 +5,7 @@ import SearchIcon from "../../../Asset/Icon/search.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import MapsComponent from "../../../Master/MapsLayout/MapsComponent";
+import CurrentLocationIcon from "../../../Asset/Icon/current-location.png";
 
 const AddressMapsView = () => {
     let history = useHistory()
@@ -27,6 +28,48 @@ const AddressMapsView = () => {
         history.push('./search')
     }
 
+    const setCurrentLocation = () => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                dispatch({ type: 'CENTER', payload: [position.coords.latitude, position.coords.longitude] })
+                dispatch({ type: 'LAT', payload: position.coords.latitude })
+                dispatch({ type: 'LNG', payload: position.coords.longitude })
+                dispatch({ type: 'ISMARKERCHANGE', payload: false })
+            });
+        }
+        _generateAddress();
+    }
+
+    const _generateAddress = () => {
+        const mapApi = CartRedu.mapApi;
+
+        const geocoder = new mapApi.Geocoder;
+
+        geocoder.geocode({ 'location': { lat: CartRedu.lat, lng: CartRedu.lng } }, (results, status) => {
+            console.log(results);
+            console.log(status);
+            if (status === 'OK') {
+                if (results[0]) {
+                    results[0].address_components.map((res) => {
+                        if(res.types[0] == "administrative_area_level_3") {
+                            dispatch({ type: 'DISTRICT', payload: res.short_name })
+                        }
+                        if(res.types[0] == "postal_code") {
+                            dispatch({ type: 'POSTALCODE', payload: res.short_name })
+                        }
+                    })
+
+                    dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })
+                } else {
+                    window.alert('No results found');
+                }
+            } else {
+                window.alert('Geocoder failed due to: ' + status);
+            }
+
+        });
+    }
+
     return (
         <>
             <div className="pickupSelection-layout">
@@ -39,14 +82,18 @@ const AddressMapsView = () => {
                     </div>
                 </div>
 
-                <div className="main-wrapper-maps">
+                <div style={{marginTop: CartRedu.isMarkerChange ? '0px' : '-7px'}} className="main-wrapper-maps">
                     <MapsComponent />
                 </div>
 
-                {/* <div onClick={goToAddress}>
-                    <div>AAA</div>
-                    <div>AAA</div>
-                </div> */}
+                <div style={{display: CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => setCurrentLocation()}>
+                    <div className='addressmaps-location-title'>
+                        <img className='addressmaps-location-logo' src={CurrentLocationIcon} alt='' />
+                        <div className='addressmaps-location-mainName'>
+                            Gunakan Lokasi Saat Ini
+                        </div>
+                    </div>
+                </div>
                 <div className='addressmaps-locationinfo' onClick={goToAddress}>
                     <div className='addressmaps-section'>
                         <div className='addressmaps-title'>

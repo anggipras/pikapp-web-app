@@ -1037,8 +1037,9 @@ class CartManualView extends React.Component {
                                     <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shippingPrice)}</div>
                                   </div>
                                   <div className='cartmanual-deliverydetail-insurance'>
-                                    <input className="cartmanual-deliverydetail-insurance-check" type="checkbox" defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} style={{ backgroundColor: this.state.insuranceCheckbox ? '#4bb7ac' : '#ffffff'}}/>
+                                    <input id="insuranceCheckbox" name="insuranceCheckbox" className="cartmanual-deliverydetail-insurance-check" type="checkbox" defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} />
                                     <div className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</div>
+                                    {/* <label htmlFor="insuranceCheckbox" className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</label> */}
                                     <img className='cartmanual-deliverydetail-insuranceicon' src={InfoIcon}></img>
                                   </div>
                                 </>
