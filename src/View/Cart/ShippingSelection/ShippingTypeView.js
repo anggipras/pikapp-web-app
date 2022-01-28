@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Cookies from "js-cookie"
 import Axios from "axios";
-import { address, clientId } from "../../../Asset/Constant/APIConstant";
+import { addressShipping, clientId } from "../../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Loader from 'react-loader';
 
@@ -67,7 +67,7 @@ const ShippingTypeView = () => {
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
         
-        Axios(`http://dev-api.pikapp.id:9006/api/transaction/courier-pricing`, {
+        Axios(addressShipping + `/api/transaction/courier-pricing`, {
             headers: {
                 "Content-Type": "application/json",
                 "merchant-id": currentCartMerchant.mid,

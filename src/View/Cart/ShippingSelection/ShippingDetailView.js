@@ -39,7 +39,7 @@ const ShippingDetailView = () => {
 
                     <div className="shippingDetail-titleLayout">
                         <div>
-                            <img className='shippingDetail-courier-logo' src={GojekLogo} alt='' />
+                            <img className='shippingDetail-courier-logo' src={courier.courier_image} alt='' />
                         </div>
                         <div>
                         <div className="shippingDetail-shippingName">

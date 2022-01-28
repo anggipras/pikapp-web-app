@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import MapsComponent from "../../../Master/MapsLayout/MapsComponent";
 import CurrentLocationIcon from "../../../Asset/Icon/current-location.png";
+import { useMediaQuery } from 'react-responsive'
 
 const AddressMapsView = () => {
     let history = useHistory()
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
+    const isMobile = useMediaQuery({ maxWidth: 768 })
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
@@ -82,7 +84,7 @@ const AddressMapsView = () => {
                     </div>
                 </div>
 
-                <div style={{marginTop: CartRedu.isMarkerChange ? '0px' : '-7px'}} className="main-wrapper-maps">
+                <div style={{marginTop: CartRedu.isMarkerChange ? '0px' : null}} className="main-wrapper-maps">
                     <MapsComponent />
                 </div>
 
