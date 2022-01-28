@@ -40,7 +40,6 @@ const ShippingTypeView = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        dispatch({ type: 'LOADING' });
         // setIsLoading(true);
         let allProduct = [];
         let currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"));
@@ -80,7 +79,7 @@ const ShippingTypeView = () => {
             data : req
         }).then(res => {
             let response = []
-            if(res.data.err_code !== "404") {
+            if(res.data.err_code !== "404" && res.data.result.length !== 0) {
                 res.data.result.map((ship, ind) => {
                     response.push({
                         categShip : ship.name,
@@ -97,9 +96,7 @@ const ShippingTypeView = () => {
                 setNoDataCourier(true);
             }
             
-            dispatch({ type: 'DONELOAD' })
             setIsLoading(true);
-            // props.loadingButton()
         }).catch(err => { 
             console.log(err);
             setNoDataCourier(true);
@@ -144,8 +141,8 @@ const ShippingTypeView = () => {
     return (
         <>  
             {/* {
-                isLoading ?
-                
+                !isLoading ?
+                <Loader loaded={isLoading} options={options} className="spinner"/>
                 :
                 <></>
             } */}
