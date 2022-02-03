@@ -79,14 +79,17 @@ class MapsComponent extends Component {
 
     _onClick = (value) => {
         this.setState({
+            draggable: false,
             lat: value.lat,
             lng: value.lng
+        }, () => {
+            this._generateAddress();
         });
         
         this.props.Lat(value.lat);
         this.props.Lng(value.lng);
         this.props.IsMarkerChange(true);
-        this._generateAddress();
+        // this._generateAddress();
     }
 
     apiHasLoaded = (map, maps) => {

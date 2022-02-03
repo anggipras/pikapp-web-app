@@ -108,10 +108,10 @@ const ShippingTypeView = () => {
     const handleSave = (shippingtype, courier) => {
         dispatch({ type: 'SHIPPINGTYPE', payload: shippingtype })
         dispatch({ type: 'COURIERLIST', payload: courier })
-        if (CartRedu.shippingType) {
+        // if (CartRedu.shippingType) {
             // window.history.go(-1)
             history.push('./detail')
-        }
+        // }
     }
 
     const goBack = () => {

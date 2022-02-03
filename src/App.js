@@ -13,6 +13,7 @@ import FoodCourt from "./Master/FoodCourtQR";
 import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import OrderDetailLayout from "./Master/OrderDetailLayout";
+import OrderDetailManualLayout  from "./Master/OrderDetailManualLayout";
 import ManualTxn from "./Master/ManualTransaction";
 import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
@@ -27,7 +28,7 @@ import ShippingDetailView from "./View/Cart/ShippingSelection/ShippingDetailView
 import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
 import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 import StatusCartManualLayout from "./Master/StatusCartManualLayout";
-
+import TrackingDeliveryLayout from "./Master/TrackingDeliveryLayout";
 export var cart = [
     {
         mid: "",
@@ -113,6 +114,7 @@ function App() {
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
             <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
+            <Route path="/orderdetaildelivery" component={() => <OrderDetailManualLayout />} />
             <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
             <Route exact path="/cartmanual/pickup/location" component={AddressMapsView} />
             <Route exact path="/cartmanual/pickup/search" component={AddressSearchView} />
@@ -122,6 +124,7 @@ function App() {
             <Route path="/cartmanual/shipping" component={ShippingDateView} />
             <Route path="/cartmanual/payment" component={PaymentMethodView} />
             <Route path="/cartmanual" component={() => <CartManualLayout />} />
+            <Route path="/tracking" component={() => <TrackingDeliveryLayout />} />
             <Route exact path="/:username" component={ManualTxn} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
