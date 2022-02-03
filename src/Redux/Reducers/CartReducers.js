@@ -25,7 +25,8 @@ const INITIAL_STATE = {
     shippingDesc : "",
     courierList : [],
     isMarkerChange : false,
-    searchInput : ""
+    searchInput : "",
+    // dataDetailTxn : {}
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -84,6 +85,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, isMarkerChange: action.payload }
         case "SEARCHINPUT":
             return { ...state, searchInput: action.payload }
+        // case "DATADETAILTXN":
+        //     return { ...state, dataDetailTxn: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

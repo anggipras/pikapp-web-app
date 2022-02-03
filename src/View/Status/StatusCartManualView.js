@@ -19,7 +19,7 @@ import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
 import moment from "moment";
 import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { DataDetail } from "../../Redux/Actions";
+import { DataDetail, DataDetailTxn } from "../../Redux/Actions";
 
 let interval = createRef();
 
@@ -106,10 +106,10 @@ export class StatusCartManualView extends React.Component {
       window.location.reload();
     }
 
-    if (this.state.staticCountDown) {
-      this.countDownTimer();
-      this.setState({ staticCountDown: false });
-    }
+    // if (this.state.staticCountDown) {
+    //   this.countDownTimer();
+    //   this.setState({ staticCountDown: false });
+    // }
   }
 
   getTransactionDetail() {
@@ -151,6 +151,7 @@ export class StatusCartManualView extends React.Component {
         stateData.data.push(results);
         // console.log(stateData.data);
         this.setState({ data: stateData.data, staticCountDown: true });
+        this.props.DataDetailTxn(results);
       })
       .catch((err) => {
         console.log(err);
@@ -159,43 +160,43 @@ export class StatusCartManualView extends React.Component {
 
   contentStatus = (value, bimg, blab, pimg, plab) => {
     let formatDate = value.transactionTime;
-    let totalItem = value.productList.length;
     return (
-        <div
-          className="status-cartmanual-transaction-content"
-        >
-            <div>
-                <h3 className="status-cartmanual-transactionid">ID Transaksi {value.transaction_id}</h3>
-            </div>
-            <div>
-                <h3 className="status-cartmanual-transactiondate">{moment(value.transaction_time).format("DD MMMM H:mm")}</h3>
-            </div>
-            <div className="status-cartmanual-content-border"></div>
+      <div
+        className="status-cartmanual-transaction-content"
+      >
+          <div>
+              <h3 className="status-cartmanual-transactionid">ID Transaksi {value.transaction_id}</h3>
+          </div>
+          <div>
+              <h3 className="status-cartmanual-transactiondate">{moment(value.transaction_time).format("Do MMMM YYYY, H:mm")}</h3>
+          </div>
+          <div className="status-cartmanual-content-border"></div>
 
-            <div className="status-cartmanual-transaction-topSide">
-                <h3 className="status-cartmanual-transaction-merchName">{value.shipping.shipping_method}</h3>
-                <img className='status-cartmanual-content-icon' src={ManualIcon}></img>
-            </div>
+          <div className="status-cartmanual-transaction-topSide">
+              <h3 className="status-cartmanual-transaction-merchName">{value.shipping.shipping_method}</h3>
+              <img className='status-cartmanual-content-icon' src={ManualIcon}></img>
+          </div>
 
-            <div>
-                <h3 className="status-cartmanual-item">{value.merchant_name}</h3>
-            </div>
-            <div className="status-cartmanual-content-date">
-                <span className="status-cartmanual-datetext">Tanggal Pengiriman : </span><span className="status-cartmanual-dateinfo">{moment(value.shipping.shipping_time).format("DD MMMM H:mm")}</span>
-            </div>
-            <div className="status-cartmanual-content-border"></div>
+          <div>
+              <h3 className="status-cartmanual-item">{value.merchant_name}</h3>
+          </div>
+          <div className="status-cartmanual-content-date">
+              <span className="status-cartmanual-datetext">Tanggal Pengiriman : </span><span className="status-cartmanual-dateinfo">{moment(value.shipping.shipping_time).format("DD MMMM H:mm, H:mm")}</span>
+          </div>
+          <div className="status-cartmanual-content-border"></div>
 
-            <div className="status-cartmanual-transaction-topSide">
-                <h3 className="status-cartmanual-content-paymentstatus">Status Pembayaran</h3>
+          <div className="status-cartmanual-transaction-topSide">
+              <h3 className="status-cartmanual-content-paymentstatus">Status Pembayaran</h3>
 
-                <h3 className="status-cartmanual-content-paymentinfo" style={{ color: pimg }}>{plab}</h3>
-            </div>
-            <div className="status-cartmanual-content-border"></div>
+              <h3 className="status-cartmanual-content-paymentinfo" style={{ color: pimg }}>{plab}</h3>
+          </div>
+          <div className="status-cartmanual-content-border"></div>
 
-                {
-                    value.productList.map((product, indprod) => {
-                        return (
-                            <div className="status-cartmanual-transaction-centerSide">
+              {
+                  value.productList.map((product, indprod) => {
+                      return (
+                          <div className="status-cartmanual-transaction-centerSide">
+                              <div className="status-cartmanual-transaction-item">
                                 <div className="status-cartmanual-section-quantity">
                                     <h3  className='status-cartmanual-content-quantity'>{product.quantity}x</h3>
                                 </div>
@@ -203,17 +204,53 @@ export class StatusCartManualView extends React.Component {
                                     <h3 className='status-cartmanual-content-item'>{product.product_name}</h3>
                                     <h3 className='status-cartmanual-content-desc'>{product.notes}</h3>
                                 </div>
-                            </div>
-                        )
-                    })
-                }
-                
-            <div className="status-cartmanual-content-border"></div>
-            <div className="status-cartmanual-section-price">
-                <h3 className="status-cartmanual-content-totalitem">Total {totalItem} Item : </h3>
-                <h3 className="status-cartmanual-content-totalprice">Rp {Intl.NumberFormat("id-ID").format(value.total_payment)}</h3>
+                              </div>
+                              <div>
+                              <div className="status-cartmanual-section-item">
+                                  <h3 className='status-cartmanual-content-price'>Rp {Intl.NumberFormat("id-ID").format(product.price)}</h3>
+                              </div>
+                              </div>
+                          </div>
+                      )
+                  })
+              }
+          <div className="status-cartmanual-content-border"></div>
+
+          <div className="status-cartmanual-section-subtotal">
+              <h3 className="status-cartmanual-content-item">Sub-total</h3>
+              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.total_product_price)}</h3>
+          </div>
+
+          <div className="status-cartmanual-section-shippingprice">
+              <h3 className="status-cartmanual-content-item">Total Diskon</h3>
+              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.total_discount)}</h3>
+          </div>
+
+          <div className="status-cartmanual-section-shippingprice">
+              <h3 className="status-cartmanual-content-item">Ongkos Kirim</h3>
+              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.shipping.shipping_cost)}</h3>
+          </div>
+
+          <div className="status-cartmanual-section-shippingprice">
+              <h3 className="status-cartmanual-content-item">Asuransi Pengiriman</h3>
+              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.shipping.shipping_cost)}</h3>
+          </div>
+              
+          <div className="status-cartmanual-content-border"></div>
+          <div className="status-cartmanual-section-price">
+            <div>
+              <h3 className="status-cartmanual-content-totalitem">Total</h3>
+              <h3 className="status-cartmanual-content-totalprice">Rp {Intl.NumberFormat("id-ID").format(value.total_payment)}</h3>
             </div>
-        </div>
+            <Link to="/tracking" style={{ textDecoration: "none" }}>
+            <div className='status-cartmanual-tracking' >
+              <div className='status-cartmanual-tracking-button'>
+                <h1 className='status-cartmanual-tracking-word'>Lacak</h1>
+              </div>
+            </div>
+            </Link>
+          </div>
+      </div>
     );
   };
 
@@ -500,7 +537,7 @@ export class StatusCartManualView extends React.Component {
     let { statusIndex, statusList } = this.state;
     let viewSize = (
       <>
-        <div className="modal-header-status-cartmanual">
+        {/* <div className="modal-header-status-cartmanual">
           <span
             className="logopikappCenterBack"
             onClick={() => window.history.back()}
@@ -509,6 +546,12 @@ export class StatusCartManualView extends React.Component {
           </span>
 
           <div className="menu-title-status-cartmanual">Cek Transaksi</div>
+        </div> */}
+        <div className="status-cartmanual-header">
+            <span className="status-cartmanual-back" onClick={() => window.history.back()}>
+                <img className="status-cartmanual-backicon" src={ArrowBack} alt='' />
+            </span>
+            <div className="status-cartmanual-titletext">Cek Transaksi</div>
         </div>
 
         <div className="status-cartmanual-Wrapper">
@@ -545,7 +588,8 @@ const Mapstatetoprops = (state) => {
   return {
     AllRedu: state.AllRedu,
     AuthRedu: state.AuthRedu,
+    CartRedu: state.CartRedu,
   };
 };
 
-export default connect(Mapstatetoprops, { DataDetail })(StatusCartManualView);
+export default connect(Mapstatetoprops, { DataDetail, DataDetailTxn })(StatusCartManualView);

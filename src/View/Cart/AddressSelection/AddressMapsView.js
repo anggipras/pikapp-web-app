@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import SearchIcon from "../../../Asset/Icon/search.png";
@@ -13,6 +13,8 @@ const AddressMapsView = () => {
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
     const isMobile = useMediaQuery({ maxWidth: 768 })
+    const [lat, setLat] = useState(0);
+    const [lng, setLng] = useState(0);
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
@@ -37,9 +39,10 @@ const AddressMapsView = () => {
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
+                _generateAddress();
             });
         }
-        _generateAddress();
+        
     }
 
     const _generateAddress = () => {

@@ -170,3 +170,10 @@ export const SearchInput = (data) => {
         payload: data
     }
 }
+
+export const DataDetailTxn = (data) => {
+    return {
+        type: 'DATADETAILTXN',
+        payload: data
+    }
+}

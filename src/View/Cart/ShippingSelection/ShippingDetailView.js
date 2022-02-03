@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import LocationPoint from "../../../Asset/Icon/location-point.png";
@@ -10,6 +10,14 @@ const ShippingDetailView = () => {
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
     const [radioStatus, setradioStatus] = useState(0)
+    const [courierChecked, setCourierChecked] = useState(false)
+    const [dataIndex, setDataIndex] = useState(null)
+
+    useEffect(() => {
+        CartRedu.courierList.map((ship, ind) => {
+            ship.imagestatus = false;
+        })
+    }, [])
 
     const handleSave = () => {
         if (CartRedu.shippingName) {
@@ -18,8 +26,21 @@ const ShippingDetailView = () => {
         }
     }
 
-    const onChangeRadio = (ind, courier) => {
+    const onChangeRadio = (ind, courier, index) => {
         setradioStatus(ind)
+        setCourierChecked(true);
+        if(index === null ) {
+            setDataIndex(index);
+            courier.imagestatus = true;
+        } else if (index !== dataIndex) {
+            CartRedu.courierList.map((ship, ind) => {
+                if(ind === dataIndex) {
+                    ship.imagestatus = false;
+                }
+            })
+            setDataIndex(index);
+            courier.imagestatus = true;
+        }
         dispatch({ type: 'SHIPPINGNAME', payload: courier.name });
         dispatch({ type: 'SHIPPINGPRICE', payload: courier.price });
         dispatch({ type: 'SHIPPINGDESC', payload: courier.description });
@@ -35,7 +56,7 @@ const ShippingDetailView = () => {
     const shippingDetailList = () => {
         return CartRedu.courierList.map((courier, ind) => {
             return (
-                <div key={ind} className='shippingDetail-eachList'>
+                <div key={ind} className='shippingDetail-eachList' onClick={() => onChangeRadio(1, courier, ind)}>
 
                     <div className="shippingDetail-titleLayout">
                         <div>
@@ -52,14 +73,18 @@ const ShippingDetailView = () => {
                     </div>
 
                     <div className='shippingDetail-radioButton'>
+                        <img style={{display: courier.imagestatus ? null : 'none'}} class="shippingDetail-checkimg" src={CheckIcon} />
+                    </div>
+
+                    {/* <div className='shippingDetail-radioButton'>
                         <div class="pretty p-image p-round p-jelly">
-                            <input type="radio" name="icon_solid" onChange={() => onChangeRadio(1, courier)} defaultChecked={radioStatus === 1 ? true : false} />
+                            <input type="radio" name="icon_solid" onChange={() => onChangeRadio(1, courier, ind)} defaultChecked={radioStatus === 1 ? true : false} />
                             <div class="state">
                                 <img class="image" src={CheckIcon} />
                                 <label></label>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             )
         })

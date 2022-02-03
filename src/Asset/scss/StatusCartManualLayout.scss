@@ -12,10 +12,25 @@
     font-family: "SF-Compact-Rounded-Semibold";
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
   }
+
+  @font-face {
+    font-family: "Inter-Reguler";
+    src: url(../Font/FontInter/Inter-ExtraLight.ttf);
+  }
+
+  @font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+  }
+
+  @font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+  }
   
   .status-cartmanual-Layout {
     width: 100vw;
-    padding: 20px 117px 20px 107px;
+    // padding: 20px 117px 20px 107px;
     background-color: #ffffff;
   }
   
@@ -61,7 +76,7 @@
     border-radius: 20px; /* Optional. Rounds container corners */
     // overflow: auto;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-    padding: 32px 26px 32px 27px;
+    padding: 5px 5px 32px 5px;
   }
   
   .modal-header-status-cartmanual {
@@ -142,7 +157,7 @@
     // min-width: 450px;
     // max-width: 450px;
     margin-bottom: 20px;
-    width: 105%;
+    width: 96%;
     cursor: pointer;
     box-sizing: border-box;
     border: 0.5px solid #c4c4c4;
@@ -221,7 +236,7 @@
   
   .status-cartmanual-transaction-centerSide {
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     // align-items: center;
     // font-size: 15px;
     // font-family: "SF-Compact-Rounded", sans-serif;
@@ -426,7 +441,9 @@
   }
 
   .status-cartmanual-section-price {
-    margin-top: 10px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .status-cartmanual-content-totalitem {
@@ -457,12 +474,46 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
+
+  .status-cartmanual-transaction-item {
+    display: flex;
+    justify-items: start;
+  }
+
+  // .status-cartmanual-section-item {
+  //   margin-top: 8px;
+  //   width: auto;
+  // }
+
+  .status-cartmanual-content-price {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: end;
+  }
+
+  .status-cartmanual-section-subtotal {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .status-cartmanual-section-shippingprice {
+    display: flex;
+    justify-content: space-between;
+  }
   
   $font768size: 13px;
   @media (max-width: 768px) {
     .status-cartmanual-Layout {
       width: 100vw;
-      padding: 34px 15px 15px 19px;
+      // padding: 34px 15px 15px 19px;
     }
   
     .status-cartmanual-Title {
@@ -535,14 +586,14 @@
     .status-cartmanual-inputarea {
         // min-width: 0px !important;
         // max-width: 0px !important;
-        width: 100% !important;
+        width: 96% !important;
     }
   }
   
   @media (max-width: 380px) {
     .status-cartmanual-Layout {
       width: 100vw;
-      padding: 30px 10px 15px 10px;
+      // padding: 30px 10px 15px 10px;
     }
   
     .status-cartmanual-Content {
@@ -556,7 +607,7 @@
   @media (max-width: 325px) {
     .status-cartmanual-Layout {
       width: 100vw;
-      padding: 26px 10px 15px 10px;
+      // padding: 26px 10px 15px 10px;
     }
   
     .status-cartmanual-Content {
@@ -629,7 +680,60 @@
     display: flex;
     // min-width: 450px;
     // max-width: 450px;
-    width: 105%;
+    width: 97%;
     margin-bottom: 18px;
+}
+
+.status-cartmanual-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 5px 14px 5px;
+  background-color: #FFFFFF !important;
+}
+
+.status-cartmanual-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.status-cartmanual-titletext {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 16px;
+}
+
+.status-cartmanual-tracking {
+  display: flex;
+  justify-content: space-between;
+  background-color: #4bb7ac;
+  // box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
+  border-radius: 5px;
+  padding: 12px 24px 13px 24px;
+  max-width: 95px;
+  min-width: 85px;
+  width: auto;
+  height: 40px;
+  cursor: pointer;
+}
+
+.status-cartmanual-tracking-button {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.status-cartmanual-tracking-word {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #ffffff;
+  padding-top: 9px;
+  // margin-left: 14px;
 }
   
