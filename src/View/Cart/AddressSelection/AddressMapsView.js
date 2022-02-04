@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import SearchIcon from "../../../Asset/Icon/search.png";
@@ -15,6 +15,20 @@ const AddressMapsView = () => {
     const isMobile = useMediaQuery({ maxWidth: 768 })
     const [lat, setLat] = useState(0);
     const [lng, setLng] = useState(0);
+    const [center, setCenter] = useState([]);
+    const [district, setDistrict] = useState("");
+    const [postalcode, setPostalCode] = useState("");
+    const [formattedAddress, setFormattedAddress] = useState("");
+    const [isMarkerChange, setIsMarkerChange] = useState(false);
+
+    useEffect(() => {
+        if(CartRedu.formattedAddress !== "") {
+            setFormattedAddress(CartRedu.formattedAddress);
+        } 
+        // else if (CartRedu.formattedAddress !== formattedAddress) {
+        //     setFormattedAddress(CartRedu.formattedAddress);
+        // }
+    }, [CartRedu.formattedAddress])
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
@@ -24,7 +38,7 @@ const AddressMapsView = () => {
     }
 
     const goBack = () => {
-        dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
+        // dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
         window.history.go(-1)
     }
 
@@ -39,10 +53,9 @@ const AddressMapsView = () => {
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
-                _generateAddress();
             });
         }
-        
+        _generateAddress();
     }
 
     const _generateAddress = () => {
@@ -62,9 +75,16 @@ const AddressMapsView = () => {
                         if(res.types[0] == "postal_code") {
                             dispatch({ type: 'POSTALCODE', payload: res.short_name })
                         }
+                        if(res.types[0] == "administrative_area_level_2") {
+                            dispatch({ type: 'CITY', payload: res.short_name })
+                        }
+                        if(res.types[0] == "administrative_area_level_1") {
+                            dispatch({ type: 'PROVINCE', payload: res.short_name })
+                        }
                     })
 
                     dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })
+                    setFormattedAddress(results[0].formatted_address)
                 } else {
                     window.alert('No results found');
                 }
@@ -108,7 +128,7 @@ const AddressMapsView = () => {
                                 </div>
 
                                 <div className='addressmaps-detailinfo'>
-                                    <div className='addressmaps-detailinfo-text'>{CartRedu.formattedAddress}</div>
+                                    <div className='addressmaps-detailinfo-text'>{formattedAddress}</div>
                                 </div>
                             </div>
                         </div>

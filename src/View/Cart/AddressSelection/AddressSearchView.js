@@ -57,6 +57,12 @@ const AddressSearchView = () => {
                         if(res.types[0] == "postal_code") {
                             dispatch({ type: 'POSTALCODE', payload: res.short_name })
                         }
+                        if(res.types[0] == "administrative_area_level_2") {
+                            dispatch({ type: 'CITY', payload: res.short_name })
+                        }
+                        if(res.types[0] == "administrative_area_level_1") {
+                            dispatch({ type: 'PROVINCE', payload: res.short_name })
+                        }
                     })
 
                     dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })

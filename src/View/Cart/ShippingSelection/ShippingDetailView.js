@@ -12,18 +12,41 @@ const ShippingDetailView = () => {
     const [radioStatus, setradioStatus] = useState(0)
     const [courierChecked, setCourierChecked] = useState(false)
     const [dataIndex, setDataIndex] = useState(null)
+    const [courierName, setCourierName] = useState("")
+    const [courierPrice, setCourierPrice] = useState(0)
+    const [courierDesc, setCourierDesc] = useState(0)
+    const [courierService, setCourierService] = useState("")
+    const [courierList, setCourierList] = useState([])
 
     useEffect(() => {
+        // CartRedu.courierList.map((ship, ind) => {
+        //     if(CartRedu.shippingName !== "") {
+        //         if(ship.name === CartRedu.shippingName) {
+        //             ship.imagestatus = true;
+        //         } else {
+        //             ship.imagestatus = false;
+        //         }
+        //     } else {
+        //         ship.imagestatus = false;
+        //     }
+        // })
         CartRedu.courierList.map((ship, ind) => {
-            ship.imagestatus = false;
+            if(CartRedu.shippingName !== "") {
+                if(ship.name === CartRedu.shippingName) {
+                    setDataIndex(ind);
+                    ship.imagestatus = true;
+                }
+            }
         })
-    }, [])
+        setCourierList(CartRedu.courierList);
+    }, [courierList])
 
     const handleSave = () => {
-        if (CartRedu.shippingName) {
-            // window.history.go(-1)
-            window.history.go('-2')
-        }
+        dispatch({ type: 'SHIPPINGNAME', payload: courierName });
+        dispatch({ type: 'SHIPPINGPRICE', payload: courierPrice });
+        dispatch({ type: 'SHIPPINGDESC', payload: courierDesc });
+        dispatch({ type: 'COURIERSERVICETYPE', payload: courierService });
+        window.history.go('-2')
     }
 
     const onChangeRadio = (ind, courier, index) => {
@@ -33,7 +56,7 @@ const ShippingDetailView = () => {
             setDataIndex(index);
             courier.imagestatus = true;
         } else if (index !== dataIndex) {
-            CartRedu.courierList.map((ship, ind) => {
+            courierList.map((ship, ind) => {
                 if(ind === dataIndex) {
                     ship.imagestatus = false;
                 }
@@ -41,20 +64,21 @@ const ShippingDetailView = () => {
             setDataIndex(index);
             courier.imagestatus = true;
         }
-        dispatch({ type: 'SHIPPINGNAME', payload: courier.name });
-        dispatch({ type: 'SHIPPINGPRICE', payload: courier.price });
-        dispatch({ type: 'SHIPPINGDESC', payload: courier.description });
+        setCourierName(courier.name);
+        setCourierPrice(courier.price);
+        setCourierDesc(courier.description);
+        setCourierService(courier.service_type);
     }
 
     const goBack = () => {
-        dispatch({ type: 'SHIPPINGNAME', payload: "" })
-        dispatch({ type: 'SHIPPINGPRICE', payload: "" });
-        dispatch({ type: 'SHIPPINGDESC', payload: "" });
+        // dispatch({ type: 'SHIPPINGNAME', payload: "" })
+        // dispatch({ type: 'SHIPPINGPRICE', payload: "" });
+        // dispatch({ type: 'SHIPPINGDESC', payload: "" });
         window.history.go(-1)
     }
 
     const shippingDetailList = () => {
-        return CartRedu.courierList.map((courier, ind) => {
+        return courierList.map((courier, ind) => {
             return (
                 <div key={ind} className='shippingDetail-eachList' onClick={() => onChangeRadio(1, courier, ind)}>
 
@@ -64,7 +88,7 @@ const ShippingDetailView = () => {
                         </div>
                         <div>
                         <div className="shippingDetail-shippingName">
-                            <span className="shippingDetail-blackNotes">{courier.name} (Rp {Intl.NumberFormat("id-ID").format(courier.price)})</span>
+                            <span className="shippingDetail-blackNotes">{courier.name} (Rp {Intl.NumberFormat("id-ID").format(courier.price)}) </span>
                         </div>
                         <div className="shippingDetail-shippingDetail">
                             <span className="shippingDetail-grayNotes">{courier.description}</span>
@@ -106,7 +130,7 @@ const ShippingDetailView = () => {
                 </div>
                 
 
-                <div onClick={handleSave} className="shippingDetail-selectButton" style={{backgroundColor: CartRedu.shippingName ? '#4bb7ac' : '#aaaaaa'}}>Pilih</div>
+                <div onClick={handleSave} className="shippingDetail-selectButton" style={{backgroundColor: courierName ? '#4bb7ac' : '#aaaaaa'}}>Pilih</div>
             </div>
         </>
     )
