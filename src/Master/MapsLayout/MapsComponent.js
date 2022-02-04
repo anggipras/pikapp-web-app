@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import AutoComplete from './AutoCompleteComponent';
 import Marker from './MarkerComponent';
 
-import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, IsMarkerChange } from '../../Redux/Actions'
+import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, City, Province, IsMarkerChange } from '../../Redux/Actions'
 import { connect } from "react-redux";
 
 import Button from "react-bootstrap/Button";
@@ -34,7 +34,8 @@ class MapsComponent extends Component {
         address: '',
         draggable: true,
         lat: null,
-        lng: null
+        lng: null,
+        oldLat: null
     };
 
     componentWillMount() {
@@ -46,6 +47,11 @@ class MapsComponent extends Component {
         this.setCurrentLocation();
     }
 
+    // componentDidUpdate() {
+    //     if(this.state.address !== this.props.CartRedu.formattedAddress) {
+    //         this.props.FormattedAddress(this.state.address);
+    //     }
+    // }
 
     onMarkerInteraction = (childKey, childProps, mouse) => {
         this.setState({
@@ -81,7 +87,8 @@ class MapsComponent extends Component {
         this.setState({
             draggable: false,
             lat: value.lat,
-            lng: value.lng
+            lng: value.lng,
+            oldLat: value.lat
         }, () => {
             this._generateAddress();
         });
@@ -140,6 +147,12 @@ class MapsComponent extends Component {
                         }
                         if(res.types[0] == "postal_code") {
                             this.props.PostalCode(res.short_name);
+                        }
+                        if(res.types[0] == "administrative_area_level_2") {
+                            this.props.City(res.short_name);
+                        }
+                        if(res.types[0] == "administrative_area_level_1") {
+                            this.props.Province(res.short_name);
                         }
                     })
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
@@ -248,6 +261,6 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, IsMarkerChange })(MapsComponent)
+export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, City, Province, IsMarkerChange })(MapsComponent)
 
 // export default MapsComponent;

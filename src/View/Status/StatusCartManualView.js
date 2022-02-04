@@ -181,7 +181,7 @@ export class StatusCartManualView extends React.Component {
               <h3 className="status-cartmanual-item">{value.merchant_name}</h3>
           </div>
           <div className="status-cartmanual-content-date">
-              <span className="status-cartmanual-datetext">Tanggal Pengiriman : </span><span className="status-cartmanual-dateinfo">{moment(value.shipping.shipping_time).format("DD MMMM H:mm, H:mm")}</span>
+              <span className="status-cartmanual-datetext">Tanggal Pengiriman : </span><span className="status-cartmanual-dateinfo">{moment(value.shipping.shipping_time).format("DD MMMM YYYY, H:mm")}</span>
           </div>
           <div className="status-cartmanual-content-border"></div>
 
@@ -207,7 +207,7 @@ export class StatusCartManualView extends React.Component {
                               </div>
                               <div>
                               <div className="status-cartmanual-section-item">
-                                  <h3 className='status-cartmanual-content-price'>Rp {Intl.NumberFormat("id-ID").format(product.price)}</h3>
+                                  <h3 className='status-cartmanual-content-price'>Rp {Intl.NumberFormat("id-ID").format((product.price * product.quantity) + (product.extraPrice * product.quantity))}</h3>
                               </div>
                               </div>
                           </div>
@@ -233,7 +233,7 @@ export class StatusCartManualView extends React.Component {
 
           <div className="status-cartmanual-section-shippingprice">
               <h3 className="status-cartmanual-content-item">Asuransi Pengiriman</h3>
-              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.shipping.shipping_cost)}</h3>
+              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.shipping.shipping_insurance_cost)}</h3>
           </div>
               
           <div className="status-cartmanual-content-border"></div>
@@ -242,13 +242,18 @@ export class StatusCartManualView extends React.Component {
               <h3 className="status-cartmanual-content-totalitem">Total</h3>
               <h3 className="status-cartmanual-content-totalprice">Rp {Intl.NumberFormat("id-ID").format(value.total_payment)}</h3>
             </div>
-            <Link to="/tracking" style={{ textDecoration: "none" }}>
-            <div className='status-cartmanual-tracking' >
-              <div className='status-cartmanual-tracking-button'>
-                <h1 className='status-cartmanual-tracking-word'>Lacak</h1>
-              </div>
-            </div>
-            </Link>
+            {
+              value.order_status === "DELIVER" ?
+              <Link to="/tracking" style={{ textDecoration: "none" }}>
+                <div className='status-cartmanual-tracking' >
+                  <div className='status-cartmanual-tracking-button'>
+                    <h1 className='status-cartmanual-tracking-word'>Lacak</h1>
+                  </div>
+                </div>
+              </Link>
+              :
+              <></>
+            }
           </div>
       </div>
     );
@@ -553,12 +558,12 @@ export class StatusCartManualView extends React.Component {
             </span>
             <div className="status-cartmanual-titletext">Cek Transaksi</div>
         </div>
-
-        <div className="status-cartmanual-Wrapper">
         <div className="status-cartmanual-inputarea">
             <input className="status-cartmanual-textbox" placeholder="Masukkan ID Transaksi Anda" onChange={this.handleTransactionId} value={this.state.transactionId} />
             <div className="status-cartmanual-checkbutton" onClick={() => this.getTransactionDetail()}>Cek</div>
         </div>
+
+        <div className="status-cartmanual-Wrapper">
             {this.contentMainView()}
         </div>
       </>

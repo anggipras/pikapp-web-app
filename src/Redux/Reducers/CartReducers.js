@@ -18,6 +18,8 @@ const INITIAL_STATE = {
     lng : 0,
     center : [],
     district : "",
+    city : "",
+    province : "",
     formattedAddress : "",
     shippingType : "",
     shippingName : "",
@@ -26,6 +28,7 @@ const INITIAL_STATE = {
     courierList : [],
     isMarkerChange : false,
     searchInput : "",
+    courierServiceType : ""
     // dataDetailTxn : {}
 }
 
@@ -69,6 +72,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, center: action.payload }
         case "DISTRICT":
             return { ...state, district: action.payload }
+        case "CITY":
+            return { ...state, city: action.payload }
+        case "PROVINCE":
+            return { ...state, province: action.payload }
         case "FORMATTEDADDRESS":
             return { ...state, formattedAddress: action.payload }
         case "SHIPPINGTYPE":
@@ -85,6 +92,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, isMarkerChange: action.payload }
         case "SEARCHINPUT":
             return { ...state, searchInput: action.payload }
+        case "COURIERSERVICETYPE":
+            return { ...state, courierServiceType: action.payload }
         // case "DATADETAILTXN":
         //     return { ...state, dataDetailTxn: action.payload }
         case "DEFAULTSTATE":

@@ -30,6 +30,7 @@ const AddressInputView = () => {
     }
 
     const goBack = () => {
+        dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
         dispatch({ type: 'FULLADDRESS', payload: "" })
         dispatch({ type: 'POSTALCODE', payload: "" })
         dispatch({ type: 'SHIPPERNOTES', payload: "" })

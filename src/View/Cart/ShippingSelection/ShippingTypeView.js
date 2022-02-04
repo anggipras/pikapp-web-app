@@ -79,19 +79,33 @@ const ShippingTypeView = () => {
             data : req
         }).then(res => {
             let response = []
+            let courierList = []
             if(res.data.err_code !== "404" && res.data.result.length !== 0) {
                 res.data.result.map((ship, ind) => {
+                    ship.courier_list.forEach(cour => {
+                        courierList.push({
+                            courier_code: cour.courier_code,
+                            courier_image: cour.courier_image,
+                            description: cour.description,
+                            name: cour.name,
+                            price: cour.price,
+                            service_name: cour.service_name,
+                            service_type: cour.service_type,
+                            imagestatus: false
+                        })
+                    })
                     response.push({
                         categShip : ship.name,
                         lowerLimit : ship.lower_limit,
                         upperLimit : ship.upper_limit,
                         description : ship.description,
                         shipId : ind,
-                        courierList : ship.courier_list 
+                        courierList : courierList 
                     })
                 })
     
                 setShippingList(response);
+                console.log(response);
             } else {
                 setNoDataCourier(true);
             }
@@ -108,14 +122,13 @@ const ShippingTypeView = () => {
     const handleSave = (shippingtype, courier) => {
         dispatch({ type: 'SHIPPINGTYPE', payload: shippingtype })
         dispatch({ type: 'COURIERLIST', payload: courier })
-        // if (CartRedu.shippingType) {
-            // window.history.go(-1)
-            history.push('./detail')
-        // }
+        history.push('./detail')
     }
 
     const goBack = () => {
-        dispatch({ type: 'SHIPPINGTYPE', payload: "" })
+        if(CartRedu.shippingName === "") {
+            dispatch({ type: 'SHIPPINGTYPE', payload: "" })
+        }
         window.history.go(-1)
     }
 
@@ -126,7 +139,16 @@ const ShippingTypeView = () => {
 
                     <div className="shippingSelection-titleLayout">
                         <div className="shippingSelection-shippingName">
-                            <span className="shippingSelection-blackNotes">{ship.categShip} (Rp {Intl.NumberFormat("id-ID").format(ship.lowerLimit)} - Rp {Intl.NumberFormat("id-ID").format(ship.upperLimit)})</span>
+                            <span className="shippingSelection-blackNotes">{ship.categShip} 
+                            {
+                                ship.lowerLimit === 0 ?
+                                <span> (Rp {Intl.NumberFormat("id-ID").format(ship.upperLimit)})</span>
+                                :
+                                <span>
+                                    (Rp {Intl.NumberFormat("id-ID").format(ship.lowerLimit)} - Rp {Intl.NumberFormat("id-ID").format(ship.upperLimit)})
+                                </span>
+                            }
+                            </span>
                         </div>
                         <div className="shippingSelection-shippingDetail">
                             <span className="shippingSelection-grayNotes">{ship.description}</span>
@@ -163,9 +185,6 @@ const ShippingTypeView = () => {
                         }
                     </div>
                 </div>
-                
-
-                {/* <div onClick={handleSave} className="shippingSelection-selectButton" style={{backgroundColor: CartRedu.shippingType ? '#4bb7ac' : '#aaaaaa'}}>Simpan</div> */}
             </div>
         </>
     )

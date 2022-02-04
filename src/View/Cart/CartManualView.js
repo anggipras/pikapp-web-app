@@ -390,11 +390,11 @@ class CartManualView extends React.Component {
         selectedProd.push({
           product_id: selectMenu.productId,
           product_name: selectMenu.foodName,
-          product_price: selectMenu.foodPrice,
+          product_price: Number(selectMenu.foodPrice),
           notes: newlistArr,
           quantity: selectMenu.foodAmount,
           discount: 0,
-          extra_price: extraprice,
+          extra_price: Number(extraprice),
           extra_menus: [],
         })
       })
@@ -413,7 +413,13 @@ class CartManualView extends React.Component {
         customer_name: this.state.customerName,
         customer_address: this.props.CartRedu.fullAddress,
         customer_address_detail: this.props.CartRedu.shipperNotes,
-        customer_phone_number: "0" + this.state.customerPhoneNumber
+        customer_phone_number: "0" + this.state.customerPhoneNumber,
+        latitude: this.props.CartRedu.lat,
+        longitude: this.props.CartRedu.lng,
+        subdistrict_name: this.props.CartRedu.district,
+        city: this.props.CartRedu.city,
+        province: this.props.CartRedu.province,
+        postal_code: this.props.CartRedu.postalCode,
       }
 
       let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shippingPrice)
@@ -426,7 +432,7 @@ class CartManualView extends React.Component {
         shipperName = "Pickup Sendiri";
       } else {
         pickupType = "DELIVERY";
-        shipperName = this.props.CartRedu.shipperName;
+        shipperName = this.props.CartRedu.shippingName;
         shipperPrice = this.props.CartRedu.shippingPrice
       }
 
@@ -444,7 +450,9 @@ class CartManualView extends React.Component {
         shipping_method: shipperName,
         shipping_cost: shipperPrice,
         shipping_time: shippingTime,
-        shipping_time_type : shippingType
+        shipping_time_type: shippingType,
+        shipping_insurance: this.state.insurancePrice,
+        shipping_service_type: this.props.CartRedu.courierServiceType
       }
 
   
@@ -471,7 +479,7 @@ class CartManualView extends React.Component {
       uuid = uuid.replace(/-/g, "");
       const date = new Date().toISOString();
       
-      Axios(address + "pos/v1/web/transaction/add/", {
+      Axios(address + "pos/v2/web/transaction/add/", {
         headers: {
           "Content-Type": "application/json",
           "x-request-id": uuid,
@@ -1040,7 +1048,7 @@ class CartManualView extends React.Component {
                                     <input id="insuranceCheckbox" name="insuranceCheckbox" className="cartmanual-deliverydetail-insurance-check" type="checkbox" defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} />
                                     <div className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</div>
                                     {/* <label htmlFor="insuranceCheckbox" className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</label> */}
-                                    <img className='cartmanual-deliverydetail-insuranceicon' src={InfoIcon}></img>
+                                    {/* <img className='cartmanual-deliverydetail-insuranceicon' src={InfoIcon}></img> */}
                                   </div>
                                 </>
                                 :

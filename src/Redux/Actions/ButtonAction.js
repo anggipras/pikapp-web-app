@@ -177,3 +177,24 @@ export const DataDetailTxn = (data) => {
         payload: data
     }
 }
+
+export const City = (data) => {
+    return {
+        type: 'CITY',
+        payload: data
+    }
+}
+
+export const Province = (data) => {
+    return {
+        type: 'PROVINCE',
+        payload: data
+    }
+}
+
+export const CourierServiceType = (data) => {
+    return {
+        type: 'COURIERSERVICETYPE',
+        payload: data
+    }
+}
