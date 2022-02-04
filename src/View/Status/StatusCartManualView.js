@@ -233,7 +233,7 @@ export class StatusCartManualView extends React.Component {
 
           <div className="status-cartmanual-section-shippingprice">
               <h3 className="status-cartmanual-content-item">Asuransi Pengiriman</h3>
-              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.shipping.shipping_cost)}</h3>
+              <h3 className="status-cartmanual-content-item">Rp {Intl.NumberFormat("id-ID").format(value.shipping.shipping_insurance_cost)}</h3>
           </div>
               
           <div className="status-cartmanual-content-border"></div>

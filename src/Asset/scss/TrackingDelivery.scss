@@ -24,7 +24,7 @@
 
 .tracking-delivery-mainLayout {
   box-shadow: 4px 0 4px -4px rgba(0, 0, 0, 0.1), -4px 0 4px -4px rgba(0, 0, 0, 0.1);
-  height: 100vh;
+  // height: 100vh;
 }
 
 .tracking-delivery-Layout {
@@ -223,6 +223,17 @@
   margin-bottom: 0px;
 }
 
+.tracking-delivery-content-detail {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 0px;
+}
+
 .tracking-delivery-content-desc {
   font-family: "SF-Compact-Rounded", sans-serif;
   font-style: normal;
@@ -341,7 +352,7 @@
 }
 
 .tracking-delivery-courier-info {
-  margin-left: 10px;
+  margin-left: 0px;
 }
 
 .tracking-delivery-content-info {
