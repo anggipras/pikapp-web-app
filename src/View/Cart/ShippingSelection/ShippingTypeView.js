@@ -79,9 +79,10 @@ const ShippingTypeView = () => {
             data : req
         }).then(res => {
             let response = []
-            let courierList = []
+            
             if(res.data.err_code !== "404" && res.data.result.length !== 0) {
                 res.data.result.map((ship, ind) => {
+                    let courierList = []
                     ship.courier_list.forEach(cour => {
                         courierList.push({
                             courier_code: cour.courier_code,

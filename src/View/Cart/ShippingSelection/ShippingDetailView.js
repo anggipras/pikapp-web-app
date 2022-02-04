@@ -35,6 +35,10 @@ const ShippingDetailView = () => {
                 if(ship.name === CartRedu.shippingName) {
                     setDataIndex(ind);
                     ship.imagestatus = true;
+                    setCourierName(ship.name);
+                    setCourierPrice(ship.price);
+                    setCourierDesc(ship.description);
+                    setCourierService(ship.service_type);
                 }
             }
         })
