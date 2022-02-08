@@ -85,7 +85,7 @@ class MapsComponent extends Component {
 
     _onClick = (value) => {
         this.setState({
-            draggable: false,
+            draggable: true,
             lat: value.lat,
             lng: value.lng,
             oldLat: value.lat

@@ -44,7 +44,8 @@ export class StatusCartManualView extends React.Component {
             shipping_method: "",
             shipping_cost: 0,
             shipping_time: "",
-            shipping_time_type: ""
+            shipping_time_type: "",
+            shipping_service_type_category: ""
         },
         customer : {
             address: "",
@@ -173,8 +174,8 @@ export class StatusCartManualView extends React.Component {
           <div className="status-cartmanual-content-border"></div>
 
           <div className="status-cartmanual-transaction-topSide">
-              <h3 className="status-cartmanual-transaction-merchName">{value.shipping.shipping_method}</h3>
-              <img className='status-cartmanual-content-icon' src={ManualIcon}></img>
+              <h3 className="status-cartmanual-transaction-merchName">{value.shipping.shipping_method} - {value.shipping.shipping_service_type_category}</h3>
+              {/* <img className='status-cartmanual-content-icon' src={ManualIcon}></img> */}
           </div>
 
           <div>
