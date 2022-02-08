@@ -4,6 +4,8 @@ import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import pikappLogo from '../../Asset/Logo/logo4x.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import CopyIcon from "../../Asset/Icon/copy-icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -77,6 +79,14 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentType: "WALLET_OVO" });
                 this.setState({ paymentOption: "Pembayaran Ovo" });
                 this.setState({ paymentImage: OvoPayment });
+            } else if (this.props.AllRedu.dataOrder.paymentType === "WALLET_DANA") {
+                this.setState({ paymentType: "WALLET_DANA" });
+                this.setState({ paymentOption: "Pembayaran DANA" });
+                this.setState({ paymentImage: DanaPayment });
+            } else if (this.props.AllRedu.dataOrder.paymentType === "WALLET_SHOPEEPAY") {
+                this.setState({ paymentType: "WALLET_SHOPEEPAY" });
+                this.setState({ paymentOption: "Pembayaran ShopeePay" });
+                this.setState({ paymentImage: ShopeePayment });
             }
             this.setState({ dataOrder: this.props.AllRedu.dataOrder });
         } else if (localStorage.getItem("payment")) {
@@ -90,6 +100,14 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentType: "WALLET_OVO" });
                 this.setState({ paymentOption: "Pembayaran Ovo" });
                 this.setState({ paymentImage: OvoPayment });
+            } else if (dataPayment.paymentType === "WALLET_DANA") {
+                this.setState({ paymentType: "WALLET_DANA" });
+                this.setState({ paymentOption: "Pembayaran DANA" });
+                this.setState({ paymentImage: DanaPayment });
+            } else if (dataPayment.paymentType === "WALLET_SHOPEEPAY") {
+                this.setState({ paymentType: "WALLET_SHOPEEPAY" });
+                this.setState({ paymentOption: "Pembayaran ShopeePay" });
+                this.setState({ paymentImage: ShopeePayment });
             }
 
             this.setState({ dataOrder: dataPayment });

@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
+import { address, addressShipping, secret, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import { connect } from "react-redux";
@@ -22,7 +22,8 @@ class TrackingDeliveryView extends React.Component {
                 shipping_method: "",
                 shipping_cost: 0,
                 shipping_time: "",
-                shipping_time_type: ""
+                shipping_time_type: "",
+                waybill_id : ""
             },
             customer : {
                 address: "",
@@ -54,31 +55,47 @@ class TrackingDeliveryView extends React.Component {
             total_discount: 0,
             total_payment: 0,
         },
-        history : [{
-            note: "SHIPMENT RECEIVED BY JNE COUNTER OFFICER AT [JAKARTA]",
-            updated_at: "2021-03-16T18:17:00+07:00",
-            status: "dropping_off"
-        }, {
-            note: "RECEIVED AT SORTING CENTER [JAKARTA]",
-            updated_at: "2021-03-16T21:15:00+07:00",
-            status: "dropping_off"
-        }, {
-            note: "SHIPMENT FORWARDED TO DESTINATION [JAKARTA , HUB VETERAN BINTARO]",
-            updated_at: "2021-03-16T23:12:00+07:00",
-            status: "dropping_off"
-        }, {
-            note: "RECEIVED AT INBOUND STATION [JAKARTA , HUB VETERAN BINTARO]",
-            updated_at: "2021-03-16T23:43:00+07:00",
-            status: "dropping_off"
-        }, {
-            note: "WITH DELIVERY COURIER [JAKARTA , HUB VETERAN BINTARO]",
-            updated_at: "2021-03-17T09:29:00+07:00",
-            status: "dropping_off"
-        }, {
-            note: "DELIVERED TO [ainul yakin | 17-03-2021 11:15 | JAKARTA]",
-            updated_at: "2021-03-17T11:15:00+07:00",
-            status: "delivered"
-        }]
+        dataCourier : {
+            id: "",
+            waybill_id: "TX12345",
+            courier: {
+                company: "Gojek",
+                name: "Anastasya",
+                phone: "089660050299"
+            },
+            destination: {
+                contact_name: "",
+                address: ""
+            },
+            history: [{
+                note: "SHIPMENT RECEIVED BY JNE COUNTER OFFICER AT [JAKARTA]",
+                updated_at: "2021-03-16T18:17:00+07:00",
+                status: "dropping_off"
+            }, {
+                note: "RECEIVED AT SORTING CENTER [JAKARTA]",
+                updated_at: "2021-03-16T21:15:00+07:00",
+                status: "dropping_off"
+            }, {
+                note: "SHIPMENT FORWARDED TO DESTINATION [JAKARTA , HUB VETERAN BINTARO]",
+                updated_at: "2021-03-16T23:12:00+07:00",
+                status: "dropping_off"
+            }, {
+                note: "RECEIVED AT INBOUND STATION [JAKARTA , HUB VETERAN BINTARO]",
+                updated_at: "2021-03-16T23:43:00+07:00",
+                status: "dropping_off"
+            }, {
+                note: "WITH DELIVERY COURIER [JAKARTA , HUB VETERAN BINTARO]",
+                updated_at: "2021-03-17T09:29:00+07:00",
+                status: "dropping_off"
+            }, {
+                note: "DELIVERED TO [ainul yakin | 17-03-2021 11:15 | JAKARTA]",
+                updated_at: "2021-03-17T11:15:00+07:00",
+                status: "delivered"
+            }],
+            link: "",
+            order_id: "",
+            status: ""
+        }
     }
 
     componentDidMount() {
@@ -92,15 +109,45 @@ class TrackingDeliveryView extends React.Component {
         }
 
         // if (Object.keys(this.props.AllRedu.dataDetailTxn).length !== 0) {
-            this.setState({ data : this.props.AllRedu.dataDetailTxn })
+            this.setState({ data : this.props.AllRedu.dataDetailTxn },
+                () => {
+                    this.getTrackingOrder();
+                })
         // }
 
-        
-        let list = this.state.history.sort().reverse();
-        this.setState({ history : list });
+        let list = this.state.dataCourier.history.sort().reverse();
+        // this.setState({ history : list });
     }
 
     componentDidUpdate() {
+    }
+
+    getTrackingOrder() {
+        var request = {
+            waybill_id : this.state.data.shipping.waybill_id,
+            courier : this.state.data.shipping.shipping_method.toLowerCase()
+        }
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        let historyTransAPI = addressShipping + '/api/webhook/v1/order-status'
+        Axios(historyTransAPI, {
+        headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+        },
+        method: "POST",
+        data: request
+        })
+        .then((res) => {
+            var results = res.data.results;
+            this.setState({ dataCourier: results });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     goBack = () => {
@@ -134,6 +181,12 @@ class TrackingDeliveryView extends React.Component {
         .catch((err) => {
             console.log(err);
         });
+    }
+
+    handleCourierPhone = (phone) => { //go to Whatsapp chat
+        phone.substring(1)
+        let waNumber = '62' + phone
+        window.location.href = `https://wa.me/${waNumber}`
     }
 
     render() {
@@ -196,7 +249,7 @@ class TrackingDeliveryView extends React.Component {
                                             <h3 className="tracking-delivery-info-order" style={{ color : "#F4B55B" }}>Pesanan Selesai</h3>
                                         </div> */}
                                         <div>
-                                            <h3 className="tracking-delivery-transactionid">Resi Pengiriman: {this.state.data.transaction_id}</h3>
+                                            <h3 className="tracking-delivery-transactionid">Resi Pengiriman: {this.state.dataCourier.waybill_id}</h3>
                                         </div>
                                         {/* <div>
                                             <h3 className="tracking-delivery-transactiondate">Estimasi Tiba di tujuan: {moment(this.state.data.transaction_time).format("Do MMMM YYYY, H:mm")}</h3>
@@ -210,7 +263,7 @@ class TrackingDeliveryView extends React.Component {
                                             <h3 className="tracking-delivery-item">{this.state.data.merchant_name}</h3>
                                         </div>
                                         <div className="tracking-delivery-content-date">
-                                            <span className="tracking-delivery-datetext">Tanggal Pengiriman : </span><span className="tracking-delivery-dateinfo">{moment(this.state.data.shipping.shipping_time).format("DD MMMM H:mm, H:mm")}</span>
+                                            <span className="tracking-delivery-datetext">Tanggal Pengiriman : </span><span className="tracking-delivery-dateinfo">{moment(this.state.data.shipping.shipping_time).format("DD MMMM YYYY, H:mm")}</span>
                                         </div>
                                         <div className="tracking-delivery-content-border"></div>
 
@@ -223,12 +276,12 @@ class TrackingDeliveryView extends React.Component {
                                                             <img className='tracking-delivery-content-icon' src={CourierPhoto}></img>
                                                         </div> */}
                                                         <div className="tracking-delivery-courier-info">
-                                                            <h3 className="tracking-delivery-courier-name">Budi Doremi</h3>
-                                                            <h3 className="tracking-delivery-courier-phone">+6287887667887</h3>
+                                                            <h3 className="tracking-delivery-courier-name">{this.state.dataCourier.courier.name}</h3>
+                                                            <h3 className="tracking-delivery-courier-phone">{this.state.dataCourier.courier.phone}</h3>
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <img className='tracking-delivery-content-icon' src={ManualIcon}></img>
+                                                        <img onClick={() => this.handleCourierPhone(this.state.dataCourier.courier.phone)} className='tracking-delivery-content-icon' src={ManualIcon}></img>
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,7 +289,7 @@ class TrackingDeliveryView extends React.Component {
                                         <div className="tracking-delivery-content-border"></div>
 
                                         {
-                                        this.state.history.map((ship, ind) => {
+                                        this.state.dataCourier.history.map((ship, ind) => {
                                             return (
                                                 <div key={ind} className="tracking-delivery-transaction-centerSide">
                                                     <div className="tracking-delivery-section-quantity">

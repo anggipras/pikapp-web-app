@@ -426,14 +426,18 @@ class CartManualView extends React.Component {
 
       let pickupType = ''
       let shipperName = ''
+      let shipperType = ''
+      let shipperCategoryType = ''
       let shipperPrice = 0
       if(this.props.CartRedu.pickupType === 0) {
         pickupType = "PICKUP";
         shipperName = "Pickup Sendiri";
       } else {
         pickupType = "DELIVERY";
-        shipperName = this.props.CartRedu.shippingName;
-        shipperPrice = this.props.CartRedu.shippingPrice
+        shipperName = this.props.CartRedu.shippingName.toLowerCase();
+        shipperPrice = this.props.CartRedu.shippingPrice;
+        shipperType = this.props.CartRedu.courierServiceType;
+        shipperCategoryType = this.props.CartRedu.shippingType;
       }
 
       let shippingTime = '';
@@ -452,7 +456,8 @@ class CartManualView extends React.Component {
         shipping_time: shippingTime,
         shipping_time_type: shippingType,
         shipping_insurance: this.state.insurancePrice,
-        shipping_service_type: this.props.CartRedu.courierServiceType
+        shipping_service_type: shipperType,
+        shipping_service_type_category: shipperCategoryType
       }
 
   
