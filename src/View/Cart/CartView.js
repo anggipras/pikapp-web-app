@@ -509,8 +509,6 @@ class CartView extends React.Component {
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_DANA') {
-          const link = res.data.results[0].checkout_url_mobile;
-          windowReference.location = link;
           // this.setState({ redirectPaymentUrl : res.data.results[0].checkout_url_mobile });
           this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
           setTimeout(() => {
@@ -529,6 +527,8 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
+            const link = res.data.results[0].checkout_url_mobile;
+            windowReference.location = link;
             // this.setState({ loadButton: true })
             // this.props.DoneLoad()
             // this.setState({ redirectPayment : true });
@@ -536,7 +536,6 @@ class CartView extends React.Component {
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-          window.location.assign(res.data.results[0].checkout_url_deeplink);
           this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
           setTimeout(() => {
             let filterOtherCart = storageData.filter(valFilter => {
@@ -554,6 +553,7 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
+            window.location.assign(res.data.results[0].checkout_url_deeplink);
             // this.setState({ loadButton: true })
             // this.props.DoneLoad()
           }, 1000);
