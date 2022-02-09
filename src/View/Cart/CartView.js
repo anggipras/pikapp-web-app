@@ -21,7 +21,7 @@ import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
 import { EditMenuCart, IsMerchantQR, DataOrder } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 // import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
@@ -124,8 +124,6 @@ class CartView extends React.Component {
         )
       }
     ],
-    redirectPayment : false,
-    redirectPaymentUrl : ""
   };
 
   componentDidMount() {
@@ -420,10 +418,10 @@ class CartView extends React.Component {
     }
     expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
 
-    let windowReference
-    if(this.state.paymentType === "WALLET_DANA") {
-      windowReference = window.open();
-    }
+    // let windowReference
+    // if(this.state.paymentType === "WALLET_DANA") {
+    //   windowReference = window.open();
+    // }
 
     var requestData = {
       products: selectedProd,
@@ -453,17 +451,6 @@ class CartView extends React.Component {
       data: requestData,
     })
       .then((res) => {
-        // const link = res.data.results[0].checkout_url_mobile;
-
-        // const newTab = document.createElement("newTab");
-        // newTab.setAttribute('href', link);
-        // newTab.setAttribute('target', '_blank');
-        // newTab.click();
-        // window.open(res.data.results[0].checkout_url_mobile, '_blank');
-        // window.location.assign(res.data.results[0].checkout_url_deeplink);
-
-        // windowReference.location = link;
-
         if (this.state.paymentType === 'PAY_BY_CASHIER') {
           this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
           setTimeout(() => {
@@ -509,7 +496,6 @@ class CartView extends React.Component {
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_DANA') {
-          // this.setState({ redirectPaymentUrl : res.data.results[0].checkout_url_mobile });
           this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
           setTimeout(() => {
             let filterOtherCart = storageData.filter(valFilter => {
@@ -527,12 +513,11 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
-            const link = res.data.results[0].checkout_url_mobile;
-            windowReference.location = link;
+            window.location.assign(res.data.results[0].checkout_url_mobile);
+            // const link = res.data.results[0].checkout_url_mobile;
+            // windowReference.location = link;
             // this.setState({ loadButton: true })
             // this.props.DoneLoad()
-            // this.setState({ redirectPayment : true });
-            // this.setState({ redirectPayment : false });
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
@@ -902,10 +887,6 @@ class CartView extends React.Component {
     if (this.state.loadButton) {
       return <Redirect to='/orderconfirmation' />
     }
-
-    // if (this.state.redirectPayment) {
-    //   return <Link to={{ pathname: this.state.redirectPaymentUrl}} target="_blank" rel="noopener noreferrer" />
-    // }
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let allCart = JSON.parse(localStorage.getItem('cart'))
