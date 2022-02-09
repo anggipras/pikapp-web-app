@@ -21,7 +21,7 @@ import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
 import { EditMenuCart, IsMerchantQR, DataOrder } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 // import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
@@ -124,6 +124,8 @@ class CartView extends React.Component {
         )
       }
     ],
+    redirectPayment : false,
+    redirectPaymentUrl : ""
   };
 
   componentDidMount() {
@@ -418,6 +420,11 @@ class CartView extends React.Component {
     }
     expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
 
+    let windowReference
+    if(this.state.paymentType === "WALLET_DANA") {
+      windowReference = window.open();
+    }
+
     var requestData = {
       products: selectedProd,
       payment_with: this.state.paymentType,
@@ -502,9 +509,9 @@ class CartView extends React.Component {
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_DANA') {
-          var windowReference = window.open();
           const link = res.data.results[0].checkout_url_mobile;
           windowReference.location = link;
+          // this.setState({ redirectPaymentUrl : res.data.results[0].checkout_url_mobile });
           this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
           setTimeout(() => {
             let filterOtherCart = storageData.filter(valFilter => {
@@ -524,6 +531,8 @@ class CartView extends React.Component {
             localStorage.removeItem("counterPayment");
             // this.setState({ loadButton: true })
             // this.props.DoneLoad()
+            // this.setState({ redirectPayment : true });
+            // this.setState({ redirectPayment : false });
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
@@ -893,6 +902,10 @@ class CartView extends React.Component {
     if (this.state.loadButton) {
       return <Redirect to='/orderconfirmation' />
     }
+
+    // if (this.state.redirectPayment) {
+    //   return <Link to={{ pathname: this.state.redirectPaymentUrl}} target="_blank" rel="noopener noreferrer" />
+    // }
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
     let allCart = JSON.parse(localStorage.getItem('cart'))
