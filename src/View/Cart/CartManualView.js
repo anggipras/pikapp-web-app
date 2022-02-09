@@ -434,7 +434,7 @@ class CartManualView extends React.Component {
         shipperName = "Pickup Sendiri";
       } else {
         pickupType = "DELIVERY";
-        shipperName = this.props.CartRedu.shippingName.toLowerCase();
+        shipperName = this.props.CartRedu.shippingCode;
         shipperPrice = this.props.CartRedu.shippingPrice;
         shipperType = this.props.CartRedu.courierServiceType;
         shipperCategoryType = this.props.CartRedu.shippingType;
