@@ -16,6 +16,7 @@ const ShippingDetailView = () => {
     const [courierPrice, setCourierPrice] = useState(0)
     const [courierDesc, setCourierDesc] = useState(0)
     const [courierService, setCourierService] = useState("")
+    const [courierCode, setCourierCode] = useState("")
     const [courierList, setCourierList] = useState([])
 
     useEffect(() => {
@@ -39,6 +40,7 @@ const ShippingDetailView = () => {
                     setCourierPrice(ship.price);
                     setCourierDesc(ship.description);
                     setCourierService(ship.service_type);
+                    setCourierCode(ship.courier_code);
                 }
             }
         })
@@ -50,6 +52,7 @@ const ShippingDetailView = () => {
         dispatch({ type: 'SHIPPINGPRICE', payload: courierPrice });
         dispatch({ type: 'SHIPPINGDESC', payload: courierDesc });
         dispatch({ type: 'COURIERSERVICETYPE', payload: courierService });
+        dispatch({ type: 'SHIPPINGCODE', payload: courierCode });
         window.history.go('-2')
     }
 
@@ -72,6 +75,7 @@ const ShippingDetailView = () => {
         setCourierPrice(courier.price);
         setCourierDesc(courier.description);
         setCourierService(courier.service_type);
+        setCourierCode(courier.courier_code);
     }
 
     const goBack = () => {

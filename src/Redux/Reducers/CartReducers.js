@@ -25,6 +25,7 @@ const INITIAL_STATE = {
     shippingName : "",
     shippingPrice : 0,
     shippingDesc : "",
+    shippingCode : "",
     courierList : [],
     isMarkerChange : false,
     searchInput : "",
@@ -86,6 +87,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, shippingPrice: action.payload }
         case "SHIPPINGDESC":
             return { ...state, shippingDesc: action.payload }
+        case "SHIPPINGCODE":
+            return { ...state, shippingCode: action.payload }            
         case "COURIERLIST":
             return { ...state, courierList: action.payload }
         case "ISMARKERCHANGE":

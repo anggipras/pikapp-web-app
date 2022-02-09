@@ -125,7 +125,7 @@ class TrackingDeliveryView extends React.Component {
     getTrackingOrder() {
         var request = {
             waybill_id : this.state.data.shipping.waybill_id,
-            courier : this.state.data.shipping.shipping_method.toLowerCase()
+            courier : this.state.data.shipping.shipping_method
         }
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
