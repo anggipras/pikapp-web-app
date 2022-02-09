@@ -513,7 +513,8 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
-            window.location.assign(res.data.results[0].checkout_url_mobile);
+            // window.location.assign(res.data.results[0].checkout_url_mobile);
+            window.location.href = res.data.results[0].checkout_url_mobile;
             // const link = res.data.results[0].checkout_url_mobile;
             // windowReference.location = link;
             // this.setState({ loadButton: true })

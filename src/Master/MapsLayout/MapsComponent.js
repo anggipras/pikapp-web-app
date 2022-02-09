@@ -188,6 +188,26 @@ class MapsComponent extends Component {
         }
     }
 
+    getCurrentLocation() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+
+                this.props.Center([position.coords.latitude, position.coords.longitude]);
+                this.props.Lat(position.coords.latitude);
+                this.props.Lng(position.coords.longitude);
+                this.props.IsMarkerChange(false);
+
+                this.setState({
+                    center: [position.coords.latitude, position.coords.longitude],
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                }, () => {
+                    this._generateAddress();
+                });
+            });
+        }
+    }
+
     render() {
         const {
             places, mapApiLoaded, mapInstance, mapApi,
@@ -234,6 +254,16 @@ class MapsComponent extends Component {
 
 
                 </GoogleMapReact>
+                {/* <div className="info-wrapper"> */}
+                    <div style={{display: this.props.CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => this.getCurrentLocation()}>
+                        <div className='addressmaps-location-title'>
+                            <img className='addressmaps-location-logo' src={CurrentLocationIcon} alt='' />
+                            <div className='addressmaps-location-mainName'>
+                                Gunakan Lokasi Saat Ini
+                            </div>
+                        </div>
+                    </div>
+                {/* </div> */}
 
                 {/* {mapApiLoaded && (
                     <div>

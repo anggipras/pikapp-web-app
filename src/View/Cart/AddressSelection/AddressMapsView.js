@@ -111,15 +111,15 @@ const AddressMapsView = () => {
                     <MapsComponent />
                 </div>
 
-                <div style={{display: CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => setCurrentLocation()}>
+                {/* <div style={{display: CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => setCurrentLocation()}>
                     <div className='addressmaps-location-title'>
                         <img className='addressmaps-location-logo' src={CurrentLocationIcon} alt='' />
                         <div className='addressmaps-location-mainName'>
                             Gunakan Lokasi Saat Ini
                         </div>
                     </div>
-                </div>
-                <div className='addressmaps-locationinfo' onClick={goToAddress}>
+                </div> */}
+                <div style={{marginTop: CartRedu.isMarkerChange ? '30px' : '0px'}} className='addressmaps-locationinfo' onClick={goToAddress}>
                     <div className='addressmaps-section'>
                         <div className='addressmaps-title'>
                             <div className='addressmaps-titlename'>
@@ -128,7 +128,7 @@ const AddressMapsView = () => {
                                 </div>
 
                                 <div className='addressmaps-detailinfo'>
-                                    <div className='addressmaps-detailinfo-text'>{formattedAddress}</div>
+                                    <div className='addressmaps-detailinfo-text'>{CartRedu.formattedAddress}</div>
                                 </div>
                             </div>
                         </div>

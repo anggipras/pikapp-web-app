@@ -726,6 +726,8 @@ class CartManualView extends React.Component {
       this.props.CustomerName(e.target.value);
       if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
         this.setState({ disabledSubmitButton : false})
+      } else {
+        this.setState({ disabledSubmitButton : true})
       }
     }
 
@@ -734,6 +736,8 @@ class CartManualView extends React.Component {
       this.props.CustomerPhoneNumber(e.target.value);
       if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
         this.setState({ disabledSubmitButton : false})
+      } else {
+        this.setState({ disabledSubmitButton : true})
       }
     }
 
