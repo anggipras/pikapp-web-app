@@ -141,9 +141,9 @@ class OrderConfirmationView extends React.Component {
     }
 
     backToHome = () => {
-        // let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
-        // window.location.href = '/store?mid=' + selectedMerchant[0].mid;
-        window.history.back()
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+        window.location.href = '/store?mid=' + selectedMerchant[0].mid;
+        // window.history.back()
     }
 
     goToStatus = () => {
@@ -213,7 +213,7 @@ class OrderConfirmationView extends React.Component {
                     resultModal.transactionId = results.transaction_id
                     resultModal.status = results.status
 
-                    if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE") {
+                    if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
                         this.setState({ isSubmit: true });
                         this.setState({ showResponsePayment: true });
                     } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
