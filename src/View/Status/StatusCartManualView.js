@@ -248,7 +248,7 @@ export class StatusCartManualView extends React.Component {
           <div className="status-cartmanual-section-price">
             <div>
               <h3 className="status-cartmanual-content-totalitem">Total</h3>
-              <h3 className="status-cartmanual-content-totalprice">Rp {Intl.NumberFormat("id-ID").format(value.total_payment + value.shipping.shipping_insurance_cost)}</h3>
+              <h3 className="status-cartmanual-content-totalprice">Rp {Intl.NumberFormat("id-ID").format(value.total_payment)}</h3>
             </div>
             {
               value.order_status === "DELIVER" ?

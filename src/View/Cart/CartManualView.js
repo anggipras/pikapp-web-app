@@ -468,13 +468,13 @@ class CartManualView extends React.Component {
         mid: currentCartMerchant.mid,
         order_type: pickupType,
         order_platform: "PIKAPP",
-        total_product_price: finalProduct[0].totalPrice.toString(),
+        total_product_price: finalProduct[0].totalPrice,
         // payment_status: "OPEN",
         payment_method: this.state.paymentType,
         billing_phone_number: this.props.CartRedu.phoneNumber,
         order_status: "OPEN",
         total_discount: 0,
-        total_payment: totalPayment.toString(),
+        total_payment: totalPayment + this.state.insurancePrice,
         expiry_date: expiryDate
       }
   
