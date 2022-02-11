@@ -13,7 +13,9 @@ import { connect } from "react-redux";
 
 import Button from "react-bootstrap/Button";
 
-import CurrentLocationIcon from  "../../Asset/Icon/current-location.png"
+import CurrentLocationIcon from  "../../Asset/Icon/current-location.png";
+
+import { mapsApiKey } from '../../Asset/Constant/APIConstant';
 
 const Wrapper = styled.main`
   width: 100%;
@@ -227,7 +229,7 @@ class MapsComponent extends Component {
                     onChildClick={() => console.log('child click')}
                     onClick={this._onClick}
                     bootstrapURLKeys={{
-                        key: 'AIzaSyAhpg4G_EANh5cM9sHUY04XZaTAJVrd0Us',
+                        key: mapsApiKey,
                         libraries: ['places', 'geometry'],
                     }}
                     yesIWantToUseGoogleMapApiInternals
