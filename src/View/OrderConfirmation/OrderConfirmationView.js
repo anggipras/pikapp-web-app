@@ -88,7 +88,10 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentOption: "Pembayaran ShopeePay" });
                 this.setState({ paymentImage: ShopeePayment });
             }
-            this.setState({ dataOrder: this.props.AllRedu.dataOrder });
+            this.setState({ dataOrder: this.props.AllRedu.dataOrder },
+            () => {
+                this.getStatusPayment();
+            });
         } else if (localStorage.getItem("payment")) {
             var dataPayment = JSON.parse(localStorage.getItem("payment"));
 
@@ -110,10 +113,11 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentImage: ShopeePayment });
             }
 
-            this.setState({ dataOrder: dataPayment });
+            this.setState({ dataOrder: dataPayment },
+            () => {
+                this.getStatusPayment();
+            });
         }
-
-        this.showResponsePayment();
     }
 
     componentDidUpdate() {
@@ -299,6 +303,42 @@ class OrderConfirmationView extends React.Component {
         copy(this.state.dataOrder.transactionId, {
             debug: true,
             message: 'Transaction ID Copy to Clipboard',
+        });
+    }
+
+    getStatusPayment = () => {
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId
+            },
+            method: "GET",
+        })
+        .then((res) => {
+            console.log(res.data.results);
+            var results = res.data.results;
+            var resultModal = { ...this.currentModal }
+            resultModal.transactionId = results.transaction_id
+            resultModal.status = results.status
+
+            if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: true });
+            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: false });
+            }
+
+            this.setState({
+                currentModal: resultModal
+            })
+        })
+        .catch((err) => {
         });
     }
 
