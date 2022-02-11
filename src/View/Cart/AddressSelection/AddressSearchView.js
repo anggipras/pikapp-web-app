@@ -51,6 +51,12 @@ const AddressSearchView = () => {
             if (status === 'OK') {
                 if (results[0]) {
                     results[0].address_components.map((res) => {
+                        if(res.types[0] == "street_number") {
+                            dispatch({ type: 'STREETNUMBER', payload: "No. " + res.short_name })
+                        }
+                        if(res.types[0] == "route") {
+                            dispatch({ type: 'STREETNAME', payload: res.short_name })
+                        }
                         if(res.types[0] == "administrative_area_level_3") {
                             dispatch({ type: 'DISTRICT', payload: res.short_name })
                         }
@@ -65,7 +71,8 @@ const AddressSearchView = () => {
                         }
                     })
 
-                    dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })
+                    // dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })
+                    dispatch({ type: 'FORMATTEDADDRESS', payload: CartRedu.streetName + " " + CartRedu.streetNumber })
                     dispatch({ type: 'CENTER', payload: [CartRedu.lat, CartRedu.lng] })
                     dispatch({ type: 'SEARCHINPUT', payload: results[0].formatted_address })
                 } else {

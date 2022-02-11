@@ -124,11 +124,15 @@ const AddressMapsView = () => {
                         <div className='addressmaps-title'>
                             <div className='addressmaps-titlename'>
                                 <div className='addressmaps-mainname'>
-                                    {CartRedu.district}
+                                    {/* {CartRedu.district} */}
+                                    {CartRedu.formattedAddress}
                                 </div>
 
                                 <div className='addressmaps-detailinfo'>
-                                    <div className='addressmaps-detailinfo-text'>{CartRedu.formattedAddress}</div>
+                                    <div className='addressmaps-detailinfo-text'>
+                                        {/* {CartRedu.formattedAddress} */}
+                                        {CartRedu.district}, {CartRedu.city}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1042,7 +1042,7 @@ class CartManualView extends React.Component {
                                 this.props.CartRedu.pickupType === 1 ?
                                 <>
                                   <div className='cartmanual-deliverydetail-title'>Dikirim ke</div>
-                                  <div className='cartmanual-deliverydetail-address'>{this.props.CartRedu.formattedAddress}</div>
+                                  <div className='cartmanual-deliverydetail-address'>{this.props.CartRedu.formattedAddress}, {this.props.CartRedu.district}, {this.props.CartRedu.city}</div>
                                   {
                                     this.props.CartRedu.shipperNotes != "" ?
                                     <div className='cartmanual-deliverydetail-shipperNotesTitle'>Catatan : <span className='cartmanual-deliverydetail-shipperNotes'>{this.props.CartRedu.shipperNotes}</span></div>

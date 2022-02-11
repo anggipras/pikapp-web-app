@@ -178,6 +178,20 @@ export const DataDetailTxn = (data) => {
     }
 }
 
+export const StreetNumber = (data) => {
+    return {
+        type: 'STREETNUMBER',
+        payload: data
+    }
+}
+
+export const StreetName = (data) => {
+    return {
+        type: 'STREETNAME',
+        payload: data
+    }
+}
+
 export const City = (data) => {
     return {
         type: 'CITY',

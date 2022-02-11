@@ -17,6 +17,8 @@ const INITIAL_STATE = {
     lat : 0,
     lng : 0,
     center : [],
+    streetNumber : "",
+    streetName : "",
     district : "",
     city : "",
     province : "",
@@ -71,6 +73,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, lng: action.payload }
         case "CENTER":
             return { ...state, center: action.payload }
+        case "STREETNUMBER":
+            return { ...state, streetNumber: action.payload }
+        case "STREETNAME":
+            return { ...state, streetName: action.payload }
         case "DISTRICT":
             return { ...state, district: action.payload }
         case "CITY":
