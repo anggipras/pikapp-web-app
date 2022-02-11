@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import AutoComplete from './AutoCompleteComponent';
 import Marker from './MarkerComponent';
 
-import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, City, Province, IsMarkerChange } from '../../Redux/Actions'
+import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, StreetNumber, StreetName, City, Province, IsMarkerChange } from '../../Redux/Actions'
 import { connect } from "react-redux";
 
 import Button from "react-bootstrap/Button";
@@ -144,6 +144,12 @@ class MapsComponent extends Component {
                 if (results[0]) {
                     this.zoom = 12;
                     results[0].address_components.map((res) => {
+                        if(res.types[0] == "street_number") {
+                            this.props.StreetNumber("No. " + res.short_name);
+                        }
+                        if(res.types[0] == "route") {
+                            this.props.StreetName(res.short_name);
+                        }
                         if(res.types[0] == "administrative_area_level_3") {
                             this.props.District(res.short_name);
                         }
@@ -156,10 +162,13 @@ class MapsComponent extends Component {
                         if(res.types[0] == "administrative_area_level_1") {
                             this.props.Province(res.short_name);
                         }
+
+                        
                     })
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
                     this.setState({ address: results[0].formatted_address });
-                    this.props.FormattedAddress(results[0].formatted_address);
+                    // this.props.FormattedAddress(results[0].formatted_address);
+                    this.props.FormattedAddress(this.props.CartRedu.streetName + " " + this.props.CartRedu.streetNumber);
                     this.props.Center([this.props.CartRedu.lat, this.props.CartRedu.lng]);
                 } else {
                     window.alert('No results found');
@@ -293,6 +302,6 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, City, Province, IsMarkerChange })(MapsComponent)
+export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, StreetNumber, StreetName, City, Province, IsMarkerChange })(MapsComponent)
 
 // export default MapsComponent;
