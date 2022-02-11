@@ -2,6 +2,7 @@ export const address = "https://dev-api.pikapp.id/";
 // export const address = "https://api.pikapp.id/";
 
 export const addressShipping = "https://dev-courier-api.pikapp.id";
+// export const addressShipping = "https://courier-api.pikapp.id";
 
 var secretDev = "21f6fc80-cfdb-11ea-87d0-0242ac130003"
 var secretProd = "qaah4zq3cutmr36kqvq95qj5hax8f9ku25fv"
