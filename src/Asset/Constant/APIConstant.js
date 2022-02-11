@@ -15,4 +15,6 @@ var googleKeyProd = "AIzaSyBMG_JpxmoPEBH6fpveaowU2vkWYrZEw1Y"
 var googleKeyDev = "AIzaSyAikqroR5x4BrRv5Yj-tWgUcqvjEKUysh4"
 export const googleKey = googleKeyDev;
 
+export const mapsApiKey = "AIzaSyAhpg4G_EANh5cM9sHUY04XZaTAJVrd0Us";
+
 export const jwtSecret = "Er3lzchUa489bdlg35PCaGMKk2YzflBHCMue2jIAy9nFENvokE0JUbwytMFSvrajK8gYDttMdvzWw0OBRydt7pXfAAd1DTxWvE0Hc"
