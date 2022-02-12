@@ -5,6 +5,8 @@ import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import CartModal from "../../Component/Modal/CartModal";
@@ -198,6 +200,14 @@ class CartView extends React.Component {
             image: "ovo",
             option: "OVO",
           },
+          {
+            image: "dana",
+            option: "DANA",
+          },
+          {
+            image: "shopee",
+            option: "ShopeePay",
+          },
         ],
       });
     } else if (data === "payment-detail") {
@@ -336,8 +346,12 @@ class CartView extends React.Component {
     } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
       if (data === 0) {
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
-      } else {
+      } else if (data === 1) {
         this.setState({ paymentType: "WALLET_OVO", paymentOption: "OVO", indexOptionPay: data })
+      } else if (data === 2) {
+        this.setState({ paymentType: "WALLET_DANA", paymentOption: "DANA", indexOptionPay: data })
+      } else if (data === 3) {
+        this.setState({ paymentType: "WALLET_SHOPEEPAY", paymentOption: "ShopeePay", indexOptionPay: data })
       }
     }
   }
@@ -404,6 +418,11 @@ class CartView extends React.Component {
     }
     expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
 
+    // let windowReference
+    // if(this.state.paymentType === "WALLET_DANA") {
+    //   windowReference = window.open();
+    // }
+
     var requestData = {
       products: selectedProd,
       payment_with: this.state.paymentType,
@@ -421,7 +440,7 @@ class CartView extends React.Component {
     uuid = uuid.replace(/-/g, "");
     const date = new Date().toISOString();
     
-    Axios(address + "/txn/v3/txn-post/", {
+    Axios(address + "/txn/v4/txn-post/", {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
@@ -453,7 +472,8 @@ class CartView extends React.Component {
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
-        } else {
+        } 
+        else if(this.state.paymentType === 'WALLET_OVO') {
           this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
           setTimeout(() => {
             let filterOtherCart = storageData.filter(valFilter => {
@@ -473,6 +493,55 @@ class CartView extends React.Component {
             localStorage.removeItem("counterPayment");
             this.setState({ loadButton: true })
             this.props.DoneLoad()
+          }, 1000);
+        }
+        else if(this.state.paymentType === 'WALLET_DANA') {
+          this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            // window.location.assign(res.data.results[0].checkout_url_mobile);
+            window.location.href = res.data.results[0].checkout_url_mobile;
+            // const link = res.data.results[0].checkout_url_mobile;
+            // windowReference.location = link;
+            // this.setState({ loadButton: true })
+            // this.props.DoneLoad()
+          }, 1000);
+        }
+        else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+          this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            window.location.assign(res.data.results[0].checkout_url_deeplink);
+            // this.setState({ loadButton: true })
+            // this.props.DoneLoad()
           }, 1000);
         }
       })
@@ -982,6 +1051,10 @@ class CartView extends React.Component {
       paymentImage = CashierPayment
     } else if (this.state.paymentType === "WALLET_OVO") {
       paymentImage = OvoPayment
+    } else if (this.state.paymentType === "WALLET_DANA") {
+      paymentImage = DanaPayment
+    } else if (this.state.paymentType === "WALLET_SHOPEEPAY") {
+      paymentImage = ShopeePayment
     }
 
     // this.setState({ dataOrder : { totalPayment : totalPaymentShow, paymentType : this.state.paymentType }});
