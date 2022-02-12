@@ -13,6 +13,8 @@ import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import NoTransaction from "../../Asset/Icon/notrans.png";
 import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
 import moment from "moment";
@@ -376,7 +378,7 @@ export class StatusView extends React.Component {
                 });
             }
           } else {
-            if (valTime.payment === "WALLET_OVO") {
+            if (valTime.payment === "WALLET_OVO" || valTime.payment === "WALLET_DANA" || valTime.payment === "WALLET_SHOPEEPAY") {
               if (newSeconds < 10) {
                 clearInterval(interval.current);
                 window.location.reload();
@@ -422,6 +424,12 @@ export class StatusView extends React.Component {
         } else if (value.payment === "WALLET_OVO") {
           payImage = OvoPayment;
           payLabel = "Ovo";
+        } else if (value.payment === "WALLET_DANA") {
+          payImage = DanaPayment;
+          payLabel = "DANA";
+        } else if (value.payment === "WALLET_SHOPEEPAY") {
+          payImage = ShopeePayment;
+          payLabel = "ShopeePay";
         }
 
         if (value.biz_type === "DINE_IN") {
@@ -482,6 +490,12 @@ export class StatusView extends React.Component {
         } else if (value.payment === "WALLET_OVO") {
           payImage = OvoPayment;
           payLabel = "Ovo";
+        } else if (value.payment === "WALLET_DANA") {
+          payImage = DanaPayment;
+          payLabel = "DANA";
+        } else if (value.payment === "WALLET_SHOPEEPAY") {
+          payImage = ShopeePayment;
+          payLabel = "ShopeePay";
         }
 
         if (value.biz_type === "DINE_IN") {
@@ -531,6 +545,12 @@ export class StatusView extends React.Component {
         } else if (value.payment === "WALLET_OVO") {
           payImage = OvoPayment;
           payLabel = "Ovo";
+        } else if (value.payment === "WALLET_DANA") {
+          payImage = DanaPayment;
+          payLabel = "DANA";
+        } else if (value.payment === "WALLET_SHOPEEPAY") {
+          payImage = ShopeePayment;
+          payLabel = "ShopeePay";
         }
 
         if (value.biz_type === "DINE_IN") {
@@ -580,6 +600,12 @@ export class StatusView extends React.Component {
         } else if (value.payment === "WALLET_OVO") {
           payImage = OvoPayment;
           payLabel = "Ovo";
+        } else if (value.payment === "WALLET_DANA") {
+          payImage = DanaPayment;
+          payLabel = "DANA";
+        } else if (value.payment === "WALLET_SHOPEEPAY") {
+          payImage = ShopeePayment;
+          payLabel = "ShopeePay";
         }
 
         if (value.biz_type === "DINE_IN") {
@@ -625,6 +651,12 @@ export class StatusView extends React.Component {
         } else if (value.payment === "WALLET_OVO") {
           payImage = OvoPayment;
           payLabel = "Ovo";
+        } else if (value.payment === "WALLET_DANA") {
+          payImage = DanaPayment;
+          payLabel = "DANA";
+        } else if (value.payment === "WALLET_SHOPEEPAY") {
+          payImage = ShopeePayment;
+          payLabel = "ShopeePay";
         }
 
         if (value.biz_type === "DINE_IN") {

@@ -7,6 +7,8 @@ import { LoadingButton, DoneLoad, DataDetail } from '../../Redux/Actions'
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
 import moment from 'moment';
 import idLocale from "moment/locale/id";
@@ -134,10 +136,17 @@ class OrderDetailView extends React.Component {
                 if (resultModal.payment === "PAY_BY_CASHIER") {
                     resultModal.paymentOption = "Pembayaran Di Kasir";
                     resultModal.paymentImage = CashierPayment;
-                } else {
+                } else if (resultModal.payment === "WALLET_OVO") {
                     resultModal.paymentOption = "OVO";
                     resultModal.paymentImage = OvoPayment;
+                } else if (resultModal.payment === "WALLET_DANA") {
+                    resultModal.paymentOption = "DANA";
+                    resultModal.paymentImage = DanaPayment;
+                } else if (resultModal.payment === "WALLET_SHOPEEPAY") {
+                    resultModal.paymentOption = "ShopeePay";
+                    resultModal.paymentImage = ShopeePayment;
                 }
+
 
                 resultModal.transactionTime = moment(resultModal.transactionTime).format('Do MMMM YYYY, H:mm');
 
