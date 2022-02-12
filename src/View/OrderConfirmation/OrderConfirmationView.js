@@ -4,6 +4,8 @@ import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import pikappLogo from '../../Asset/Logo/logo4x.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import CopyIcon from "../../Asset/Icon/copy-icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -77,8 +79,19 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentType: "WALLET_OVO" });
                 this.setState({ paymentOption: "Pembayaran Ovo" });
                 this.setState({ paymentImage: OvoPayment });
+            } else if (this.props.AllRedu.dataOrder.paymentType === "WALLET_DANA") {
+                this.setState({ paymentType: "WALLET_DANA" });
+                this.setState({ paymentOption: "Pembayaran DANA" });
+                this.setState({ paymentImage: DanaPayment });
+            } else if (this.props.AllRedu.dataOrder.paymentType === "WALLET_SHOPEEPAY") {
+                this.setState({ paymentType: "WALLET_SHOPEEPAY" });
+                this.setState({ paymentOption: "Pembayaran ShopeePay" });
+                this.setState({ paymentImage: ShopeePayment });
             }
-            this.setState({ dataOrder: this.props.AllRedu.dataOrder });
+            this.setState({ dataOrder: this.props.AllRedu.dataOrder },
+            () => {
+                this.getStatusPayment();
+            });
         } else if (localStorage.getItem("payment")) {
             var dataPayment = JSON.parse(localStorage.getItem("payment"));
 
@@ -90,9 +103,20 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentType: "WALLET_OVO" });
                 this.setState({ paymentOption: "Pembayaran Ovo" });
                 this.setState({ paymentImage: OvoPayment });
+            } else if (dataPayment.paymentType === "WALLET_DANA") {
+                this.setState({ paymentType: "WALLET_DANA" });
+                this.setState({ paymentOption: "Pembayaran DANA" });
+                this.setState({ paymentImage: DanaPayment });
+            } else if (dataPayment.paymentType === "WALLET_SHOPEEPAY") {
+                this.setState({ paymentType: "WALLET_SHOPEEPAY" });
+                this.setState({ paymentOption: "Pembayaran ShopeePay" });
+                this.setState({ paymentImage: ShopeePayment });
             }
 
-            this.setState({ dataOrder: dataPayment });
+            this.setState({ dataOrder: dataPayment },
+            () => {
+                this.getStatusPayment();
+            });
         }
 
         this.showResponsePayment();
@@ -123,9 +147,14 @@ class OrderConfirmationView extends React.Component {
     }
 
     backToHome = () => {
-        // let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
-        // window.location.href = '/store?mid=' + selectedMerchant[0].mid;
-        window.history.back()
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+        let noTable = localStorage.getItem('table');
+        if(this.props.AuthRedu.isManualTxn) {
+            window.location.href = '/store?username=' + selectedMerchant[0].mid;
+        } else {
+            window.location.href = '/store?mid=' + selectedMerchant[0].mid + '&table=' + noTable.toString();
+        }
+        // window.history.back()
     }
 
     goToStatus = () => {
@@ -195,7 +224,7 @@ class OrderConfirmationView extends React.Component {
                     resultModal.transactionId = results.transaction_id
                     resultModal.status = results.status
 
-                    if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE") {
+                    if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
                         this.setState({ isSubmit: true });
                         this.setState({ showResponsePayment: true });
                     } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
@@ -281,6 +310,42 @@ class OrderConfirmationView extends React.Component {
         copy(this.state.dataOrder.transactionId, {
             debug: true,
             message: 'Transaction ID Copy to Clipboard',
+        });
+    }
+
+    getStatusPayment = () => {
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId
+            },
+            method: "GET",
+        })
+        .then((res) => {
+            console.log(res.data.results);
+            var results = res.data.results;
+            var resultModal = { ...this.currentModal }
+            resultModal.transactionId = results.transaction_id
+            resultModal.status = results.status
+
+            if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: true });
+            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: false });
+            }
+
+            this.setState({
+                currentModal: resultModal
+            })
+        })
+        .catch((err) => {
         });
     }
 

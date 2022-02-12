@@ -7,6 +7,8 @@ import takeawayWhite from '../../Asset/Icon/takeawayWhite.png'
 import CashierPayment from '../../Asset/Icon/CashierPayment.png'
 import CashierPaymentWhite from '../../Asset/Icon/CashierPaymentWhite.png'
 import OvoPayment from '../../Asset/Icon/ovo_icon.png'
+import DanaPayment from '../../Asset/Icon/dana_icon.png'
+import ShopeePayment from '../../Asset/Icon/shopee_icon.png'
 import Alertcircle from '../../Asset/Icon/alertcircle.png'
 import ReactTooltip from 'react-tooltip';
 import '../../Asset/scss/CartModal.scss'
@@ -87,13 +89,17 @@ const CartModal = (props) => {
                     imageOption = takeawayWhite;
                 }
             } else if (optionVal.image === "cashier") {
-                if (radioNumPay === 1) {
+                if (radioNumPay >= 1) {
                     imageOption = CashierPayment;
                 } else {
                     imageOption = CashierPaymentWhite;
                 }
             } else if (optionVal.image === "ovo") {
                 imageOption = OvoPayment;
+            } else if (optionVal.image === "dana") {
+                imageOption = DanaPayment;
+            } else if (optionVal.image === "shopee") {
+                imageOption = ShopeePayment;
             }
 
             if (props.title === 'Pilih Cara Makan Anda') {
