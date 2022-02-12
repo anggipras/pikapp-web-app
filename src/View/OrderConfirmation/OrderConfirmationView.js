@@ -146,10 +146,11 @@ class OrderConfirmationView extends React.Component {
 
     backToHome = () => {
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+        let noTable = localStorage.getItem('table');
         if(this.props.AuthRedu.isManualTxn) {
             window.location.href = '/store?username=' + selectedMerchant[0].mid;
         } else {
-            window.location.href = '/store?mid=' + selectedMerchant[0].mid;
+            window.location.href = '/store?mid=' + selectedMerchant[0].mid + '&table=' + noTable.toString();
         }
         // window.history.back()
     }
