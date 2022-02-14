@@ -29,6 +29,7 @@ import moment from "moment";
 import DeliveryIcon from "../../Asset/Icon/delivery.png";
 import ShippingDate from "../../Asset/Icon/shipping-date.png";
 import PaymentMethod from "../../Asset/Icon/payment-method.png";
+import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
@@ -1145,6 +1146,32 @@ class CartManualView extends React.Component {
                         }
                       </div>
                     </div>
+                  </div>
+
+                  <div className='promoCart-voucherinfo'>
+                    <Link to={"/promo/pickup"} style={{ textDecoration: "none", width: "100%" }}>
+                      <div className='promoCart-detailContent'>
+                            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                              <div className='promoCart-leftSide'>
+                                  <img className='promoCart-img-icon' src={VoucherIcon} alt='' />
+                                  <div className='promoCart-title'>Voucher Diskon</div>
+                                </div>
+
+                                <span className="promoCart-arrowright">
+                                  <img className="promoCart-arrowright-icon" src={ArrowRight} />
+                                </span>
+                            </div>
+
+                            {/* <div className='promoCart-selectiondetail'>
+                              <div className="promoCart-selectiondetail-border"></div>
+
+                              <div className='promoCart-selectiondetail-desc'>
+                                  <div>PIKAPPTAHUNBARU</div>
+                                  <div style={{fontWeight: "bold"}}>50%</div>
+                              </div>
+                            </div> */}
+                      </div>
+                    </Link>
                   </div>
 
                   <div className='cartmanual-summarypayment'>

@@ -35,6 +35,8 @@ import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
+import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
+import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 
 var currentExt = {
   detailCategory: [
@@ -1570,6 +1572,22 @@ class ProductView extends React.Component {
             }
           </div>
         </div> */}
+
+        <div className='promo-voucherinfo'>
+          <Link to={"/promo/pickup"} style={{ textDecoration: "none", width: "100%" }}>
+            <div className='promo-detailContent'>
+                  <div className='promo-leftSide'>
+                    <img className='promo-img-icon' src={VoucherIcon} alt='' />
+                    <div className='promo-title'>3 Voucher Diskon Tersedia</div>
+                  </div>
+
+                  <span className="promo-arrowright">
+                    <img className="promo-arrowright-icon" src={ArrowRight} />
+                  </span>
+            </div>
+          </Link>
+        </div>
+
         <div className='merchant-section' style={{ backgroundColor: "white" }}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>
