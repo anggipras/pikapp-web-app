@@ -29,6 +29,7 @@ import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
 import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 import StatusCartManualLayout from "./Master/StatusCartManualLayout";
 import TrackingDeliveryLayout from "./Master/TrackingDeliveryLayout";
+import PromoView from "./View/Promo/PromoView";
 export var cart = [
     {
         mid: "",
@@ -110,6 +111,7 @@ function App() {
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
             {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
+            <Route exact path="/promo" component={PromoView} />
             <Route path="/profile" component={() => <ProfileLayout />} />
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />

@@ -1149,7 +1149,7 @@ class CartManualView extends React.Component {
                   </div>
 
                   <div className='promoCart-voucherinfo'>
-                    <Link to={"/promo/pickup"} style={{ textDecoration: "none", width: "100%" }}>
+                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon"}}} style={{ textDecoration: "none", width: "100%" }}>
                       <div className='promoCart-detailContent'>
                             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                               <div className='promoCart-leftSide'>

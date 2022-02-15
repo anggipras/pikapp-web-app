@@ -1574,7 +1574,7 @@ class ProductView extends React.Component {
         </div> */}
 
         <div className='promo-voucherinfo'>
-          <Link to={"/promo/pickup"} style={{ textDecoration: "none", width: "100%" }}>
+          <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0 }}} style={{ textDecoration: "none", width: "100%" }}>
             <div className='promo-detailContent'>
                   <div className='promo-leftSide'>
                     <img className='promo-img-icon' src={VoucherIcon} alt='' />
