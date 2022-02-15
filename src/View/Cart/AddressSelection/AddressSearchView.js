@@ -34,6 +34,8 @@ const AddressSearchView = () => {
                 dispatch({ type: 'CENTER', payload: [position.coords.latitude, position.coords.longitude] })
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
+                // dispatch({ type: 'STREETNUMBER', payload: ""})
+                // dispatch({ type: 'STREETNAME', payload: "" })
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
             });
         }
