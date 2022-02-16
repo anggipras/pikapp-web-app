@@ -18,7 +18,7 @@ import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
 import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
-import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber } from '../../Redux/Actions'
+import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber, InsuranceCheckbox, InsurancePrice } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
@@ -180,7 +180,7 @@ class CartManualView extends React.Component {
       // }
 
       if(this.props.CartRedu) {
-        this.setState({ cartReduData : this.props.CartRedu });
+        this.setState({ cartReduData : this.props.CartRedu, insuranceCheckbox : this.props.CartRedu.insuranceCheckbox, insurancePrice : this.props.CartRedu.insurancePrice });
       }
       
       if(this.props.CartRedu.shippingDate) {
@@ -321,6 +321,11 @@ class CartManualView extends React.Component {
           }
         }
       }
+
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
     }
   
     handleIncrease(e, ind, mid) {
@@ -343,7 +348,12 @@ class CartManualView extends React.Component {
       });
   
       localStorage.setItem('cart', JSON.stringify(allCart))
-      this.setState({ updateData: 'updated' })
+      this.setState({ updateData: 'updated' });
+      
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
     }
 
     handleOption = (data) => {
@@ -647,6 +657,12 @@ class CartManualView extends React.Component {
   
       this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart, indexEdit: ind, themid: mid })
       this.props.EditMenuCart(true)
+
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
+
       document.body.style.overflowY = 'hidden'
     }
   
@@ -758,11 +774,16 @@ class CartManualView extends React.Component {
       })
       .then(() => {
         console.log('savetocart succeed');
+        this.setState({ insurancePrice: 0});
+        this.setState({ insuranceCheckbox: false });
+        this.props.InsurancePrice(0);
+        this.props.InsuranceCheckbox(false);
       })
       .catch((err) => {
         console.log(err);
       });
     }
+
     tourPage = () => {
       if (this.state.startTour === true) {
         return (
@@ -871,9 +892,15 @@ class CartManualView extends React.Component {
 
         this.setState({ insurancePrice: finalNumber});
         this.setState({ insuranceCheckbox: e.target.checked });
+
+        this.props.InsurancePrice(finalNumber);
+        this.props.InsuranceCheckbox(e.target.checked);
       } else {
         this.setState({ insurancePrice: 0});
         this.setState({ insuranceCheckbox: e.target.checked });
+
+        this.props.InsurancePrice(0);
+        this.props.InsuranceCheckbox(e.target.checked);
       }
     }
 
@@ -1162,7 +1189,7 @@ class CartManualView extends React.Component {
                                     <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.state.cartReduData.shippingPrice)}</div>
                                   </div>
                                   <div className='cartmanual-deliverydetail-insurance'>
-                                    <input id="insuranceCheckbox" name="insuranceCheckbox" className="cartmanual-deliverydetail-insurance-check" type="checkbox" defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} />
+                                    <input id="insuranceCheckbox" name="insuranceCheckbox" className="cartmanual-deliverydetail-insurance-check" type="checkbox" checked={this.state.insuranceCheckbox} defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} />
                                     <div className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</div>
                                     {/* <label htmlFor="insuranceCheckbox" className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</label> */}
                                     {/* <img className='cartmanual-deliverydetail-insuranceicon' src={InfoIcon}></img> */}
@@ -1344,4 +1371,4 @@ const Mapstatetoprops = (state) => {
     }
   }
   
-  export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber })(CartManualView)
+  export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber, InsuranceCheckbox, InsurancePrice })(CartManualView)
