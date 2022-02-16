@@ -89,12 +89,19 @@ class TrackingDeliveryView extends React.Component {
             this.setState({ isMobile: false });
         }
 
-        // if (Object.keys(this.props.AllRedu.dataDetailTxn).length !== 0) {
+        if (Object.keys(this.props.AllRedu.dataDetailTxn).length !== 0) {
             this.setState({ data : this.props.AllRedu.dataDetailTxn },
                 () => {
                     this.getTrackingOrder();
                 })
-        // }
+        } else if (localStorage.getItem("deliveryData")) {
+            var dataDelivery = JSON.parse(localStorage.getItem("deliveryData"));
+
+            this.setState({ data : dataDelivery },
+                () => {
+                    this.getTrackingOrder();
+                })
+        }
 
         let list = this.state.dataCourier.history.sort().reverse();
         // this.setState({ history : list });
