@@ -153,6 +153,7 @@ export class StatusCartManualView extends React.Component {
         // console.log(stateData.data);
         this.setState({ data: stateData.data, staticCountDown: true });
         this.props.DataDetailTxn(results);
+        localStorage.setItem("deliveryData", JSON.stringify(results));
       })
       .catch((err) => {
         console.log(err);
