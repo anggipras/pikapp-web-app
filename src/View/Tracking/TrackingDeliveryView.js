@@ -23,7 +23,8 @@ class TrackingDeliveryView extends React.Component {
                 shipping_cost: 0,
                 shipping_time: "",
                 shipping_time_type: "",
-                waybill_id : ""
+                waybill_id : "",
+                tracking_id : ""
             },
             customer : {
                 address: "",
@@ -104,13 +105,13 @@ class TrackingDeliveryView extends React.Component {
 
     getTrackingOrder() {
         var request = {
-            waybill_id : this.state.data.shipping.waybill_id,
+            tracking_id : this.state.data.shipping.tracking_id,
             courier : this.state.data.shipping.shipping_method
         }
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
-        let historyTransAPI = addressShipping + '/api/webhook/v1/order-status'
+        let historyTransAPI = addressShipping + '/api/transaction/tracking-order'
         Axios(historyTransAPI, {
         headers: {
             "Content-Type": "application/json",
@@ -229,7 +230,7 @@ class TrackingDeliveryView extends React.Component {
                                             <h3 className="tracking-delivery-info-order" style={{ color : "#F4B55B" }}>Pesanan Selesai</h3>
                                         </div> */}
                                         <div>
-                                            <h3 className="tracking-delivery-transactionid">Resi Pengiriman: {this.state.dataCourier.waybill_id}</h3>
+                                            <h3 className="tracking-delivery-transactionid">Resi Pengiriman: {this.state.data.shipping.waybill_id}</h3>
                                         </div>
                                         {/* <div>
                                             <h3 className="tracking-delivery-transactiondate">Estimasi Tiba di tujuan: {moment(this.state.data.transaction_time).format("Do MMMM YYYY, H:mm")}</h3>
