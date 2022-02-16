@@ -1342,6 +1342,32 @@ body {
   padding: 10px 8px 10px 8px;
 }
 
+.cartmanual-detailcontent-address {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  // font-size: 17px;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #4bb7ac;
+  width: auto;
+  margin-bottom: 0px;
+}
+
+.cartmanual-detailcontent-addressdesc {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  // font-size: 15px;
+  font-size: 13px;
+  line-height: 20px;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  color: #767676;
+  width: auto;
+}
+
 @media (max-width: 768px) {
   // .cartmanual-main {
   //   // max-width: 480px !important;

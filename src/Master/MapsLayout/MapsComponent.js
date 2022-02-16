@@ -162,8 +162,6 @@ class MapsComponent extends Component {
                         if(res.types[0] == "administrative_area_level_1") {
                             this.props.Province(res.short_name);
                         }
-
-                        
                     })
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
                     this.setState({ address: results[0].formatted_address });
@@ -207,6 +205,8 @@ class MapsComponent extends Component {
                 this.props.Lat(position.coords.latitude);
                 this.props.Lng(position.coords.longitude);
                 this.props.IsMarkerChange(false);
+                this.props.StreetNumber("");
+                this.props.StreetName("");
 
                 this.setState({
                     center: [position.coords.latitude, position.coords.longitude],
