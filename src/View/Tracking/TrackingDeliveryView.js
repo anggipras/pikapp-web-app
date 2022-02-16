@@ -123,7 +123,8 @@ class TrackingDeliveryView extends React.Component {
         data: request
         })
         .then((res) => {
-            var results = res.data.results;
+            var results = res.data.result;
+            results.history.sort().reverse();
             this.setState({ dataCourier: results });
         })
         .catch((err) => {
@@ -165,9 +166,9 @@ class TrackingDeliveryView extends React.Component {
     }
 
     handleCourierPhone = (phone) => { //go to Whatsapp chat
-        phone.substring(1)
-        let waNumber = '62' + phone
-        window.location.href = `https://wa.me/${waNumber}`
+        // phone.substring(1)
+        // let waNumber = '62' + phone
+        window.location.href = `https://wa.me/${phone}`
     }
 
     render() {
