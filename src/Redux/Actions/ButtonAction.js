@@ -212,3 +212,17 @@ export const CourierServiceType = (data) => {
         payload: data
     }
 }
+
+export const InsuranceCheckbox = (bool) => {
+    return {
+        type: 'INSURANCECHECKBOX',
+        payload: bool
+    }
+}
+
+export const InsurancePrice = (data) => {
+    return {
+        type: 'INSURANCEPRICE',
+        payload: data
+    }
+}

@@ -151,7 +151,9 @@ const PickupSelectionView = () => {
     }
 
     const goBack = () => {
-        dispatch({ type: 'PICKUPTYPE', payload: -1 })
+        if(CartRedu.formattedAddress === "" && CartRedu.shippingName === "" && CartRedu.shippingPrice === "") {
+            dispatch({ type: 'PICKUPTYPE', payload: -1 })
+        }
         window.history.go(-1)
     }
 
