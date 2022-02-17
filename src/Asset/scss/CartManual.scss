@@ -986,9 +986,9 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   display: flex;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
+  // display: -webkit-box;
+  // -webkit-line-clamp: 1;
+  // -webkit-box-orient: vertical;
 }
 
 .cartmanual-deliverydetail-shipperNotesTitle {
@@ -1012,13 +1012,75 @@ body {
   justify-content: space-between;
 }
 
-.cartmanual-deliverydetail-shipperLayout-shipperName, .cartmanual-deliverydetail-shipperLayout-shipperPrice {
+.cartmanual-deliverydetail-shipperLayout-shipperName {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  color: #111111;
+  text-transform: capitalize;
+}
+
+.cartmanual-deliverydetail-shipperLayout-shipperPrice {
   font-family: "SF-Compact-Rounded", sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 17px;
+  font-size: 15px;
   color: #111111;
+  text-transform: capitalize;
 }
+
+.cartmanual-deliverydetail-insurance-info {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: #111111;
+  padding: 0px 8px 0px 8px;
+}
+
+.cartmanual-deliverydetail-insurance {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-top: 10px;
+  background-color: #ffffff;
+}
+
+.cartmanual-deliverydetail-insuranceicon {
+  width: 18px;
+  height: 18px;
+}
+
+.cartmanual-deliverydetail-insurance-check {
+  width: 15px;
+  height: 15px;
+  background-color: #ffffff;
+}
+
+.cartmanual-deliverydetail-insurance input[type="checkbox"]:checked{
+  // background-color: #4bb7ac !important;
+  // filter: hue-rotate(100deg);
+  // filter: invert(66%) sepia(51%) saturate(425%) hue-rotate(125deg) brightness(88%) contrast(86%);
+  filter: invert(0%) sepia(93%) saturate(425%) hue-rotate(125deg) brightness(108%) contrast(116%);
+  // filter: brightness(50%) sepia(1);
+}
+
+// .cartmanual-deliverydetail-insurance:checked {
+//   background-color: #4bb7ac !important;
+// }
+
+// input[type='checkbox']:checked {
+  // background-color: #4bb7ac !important;
+  // filter: hue-rotate(140deg);
+// }
+
+// .cartmanual-deliverydetail-insurance input[type="checkbox"] {
+//   background-color: #4bb7ac !important;
+//   &:checked{
+//     background-color: #ff0000;
+//   }
+// }
 
 .cartmanual-deliveryinfo {
   // min-width: 480px;
@@ -1217,6 +1279,32 @@ body {
   // display: flex;
   height: 100%;
   padding: 10px 8px 10px 8px;
+}
+
+.cartmanual-detailcontent-address {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  // font-size: 17px;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #4bb7ac;
+  width: auto;
+  margin-bottom: 0px;
+}
+
+.cartmanual-detailcontent-addressdesc {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  // font-size: 15px;
+  font-size: 13px;
+  line-height: 20px;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  color: #767676;
+  width: auto;
 }
 
 @media (max-width: 768px) {

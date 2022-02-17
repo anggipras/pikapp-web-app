@@ -1649,3 +1649,292 @@
 .txtIndent {
   text-indent: 0.5em;
 }
+
+// order detail delivery
+@media (min-width: 768px) {
+  .manual-orderdetail-Layout {
+    width: 480px !important;
+    // margin-left: 31%;
+    padding: 5px 17px 26px 17px;
+    background-color: #ffffff;
+    min-height: 619px;
+  }
+}
+
+.manual-orderdetail-Layout {
+  // width: 98vw;
+  // padding: 20px 117px 20px 107px;
+  background-color: #ffffff;
+}
+
+.manual-orderdetail-Title {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 54px;
+  // margin-bottom: 41px;
+  margin-bottom: 10px;
+}
+
+.manual-orderdetail-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 5px 14px 0px;
+  background-color: #FFFFFF !important;
+}
+
+.manual-orderdetail-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.manual-orderdetail-titletext {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 16px;
+}
+
+.manual-orderdetail-Content {
+  display: flex;
+  flex-direction: column;
+}
+
+.manual-orderdetail-LeftSide {
+  // width: 50%;
+  width: 100%;
+  // display: flex;
+  // width: auto;
+  // justify-content: center;
+}
+
+.manual-orderdetail-transaction-detail {
+  // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  // min-width: 477px;
+  width: auto;
+  margin-bottom: 30px;
+  cursor: pointer;
+  border: 1px solid #c4c4c4;
+  background-color: #ffffff;
+}
+
+.manual-orderdetail-transaction-content {
+  padding: 15px 20px 15px 20px;
+}
+
+.manual-orderdetail-transactionid {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #111111;
+  padding-top: 3px;
+}
+
+.manual-orderdetail-transactiondate {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #767676;
+  padding-top: 3px;
+}
+
+.manual-orderdetail-content-border {
+  border-top : 1px solid #c4c4c4;
+}
+
+.manual-orderdetail-transaction-topSide {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  // text-align: center;
+}
+
+.manual-orderdetail-transaction-merchName {
+  font-size: 17px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.manual-orderdetail-content-icon {
+  width: 28px;
+}
+
+.manual-orderdetail-item {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #494949;
+  margin-bottom: 0px;
+}
+
+.manual-orderdetail-content-date {
+  margin-bottom: 5px;
+}
+
+.manual-orderdetail-datetext {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #4BB7AC;
+}
+
+.manual-orderdetail-transaction-centerSide {
+  display: flex;
+  justify-content: space-between;
+  // align-items: center;
+  // font-size: 15px;
+  // font-family: "SF-Compact-Rounded", sans-serif;
+  // font-style: normal;
+  // font-weight: normal;
+  // line-height: 15px;
+  // color: #767676;
+  // margin-bottom: 15px;
+}
+
+.manual-orderdetail-section-quantity {
+  margin-top: 8px;
+  width: 30px;
+}
+
+.manual-orderdetail-section-item {
+  margin-top: 8px;
+  width: auto;
+}
+
+.manual-orderdetail-content-quantity {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.manual-orderdetail-content-item {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+.manual-orderdetail-content-desc {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.manual-orderdetail-section-price {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manual-orderdetail-content-totalitem {
+  font-size: 17px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+}
+
+.manual-orderdetail-content-totalprice {
+  font-size: 17px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.manual-orderdetail-transaction-item {
+  display: flex;
+  justify-items: start;
+}
+
+.manual-orderdetail-content-price {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: end;
+}
+
+.manual-orderdetail-section-subtotal {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manual-orderdetail-section-shippingprice {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .manual-orderdetail-Layout {
+    width: 100vw;
+    padding: 5px 17px 26px 17px;
+    min-height: 725px;
+  }
+}

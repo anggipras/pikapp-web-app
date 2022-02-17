@@ -5,6 +5,7 @@ import ArrowGo from "../../../Asset/Icon/arrowright-icon.png";
 import takeawayColor from '../../../Asset/Icon/takeawayColor.png'
 import deliveryColor from '../../../Asset/Icon/delivery-icon.png'
 import LocationIcon from '../../../Asset/Icon/location-icon.png'
+import KurirIcon from '../../../Asset/Icon/kurir.png'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -29,6 +30,10 @@ const PickupSelectionView = () => {
 
     const goToAddress = () => {
         history.push('./pickup/address')
+    }
+
+    const goToShipping = () => {
+        history.push('./pickup/shipping')
     }
 
     const handleShipperName = (e) => {
@@ -77,13 +82,13 @@ const PickupSelectionView = () => {
 
                         <div className="deliverySelection-addressLayout">
                             <div className="deliverySelection-addressTitle">
-                                Alamat Pengiriman
+                                { CartRedu.formattedAddress ? <></> : "Alamat Pengiriman" }
                             </div>
                             <div className="deliverySelection-addressInputted">
-                                { CartRedu.fullAddress ? <span className="deliverySelection-grayNotes">{CartRedu.fullAddress}</span> : "Masukkan alamat pengiriman sekarang" }
+                                { CartRedu.formattedAddress ? <span className="deliverySelection-blackNotes">{CartRedu.formattedAddress}</span> : "Masukkan alamat pengiriman sekarang" }
                             </div>
                             <div className="deliverySelection-addressInputted">
-                                { CartRedu.shipperNotes ? <span className="deliverySelection-greenNotes">Catatan : <span className="deliverySelection-grayNotes">{CartRedu.shipperNotes}</span></span> : null}
+                                { CartRedu.shipperNotes ? <span className="deliverySelection-greenNotes"><span className="deliverySelection-grayNotes">{CartRedu.shipperNotes}</span></span> : null}
                             </div>
                         </div>
                     </div>
@@ -93,7 +98,32 @@ const PickupSelectionView = () => {
                     </span>
                 </div>
 
-                <div className="deliverySelection-shipperName">
+                <div style={{display: CartRedu.formattedAddress ? 'flex': 'none'}} className="deliverySelection-input" onClick={goToShipping}>
+                {/* <div className="deliverySelection-input" onClick={goToShipping}> */}
+                    <div className="deliverySelection-input-leftSide">
+                        <span className="deliverySelection-locationIcon">
+                            <img className="address-location-icon" src={KurirIcon} />
+                        </span>
+
+                        <div className="deliverySelection-addressLayout">
+                            <div className="deliverySelection-addressTitle">
+                                { CartRedu.shippingType ? <></> : "Pilih Pengiriman" }
+                            </div>
+                            <div className="deliverySelection-addressInputted">
+                                { CartRedu.shippingType ? <span className="deliverySelection-blackNotes">{CartRedu.shippingType} - {CartRedu.shippingName} (Rp {Intl.NumberFormat("id-ID").format(CartRedu.shippingPrice)})</span> : null}
+                            </div>
+                            <div className="deliverySelection-addressInputted">
+                                { CartRedu.shippingDesc ? <span className="deliverySelection-greenNotes"><span className="deliverySelection-grayNotes">{CartRedu.shippingDesc}</span></span> : null}
+                            </div>
+                        </div>
+                    </div>
+
+                    <span className="deliverySelection-openIcon">
+                        <img className="address-open-icon" src={ArrowGo} />
+                    </span>
+                </div>
+
+                {/* <div className="deliverySelection-shipperName">
                     <div className="deliverySelection-shipperName-title">Nama Kurir <span style={{color: "red"}}>*</span></div>
                     <input onChange={handleShipperName} className="deliverySelection-shipperName-inputArea" placeholder="Masukkan nama kurir disini..." defaultValue={CartRedu.shipperName}/>
                 </div>
@@ -104,7 +134,7 @@ const PickupSelectionView = () => {
                         <div className="deliverySelection-shipperPrice-currency">Rp</div>
                         <input onChange={handleShipperPrice} type='number' inputMode='numeric' className="deliverySelection-shipperPrice-inputArea" placeholder="Masukkan ongkos kirim disini..." defaultValue={CartRedu.shipperPrice}/>
                     </div>
-                </div>
+                </div> */}
             </div>
         )
     }
@@ -113,7 +143,7 @@ const PickupSelectionView = () => {
         if(CartRedu.pickupType === 0) {
             // Save pickup takeaway data
             window.history.go(-1)
-        } else if(CartRedu.fullAddress && CartRedu.shipperName && CartRedu.shipperPrice) {
+        } else if(CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice) {
             // Save pickup delivery data
             dispatch({ type: 'PICKUPTYPE', payload: 1 })
             window.history.go(-1)
@@ -121,7 +151,9 @@ const PickupSelectionView = () => {
     }
 
     const goBack = () => {
-        dispatch({ type: 'PICKUPTYPE', payload: -1 })
+        if(CartRedu.formattedAddress === "" && CartRedu.shippingName === "" && CartRedu.shippingPrice === "") {
+            dispatch({ type: 'PICKUPTYPE', payload: -1 })
+        }
         window.history.go(-1)
     }
 
@@ -146,7 +178,7 @@ const PickupSelectionView = () => {
                     style={{backgroundColor: 
                         CartRedu.pickupType === 0 ? '#4bb7ac' 
                         : 
-                        CartRedu.fullAddress && CartRedu.shipperName && CartRedu.shipperPrice ? '#4bb7ac'
+                        CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice ? '#4bb7ac'
                         : 
                         '#aaaaaa'}}
                 >Pilih</div>

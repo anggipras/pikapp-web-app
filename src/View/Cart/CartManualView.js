@@ -7,6 +7,7 @@ import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
+import InfoIcon from "../../Asset/Icon/info-icon.png";
 import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -17,7 +18,7 @@ import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
 import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
-import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber } from '../../Redux/Actions'
+import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber, InsuranceCheckbox, InsurancePrice } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
 import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
@@ -133,6 +134,34 @@ class CartManualView extends React.Component {
       customerShippingDate : "",
       isShowItem : undefined,
       disabledSubmitButton : true,
+      insuranceCheckbox : false,
+      insurancePrice : 0,
+      cartReduData : {
+        pickupType: -1, //PICKUP PAGE
+        fullAddress: "",
+        postalCode : "",
+        shipperNotes: "",
+        shipperName: "",
+        shipperPrice: "",
+        shippingDateType : "", //SHIPPING DATE PAGE
+        shippingDate : "",
+        paymentType: -1, //PAYMENT PAGE
+        phoneNumber: "",
+        customerName: "",
+        customerPhoneNumber: "",
+        lat : 0,
+        lng : 0,
+        district : "",
+        city : "",
+        province : "",
+        formattedAddress : "",
+        shippingType : "",
+        shippingName : "",
+        shippingPrice : 0,
+        shippingDesc : "",
+        shippingCode : "",
+        courierServiceType : ""
+      }
     };
 
     componentDidMount() {
@@ -149,6 +178,10 @@ class CartManualView extends React.Component {
       // } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
       //   this.setState({ startTour : true});
       // }
+
+      if(this.props.CartRedu) {
+        this.setState({ cartReduData : this.props.CartRedu, insuranceCheckbox : this.props.CartRedu.insuranceCheckbox, insurancePrice : this.props.CartRedu.insurancePrice });
+      }
       
       if(this.props.CartRedu.shippingDate) {
         this.setState({ customerShippingDate : moment(new Date(this.props.CartRedu.shippingDate)).format("Do MMMM YYYY, H:mm")})
@@ -162,6 +195,10 @@ class CartManualView extends React.Component {
       }
 
       if(this.props.CartRedu.customerName !== "" && this.props.CartRedu.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+        this.setState({ disabledSubmitButton : false})
+      }
+
+      if(this.state.cartReduData.customerName !== "" && this.state.cartReduData.customerPhoneNumber !== "" && this.state.cartReduData.pickupType !== -1 && this.state.cartReduData.shippingDate !== "" && this.state.cartReduData.paymentType !== -1) {
         this.setState({ disabledSubmitButton : false})
       }
     }
@@ -284,6 +321,11 @@ class CartManualView extends React.Component {
           }
         }
       }
+
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
     }
   
     handleIncrease(e, ind, mid) {
@@ -306,7 +348,12 @@ class CartManualView extends React.Component {
       });
   
       localStorage.setItem('cart', JSON.stringify(allCart))
-      this.setState({ updateData: 'updated' })
+      this.setState({ updateData: 'updated' });
+      
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
     }
 
     handleOption = (data) => {
@@ -387,11 +434,11 @@ class CartManualView extends React.Component {
         selectedProd.push({
           product_id: selectMenu.productId,
           product_name: selectMenu.foodName,
-          product_price: selectMenu.foodPrice,
+          product_price: Number(selectMenu.foodPrice),
           notes: newlistArr,
           quantity: selectMenu.foodAmount,
           discount: 0,
-          extra_price: extraprice,
+          extra_price: Number(extraprice),
           extra_menus: [],
         })
       })
@@ -406,34 +453,78 @@ class CartManualView extends React.Component {
       }
       expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
 
+      // let customerInfo = {
+      //   customer_name: this.state.customerName,
+      //   customer_address: this.props.CartRedu.fullAddress,
+      //   customer_address_detail: this.props.CartRedu.shipperNotes,
+      //   customer_phone_number: "0" + this.state.customerPhoneNumber,
+      //   latitude: this.props.CartRedu.lat,
+      //   longitude: this.props.CartRedu.lng,
+      //   subdistrict_name: this.props.CartRedu.district,
+      //   city: this.props.CartRedu.city,
+      //   province: this.props.CartRedu.province,
+      //   postal_code: this.props.CartRedu.postalCode,
+      // }
+
       let customerInfo = {
         customer_name: this.state.customerName,
-        customer_address: this.props.CartRedu.fullAddress,
-        customer_address_detail: this.props.CartRedu.shipperNotes,
-        customer_phone_number: "0" + this.state.customerPhoneNumber
+        customer_address: this.state.cartReduData.fullAddress,
+        customer_address_detail: this.state.cartReduData.shipperNotes,
+        customer_phone_number: "0" + this.state.customerPhoneNumber,
+        latitude: this.state.cartReduData.lat,
+        longitude: this.state.cartReduData.lng,
+        subdistrict_name: this.state.cartReduData.district,
+        city: this.state.cartReduData.city,
+        province: this.state.cartReduData.province,
+        postal_code: this.state.cartReduData.postalCode,
       }
 
-      let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shipperPrice)
+      // let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shippingPrice)
+
+      let totalPayment = finalProduct[0].totalPrice + Number(this.state.cartReduData.shippingPrice)
 
       let pickupType = ''
       let shipperName = ''
+      let shipperType = ''
+      let shipperCategoryType = ''
       let shipperPrice = 0
-      if(this.props.CartRedu.pickupType === 0) {
+      // if(this.props.CartRedu.pickupType === 0) {
+      //   pickupType = "PICKUP";
+      //   shipperName = "Pickup Sendiri";
+      // } else {
+      //   pickupType = "DELIVERY";
+      //   shipperName = this.props.CartRedu.shippingCode;
+      //   shipperPrice = this.props.CartRedu.shippingPrice;
+      //   shipperType = this.props.CartRedu.courierServiceType;
+      //   shipperCategoryType = this.props.CartRedu.shippingType;
+      // }
+
+      if(this.state.cartReduData.pickupType === 0) {
         pickupType = "PICKUP";
         shipperName = "Pickup Sendiri";
       } else {
         pickupType = "DELIVERY";
-        shipperName = this.props.CartRedu.shipperName;
-        shipperPrice = this.props.CartRedu.shipperPrice
+        shipperName = this.state.cartReduData.shippingCode;
+        shipperPrice = this.state.cartReduData.shippingPrice;
+        shipperType = this.state.cartReduData.courierServiceType;
+        shipperCategoryType = this.state.cartReduData.shippingType;
       }
 
       let shippingTime = '';
       let shippingType = '';
-      if(this.props.CartRedu.shippingDateType === 0) {
+      // if(this.props.CartRedu.shippingDateType === 0) {
+      //   shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
+      //   shippingType = "NOW";
+      // } else {
+      //   shippingTime = moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss");
+      //   shippingType = "CUSTOM";
+      // }
+
+      if(this.state.cartReduData.shippingDateType === 0) {
         shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
         shippingType = "NOW";
       } else {
-        shippingTime = moment(new Date(this.props.CartRedu.shippingDate)).format("yyyy-MM-DD HH:mm:ss");
+        shippingTime = moment(new Date(this.state.cartReduData.shippingDate)).format("yyyy-MM-DD HH:mm:ss");
         shippingType = "CUSTOM";
       }
 
@@ -441,7 +532,10 @@ class CartManualView extends React.Component {
         shipping_method: shipperName,
         shipping_cost: shipperPrice,
         shipping_time: shippingTime,
-        shipping_time_type : shippingType
+        shipping_time_type: shippingType,
+        shipping_insurance: this.state.insurancePrice,
+        shipping_service_type: shipperType,
+        shipping_service_type_category: shipperCategoryType
       }
 
   
@@ -452,13 +546,14 @@ class CartManualView extends React.Component {
         mid: currentCartMerchant.mid,
         order_type: pickupType,
         order_platform: "PIKAPP",
-        total_product_price: finalProduct[0].totalPrice.toString(),
+        total_product_price: finalProduct[0].totalPrice,
         // payment_status: "OPEN",
         payment_method: this.state.paymentType,
-        billing_phone_number: this.props.CartRedu.phoneNumber,
+        // billing_phone_number: this.props.CartRedu.phoneNumber,
+        billing_phone_number: this.state.cartReduData.phoneNumber,
         order_status: "OPEN",
         total_discount: 0,
-        total_payment: totalPayment.toString(),
+        total_payment: totalPayment + this.state.insurancePrice,
         expiry_date: expiryDate
       }
   
@@ -468,7 +563,7 @@ class CartManualView extends React.Component {
       uuid = uuid.replace(/-/g, "");
       const date = new Date().toISOString();
       
-      Axios(address + "pos/v1/web/transaction/add/", {
+      Axios(address + "pos/v2/web/transaction/add/", {
         headers: {
           "Content-Type": "application/json",
           "x-request-id": uuid,
@@ -562,6 +657,12 @@ class CartManualView extends React.Component {
   
       this.setState({ showMenuDet: true, filteredCart: filteredStore, currentData: objFilteredCart, indexEdit: ind, themid: mid })
       this.props.EditMenuCart(true)
+
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
+
       document.body.style.overflowY = 'hidden'
     }
   
@@ -673,11 +774,16 @@ class CartManualView extends React.Component {
       })
       .then(() => {
         console.log('savetocart succeed');
+        this.setState({ insurancePrice: 0});
+        this.setState({ insuranceCheckbox: false });
+        this.props.InsurancePrice(0);
+        this.props.InsuranceCheckbox(false);
       })
       .catch((err) => {
         console.log(err);
       });
     }
+
     tourPage = () => {
       if (this.state.startTour === true) {
         return (
@@ -708,16 +814,32 @@ class CartManualView extends React.Component {
     handleCustomerName = (e) =>{
       this.setState({ customerName: e.target.value});
       this.props.CustomerName(e.target.value);
-      if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+      // if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+      //   this.setState({ disabledSubmitButton : false})
+      // } else {
+      //   this.setState({ disabledSubmitButton : true})
+      // }
+
+      if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.state.cartReduData.pickupType !== -1 && this.state.cartReduData.shippingDate !== "" && this.state.cartReduData.paymentType !== -1) {
         this.setState({ disabledSubmitButton : false})
+      } else {
+        this.setState({ disabledSubmitButton : true})
       }
     }
 
     handleCustomerPhoneNumber = (e) =>{
       this.setState({ customerPhoneNumber: e.target.value});
       this.props.CustomerPhoneNumber(e.target.value);
-      if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+      // if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.props.CartRedu.pickupType !== -1 && this.props.CartRedu.shippingDate !== "" && this.props.CartRedu.paymentType !== -1) {
+      //   this.setState({ disabledSubmitButton : false})
+      // } else {
+      //   this.setState({ disabledSubmitButton : true})
+      // }
+
+      if(this.state.customerName !== "" && this.state.customerPhoneNumber !== "" && this.state.cartReduData.pickupType !== -1 && this.state.cartReduData.shippingDate !== "" && this.state.cartReduData.paymentType !== -1) {
         this.setState({ disabledSubmitButton : false})
+      } else {
+        this.setState({ disabledSubmitButton : true})
       }
     }
 
@@ -753,6 +875,33 @@ class CartManualView extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+    }
+
+    handleInsurancePrice = (e) => {
+      if (e.target.checked) {
+        let totalPayment = finalProduct[0].totalPrice
+        let insurance = totalPayment * 0.5 / 100;
+
+        let finalNumber = 0;
+
+        if(insurance % 0.5 === 0) {
+          finalNumber = Math.ceil(insurance);
+        } else {
+          finalNumber = Math.floor(insurance);
+        }
+
+        this.setState({ insurancePrice: finalNumber});
+        this.setState({ insuranceCheckbox: e.target.checked });
+
+        this.props.InsurancePrice(finalNumber);
+        this.props.InsuranceCheckbox(e.target.checked);
+      } else {
+        this.setState({ insurancePrice: 0});
+        this.setState({ insuranceCheckbox: e.target.checked });
+
+        this.props.InsurancePrice(0);
+        this.props.InsuranceCheckbox(e.target.checked);
+      }
     }
 
     render() {
@@ -856,6 +1005,30 @@ class CartManualView extends React.Component {
         }
         return storeFood
       });
+
+      let detailView = storeList.map((store, index) => {
+        if (store.mid === currentCartMerchant.mid) {
+          return (
+            <div key={index} className='cartmanual-customerinfo'>
+              <div className='cartmanual-customerinfo-header'>
+                <div className='cartmanual-customerinfo-title'>
+                  Detail Restoran
+                </div>
+              </div>
+
+              <div className='cartmanual-customerinfo-content'>
+                <h2 className='cartmanual-detailcontent-address'>
+                  {store.storeName}
+                </h2>
+
+                <h4 className='cartmanual-detailcontent-addressdesc'>
+                  {store.storeAdress}
+                </h4>
+              </div>
+            </div>
+          )
+        }
+      });
   
       let totalPaymentShow = 0
       let totalItem = 0
@@ -875,7 +1048,9 @@ class CartManualView extends React.Component {
         },
       ]
 
-      let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shipperPrice);
+      // let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shippingPrice) + this.state.insurancePrice;
+
+      let totalFinalProduct = totalPaymentShow + Number(this.state.cartReduData.shippingPrice) + this.state.insurancePrice;
   
       let paymentImage;
       let eatImage;
@@ -951,6 +1126,7 @@ class CartManualView extends React.Component {
   
               <div className='cartmanual-RightSide'>
                 <div className='cartmanual-flex-RightSide'>
+                  {detailView}
   
                   <div className='cartmanual-customerinfo'>
                     <div className='cartmanual-customerinfo-header'>
@@ -992,25 +1168,31 @@ class CartManualView extends React.Component {
                         </Link>
                         </div>
                         {
-                          this.props.CartRedu.pickupType != -1 ?
+                          this.state.cartReduData.pickupType != -1 ?
                           <div className='cartmanual-deliverydetail'>
                             <div className="cartmanual-deliverydetail-border"></div>
 
                             <div className='cartmanual-deliverydetail-desc'>
                               {
-                                this.props.CartRedu.pickupType === 1 ?
+                                this.state.cartReduData.pickupType === 1 ?
                                 <>
                                   <div className='cartmanual-deliverydetail-title'>Dikirim ke</div>
-                                  <div className='cartmanual-deliverydetail-address'>{this.props.CartRedu.fullAddress}</div>
+                                  <div className='cartmanual-deliverydetail-address'>{this.state.cartReduData.formattedAddress}, {this.state.cartReduData.district}, {this.state.cartReduData.city}</div>
                                   {
-                                    this.props.CartRedu.shipperNotes != "" ?
-                                    <div className='cartmanual-deliverydetail-shipperNotesTitle'>Catatan : <span className='cartmanual-deliverydetail-shipperNotes'>{this.props.CartRedu.shipperNotes}</span></div>
+                                    this.state.cartReduData.shipperNotes != "" ?
+                                    <div className='cartmanual-deliverydetail-shipperNotesTitle'>Catatan : <span className='cartmanual-deliverydetail-shipperNotes'>{this.state.cartReduData.shipperNotes}</span></div>
                                     :
                                     null
                                   }
                                   <div className='cartmanual-deliverydetail-shipperLayout'>
-                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperName'>{this.props.CartRedu.shipperName}</div>
-                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shipperPrice)}</div>
+                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperName'>{this.state.cartReduData.shippingType} - {this.state.cartReduData.shippingName}</div>
+                                    <div className='cartmanual-deliverydetail-shipperLayout-shipperPrice'>Rp. {Intl.NumberFormat("id-ID").format(this.state.cartReduData.shippingPrice)}</div>
+                                  </div>
+                                  <div className='cartmanual-deliverydetail-insurance'>
+                                    <input id="insuranceCheckbox" name="insuranceCheckbox" className="cartmanual-deliverydetail-insurance-check" type="checkbox" checked={this.state.insuranceCheckbox} defaultChecked={this.state.insuranceCheckbox} onChange={this.handleInsurancePrice} />
+                                    <div className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</div>
+                                    {/* <label htmlFor="insuranceCheckbox" className='cartmanual-deliverydetail-insurance-info'>Asuransi Pengiriman</label> */}
+                                    {/* <img className='cartmanual-deliverydetail-insuranceicon' src={InfoIcon}></img> */}
                                   </div>
                                 </>
                                 :
@@ -1047,7 +1229,7 @@ class CartManualView extends React.Component {
                             <div className="cartmanual-shippingdatedetail-border"></div>
 
                             {
-                              this.props.CartRedu.shippingDateType === 1 ?
+                              this.state.cartReduData.shippingDateType === 1 ?
                               <div className='cartmanual-shippingdatedetail-desc'>
                                 <div>{this.state.customerShippingDate}</div>
                               </div>
@@ -1081,7 +1263,7 @@ class CartManualView extends React.Component {
                         </Link>
                         </div>
                         {
-                          this.props.CartRedu.phoneNumber != "" ?
+                          this.state.cartReduData.phoneNumber != "" ?
                           <div className='cartmanual-paymentdetail'>
                             <div className="cartmanual-paymentdetail-border"></div>
 
@@ -1090,7 +1272,7 @@ class CartManualView extends React.Component {
                                   <img style={{height: '25px', width: '25px'}} src={OvoPayment} />
                                   <div style={{marginLeft: '10px'}}>OVO</div>
                                 </div>
-                                <div>{this.props.CartRedu.phoneNumber}</div>
+                                <div>{this.state.cartReduData.phoneNumber}</div>
                             </div>
                           </div>
                           :
@@ -1126,9 +1308,22 @@ class CartManualView extends React.Component {
                       <div className='cartmanual-detailprice-desc'>
                         <div className='orderDetail-detailprice-word'>
                           <div>Total Ongkos Kirim</div>
-                          <div>Rp. {Intl.NumberFormat("id-ID").format(this.props.CartRedu.shipperPrice)}</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.cartReduData.shippingPrice)}</div>
                         </div>
                       </div>
+                      
+                      {
+                        this.state.insuranceCheckbox ?
+                        <div className='cartmanual-detailprice-desc'>
+                          <div className='orderDetail-detailprice-word'>
+                            <div>Asuransi Pengiriman</div>
+                            <div>Rp. {Intl.NumberFormat("id-ID").format(this.state.insurancePrice)}</div>
+                          </div>
+                        </div>
+                        : 
+                        <></>
+                      }
+                      
                       </div>
                     </div>
                   </div>
@@ -1176,4 +1371,4 @@ const Mapstatetoprops = (state) => {
     }
   }
   
-  export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber })(CartManualView)
+  export default connect(Mapstatetoprops, { EditMenuCart, LoadingButton, DoneLoad, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumber, InsuranceCheckbox, InsurancePrice })(CartManualView)
