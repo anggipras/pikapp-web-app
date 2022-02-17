@@ -17,7 +17,6 @@ import OrderDetailManualLayout  from "./Master/OrderDetailManualLayout";
 import ManualTxn from "./Master/ManualTransaction";
 import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
-// import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
 import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
 import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
@@ -82,16 +81,8 @@ function countDown(){
 function App() {
     const dispatch = useDispatch();
     const [tokenFound, setTokenFound] = useState('');
-    // getToken(setTokenFound);
 
     dispatch({ type: 'FCMTOKEN', payload: tokenFound });
-
-    // if (Cookies.get("auth") === undefined) {
-    //     let deleteCart = JSON.parse(localStorage.getItem("cart"))
-    //     let newCart = []
-    //     newCart.push(deleteCart[0])
-    //     localStorage.setItem('cart', JSON.stringify(newCart))
-    // }
 
     if(localStorage.getItem("counterPayment")) {
         timeLeft = setInterval(() => countDown(), 1000);

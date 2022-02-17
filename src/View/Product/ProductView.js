@@ -411,11 +411,12 @@ class ProductView extends React.Component {
 
             if(value.mid) {
               this.setState({ isManualTxn : false });
+              Cookies.set("isManualTxn", 0)
               this.props.IsManualTxn(false);
             } else {
               this.setState({ isManualTxn : true });
+              Cookies.set("isManualTxn", 1)
               this.props.IsManualTxn(true);
-              console.log("aaa" + this.props.AuthRedu.isManualTxn);
             }
 
             this.setState({ totalProduct : res.data.results.products.length });
@@ -1574,7 +1575,7 @@ class ProductView extends React.Component {
         </div> */}
 
         <div className='promo-voucherinfo'>
-          <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0 }}} style={{ textDecoration: "none", width: "100%" }}>
+          <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
             <div className='promo-detailContent'>
                   <div className='promo-leftSide'>
                     <img className='promo-img-icon' src={VoucherIcon} alt='' />
