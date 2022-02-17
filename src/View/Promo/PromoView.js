@@ -6,6 +6,7 @@ import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
 import takeawayColor from '../../Asset/Icon/takeawayColor.png'
 import paymentColor from '../../Asset/Icon/CashierPayment.png'
 import moment from "moment";
+import Cookies from "js-cookie"
 import { useLocation } from "react-router-dom"
 
 const PromoView = () => {
@@ -60,24 +61,29 @@ const PromoView = () => {
     useEffect(() => {
         var selectedPromoListContainer = []
         var disabledPromoListContainer = []
-        if (alertStatus.phoneNumber == "0" && alertStatus.paymentType == 0) {
-            selectedPromoListContainer = promoListData
-        } else if(alertStatus.phoneNumber == "" && alertStatus.paymentType == -1) {
-            selectedPromoListContainer = promoListData
+        let isManualTxn = Cookies.get("isManualTxn")
+        if (isManualTxn == 0) {
+            
         } else {
-            promoListData.forEach(val => {
-                if (CartRedu.pickupType == 0) {
-                    if (alertStatus.paymentType == 0) {
-                        if (val.promo_shipment_method.includes("Pick Up") && val.promo_payment_method.includes("OVO")) {
-                            selectedPromoListContainer.push(val)
-                        } else {
-                            disabledPromoListContainer.push(val)
+            if (alertStatus.phoneNumber == "0" && alertStatus.paymentType == 0) {
+                selectedPromoListContainer = promoListData
+            } else if(alertStatus.phoneNumber == "" && alertStatus.paymentType == -1) {
+                selectedPromoListContainer = promoListData
+            } else {
+                promoListData.forEach(val => {
+                    if (CartRedu.pickupType == 0) {
+                        if (alertStatus.paymentType == 0) {
+                            if (val.promo_shipment_method.includes("Pick Up") && val.promo_payment_method.includes("OVO")) {
+                                selectedPromoListContainer.push(val)
+                            } else {
+                                disabledPromoListContainer.push(val)
+                            }
                         }
+                    } else {
+                        
                     }
-                } else {
-                    
-                }
-            })
+                })
+            }
         }
         // console.log("SELECTED", selectedPromoListContainer)
         // console.log("DISABLE", disabledPromoListContainer)
@@ -238,8 +244,16 @@ const PromoView = () => {
                             null
                     }
 
+                    <div className="selectedPromo-title" style={{display: promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1? "none":"block"}} >
+                        Pilih 1
+                    </div>
+
                     <div className='promoPage-section' style={{display: "block", marginBottom: disabledPromoListData.length == 0? "45px":"0px"}}>
                         {promoPageList()}
+                    </div>
+
+                    <div className="disabledPromo-title" style={{display: disabledPromoListData.length == 0? "none":"block"}}>
+                        Voucher Tidak Dapat Dipilih
                     </div>
 
                     <div className='promoPage-section' style={{display: disabledPromoListData.length == 0? "none":"block", marginBottom: "45px"}}>

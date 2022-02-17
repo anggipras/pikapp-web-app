@@ -60,7 +60,7 @@ body {
 
 // Promo List Start
 .promoPage-section {
-    margin-top: 20px;
+    margin-top: 14px;
 }
 
 .promolistbox-section, .promolistbox-section-disabled {
@@ -121,6 +121,10 @@ body {
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
+}
+
+.promolist-detail-minOrder, .promolist-detail-maxDiscount {
+    margin-top: 5px;
 }
 
 .promolist-bottomInfo-layout {
@@ -264,6 +268,25 @@ body {
     text-align: center;
     font-size: 18px;
     color: white;
+}
+
+.selectedPromo-title {
+    margin-left: 14px;
+    margin-top: 14px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: #aaaaaa;
+}
+
+.disabledPromo-title {
+    margin-left: 14px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: #111111;
 }
 
 @media (max-width: 450px) {
