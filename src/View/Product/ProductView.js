@@ -1474,7 +1474,7 @@ class ProductView extends React.Component {
                       <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
                   }
                 </div> */}
-                <img className='merchant-storeimg-logo' src={this.state.data.image} alt='' />
+                <img className='merchant-storeimg-logo' src={this.state.data.logo} alt='' />
                 <div className='merchant-name'>
                   <div className='merchant-mainName'>
                     {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}

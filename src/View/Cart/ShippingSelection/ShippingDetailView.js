@@ -53,6 +53,8 @@ const ShippingDetailView = () => {
         dispatch({ type: 'SHIPPINGDESC', payload: courierDesc });
         dispatch({ type: 'COURIERSERVICETYPE', payload: courierService });
         dispatch({ type: 'SHIPPINGCODE', payload: courierCode });
+        dispatch({ type: 'INSURANCECHECKBOX', payload: false });
+        dispatch({ type: 'INSURANCEPRICE', payload: 0 });
         window.history.go('-2')
     }
 

@@ -23,7 +23,8 @@ class TrackingDeliveryView extends React.Component {
                 shipping_cost: 0,
                 shipping_time: "",
                 shipping_time_type: "",
-                waybill_id : ""
+                waybill_id : "",
+                tracking_id : ""
             },
             customer : {
                 address: "",
@@ -88,12 +89,19 @@ class TrackingDeliveryView extends React.Component {
             this.setState({ isMobile: false });
         }
 
-        // if (Object.keys(this.props.AllRedu.dataDetailTxn).length !== 0) {
+        if (Object.keys(this.props.AllRedu.dataDetailTxn).length !== 0) {
             this.setState({ data : this.props.AllRedu.dataDetailTxn },
                 () => {
                     this.getTrackingOrder();
                 })
-        // }
+        } else if (localStorage.getItem("deliveryData")) {
+            var dataDelivery = JSON.parse(localStorage.getItem("deliveryData"));
+
+            this.setState({ data : dataDelivery },
+                () => {
+                    this.getTrackingOrder();
+                })
+        }
 
         let list = this.state.dataCourier.history.sort().reverse();
         // this.setState({ history : list });
@@ -104,13 +112,13 @@ class TrackingDeliveryView extends React.Component {
 
     getTrackingOrder() {
         var request = {
-            waybill_id : this.state.data.shipping.waybill_id,
+            tracking_id : this.state.data.shipping.tracking_id,
             courier : this.state.data.shipping.shipping_method
         }
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
-        let historyTransAPI = addressShipping + '/api/webhook/v1/order-status'
+        let historyTransAPI = addressShipping + '/api/transaction/tracking-order'
         Axios(historyTransAPI, {
         headers: {
             "Content-Type": "application/json",
@@ -122,7 +130,8 @@ class TrackingDeliveryView extends React.Component {
         data: request
         })
         .then((res) => {
-            var results = res.data.results;
+            var results = res.data.result;
+            results.history.sort().reverse();
             this.setState({ dataCourier: results });
         })
         .catch((err) => {
@@ -164,9 +173,14 @@ class TrackingDeliveryView extends React.Component {
     }
 
     handleCourierPhone = (phone) => { //go to Whatsapp chat
-        phone.substring(1)
-        let waNumber = '62' + phone
-        window.location.href = `https://wa.me/${waNumber}`
+        // phone.substring(1)
+        // let waNumber = '62' + phone
+        window.location.href = `https://wa.me/${phone}`
+    }
+
+    handleLiveTracking() {
+        window.open(this.state.dataCourier.link, "_blank");
+        // windowReference.location = link;
     }
 
     render() {
@@ -229,7 +243,7 @@ class TrackingDeliveryView extends React.Component {
                                             <h3 className="tracking-delivery-info-order" style={{ color : "#F4B55B" }}>Pesanan Selesai</h3>
                                         </div> */}
                                         <div>
-                                            <h3 className="tracking-delivery-transactionid">Resi Pengiriman: {this.state.dataCourier.waybill_id}</h3>
+                                            <h3 className="tracking-delivery-transactionid">Resi Pengiriman: {this.state.data.shipping.waybill_id}</h3>
                                         </div>
                                         {/* <div>
                                             <h3 className="tracking-delivery-transactiondate">Estimasi Tiba di tujuan: {moment(this.state.data.transaction_time).format("Do MMMM YYYY, H:mm")}</h3>
@@ -290,6 +304,14 @@ class TrackingDeliveryView extends React.Component {
                         </div>
                     }
                 </div>
+                {
+                    this.state.dataCourier.link !== "" ?
+                    <div onClick={() => this.handleLiveTracking()} className="tracking-delivery-loc">
+                        <div className="tracking-delivery-liveloc" style={{backgroundColor: '#4bb7ac'}}>Lihat Live Tracking</div>
+                    </div>
+                    :
+                    <></>
+                }
             </div>
         )
     }

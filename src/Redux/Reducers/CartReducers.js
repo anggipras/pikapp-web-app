@@ -31,7 +31,9 @@ const INITIAL_STATE = {
     courierList : [],
     isMarkerChange : false,
     searchInput : "",
-    courierServiceType : ""
+    courierServiceType : "",
+    insuranceCheckbox : false,
+    insurancePrice : 0
     // dataDetailTxn : {}
 }
 
@@ -103,6 +105,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, searchInput: action.payload }
         case "COURIERSERVICETYPE":
             return { ...state, courierServiceType: action.payload }
+        case "INSURANCECHECKBOX":
+            return { ...state, insuranceCheckbox: action.payload }
+        case "INSURANCEPRICE":
+            return { ...state, insurancePrice: action.payload }
         // case "DATADETAILTXN":
         //     return { ...state, dataDetailTxn: action.payload }
         case "DEFAULTSTATE":
