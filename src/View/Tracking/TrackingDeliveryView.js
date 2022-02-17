@@ -178,6 +178,11 @@ class TrackingDeliveryView extends React.Component {
         window.location.href = `https://wa.me/${phone}`
     }
 
+    handleLiveTracking() {
+        window.open(this.state.dataCourier.link, "_blank");
+        // windowReference.location = link;
+    }
+
     render() {
         let statusTransaction = () => {
             let statusDesc
@@ -299,6 +304,14 @@ class TrackingDeliveryView extends React.Component {
                         </div>
                     }
                 </div>
+                {
+                    this.state.dataCourier.link !== "" ?
+                    <div onClick={() => this.handleLiveTracking()} className="tracking-delivery-loc">
+                        <div className="tracking-delivery-liveloc" style={{backgroundColor: '#4bb7ac'}}>Lihat Live Tracking</div>
+                    </div>
+                    :
+                    <></>
+                }
             </div>
         )
     }
