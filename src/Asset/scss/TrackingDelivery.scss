@@ -1,0 +1,431 @@
+@font-face {
+  font-family: "SF-Compact-Rounded";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
+@font-face {
+  font-family: "SF-Compact-Rounded-Medium";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+  font-family: "SF-Compact-Rounded-Semibold";
+  src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+@media (min-width: 768px) {
+  .tracking-delivery-Layout {
+    width: 480px !important;
+    // margin-left: 31%;
+    padding: 5px 10px 26px 10px;
+    background-color: #f0f1f2;
+  }
+}
+
+.tracking-delivery-mainLayout {
+  box-shadow: 4px 0 4px -4px rgba(0, 0, 0, 0.1), -4px 0 4px -4px rgba(0, 0, 0, 0.1);
+  // height: 100vh;
+}
+
+.tracking-delivery-Layout {
+  // width: 98vw;
+  // padding: 20px 117px 20px 107px;
+  background-color: #f0f1f2;
+}
+
+.tracking-delivery-Title {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 54px;
+  // margin-bottom: 41px;
+  margin-bottom: 10px;
+  padding: 0px 17px 0px 17px;
+  background-color: #ffffff;
+}
+
+.tracking-delivery-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 5px 14px 0px;
+  background-color: #FFFFFF !important;
+}
+
+.tracking-delivery-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.tracking-delivery-titletext {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 16px;
+}
+
+.tracking-delivery-Content {
+  display: flex;
+  flex-direction: column;
+}
+
+.tracking-delivery-LeftSide {
+  // width: 50%;
+  width: 100%;
+  // display: flex;
+  // width: auto;
+  // justify-content: center;
+}
+
+.tracking-delivery-transaction-detail {
+  // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  // min-width: 477px;
+  width: auto;
+  margin-bottom: 30px;
+  cursor: pointer;
+  // border: 1px solid #c4c4c4;
+  background-color: #ffffff;
+}
+
+.tracking-delivery-transaction-content {
+  padding: 15px 20px 15px 20px;
+}
+
+.tracking-delivery-transactionid {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #111111;
+  padding-top: 3px;
+}
+
+.tracking-delivery-transactiondate {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #767676;
+  padding-top: 3px;
+}
+
+.tracking-delivery-content-border {
+  border-top : 1px solid #c4c4c4;
+}
+
+.tracking-delivery-transaction-topSide {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  // text-align: center;
+}
+
+.tracking-delivery-transaction-merchName {
+  font-size: 17px;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+  text-transform: capitalize;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.tracking-delivery-content-icon {
+  width: 30px;
+}
+
+.tracking-delivery-item {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #494949;
+  margin-bottom: 0px;
+}
+
+.tracking-delivery-content-date {
+  margin-bottom: 5px;
+}
+
+.tracking-delivery-datetext {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #4BB7AC;
+}
+
+.tracking-delivery-transaction-centerSide {
+  display: flex;
+  justify-content: start;
+  // align-items: center;
+  // font-size: 15px;
+  // font-family: "SF-Compact-Rounded", sans-serif;
+  // font-style: normal;
+  // font-weight: normal;
+  // line-height: 15px;
+  // color: #767676;
+  // margin-bottom: 15px;
+}
+
+.tracking-delivery-section-quantity {
+  margin-top: 8px;
+  // width: 30px;
+}
+
+.tracking-delivery-section-item {
+  margin-top: 8px;
+  margin-left: 10px;
+  width: auto;
+}
+
+.tracking-delivery-content-hour {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tracking-delivery-content-item {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 0px;
+}
+
+.tracking-delivery-content-detail {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 0px;
+}
+
+.tracking-delivery-content-desc {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.tracking-delivery-section-price {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tracking-delivery-content-totalitem {
+  font-size: 17px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+}
+
+.tracking-delivery-content-totalprice {
+  font-size: 17px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 8px;
+  max-width: 350px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.tracking-delivery-transaction-item {
+  display: flex;
+  justify-items: start;
+}
+
+.tracking-delivery-content-price {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: end;
+}
+
+.tracking-delivery-section-subtotal {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tracking-delivery-section-shippingprice {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tracking-delivery-section-courier {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tracking-delivery-courier-phone {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #767676;
+  padding-top: 3px;
+  margin-bottom: 0px;
+}
+
+.tracking-delivery-courier-name {
+  font-size: 16px;
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  color: #111111;
+  margin-bottom: 0px;
+  max-width: 350px;
+  text-transform: capitalize;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+}
+
+.tracking-delivery-courier {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.tracking-delivery-courier-info {
+  margin-left: 0px;
+}
+
+.tracking-delivery-content-info {
+  display: flex;
+  /* justify-content: start; */
+  align-items: center;
+}
+
+.tracking-delivery-content-call {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.tracking-delivery-info-order {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+.tracking-delivery-dateinfo {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #111111;
+}
+
+.tracking-delivery-loc {
+  display: block;
+  position: sticky;
+  bottom: 0;
+  margin: 0;
+  padding: 10px 0px 10px 0px;
+  background-color: #ffffff;
+}
+
+.tracking-delivery-liveloc {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  border-radius: 8px;
+  margin-left: 14px;
+  margin-right: 14px;
+
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .tracking-delivery-Layout {
+    width: 100vw;
+    padding: 5px 10px 26px 10px;
+    min-height: 725px;
+  }
+}

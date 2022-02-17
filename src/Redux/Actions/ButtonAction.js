@@ -93,3 +93,136 @@ export const IsManualTxn = (bool) => {
         payload: bool
     }
 }
+
+export const MapInstance = (data) => {
+    return {
+        type: 'MAPINSTANCE',
+        payload: data
+    }
+}
+
+export const MapApi = (data) => {
+    return {
+        type: 'MAPAPI',
+        payload: data
+    }
+}
+
+export const District = (data) => {
+    return {
+        type: 'DISTRICT',
+        payload: data
+    }
+}
+
+export const FormattedAddress = (data) => {
+    return {
+        type: 'FORMATTEDADDRESS',
+        payload: data
+    }
+}
+
+export const Places = (data) => {
+    return {
+        type: 'PLACES',
+        payload: data
+    }
+}
+
+export const Lat = (data) => {
+    return {
+        type: 'LAT',
+        payload: data
+    }
+}
+
+export const Lng = (data) => {
+    return {
+        type: 'LNG',
+        payload: data
+    }
+}
+
+export const Center = (data) => {
+    return {
+        type: 'CENTER',
+        payload: data
+    }
+}
+
+export const PostalCode = (data) => {
+    return {
+        type: 'POSTALCODE',
+        payload: data
+    }
+}
+
+export const IsMarkerChange = (bool) => {
+    return {
+        type: 'ISMARKERCHANGE',
+        payload: bool
+    }
+}
+
+export const SearchInput = (data) => {
+    return {
+        type: 'SEARCHINPUT',
+        payload: data
+    }
+}
+
+export const DataDetailTxn = (data) => {
+    return {
+        type: 'DATADETAILTXN',
+        payload: data
+    }
+}
+
+export const StreetNumber = (data) => {
+    return {
+        type: 'STREETNUMBER',
+        payload: data
+    }
+}
+
+export const StreetName = (data) => {
+    return {
+        type: 'STREETNAME',
+        payload: data
+    }
+}
+
+export const City = (data) => {
+    return {
+        type: 'CITY',
+        payload: data
+    }
+}
+
+export const Province = (data) => {
+    return {
+        type: 'PROVINCE',
+        payload: data
+    }
+}
+
+export const CourierServiceType = (data) => {
+    return {
+        type: 'COURIERSERVICETYPE',
+        payload: data
+    }
+}
+
+export const InsuranceCheckbox = (bool) => {
+    return {
+        type: 'INSURANCECHECKBOX',
+        payload: bool
+    }
+}
+
+export const InsurancePrice = (data) => {
+    return {
+        type: 'INSURANCEPRICE',
+        payload: data
+    }
+}

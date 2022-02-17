@@ -15,6 +15,7 @@ const INITIAL_STATE = {
     dataOrder : {},
     fcmToken : '',
     dataDetail : {},
+    dataDetailTxn : {}
     // isManualTxn : false
 }
 
@@ -56,6 +57,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, dataDetail: action.payload }
         // case "ISMANUALTXN":
         //     return { ...state, isManualTxn: action.payload }
+        case "DATADETAILTXN":
+            return { ...state, dataDetailTxn: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

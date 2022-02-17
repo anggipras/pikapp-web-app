@@ -1,0 +1,316 @@
+@font-face {
+    font-family: "SF-Compact-Rounded";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Medium";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Semibold";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+body {
+    background-color: lightgrey;
+    display: flex;
+    justify-content: center;
+}
+
+.shippingSelection-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 480px;
+    width: 100vw;
+    height: 100vh;
+    padding: 0px 0px 20px 0px;
+    background-color: #ffffff;
+}
+
+.shippingSelection-topSide {
+    display: flex;
+    flex-direction: column;
+}
+
+.shippingSelection-header {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid lightgrey;
+    padding: 14px 14px 14px 14px;
+}
+
+.backArrow-icon {
+    width: 23px;
+    height: 23px;
+}
+
+.shippingSelection-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    font-size: 20px;
+    color: #111111;
+    margin-left: 16px;
+}
+
+.shippingSelection-section {
+    // padding: 22px 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shippingSelection-eachList {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0px 10px 0px;
+    border-top: 0.5px solid #D9CECE;
+    border-bottom: 0.5px solid #D9CECE;
+    cursor: pointer;
+}
+
+.shippingSelection-eachList:nth-child(odd) {
+    border-bottom: none;
+}
+
+.shippingSelection-eachList:nth-child(even) {
+    border-bottom: none;
+}
+
+.shippingSelection-eachList:last-child {
+    border-bottom: 0.5px solid #D9CECE;
+}
+
+.shippingSelection-selectButton {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    border-radius: 8px;
+    margin-left: 14px;
+    margin-right: 14px;
+
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+}
+
+.shippingSelection-titleLayout {
+    margin-left: 14px;
+}
+
+.shippingSelection-shippingName {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: gray;
+    font-size: 15px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    padding: 5px 0px 0px 0px;
+}
+
+.shippingSelection-shippingDetail {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    color: gray;
+    font-size: 12px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    padding: 2px 0px 0px 0px;
+}
+
+.shippingSelection-blackNotes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: #111111;
+    font-size: 15px;
+}
+
+.shippingSelection-grayNotes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    color: #111111;
+    font-size: 12px;
+}
+
+.shippingSelection-nodata {
+    width: 50%;
+    margin-top: 150px;
+}
+
+// detail
+.shippingDetail-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 480px;
+    width: 100vw;
+    height: 100vh;
+    padding: 0px 0px 20px 0px;
+    background-color: #ffffff;
+}
+
+.shippingDetail-topSide {
+    display: flex;
+    flex-direction: column;
+}
+
+.shippingDetail-header {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid lightgrey;
+    padding: 14px 14px 14px 14px;
+}
+
+.backArrow-icon {
+    width: 23px;
+    height: 23px;
+}
+
+.shippingDetail-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    font-size: 20px;
+    color: #111111;
+    margin-left: 16px;
+}
+
+// .shippingDetail-section {
+//     padding: 22px 42px;
+// }
+
+.shippingDetail-eachList {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0px 10px 0px;
+    border-top: 0.5px solid #D9CECE;
+    border-bottom: 0.5px solid #D9CECE;
+    cursor: pointer;
+}
+
+.shippingDetail-eachList:nth-child(odd) {
+    border-bottom: none;
+}
+
+.shippingDetail-eachList:nth-child(even) {
+    border-bottom: none;
+}
+
+.shippingDetail-eachList:last-child {
+    border-bottom: 0.5px solid #D9CECE;
+}
+
+.shippingDetail-selectButton {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    border-radius: 8px;
+    margin-left: 14px;
+    margin-right: 14px;
+
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+}
+
+.shippingDetail-titleLayout {
+    margin-left: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shippingDetail-shippingName {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: gray;
+    font-size: 15px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    padding: 5px 0px 0px 0px;
+}
+
+.shippingDetail-shippingDetail {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    color: gray;
+    font-size: 12px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    padding: 2px 0px 0px 0px;
+}
+
+.shippingDetail-blackNotes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    color: #111111;
+    font-size: 15px;
+    text-transform: capitalize;
+}
+
+.shippingDetail-grayNotes {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    color: #111111;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.shippingDetail-courier-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 50px;
+}
+
+.shippingDetail-radioButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shippingDetail-checkimg {
+    width: 18px;
+    margin-right: 13px;
+}

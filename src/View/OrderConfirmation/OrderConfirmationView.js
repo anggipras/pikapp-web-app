@@ -118,8 +118,6 @@ class OrderConfirmationView extends React.Component {
                 this.getStatusPayment();
             });
         }
-
-        this.showResponsePayment();
     }
 
     componentDidUpdate() {
