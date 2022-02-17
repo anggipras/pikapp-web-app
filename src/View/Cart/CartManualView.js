@@ -623,7 +623,7 @@ class CartManualView extends React.Component {
           return newlistArr += `${val2.name}, `
         })
       })
-      return <h5 className='cartmanual-List-content-choice'>{newlistArr}</h5>
+      return <h5 className='cartmanual-List-content-choice' style={{display: "flex"}}><h5 className='cartmanual-List-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan :</h5>{newlistArr}</h5>
     }
   
     onEditCart = (ind, mid) => {
@@ -970,8 +970,8 @@ class CartManualView extends React.Component {
                   <div className='cartmanual-List-content-detail-left'>
                     <h2 className='cartmanual-List-content-title'>{food.foodName}</h2>
                     {this.newListAllChoices(food)}
-                    <h5 className='cartmanual-List-content-notes'>Tambahan : {food.foodNote}</h5>
-                    <h3 className='cartmanual-List-content-price'>Rp. {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                    <h3 className='cartmanual-List-content-price'>Rp {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                    <h5 className='cartmanual-List-content-notes' style={{display: food.foodNote == ""? "none":"block"}}>{food.foodNote}</h5>
                   </div>
   
                   <div className='cartmanual-List-content-detail-right'>

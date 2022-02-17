@@ -16,6 +16,8 @@ const PromoView = () => {
     const promoTitle = location.state.title
     const promoAlert = location.state.alert
     const alertStatus = location.state.alertStatus
+    const cartStatus = location.state.cartStatus
+    const [manualTxnVar, setManualTxnVar] = useState(0)
     const declaredShipment = ["Pick Up", "Delivery", "Dine In"]
     const [promoListData, setPromoListData] = useState([
         {
@@ -62,6 +64,7 @@ const PromoView = () => {
         var selectedPromoListContainer = []
         var disabledPromoListContainer = []
         let isManualTxn = Cookies.get("isManualTxn")
+        setManualTxnVar(isManualTxn)
         if (isManualTxn == 0) {
             
         } else {
@@ -131,7 +134,7 @@ const PromoView = () => {
         return paymentString
     }
 
-    const disabledPromoList = () => {
+    const disabledPromoListDeliveryTxn = () => {
         return disabledPromoListData.map((val, ind) => {
             return (
                 <div key={ind} className='promolistbox-section-disabled' >
@@ -172,7 +175,89 @@ const PromoView = () => {
         })
     }
 
-    const promoPageList = () => {
+    const disabledPromoListDineinTxn = () => {
+        return disabledPromoListData.map((val, ind) => {
+            return (
+                <div key={ind} className='promolistbox-section-disabled' >
+                    <input disabled id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                    <label htmlFor={val.promo_title}>
+                        <div className='promolist-side'>
+                            <div className='promolist-circle-name'>{val.promo_title}</div>
+    
+                            <div className='promolist-detail'>
+                                <div className='promolist-detail-period'>Periode: {moment(new Date(val.promo_period_start)).format("DD MMMM YYYY")} - {moment(new Date(val.promo_period_end)).format("DD MMMM YYYY")}</div>
+                                <div className='promolist-detail-minOrder'>Minimal order Rp {Intl.NumberFormat("id-ID").format(val.promo_min_order)}</div>
+                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.promo_max_discount)}</div>
+                            </div>
+                        </div>
+    
+                        <div className="promolist-bottomInfo-layout">
+                            <div className="promolist-shipment-layout">
+                                <div className="promolist-shipment-circleLayout">
+                                    <img src={takeawayColor} className='promolist-shipment-icon' alt='' />
+                                </div>
+                                <div className="promolist-shipment-text">
+                                    {shipmentMethod(val.promo_shipment_method)}
+                                </div>
+                            </div>
+    
+                            <div className="promolist-payment-layout">
+                                <div className="promolist-payment-circleLayout">
+                                    <img src={paymentColor} className='promolist-payment-icon' alt='' />
+                                </div>
+                                <div className="promolist-payment-text">
+                                    {paymentMethod(val.promo_payment_method)}
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            )
+        })
+    }
+
+    const promoPageListDeliveryTxn = () => {
+        return promoListData.map((val, ind) => {
+            return (
+                <div key={ind} className={alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
+                    <input onClick={() => selectPromo(ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                    <label htmlFor={val.promo_title}>
+                        <div className='promolist-side'>
+                            <div className='promolist-circle-name'>{val.promo_title}</div>
+    
+                            <div className='promolist-detail'>
+                                <div className='promolist-detail-period'>Periode: {moment(new Date(val.promo_period_start)).format("DD MMMM YYYY")} - {moment(new Date(val.promo_period_end)).format("DD MMMM YYYY")}</div>
+                                <div className='promolist-detail-minOrder'>Minimal order Rp {Intl.NumberFormat("id-ID").format(val.promo_min_order)}</div>
+                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.promo_max_discount)}</div>
+                            </div>
+                        </div>
+    
+                        <div className="promolist-bottomInfo-layout">
+                            <div className="promolist-shipment-layout">
+                                <div className="promolist-shipment-circleLayout">
+                                    <img src={takeawayColor} className='promolist-shipment-icon' alt='' />
+                                </div>
+                                <div className="promolist-shipment-text">
+                                    {shipmentMethod(val.promo_shipment_method)}
+                                </div>
+                            </div>
+    
+                            <div className="promolist-payment-layout">
+                                <div className="promolist-payment-circleLayout">
+                                    <img src={paymentColor} className='promolist-payment-icon' alt='' />
+                                </div>
+                                <div className="promolist-payment-text">
+                                    {paymentMethod(val.promo_payment_method)}
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            )
+        })
+    }
+
+    const promoPageListDineinTxn = () => {
         return promoListData.map((val, ind) => {
             return (
                 <div key={ind} className={alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
@@ -248,17 +333,32 @@ const PromoView = () => {
                         Pilih 1
                     </div>
 
-                    <div className='promoPage-section' style={{display: "block", marginBottom: disabledPromoListData.length == 0? "45px":"0px"}}>
-                        {promoPageList()}
-                    </div>
+                    {
+                        manualTxnVar == 1 ?
+                        <div className='promoPage-section' style={{display: "block", marginBottom: disabledPromoListData.length == 0? "45px":"0px"}}>
+                            {promoPageListDeliveryTxn()}
+                        </div>
+                        :
+                        <div className='promoPage-section' style={{display: "block", marginBottom: disabledPromoListData.length == 0? "45px":"0px"}}>
+                            {promoPageListDineinTxn()}
+                        </div>
+                    }
 
                     <div className="disabledPromo-title" style={{display: disabledPromoListData.length == 0? "none":"block"}}>
                         Voucher Tidak Dapat Dipilih
                     </div>
 
-                    <div className='promoPage-section' style={{display: disabledPromoListData.length == 0? "none":"block", marginBottom: "45px"}}>
-                        {disabledPromoList()}
-                    </div>
+                    {
+                        manualTxnVar == 1 ?
+                        <div className='promoPage-section' style={{display: disabledPromoListData.length == 0? "none":"block", marginBottom: "45px"}}>
+                            {disabledPromoListDeliveryTxn()}
+                        </div>
+                        :
+                        <div className='promoPage-section' style={{display: disabledPromoListData.length == 0? "none":"block", marginBottom: "45px"}}>
+                            {disabledPromoListDineinTxn()}
+                        </div>
+                    }
+                    
 
                     <div className='promoPage-button-layout' style={{display: promoAlert == 0? "none":"flex"}}>
                         <div 
