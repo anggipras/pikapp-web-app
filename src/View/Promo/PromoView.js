@@ -18,7 +18,8 @@ const PromoView = () => {
     const alertStatus = location.state.alertStatus
     const cartStatus = location.state.cartStatus
     const [manualTxnVar, setManualTxnVar] = useState(0)
-    const declaredShipment = ["Pick Up", "Delivery", "Dine In"]
+    const declaredShipment = ["PICKUP", "DELIVERY", "DINE_IN"]
+    const declaredPayment = ["PAY_BY_CASHIER", "WALLET_OVO", "WALLET_DANA", "WALLET_SHOPEEPAY"]
     const [promoListData, setPromoListData] = useState([
         {
             promo_title: "PIKAPPTAHUNBARU 5rb",
@@ -26,8 +27,8 @@ const PromoView = () => {
             promo_period_end: "2021-01-07T19:00:00",
             promo_min_order: "50000",
             promo_max_discount: "5000",
-            promo_shipment_method: ["Delivery", "Pick Up", "Dine In"],
-            promo_payment_method: ["Cash", "OVO"]
+            promo_shipment_method: ["DELIVERY", "PICKUP", "DINE_IN"],
+            promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
         },
         {
             promo_title: "SPESIALKIRIM 15rb",
@@ -35,8 +36,8 @@ const PromoView = () => {
             promo_period_end: "2021-02-08T19:00:00",
             promo_min_order: "50000",
             promo_max_discount: "15000",
-            promo_shipment_method: ["Delivery", "Dine In"],
-            promo_payment_method: ["Cash", "OVO"]
+            promo_shipment_method: ["DELIVERY", "DINE_IN"],
+            promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
         },
         {
             promo_title: "AMBILSENDIRI 15rb",
@@ -44,8 +45,8 @@ const PromoView = () => {
             promo_period_end: "2021-03-09T19:00:00",
             promo_min_order: "50000",
             promo_max_discount: "15000",
-            promo_shipment_method: ["Pick Up"],
-            promo_payment_method: ["Cash"]
+            promo_shipment_method: ["PICKUP"],
+            promo_payment_method: ["PAY_BY_CASHIER"]
         },
         {
             promo_title: "AMBILSENDIRI 15rb",
@@ -53,8 +54,8 @@ const PromoView = () => {
             promo_period_end: "2021-03-09T19:00:00",
             promo_min_order: "50000",
             promo_max_discount: "15000",
-            promo_shipment_method: ["Pick Up"],
-            promo_payment_method: ["OVO"]
+            promo_shipment_method: ["PICKUP"],
+            promo_payment_method: ["WALLET_OVO"]
         },
     ])
     const [disabledPromoListData, setDisabledPromoListData] = useState([])
@@ -66,7 +67,23 @@ const PromoView = () => {
         let isManualTxn = Cookies.get("isManualTxn")
         setManualTxnVar(isManualTxn)
         if (isManualTxn == 0) {
-            
+            if (cartStatus.bizType == "DINE_IN") {
+                promoListData.forEach(val => {
+                    if (val.promo_payment_method.includes(cartStatus.paymentType)) {
+                        selectedPromoListContainer.push(val)
+                    } else {
+                        disabledPromoListContainer.push(val)
+                    }
+                })
+            } else {
+                promoListData.forEach(val => {
+                    if (val.promo_payment_method.includes(cartStatus.paymentType)) {
+                        selectedPromoListContainer.push(val)
+                    } else {
+                        disabledPromoListContainer.push(val)
+                    }
+                })
+            }
         } else {
             if (alertStatus.phoneNumber == "0" && alertStatus.paymentType == 0) {
                 selectedPromoListContainer = promoListData
@@ -76,7 +93,7 @@ const PromoView = () => {
                 promoListData.forEach(val => {
                     if (CartRedu.pickupType == 0) {
                         if (alertStatus.paymentType == 0) {
-                            if (val.promo_shipment_method.includes("Pick Up") && val.promo_payment_method.includes("OVO")) {
+                            if (val.promo_shipment_method.includes("PICKUP") && val.promo_payment_method.includes("WALLET_OVO")) {
                                 selectedPromoListContainer.push(val)
                             } else {
                                 disabledPromoListContainer.push(val)
