@@ -147,6 +147,7 @@ class OrderDetailView extends React.Component {
                     resultModal.paymentImage = ShopeePayment;
                 }
 
+
                 resultModal.transactionTime = moment(resultModal.transactionTime).format('Do MMMM YYYY, H:mm');
 
                 this.setState({
