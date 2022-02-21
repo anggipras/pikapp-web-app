@@ -25,7 +25,7 @@ const PromoView = () => {
             promo_title: "PIKAPPTAHUNBARU 5rb",
             promo_period_start: "2021-01-03T19:00:00",
             promo_period_end: "2021-01-07T19:00:00",
-            promo_min_order: "50000",
+            promo_min_order: "20000",
             promo_max_discount: "5000",
             promo_shipment_method: ["DELIVERY", "PICKUP", "DINE_IN"],
             promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
@@ -34,17 +34,26 @@ const PromoView = () => {
             promo_title: "SPESIALKIRIM 15rb",
             promo_period_start: "2021-02-04T19:00:00",
             promo_period_end: "2021-02-08T19:00:00",
-            promo_min_order: "50000",
+            promo_min_order: "40000",
             promo_max_discount: "15000",
             promo_shipment_method: ["DELIVERY", "DINE_IN"],
             promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
         },
         {
-            promo_title: "AMBILSENDIRI 15rb",
+            promo_title: "SPESIALKIRIM 25rb",
+            promo_period_start: "2021-02-04T19:00:00",
+            promo_period_end: "2021-02-08T19:00:00",
+            promo_min_order: "50000",
+            promo_max_discount: "25000",
+            promo_shipment_method: ["DINE_IN"],
+            promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
+        },
+        {
+            promo_title: "AMBILSENDIRI 10rb",
             promo_period_start: "2021-03-05T19:00:00",
             promo_period_end: "2021-03-09T19:00:00",
-            promo_min_order: "50000",
-            promo_max_discount: "15000",
+            promo_min_order: "30000",
+            promo_max_discount: "10000",
             promo_shipment_method: ["PICKUP"],
             promo_payment_method: ["PAY_BY_CASHIER"]
         },
@@ -67,17 +76,12 @@ const PromoView = () => {
         let isManualTxn = Cookies.get("isManualTxn")
         setManualTxnVar(isManualTxn)
         if (isManualTxn == 0) {
-            if (cartStatus.bizType == "DINE_IN") {
-                promoListData.forEach(val => {
-                    if (val.promo_payment_method.includes(cartStatus.paymentType)) {
-                        selectedPromoListContainer.push(val)
-                    } else {
-                        disabledPromoListContainer.push(val)
-                    }
-                })
+            if (promoAlert == 0) {
+                selectedPromoListContainer = promoListData
             } else {
                 promoListData.forEach(val => {
-                    if (val.promo_payment_method.includes(cartStatus.paymentType)) {
+                    let promoMinPrice = parseInt(val.promo_min_order)
+                    if (val.promo_payment_method.includes(cartStatus.paymentType) && val.promo_shipment_method.includes(cartStatus.bizType) && cartStatus.totalPayment >= promoMinPrice) {
                         selectedPromoListContainer.push(val)
                     } else {
                         disabledPromoListContainer.push(val)
@@ -118,15 +122,49 @@ const PromoView = () => {
     const shipmentMethod = (val) => {
         var shipmentString = ''
         if (val.length == 1) {
-            shipmentString = val[0]
+            if (val[0] == "PICKUP") {
+                shipmentString = "Pick Up"
+            } else if(val[0] == "TAKE_AWAY") {
+                shipmentString = "Pick Up"
+            } else if(val[0] == "DINE_IN") {
+                shipmentString = "Dine In"
+            } else {
+                shipmentString += `${val[0].charAt(0).toUpperCase() + val[0].slice(1).toLocaleLowerCase()} `
+            }
         } else {
             val.forEach((el, ind) => {
-                if (ind == val.length-1) {
-                    shipmentString += `dan ${el}`
-                } else if(ind == val.length-2) {
-                    shipmentString += `${el} `
+                if (el == "PICKUP") {
+                    if (ind == val.length-1) {
+                        shipmentString += `dan Pick Up`
+                    } else if(ind == val.length-2) {
+                        shipmentString += `Pick Up `
+                    } else {
+                        shipmentString += `Pick Up, `
+                    }
+                } else if(el == "TAKE_AWAY") {
+                    if (ind == val.length-1) {
+                        shipmentString += `dan Pick Up`
+                    } else if(ind == val.length-2) {
+                        shipmentString += `Pick Up `
+                    } else {
+                        shipmentString += `Pick Up, `
+                    }
+                } else if(el == "DINE_IN") {
+                    if (ind == val.length-1) {
+                        shipmentString += `dan Dine In`
+                    } else if(ind == val.length-2) {
+                        shipmentString += `Dine In `
+                    } else {
+                        shipmentString += `Dine In, `
+                    }
                 } else {
-                    shipmentString += `${el}, `
+                    if (ind == val.length-1) {
+                        shipmentString += `dan ${el.charAt(0).toUpperCase() + el.slice(1).toLocaleLowerCase()}`
+                    } else if(ind == val.length-2) {
+                        shipmentString += `${el.charAt(0).toUpperCase() + el.slice(1).toLocaleLowerCase()} `
+                    } else {
+                        shipmentString += `${el.charAt(0).toUpperCase() + el.slice(1).toLocaleLowerCase()}, `
+                    }
                 }
             });
         }
@@ -136,15 +174,31 @@ const PromoView = () => {
     const paymentMethod = (val) => {
         var paymentString = ''
         if (val.length == 1) {
-            paymentString = val[0]
+            if (val[0] == "PAY_BY_CASHIER") {
+                paymentString += "Cash"
+            } else {
+                let splittedPaymentMethod = val[0].split("WALLET_")
+                paymentString += splittedPaymentMethod[1]
+            }
         } else {
             val.forEach((el, ind) => {
-                if (ind == val.length-1) {
-                    paymentString += `dan ${el}`
-                } else if(ind == val.length-2) {
-                    paymentString += `${el} `
+                if (el == "PAY_BY_CASHIER") {
+                    if (ind == val.length-1) {
+                        paymentString += `dan Cash`
+                    } else if(ind == val.length-2) {
+                        paymentString += `Cash `
+                    } else {
+                        paymentString += `Cash, `
+                    }
                 } else {
-                    paymentString += `${el}, `
+                    let splittedPaymentMethod = el.split("WALLET_")
+                    if (ind == val.length-1) {
+                        paymentString += `dan ${splittedPaymentMethod[1]}`
+                    } else if(ind == val.length-2) {
+                        paymentString += `${splittedPaymentMethod[1]} `
+                    } else {
+                        paymentString += `${splittedPaymentMethod[1]}, `
+                    }
                 }
             });
         }
@@ -346,9 +400,14 @@ const PromoView = () => {
                             null
                     }
 
-                    <div className="selectedPromo-title" style={{display: promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1? "none":"block"}} >
-                        Pilih 1
-                    </div>
+                    {
+                        promoListData.length > 0 ?
+                        <div className="selectedPromo-title" style={{display: promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1? "none":"block"}} >
+                            Pilih 1
+                        </div>
+                        :
+                        null
+                    }
 
                     {
                         manualTxnVar == 1 ?

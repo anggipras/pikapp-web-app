@@ -43,6 +43,40 @@
   margin-left: 16px;
 }
 
+// Cart Table Number Start
+.cartTableNumber-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.cartTableNumber-Title {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  color: #111111;
+}
+
+.cartTableNumber-Number{
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #DC6A84;
+
+  padding: 4px 7px;
+  border-radius: 4px;
+  margin-left: 10px;
+  background-color: #F9E6EA;
+}
+// Cart Table Number End
+
 .cartContent {
   display: flex;
   flex-direction: column;
@@ -216,7 +250,7 @@
 .cart-selectiondetail-desc {
   font-family: "SF-Compact-Rounded", sans-serif;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   color: #111111;
   margin-top: 10px;
@@ -443,8 +477,8 @@
 }
 
 .cart-foodService-img-icon {
-  width: 23px;
-  height: 15px;
+  width: 25px;
+  height: 20px;
 }
 
 .cart-foodService-selectButton {

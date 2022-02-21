@@ -1,19 +1,18 @@
 import React from "react";
-import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
-import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
+import eatMethodIcon from "../../Asset/Icon/ic_eatmethod.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
+import paymentMethodIcon from "../../Asset/Icon/ic_paymentmethod.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import DanaPayment from "../../Asset/Icon/dana_icon.png";
 import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
-import checklistLogo from "../../Asset/Icon/checklist.png";
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import Cookies from "js-cookie"
@@ -54,15 +53,16 @@ var phoneNumber = ''
 
 class CartView extends React.Component {
   state = {
+    phoneNumberState: this.props.phoneNum ? this.props.phoneNum : '',
     changeUI: true,
     showModal: false,
     currentModalTitle: "",
-    paymentOption: "Pembayaran Di Kasir",
-    paymentType: "PAY_BY_CASHIER",
+    paymentOption: this.props.paymentOption ? this.props.paymentOption : "Pembayaran Di Kasir",
+    paymentType: this.props.paymentType ? this.props.paymentType : "PAY_BY_CASHIER",
     biz_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
     eat_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "Makan Di Tempat" : "Bungkus / Takeaway" : "Makan Di Tempat",
     indexOptionEat: this.props.noTable !== undefined ? this.props.noTable > 0 ? 0 : 1 : 0,
-    indexOptionPay: 0,
+    indexOptionPay: this.props.indexOptionPay ? this.props.indexOptionPay : 0,
     currentModal: [
       {
         image: "",
@@ -130,6 +130,8 @@ class CartView extends React.Component {
     this.sendTracking();
 
     this.sendTracking();
+
+    phoneNumber = this.state.phoneNumberState
 
     if(window.innerWidth < 700) {
       this.state.steptour.splice(2,1);
@@ -265,6 +267,8 @@ class CartView extends React.Component {
         cart.splice(1)
         localStorage.setItem("cart", JSON.stringify(newAllCart))
         window.history.back()
+        localStorage.removeItem("PAYMENT_TYPE")
+        localStorage.removeItem("PHONE_NUMBER")
       } else {
         let filterMerchantCart = newAllCart.filter(valueCart => {
           return valueCart.mid === mid
@@ -325,12 +329,16 @@ class CartView extends React.Component {
       }
     } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
       if (data === 0) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 }))
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
       } else if (data === 1) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_OVO", paymentOption: "OVO", indexOptionPay: data }))
         this.setState({ paymentType: "WALLET_OVO", paymentOption: "OVO", indexOptionPay: data })
       } else if (data === 2) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_DANA", paymentOption: "DANA", indexOptionPay: data }))
         this.setState({ paymentType: "WALLET_DANA", paymentOption: "DANA", indexOptionPay: data })
       } else if (data === 3) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_SHOPEEPAY", paymentOption: "ShopeePay", indexOptionPay: data }))
         this.setState({ paymentType: "WALLET_SHOPEEPAY", paymentOption: "ShopeePay", indexOptionPay: data })
       }
     }
@@ -794,6 +802,8 @@ class CartView extends React.Component {
 
   isPhoneNum = (num) => {
     phoneNumber = num
+    this.setState({ phoneNumberState: num })
+    localStorage.setItem("PHONE_NUMBER", JSON.stringify(num))
   }
 
   sendTracking() {
@@ -819,7 +829,7 @@ class CartView extends React.Component {
       }
     })
     .then((res) => {
-      console.log(res.data.results);
+      console.log("SUCCEED");
     })
     .catch((err) => {
       console.log(err);
@@ -994,6 +1004,8 @@ class CartView extends React.Component {
       )
     }
 
+    let tableNumberOfCart = localStorage.getItem("table") ? localStorage.getItem("table") : "0"
+
     return (
       <>
         <div className='cartLayout'>
@@ -1003,6 +1015,17 @@ class CartView extends React.Component {
             </span>
             <div className='confirmationOrder'>Checkout</div>
           </div>
+
+          {
+            tableNumberOfCart != "0" ?
+            <div className='cartTableNumber-layout'>
+              <div className='cartTableNumber-Title'>Nomor Meja</div>
+
+              <div className="cartTableNumber-Number">{tableNumberOfCart}</div>
+            </div>
+            :
+            null
+          }
 
           <div className='cartContent'>
             <div className='cart-LeftSide'>
@@ -1028,7 +1051,7 @@ class CartView extends React.Component {
                   <div className='cart-detailContent'>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                           <div className='cart-leftSide'>
-                              <img className='cart-foodService-img-icon' src={eatImage} alt='' />
+                              <img className='cart-foodService-img-icon' src={eatMethodIcon} alt='' />
                               <div className='cart-title'>Pilih Cara Makan</div>
                             </div>
 
@@ -1051,7 +1074,7 @@ class CartView extends React.Component {
                   <div className='cart-detailContent'>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                           <div className='cart-leftSide'>
-                              <img className='cart-foodService-img-icon' src={paymentImage} alt='' />
+                              <img className='cart-foodService-img-icon' src={paymentMethodIcon} alt='' />
                               <div className='cart-title'>Pilih Metode Pembayaran</div>
                             </div>
 
@@ -1064,10 +1087,13 @@ class CartView extends React.Component {
                           <div className="cart-selectiondetail-border"></div>
 
                           <div className='cart-selectiondetail-desc'>
+                              <img src={paymentImage} style={{width: "20px", height: "20px", marginRight: "14px"}} />
                               <div>{this.state.paymentOption}</div>
                               {
                                 this.state.paymentOption === 'OVO' ?
-                                  <div>{phoneNumber}</div>
+                                  this.state.phoneNumberState != '' ?
+                                    <div>{`(${phoneNumber})`}</div>
+                                    : null
                                   : null
                               }
                           </div>
@@ -1076,7 +1102,7 @@ class CartView extends React.Component {
                 </div>
 
                 <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
-                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type, paymentType: this.state.paymentType }}}} style={{ textDecoration: "none", width: "100%" }}>
+                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                       <div className='promoCart-detailContent'>
                             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                               <div className='promoCart-leftSide'>

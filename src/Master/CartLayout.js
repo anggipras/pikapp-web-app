@@ -1,6 +1,5 @@
 import React from "react";
 import CartView from "../View/Cart/CartView";
-// import queryString from "query-string"
 
 export default class CartLayout extends React.Component {
   componentDidMount() {
@@ -8,13 +7,28 @@ export default class CartLayout extends React.Component {
   }
 
   render() {
-    // const value = queryString.parse(window.location.search);
     let valueTable
     if (localStorage.getItem('table')) {
       valueTable = localStorage.getItem('table')
     }
+
+    let phone_number
+    if (localStorage.getItem('PHONE_NUMBER')) {
+      phone_number = JSON.parse(localStorage.getItem('PHONE_NUMBER'))
+    }
+
+    let paymentTypeCookies
+    let paymentType
+    let paymentOption
+    let indexOptionPay
+    if (JSON.parse(localStorage.getItem("PAYMENT_TYPE"))) {
+      paymentTypeCookies = JSON.parse(localStorage.getItem("PAYMENT_TYPE"))
+      paymentType = paymentTypeCookies.paymentType
+      paymentOption = paymentTypeCookies.paymentOption
+      indexOptionPay = paymentTypeCookies.indexOptionPay
+    }
     return (
-      <CartView noTable={valueTable} />
+      <CartView noTable={valueTable} paymentType={paymentType} paymentOption={paymentOption} indexOptionPay={indexOptionPay} phoneNum={phone_number} />
     );
   }
 }
