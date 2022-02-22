@@ -304,11 +304,14 @@ class CartManualView extends React.Component {
             newAllCart.push(store)
           }
         });
+
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
   
         if (newAllCart.length < 2) {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
-          window.history.back()
+          // window.history.back()
+          window.location.href = '/store?username=' + selectedMerchant[0].mid;
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -317,7 +320,8 @@ class CartManualView extends React.Component {
           if (filterMerchantCart.length) {
             this.setState({ updateData: 'updated' })
           } else {
-            window.history.back()
+            // window.history.back()
+            window.location.href = '/store?username=' + selectedMerchant[0].mid;
           }
         }
       }
@@ -915,7 +919,9 @@ class CartManualView extends React.Component {
         return valCart.mid === currentCartMerchant.mid
       })
       if (filterCart.length === 0) {
-        window.history.go(-1)
+        // window.history.go(-1)
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+        window.location.href = '/store?username=' + selectedMerchant[0].mid;
       } else {
         if (this.state.changeUI) {
           this.setState({ changeUI: false })

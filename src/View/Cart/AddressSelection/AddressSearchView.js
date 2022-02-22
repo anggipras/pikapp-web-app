@@ -34,8 +34,8 @@ const AddressSearchView = () => {
                 dispatch({ type: 'CENTER', payload: [position.coords.latitude, position.coords.longitude] })
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
-                // dispatch({ type: 'STREETNUMBER', payload: ""})
-                // dispatch({ type: 'STREETNAME', payload: "" })
+                dispatch({ type: 'STREETNUMBER', payload: ""})
+                dispatch({ type: 'STREETNAME', payload: "" })
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
             });
         }
@@ -73,8 +73,8 @@ const AddressSearchView = () => {
                         }
                     })
 
-                    // dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })
-                    dispatch({ type: 'FORMATTEDADDRESS', payload: CartRedu.streetName + " " + CartRedu.streetNumber })
+                    dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address.split(",")[0] })
+                    // dispatch({ type: 'FORMATTEDADDRESS', payload: CartRedu.streetName + " " + CartRedu.streetNumber })
                     dispatch({ type: 'CENTER', payload: [CartRedu.lat, CartRedu.lng] })
                     dispatch({ type: 'SEARCHINPUT', payload: results[0].formatted_address })
                 } else {
