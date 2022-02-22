@@ -71,6 +71,12 @@ const PromoView = () => {
     const [selectedPromo, setSelectedPromo] = useState(-1)
 
     useEffect(() => {
+        // if (JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))) {
+        //     let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
+        //     let shipmentType = shipmentTypeCookies.shipmentType
+        //     let indexShipment = shipmentTypeCookies.indexShipment
+        //     dispatch({ type: 'REMAPPICKUPTYPE', indexShipment, shipmentType })
+        // }
         var selectedPromoListContainer = []
         var disabledPromoListContainer = []
         let isManualTxn = Cookies.get("isManualTxn")
@@ -95,16 +101,11 @@ const PromoView = () => {
                 selectedPromoListContainer = promoListData
             } else {
                 promoListData.forEach(val => {
-                    if (CartRedu.pickupType == 0) {
-                        if (alertStatus.paymentType == 0) {
-                            if (val.promo_shipment_method.includes("PICKUP") && val.promo_payment_method.includes("WALLET_OVO")) {
-                                selectedPromoListContainer.push(val)
-                            } else {
-                                disabledPromoListContainer.push(val)
-                            }
-                        }
+                    let promoMinPrice = parseInt(val.promo_min_order)
+                    if (val.promo_shipment_method.includes(CartRedu.pickupTitleType) && val.promo_payment_method.includes(CartRedu.paymentTitleType) && cartStatus.totalPayment >= promoMinPrice) {
+                        selectedPromoListContainer.push(val)
                     } else {
-                        
+                        disabledPromoListContainer.push(val)
                     }
                 })
             }

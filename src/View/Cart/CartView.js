@@ -505,6 +505,8 @@ class CartView extends React.Component {
             window.location.assign(res.data.results[0].checkout_url_deeplink);
           }, 1000);
         }
+        localStorage.removeItem("PAYMENT_TYPE")
+        localStorage.removeItem("PHONE_NUMBER")
       })
       .catch((err) => {
         if (err.response.data !== undefined) {

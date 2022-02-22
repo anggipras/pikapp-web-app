@@ -310,6 +310,9 @@ class CartManualView extends React.Component {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
           window.history.back()
+          localStorage.removeItem("SHIPMENT_TYPE")
+          localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+          localStorage.removeItem("MANUAL_PHONE_NUMBER")
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -1284,7 +1287,7 @@ class CartManualView extends React.Component {
                   </div>
 
                   <div className='promoCart-voucherinfo'>
-                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.props.CartRedu.paymentType }}}} style={{ textDecoration: "none", width: "100%" }}>
+                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.props.CartRedu.paymentType }, cartStatus : { totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                       <div className='promoCart-detailContent'>
                             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                               <div className='promoCart-leftSide'>

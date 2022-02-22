@@ -24,6 +24,8 @@ const PaymentMethodView = () => {
     const handleSave = () => {
         if (CartRedu.paymentType === 0 && phoneNum && isAlertNumber === "") {
             dispatch({ type: 'PHONENUMBER', payload: phoneNum })
+            localStorage.setItem("MANUAL_PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_OVO", indexPayment: 0 }))
+            localStorage.setItem("MANUAL_PHONE_NUMBER", JSON.stringify({ phoneNumber: phoneNum }))
             window.history.go(-1)
         } else if(CartRedu.paymentType === -1) {
             console.log("CANNOT GO THROUGH")

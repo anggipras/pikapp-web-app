@@ -226,3 +226,26 @@ export const InsurancePrice = (data) => {
         payload: data
     }
 }
+
+export const ReMapPickupType = (indexShipment, shipmentType) => {
+    return {
+        type: 'REMAPPICKUPTYPE',
+        indexShipment: indexShipment,
+        shipmentType: shipmentType
+    }
+}
+
+export const ReMapPaymentType = (indexPayment, paymentType) => {
+    return {
+        type: 'REMAPPAYMENTTYPE',
+        indexPayment: indexPayment,
+        paymentType: paymentType
+    }
+}
+
+export const OvoPhoneNumber = (data) => {
+    return {
+        type: 'PHONENUMBER',
+        payload: data
+    }
+}

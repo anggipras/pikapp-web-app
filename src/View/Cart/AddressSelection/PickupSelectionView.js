@@ -142,10 +142,12 @@ const PickupSelectionView = () => {
     const handleSave = () => {
         if(CartRedu.pickupType === 0) {
             // Save pickup takeaway data
+            localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "PICKUP", indexShipment: 0 }))
             window.history.go(-1)
         } else if(CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice) {
             // Save pickup delivery data
             dispatch({ type: 'PICKUPTYPE', payload: 1 })
+            localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "DELIVERY", indexShipment: 1 }))
             window.history.go(-1)
         }
     }
