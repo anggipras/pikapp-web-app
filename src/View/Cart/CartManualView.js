@@ -595,6 +595,9 @@ class CartManualView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
+            localStorage.removeItem("SHIPMENT_TYPE")
+            localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+            localStorage.removeItem("MANUAL_PHONE_NUMBER")
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
