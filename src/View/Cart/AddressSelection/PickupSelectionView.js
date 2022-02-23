@@ -142,10 +142,22 @@ const PickupSelectionView = () => {
     const handleSave = () => {
         if(CartRedu.pickupType === 0) {
             // Save pickup takeaway data
+            if (JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))) {
+                let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
+                if (shipmentTypeCookies.indexShipment != 0) {
+                    localStorage.removeItem("MANUAL_SELECTED_PROMO")
+                }
+            }
             localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "PICKUP", indexShipment: 0 }))
             window.history.go(-1)
         } else if(CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice) {
             // Save pickup delivery data
+            if (JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))) {
+                let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
+                if (shipmentTypeCookies.indexShipment != 1) {
+                    localStorage.removeItem("MANUAL_SELECTED_PROMO")
+                }
+            }
             dispatch({ type: 'PICKUPTYPE', payload: 1 })
             localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "DELIVERY", indexShipment: 1 }))
             window.history.go(-1)
