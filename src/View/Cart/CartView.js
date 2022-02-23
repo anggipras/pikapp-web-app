@@ -54,6 +54,7 @@ var phoneNumber = ''
 class CartView extends React.Component {
   state = {
     phoneNumberState: this.props.phoneNum ? this.props.phoneNum : '',
+    selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
     changeUI: true,
     showModal: false,
     currentModalTitle: "",
@@ -269,6 +270,7 @@ class CartView extends React.Component {
         window.history.back()
         localStorage.removeItem("PAYMENT_TYPE")
         localStorage.removeItem("PHONE_NUMBER")
+        localStorage.removeItem("SELECTED_PROMO")
       } else {
         let filterMerchantCart = newAllCart.filter(valueCart => {
           return valueCart.mid === mid
@@ -507,6 +509,7 @@ class CartView extends React.Component {
         }
         localStorage.removeItem("PAYMENT_TYPE")
         localStorage.removeItem("PHONE_NUMBER")
+        localStorage.removeItem("SELECTED_PROMO")
       })
       .catch((err) => {
         if (err.response.data !== undefined) {
@@ -1117,14 +1120,18 @@ class CartView extends React.Component {
                                 </span>
                             </div>
 
-                            {/* <div className='promoCart-selectiondetail'>
-                              <div className="promoCart-selectiondetail-border"></div>
+                            {
+                              this.state.selectedPromo != null ?
+                              <div className='promoCart-selectiondetail'>
+                                <div className="promoCart-selectiondetail-border"></div>
 
-                              <div className='promoCart-selectiondetail-desc'>
-                                  <div>PIKAPPTAHUNBARU</div>
-                                  <div style={{fontWeight: "bold"}}>50%</div>
+                                <div className='promoCart-selectiondetail-desc'>
+                                    <div>{this.state.selectedPromo.promo_title}</div>
+                                </div>
                               </div>
-                            </div> */}
+                              :
+                              null
+                            }
                       </div>
                     </Link>
                   </div>

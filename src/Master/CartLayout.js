@@ -27,8 +27,14 @@ export default class CartLayout extends React.Component {
       paymentOption = paymentTypeCookies.paymentOption
       indexOptionPay = paymentTypeCookies.indexOptionPay
     }
+
+    let getSelectedPromo
+    if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+      getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+    }
+
     return (
-      <CartView noTable={valueTable} paymentType={paymentType} paymentOption={paymentOption} indexOptionPay={indexOptionPay} phoneNum={phone_number} />
+      <CartView noTable={valueTable} paymentType={paymentType} paymentOption={paymentOption} indexOptionPay={indexOptionPay} phoneNum={phone_number} selectedPromo={getSelectedPromo} />
     );
   }
 }

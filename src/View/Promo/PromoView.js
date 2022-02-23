@@ -69,14 +69,9 @@ const PromoView = () => {
     ])
     const [disabledPromoListData, setDisabledPromoListData] = useState([])
     const [selectedPromo, setSelectedPromo] = useState(-1)
+    const [selectedPromoData, setSelectedPromoData] = useState(null)
 
     useEffect(() => {
-        // if (JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))) {
-        //     let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
-        //     let shipmentType = shipmentTypeCookies.shipmentType
-        //     let indexShipment = shipmentTypeCookies.indexShipment
-        //     dispatch({ type: 'REMAPPICKUPTYPE', indexShipment, shipmentType })
-        // }
         var selectedPromoListContainer = []
         var disabledPromoListContainer = []
         let isManualTxn = Cookies.get("isManualTxn")
@@ -110,13 +105,12 @@ const PromoView = () => {
                 })
             }
         }
-        // console.log("SELECTED", selectedPromoListContainer)
-        // console.log("DISABLE", disabledPromoListContainer)
         setPromoListData(selectedPromoListContainer)
         setDisabledPromoListData(disabledPromoListContainer)
     }, [])
 
-    const selectPromo = (ind) => {
+    const selectPromo = (val, ind) => {
+        setSelectedPromoData(val)
         setSelectedPromo(ind)
     }
 
@@ -292,7 +286,7 @@ const PromoView = () => {
         return promoListData.map((val, ind) => {
             return (
                 <div key={ind} className={alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
-                    <input onClick={() => selectPromo(ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
                             <div className='promolist-circle-name'>{val.promo_title}</div>
@@ -333,7 +327,7 @@ const PromoView = () => {
         return promoListData.map((val, ind) => {
             return (
                 <div key={ind} className={alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
-                    <input onClick={() => selectPromo(ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
                             <div className='promolist-circle-name'>{val.promo_title}</div>
@@ -372,6 +366,17 @@ const PromoView = () => {
 
     const goBack = () => {
         window.history.go(-1)
+    }
+
+    const onSubmitPromo = () => {
+        if (selectedPromo != -1) {
+            if (manualTxnVar == 0) {
+                localStorage.setItem("SELECTED_PROMO", JSON.stringify(selectedPromoData))
+            } else {
+                localStorage.setItem("MANUAL_SELECTED_PROMO", JSON.stringify(selectedPromoData))
+            }
+            window.history.go(-1)
+        }
     }
 
     return (
@@ -450,7 +455,8 @@ const PromoView = () => {
                                 "#aaaaaa"
                                 :
                                 "#4bb7ac" 
-                            }}>
+                            }}
+                        onClick={() => onSubmitPromo()}>
                             Simpan
                         </div>
                     </div>

@@ -31,8 +31,14 @@ class CartManualLayout extends React.Component {
       let phoneNumCookies = JSON.parse(localStorage.getItem("MANUAL_PHONE_NUMBER"))
       this.props.OvoPhoneNumber(phoneNumCookies.phoneNumber)
     }
+
+    let getSelectedPromo
+    if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+      getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+    }
+
     return (
-      <CartManualView />
+      <CartManualView selectedPromo={getSelectedPromo} />
     );
   }
 }

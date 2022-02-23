@@ -60,6 +60,7 @@ var phoneNumber = ''
 
 class CartManualView extends React.Component {
     state = {
+      selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
       changeUI: true,
       showModal: false,
       currentModalTitle: "",
@@ -313,6 +314,7 @@ class CartManualView extends React.Component {
           localStorage.removeItem("SHIPMENT_TYPE")
           localStorage.removeItem("MANUAL_PAYMENT_TYPE")
           localStorage.removeItem("MANUAL_PHONE_NUMBER")
+          localStorage.removeItem("MANUAL_SELECTED_PROMO")
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -598,6 +600,7 @@ class CartManualView extends React.Component {
             localStorage.removeItem("SHIPMENT_TYPE")
             localStorage.removeItem("MANUAL_PAYMENT_TYPE")
             localStorage.removeItem("MANUAL_PHONE_NUMBER")
+            localStorage.removeItem("MANUAL_SELECTED_PROMO")
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -1303,14 +1306,18 @@ class CartManualView extends React.Component {
                                 </span>
                             </div>
 
-                            {/* <div className='promoCart-selectiondetail'>
-                              <div className="promoCart-selectiondetail-border"></div>
+                            {
+                              this.state.selectedPromo != null ?
+                              <div className='promoCart-selectiondetail'>
+                                <div className="promoCart-selectiondetail-border"></div>
 
-                              <div className='promoCart-selectiondetail-desc'>
-                                  <div>PIKAPPTAHUNBARU</div>
-                                  <div style={{fontWeight: "bold"}}>50%</div>
+                                <div className='promoCart-selectiondetail-desc'>
+                                    <div>{this.state.selectedPromo.promo_title}</div>
+                                </div>
                               </div>
-                            </div> */}
+                              :
+                              null
+                            }
                       </div>
                     </Link>
                   </div>
