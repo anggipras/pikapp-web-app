@@ -133,6 +133,7 @@ class TrackingDeliveryView extends React.Component {
             var results = res.data.result;
             results.history.sort().reverse();
             this.setState({ dataCourier: results });
+            console.log(this.state.dataCourier)
         })
         .catch((err) => {
             console.log(err);
@@ -261,26 +262,33 @@ class TrackingDeliveryView extends React.Component {
                                         </div>
                                         <div className="tracking-delivery-content-border"></div>
 
-                                        <div className="tracking-delivery-courier">
+                                        {
+                                            this.state.dataCourier.courier.name || this.state.dataCourier.courier.phone ?
                                             <div>
-                                                <h3 className="tracking-delivery-content-call">Hubungi Kurir</h3>
-                                                <div className="tracking-delivery-section-courier">
-                                                    <div className="tracking-delivery-content-info">
-                                                        {/* <div>
-                                                            <img className='tracking-delivery-content-icon' src={CourierPhoto}></img>
-                                                        </div> */}
-                                                        <div className="tracking-delivery-courier-info">
-                                                            <h3 className="tracking-delivery-courier-name">{this.state.dataCourier.courier.name}</h3>
-                                                            <h3 className="tracking-delivery-courier-phone">{this.state.dataCourier.courier.phone}</h3>
+                                                <div className="tracking-delivery-courier">
+                                                    <div>
+                                                        <h3 className="tracking-delivery-content-call">Hubungi Kurir</h3>
+                                                        <div className="tracking-delivery-section-courier">
+                                                            <div className="tracking-delivery-content-info">
+                                                                {/* <div>
+                                                                    <img className='tracking-delivery-content-icon' src={CourierPhoto}></img>
+                                                                </div> */}
+                                                                <div className="tracking-delivery-courier-info">
+                                                                    <h3 className="tracking-delivery-courier-name">{this.state.dataCourier.courier.name}</h3>
+                                                                    <h3 className="tracking-delivery-courier-phone">{this.state.dataCourier.courier.phone}</h3>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <img onClick={() => this.handleCourierPhone(this.state.dataCourier.courier.phone)} className='tracking-delivery-content-icon' src={ManualIcon}></img>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <img onClick={() => this.handleCourierPhone(this.state.dataCourier.courier.phone)} className='tracking-delivery-content-icon' src={ManualIcon}></img>
-                                                    </div>
                                                 </div>
+                                                <div className="tracking-delivery-content-border"></div>
                                             </div>
-                                        </div>
-                                        <div className="tracking-delivery-content-border"></div>
+                                            :
+                                            <></>
+                                        }
 
                                         {
                                         this.state.dataCourier.history.map((ship, ind) => {
@@ -305,7 +313,7 @@ class TrackingDeliveryView extends React.Component {
                     }
                 </div>
                 {
-                    this.state.dataCourier.link !== "" ?
+                    this.state.dataCourier.link ?
                     <div onClick={() => this.handleLiveTracking()} className="tracking-delivery-loc">
                         <div className="tracking-delivery-liveloc" style={{backgroundColor: '#4bb7ac'}}>Lihat Live Tracking</div>
                     </div>
