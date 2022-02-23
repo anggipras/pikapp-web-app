@@ -63,7 +63,7 @@ class CartView extends React.Component {
     biz_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
     eat_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "Makan Di Tempat" : "Bungkus / Takeaway" : "Makan Di Tempat",
     indexOptionEat: this.props.noTable !== undefined ? this.props.noTable > 0 ? 0 : 1 : 0,
-    indexOptionPay: this.props.indexOptionPay ? this.props.indexOptionPay : 0,
+    indexOptionPay: this.props.indexOptionPay !== undefined ? this.props.indexOptionPay : -1,
     currentModal: [
       {
         image: "",
@@ -324,12 +324,23 @@ class CartView extends React.Component {
       }
     }
     if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
+      if (this.state.indexOptionEat != data) {
+        this.setState({ selectedPromo: null })
+        localStorage.removeItem("SELECTED_PROMO")
+      }
       if (data == 0) {
         this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
       } else {
         this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
       }
     } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
+      let checkIndexOptionPay = JSON.parse(localStorage.getItem("PAYMENT_TYPE"))
+      if (checkIndexOptionPay) {
+        if (checkIndexOptionPay.indexOptionPay != data) {
+          this.setState({ selectedPromo: null })
+          localStorage.removeItem("SELECTED_PROMO")
+        }
+      }
       if (data === 0) {
         localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 }))
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
@@ -1088,21 +1099,26 @@ class CartView extends React.Component {
                             </span>
                         </div>
 
-                        <div className='cart-selectiondetail'>
-                          <div className="cart-selectiondetail-border"></div>
+                        {
+                          this.state.indexOptionPay != -1 ?
+                          <div className='cart-selectiondetail'>
+                            <div className="cart-selectiondetail-border"></div>
 
-                          <div className='cart-selectiondetail-desc'>
-                              <img src={paymentImage} style={{width: "20px", height: "20px", marginRight: "14px"}} />
-                              <div>{this.state.paymentOption}</div>
-                              {
-                                this.state.paymentOption === 'OVO' ?
-                                  this.state.phoneNumberState != '' ?
-                                    <div>{`(${phoneNumber})`}</div>
+                            <div className='cart-selectiondetail-desc'>
+                                <img src={paymentImage} style={{width: "20px", height: "20px", marginRight: "14px"}} />
+                                <div>{this.state.paymentOption}</div>
+                                {
+                                  this.state.paymentOption === 'OVO' ?
+                                    this.state.phoneNumberState != '' ?
+                                      <div>{`(${phoneNumber})`}</div>
+                                      : null
                                     : null
-                                  : null
-                              }
+                                }
+                            </div>
                           </div>
-                        </div>
+                          :
+                          null
+                        }
                   </div>
                 </div>
 
