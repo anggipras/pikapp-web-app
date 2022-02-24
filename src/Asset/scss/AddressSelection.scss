@@ -393,6 +393,7 @@ body {
 
 .payment-radioSection input[type="radio"]:checked + label .payment-radioTitle {
     color: #4bb7ac;
+    font-weight: bolder;
 }
 
 .payment-radioSide {
@@ -409,7 +410,7 @@ body {
 .payment-radioTitle {
     font-family: "SF-Compact-Rounded", sans-serif;
     font-style: normal;
-    font-weight: bolder;
+    // font-weight: bolder;
     color: #111111;
     font-size: 18px;
     margin-left: 10px;

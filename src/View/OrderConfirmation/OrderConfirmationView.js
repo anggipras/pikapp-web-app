@@ -90,7 +90,12 @@ class OrderConfirmationView extends React.Component {
             }
             this.setState({ dataOrder: this.props.AllRedu.dataOrder },
             () => {
-                this.getStatusPayment();
+                // this.getStatusPaymentDineIn();
+                if(this.props.AuthRedu.isManualTxn) {
+                    this.getStatusPaymentDelivery();
+                } else {
+                    this.getStatusPaymentDineIn();
+                }
             });
         } else if (localStorage.getItem("payment")) {
             var dataPayment = JSON.parse(localStorage.getItem("payment"));
@@ -115,7 +120,12 @@ class OrderConfirmationView extends React.Component {
 
             this.setState({ dataOrder: dataPayment },
             () => {
-                this.getStatusPayment();
+                // this.getStatusPaymentDineIn();
+                if(this.props.AuthRedu.isManualTxn) {
+                    this.getStatusPaymentDelivery();
+                } else {
+                    this.getStatusPaymentDineIn();
+                }
             });
         }
     }
@@ -129,8 +139,12 @@ class OrderConfirmationView extends React.Component {
             localStorage.setItem("counterPayment", this.state.counterTime);
         }
 
-        if (this.state.currentModal.status === "OPEN") {
-            this.showResponsePayment();
+        if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
+            if(this.props.AuthRedu.isManualTxn) {
+                this.showResponsePaymentDelivery();
+            } else {
+                this.showResponsePaymentDineIn();
+            }
         }
     }
 
@@ -183,7 +197,7 @@ class OrderConfirmationView extends React.Component {
         }
     }
 
-    showResponsePayment = () => {
+    showResponsePaymentDineIn = () => {
         // onMessageListener().then(payload => {
         //     console.log("payload ::: " + payload);
         //     if(payload.data.payment_status === "PAID") {
@@ -311,7 +325,7 @@ class OrderConfirmationView extends React.Component {
         });
     }
 
-    getStatusPayment = () => {
+    getStatusPaymentDineIn = () => {
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
@@ -344,6 +358,86 @@ class OrderConfirmationView extends React.Component {
             })
         })
         .catch((err) => {
+        });
+    }
+
+    showResponsePaymentDelivery = () => {
+        setInterval(async () => {
+            let uuid = uuidV4();
+            uuid = uuid.replace(/-/g, "");
+            const date = new Date().toISOString();
+            let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
+            Axios(historyTransAPI, {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId,
+                "invoice" : this.state.dataOrder.transactionId
+            },
+            method: "GET",
+            })
+            .then((res) => {
+                var results = res.data.results;
+                
+                var resultModal = { ...this.currentModal }
+                resultModal.transactionId = results.transaction_id
+                resultModal.status = results.payment_status
+
+                if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                    this.setState({ isSubmit: true });
+                    this.setState({ showResponsePayment: true });
+                } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                    this.setState({ isSubmit: true });
+                    this.setState({ showResponsePayment: false });
+                }
+
+                this.setState({
+                    currentModal: resultModal
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }, 60000);
+    }
+
+    getStatusPaymentDelivery = () => {
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
+        Axios(historyTransAPI, {
+        headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "invoice" : this.state.dataOrder.transactionId
+        },
+        method: "GET",
+        })
+        .then((res) => {
+            var results = res.data.results;
+            
+            var resultModal = { ...this.currentModal }
+            resultModal.transactionId = results.transaction_id
+            resultModal.status = results.payment_status
+
+            if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: true });
+            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: false });
+            }
+
+            this.setState({
+                currentModal: resultModal
+            })
+        })
+        .catch((err) => {
+            console.log(err);
         });
     }
 

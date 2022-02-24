@@ -413,8 +413,10 @@ class CartView extends React.Component {
     if (this.state.paymentType === 'PAY_BY_CASHIER') {
       newDate += 1800000
       phoneNumber = ''
-    } else {
+    } else if (this.state.paymentType === 'WALLET_OVO') {
       newDate += 60000
+    } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
+      newDate += 600000
     }
     expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
 
