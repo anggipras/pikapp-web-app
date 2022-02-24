@@ -214,6 +214,10 @@ class CartManualView extends React.Component {
 
         this.setState({ cartReduData : this.props.CartRedu, insuranceCheckbox : this.props.CartRedu.insuranceCheckbox, insurancePrice : this.props.CartRedu.insurancePrice });
       }
+
+      if(this.props.CartRedu.pickupType === 0) {
+        this.setState({ cartReduData : { ...this.props.CartRedu, shippingPrice: 0 }, insuranceCheckbox : false, insurancePrice : 0});
+      }
       
       if(this.props.CartRedu.shippingDate) {
         this.setState({ customerShippingDate : moment(new Date(this.props.CartRedu.shippingDate)).format("Do MMMM YYYY, H:mm")})
@@ -531,8 +535,6 @@ class CartManualView extends React.Component {
 
       // let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shippingPrice)
 
-      let totalPayment = finalProduct[0].totalPrice + Number(this.state.cartReduData.shippingPrice)
-
       let pickupType = ''
       let shipperName = ''
       let shipperType = ''
@@ -552,6 +554,17 @@ class CartManualView extends React.Component {
       if(this.state.cartReduData.pickupType === 0) {
         pickupType = "PICKUP";
         shipperName = "Pickup Sendiri";
+        shipperPrice = 0;
+        shipperType = "";
+        shipperCategoryType = "";
+        customerInfo.customer_address = "";
+        customerInfo.customer_address_detail = "";
+        customerInfo.latitude = 0;
+        customerInfo.longitude = 0;
+        customerInfo.subdistrict_name = "";
+        customerInfo.city = "";
+        customerInfo.province = "";
+        customerInfo.postal_code = "";
       } else {
         pickupType = "DELIVERY";
         shipperName = this.state.cartReduData.shippingCode;
@@ -588,6 +601,7 @@ class CartManualView extends React.Component {
         shipping_service_type_category: shipperCategoryType
       }
 
+      let totalPayment = finalProduct[0].totalPrice + Number(shipperPrice)
   
       var requestData = {
         products: selectedProd,
