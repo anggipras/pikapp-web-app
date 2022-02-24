@@ -328,6 +328,7 @@
     text-transform: capitalize;
     color: #111111;
     padding-top: 3px;
+    word-break: break-word;
   }
 
   .status-cartmanual-transactiondate {
@@ -747,4 +748,21 @@
   padding-top: 9px;
   // margin-left: 14px;
 }
-  
+
+.status-cartmanual-paymentservice {
+  display: flex;
+  // width: 50%;
+  margin-top: 8px;
+}
+
+.status-cartmanual-paymentservice-logo {
+  width: 23px;
+  height: 23px;
+}
+
+.status-cartmanual-paymentservice-words {
+  font-size: 15px;
+  padding-top: 5px;
+  text-transform: uppercase;
+  padding-left: 7px;
+}
