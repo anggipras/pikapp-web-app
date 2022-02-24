@@ -8,6 +8,7 @@ const INITIAL_STATE = {
     shippingDateType : "", //SHIPPING DATE PAGE
     shippingDate : "",
     paymentType: -1, //PAYMENT PAGE
+    paymentMethod : "",
     phoneNumber: "",
     customerName: "",
     customerPhoneNumber: "",
@@ -57,6 +58,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, shippingDate: action.payload }
         case "PAYMENTTYPE":
             return { ...state, paymentType: action.payload }
+        case "PAYMENTMETHOD":
+            return { ...state, paymentMethod: action.payload }
         case "PHONENUMBER":
             return { ...state, phoneNumber: action.payload }
         case "CUSTOMERNAME":

@@ -3,7 +3,9 @@ import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import takeawayColor from '../../../Asset/Icon/takeawayColor.png'
 import deliveryColor from '../../../Asset/Icon/delivery-icon.png'
-import OvoPayment from '../../../Asset/Icon/ovo_icon.png'
+import OvoPayment from '../../../Asset/Icon/ovo_icon.png';
+import DanaPayment from "../../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../../Asset/Icon/shopee_icon.png";
 import Alertcircle from '../../../Asset/Icon/alertcircle.png'
 import ReactTooltip from 'react-tooltip';
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,33 +17,48 @@ const PaymentMethodView = () => {
         {
             image: "ovo",
             option: "OVO"
+        },
+        {
+            image: "dana",
+            option: "DANA"
+        },
+        {
+            image: "shopee",
+            option: "ShopeePay"
         }
         ])
     const [isCheckNumber, setisCheckNumber] = useState(true)
     const [isAlertNumber, setisAlertNumber] = useState("")
     const [phoneNum, setphoneNum] = useState(CartRedu.phoneNumber)
+    const [paymentMethod, setPaymentMethod] = useState(CartRedu.paymentMethod)
 
     const handleSave = () => {
         if (CartRedu.paymentType === 0 && phoneNum && isAlertNumber === "") {
             dispatch({ type: 'PHONENUMBER', payload: phoneNum })
+            dispatch({ type: 'PAYMENTMETHOD', payload: paymentMethod })
             window.history.go(-1)
         } else if(CartRedu.paymentType === -1) {
             console.log("CANNOT GO THROUGH")
         } else {
-            console.log("CANNOT GO THROUGH")
+            // console.log("CANNOT GO THROUGH")
+            dispatch({ type: 'PHONENUMBER', payload: "" })
+            dispatch({ type: 'PAYMENTMETHOD', payload: paymentMethod })
+            window.history.go(-1)
         }
     }
 
     const goBack = () => {
-        if (!CartRedu.phoneNumber) {
+        if (!CartRedu.paymentMethod) {
             dispatch({ type: 'PHONENUMBER', payload: "" })
             dispatch({ type: 'PAYMENTTYPE', payload: -1 })
+            dispatch({ type: 'PAYMENTMETHOD', payload: "" })
         }
         window.history.go(-1)
     }
 
-    const onChangeRadio = (ind) => {
+    const onChangeRadio = (ind, option) => {
         dispatch({ type: 'PAYMENTTYPE', payload: ind })
+        setPaymentMethod(option);
     }
 
     const hideTooltip = () => {
@@ -76,13 +93,15 @@ const PaymentMethodView = () => {
             } else if (optionVal.image === "ovo") {
                 imageOption = OvoPayment;
             } else if (optionVal.image === "dana") {
-                imageOption = takeawayColor;
+                imageOption = DanaPayment;
+            } else if (optionVal.image === "shopee") {
+                imageOption = ShopeePayment;
             }
 
             return (
                 <div key={keyOption} className='payment-detailContent'>
                     <div className='payment-radioSection'>
-                        <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption)} name={'PAYMENTMETHOD'} defaultChecked={CartRedu.paymentType === keyOption ? true : false} />
+                        <input type='radio' id={optionVal.image} onChange={() => onChangeRadio(keyOption, optionVal.option)} name={'PAYMENTMETHOD'} defaultChecked={CartRedu.paymentType === keyOption ? true : false} />
                         <label htmlFor={optionVal.image}>
                             <div className='payment-radioSide'>
                                 <img className='paymentradio-image' src={imageOption} alt='' />
@@ -144,7 +163,7 @@ const PaymentMethodView = () => {
                         style={{backgroundColor: 
                             CartRedu.paymentType === -1 ? '#aaaaaa'
                             :
-                            CartRedu.paymentType === 0 ? '#4bb7ac' 
+                            CartRedu.paymentType >= 0 ? '#4bb7ac' 
                             : 
                             CartRedu.phoneNumber ? '#4bb7ac'
                             :

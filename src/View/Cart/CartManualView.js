@@ -5,6 +5,8 @@ import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import InfoIcon from "../../Asset/Icon/info-icon.png";
@@ -70,9 +72,29 @@ class CartManualView extends React.Component {
       indexOptionPay: 0,
       currentModal: [
         {
-          image: "",
-          option: "",
+          image: "cashier",
+          option: "Pembayaran Di Kasir",
+          icon: CashierPayment,
+          type: "PAY_BY_CASHIER"
         },
+        {
+          image: "ovo",
+          option: "OVO",
+          icon: OvoPayment,
+          type: "WALLET_OVO"
+        },
+        {
+          image: "dana",
+          option: "DANA",
+          icon: DanaPayment,
+          type: "WALLET_DANA"
+        },
+        {
+          image: "shopee",
+          option: "ShopeePay",
+          icon: ShopeePayment,
+          type: "WALLET_SHOPEEPAY"
+        }
       ],
       loadButton: false,
       showMenuDet: false,
@@ -146,6 +168,8 @@ class CartManualView extends React.Component {
         shippingDateType : "", //SHIPPING DATE PAGE
         shippingDate : "",
         paymentType: -1, //PAYMENT PAGE
+        paymentImage : null,
+        paymentMethod : "",
         phoneNumber: "",
         customerName: "",
         customerPhoneNumber: "",
@@ -161,7 +185,8 @@ class CartManualView extends React.Component {
         shippingDesc : "",
         shippingCode : "",
         courierServiceType : ""
-      }
+      },
+      paymentImage: ""
     };
 
     componentDidMount() {
@@ -180,6 +205,13 @@ class CartManualView extends React.Component {
       // }
 
       if(this.props.CartRedu) {
+
+        this.state.currentModal.forEach((value) => {
+          if(value.option === this.props.CartRedu.paymentMethod) {
+            this.setState({ paymentImage: value.icon, paymentType: value.type });
+          }
+        })
+
         this.setState({ cartReduData : this.props.CartRedu, insuranceCheckbox : this.props.CartRedu.insuranceCheckbox, insurancePrice : this.props.CartRedu.insurancePrice });
       }
       
@@ -227,11 +259,23 @@ class CartManualView extends React.Component {
             {
               image: "cashier",
               option: "Pembayaran Di Kasir",
+              icon: CashierPayment
             },
             {
               image: "ovo",
               option: "OVO",
+              icon: OvoPayment
             },
+            {
+              image: "dana",
+              option: "DANA",
+              icon: DanaPayment
+            },
+            {
+              image: "shopee",
+              option: "ShopeePay",
+              icon: ShopeePayment
+            }
           ],
         });
       } else if (data === "payment-detail") {
@@ -452,8 +496,10 @@ class CartManualView extends React.Component {
       if (this.state.paymentType === 'PAY_BY_CASHIER') {
         newDate += 1800000
         phoneNumber = ''
-      } else {
+      } else if (this.state.paymentType === 'WALLET_OVO') {
         newDate += 60000
+      } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
+        newDate += 600000
       }
       expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
 
@@ -578,26 +624,74 @@ class CartManualView extends React.Component {
         data: requestData,
       })
         .then((res) => {
-          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-          setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter => {
-              return valFilter.mid !== currentCartMerchant.mid
-            })
-            var dataOrder = {
-              transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.total_payment,
-              paymentType : this.state.paymentType,
-              transactionTime : newDate
-            };
-            this.props.DataOrder(dataOrder);
-            localStorage.setItem("payment", JSON.stringify(dataOrder));
-            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("lastTable")
-            localStorage.removeItem("fctable")
-            localStorage.removeItem("counterPayment");
-            this.setState({ loadButton: true })
-            this.props.DoneLoad()
-          }, 1000);
+          if(this.state.paymentType === 'WALLET_OVO') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              this.setState({ loadButton: true })
+              this.props.DoneLoad()
+            }, 1000);
+          }
+          else if(this.state.paymentType === 'WALLET_DANA') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              // this.setState({ loadButton: true })
+              // this.props.DoneLoad()
+              window.location.href = res.data.results[0].checkout_url_mobile;
+            }, 1000);
+          }
+          else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              // this.setState({ loadButton: true })
+              // this.props.DoneLoad()
+              window.location.assign(res.data.results[0].checkout_url_deeplink);
+            }, 1000);
+          }
         })
         .catch((err) => {
           if (err.response.data !== undefined) {
@@ -1269,16 +1363,21 @@ class CartManualView extends React.Component {
                         </Link>
                         </div>
                         {
-                          this.state.cartReduData.phoneNumber != "" ?
+                          this.state.cartReduData.paymentMethod != "" ?
                           <div className='cartmanual-paymentdetail'>
                             <div className="cartmanual-paymentdetail-border"></div>
 
                             <div className='cartmanual-paymentdetail-desc'>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                  <img style={{height: '25px', width: '25px'}} src={OvoPayment} />
-                                  <div style={{marginLeft: '10px'}}>OVO</div>
+                                  <img style={{height: '25px', width: '25px'}} src={this.state.paymentImage} />
+                                  <div style={{marginLeft: '10px'}}>{this.state.cartReduData.paymentMethod}</div>
                                 </div>
-                                <div>{this.state.cartReduData.phoneNumber}</div>
+                                {
+                                  this.state.cartReduData.phoneNumber !== "" ?
+                                  <div>{this.state.cartReduData.phoneNumber}</div>
+                                  :
+                                  <></>
+                                }
                             </div>
                           </div>
                           :
