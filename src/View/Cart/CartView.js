@@ -1072,7 +1072,7 @@ class CartView extends React.Component {
             <span className='logopikappCenter' onClick={() => window.history.back()} >
               <img className='LogoPikappCart' src={ArrowBack} alt='' />
             </span>
-            <div className='confirmationOrder'>Checkout</div>
+            <div className='confirmationOrder'>Pesanan Anda</div>
           </div>
 
           {
