@@ -8,6 +8,8 @@ import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import InfoIcon from "../../Asset/Icon/info-icon.png";
+import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
+import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -1105,6 +1107,19 @@ class CartManualView extends React.Component {
                 </span>
                 <div className="cartmanual-title">Checkout</div>
             </div>
+
+            {
+              this.state.notMatchPromo ?
+              <div className="promo-alert-paymentnotselected">
+                  <span className="promo-alert-icon">
+                      <img className="alert-icon" src={PromoAlert} alt='' />
+                  </span>
+
+                  <div className="promo-alert-title">Voucher tidak bisa digunakan, silahkan ubah terlebih dahulu</div>
+              </div>
+              :
+              null
+            }
   
             <div className='cartmanual-Content'>
               <div className='cartmanual-LeftSide'>
@@ -1318,7 +1333,8 @@ class CartManualView extends React.Component {
                                 <div className="promoCart-selectiondetail-border"></div>
 
                                 <div className='promoCart-selectiondetail-desc'>
-                                    <div style={{color: this.state.notMatchPromo ? "red" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
+                                  { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
+                                  <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
                                 </div>
                               </div>
                               :
