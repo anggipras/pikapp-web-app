@@ -55,7 +55,7 @@ class CartView extends React.Component {
   state = {
     phoneNumberState: this.props.phoneNum ? this.props.phoneNum : '',
     selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
-    notMatchPromo: false,
+    notMatchPromo: this.props.notMatchPromo !== undefined ? this.props.notMatchPromo : false,
     changeUI: true,
     showModal: false,
     currentModalTitle: "",
@@ -201,8 +201,10 @@ class CartView extends React.Component {
         currentModal: finalProduct
       });
     } else if (data === "payment-checking") {
-      this.setState({ showModal: true });
-      this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+      if (this.state.indexOptionPay != -1 && !this.state.notMatchPromo) {
+        this.setState({ showModal: true });
+        this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+      }
     }
   }
 
@@ -272,6 +274,7 @@ class CartView extends React.Component {
         localStorage.removeItem("PAYMENT_TYPE")
         localStorage.removeItem("PHONE_NUMBER")
         localStorage.removeItem("SELECTED_PROMO")
+        Cookies.remove("NOTMATCHPROMO")
       } else {
         let filterMerchantCart = newAllCart.filter(valueCart => {
           return valueCart.mid === mid
@@ -331,9 +334,11 @@ class CartView extends React.Component {
           getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
           let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
           if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("DINE_IN") && finalProduct[0].totalPrice >= promoMinPrice) {
+            Cookies.set("NOTMATCHPROMO", { theBool: false })
             this.setState({ notMatchPromo: false })
           } else {
-             this.setState({ notMatchPromo: true })
+            Cookies.set("NOTMATCHPROMO", { theBool: true })
+            this.setState({ notMatchPromo: true })
           }
         }
         this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
@@ -342,9 +347,11 @@ class CartView extends React.Component {
           getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
           let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
           if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && finalProduct[0].totalPrice >= promoMinPrice) {
+            Cookies.set("NOTMATCHPROMO", { theBool: false })
             this.setState({ notMatchPromo: false })
           } else {
-             this.setState({ notMatchPromo: true })
+            Cookies.set("NOTMATCHPROMO", { theBool: true }) 
+            this.setState({ notMatchPromo: true })
           }
         }
         this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
@@ -367,9 +374,11 @@ class CartView extends React.Component {
         }
 
         if (getSelectedPromo.promo_payment_method.includes(paymentTypeData) && getSelectedPromo.promo_shipment_method.includes(eatMethod) && finalProduct[0].totalPrice >= promoMinPrice) {
+          Cookies.set("NOTMATCHPROMO", { theBool: false })
           this.setState({ notMatchPromo: false })
         } else {
-           this.setState({ notMatchPromo: true })
+          Cookies.set("NOTMATCHPROMO", { theBool: true })
+          this.setState({ notMatchPromo: true })
         }
       }
       if (data === 0) {
@@ -552,6 +561,7 @@ class CartView extends React.Component {
         localStorage.removeItem("PAYMENT_TYPE")
         localStorage.removeItem("PHONE_NUMBER")
         localStorage.removeItem("SELECTED_PROMO")
+        Cookies.remove("NOTMATCHPROMO")
       })
       .catch((err) => {
         if (err.response.data !== undefined) {
@@ -1226,7 +1236,17 @@ class CartView extends React.Component {
               </div>
             </div>
             
-            <div className='cart-OrderButton buttonorder' onClick={() => this.handleDetail("payment-checking")} style={{ backgroundColor: '#4bb7ac' }} >
+            <div className='cart-OrderButton buttonorder' 
+            onClick={() => this.handleDetail("payment-checking")} 
+            style={{ backgroundColor: 
+              this.state.indexOptionPay == -1 ? 
+              '#aaaaaa'
+              :
+                this.state.notMatchPromo ?
+                '#aaaaaa'
+                :
+                '#4bb7ac'
+              }} >
               <div className='cart-OrderButton-content'>
                 <h1 className='cart-OrderButton-word'>Buat Pesanan</h1>
               </div>

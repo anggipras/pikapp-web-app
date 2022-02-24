@@ -40,8 +40,8 @@ class CartManualLayout extends React.Component {
 
     let getMatchPromoCaseCookies
     let matchPromoCaseValue
-    if (Cookies.get("NOTMATCHPROMO")) {
-      getMatchPromoCaseCookies = JSON.parse(Cookies.get("NOTMATCHPROMO"))
+    if (Cookies.get("MANUAL_NOTMATCHPROMO")) {
+      getMatchPromoCaseCookies = JSON.parse(Cookies.get("MANUAL_NOTMATCHPROMO"))
       matchPromoCaseValue = getMatchPromoCaseCookies.theBool
     }
 

@@ -150,9 +150,9 @@ const PickupSelectionView = () => {
                 let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
                 let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
                 if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && totalPaymentManualCart >= promoMinPrice) {
-                    Cookies.set("NOTMATCHPROMO", { theBool: false })
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
                 } else {
-                    Cookies.set("NOTMATCHPROMO", { theBool: true })
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
                 }
             }
             localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "PICKUP", indexShipment: 0 }))
@@ -166,9 +166,9 @@ const PickupSelectionView = () => {
                 let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
                 let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
                 if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes("DELIVERY") && totalPaymentManualCart >= promoMinPrice) {
-                    Cookies.set("NOTMATCHPROMO", { theBool: false })
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
                 } else {
-                    Cookies.set("NOTMATCHPROMO", { theBool: true })
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
                 }
             }
             dispatch({ type: 'PICKUPTYPE', payload: 1 })

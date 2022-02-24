@@ -1,5 +1,6 @@
 import React from "react";
 import CartView from "../View/Cart/CartView";
+import Cookies from "js-cookie"
 
 export default class CartLayout extends React.Component {
   componentDidMount() {
@@ -33,8 +34,15 @@ export default class CartLayout extends React.Component {
       getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
     }
 
+    let getMatchPromoCaseCookies
+    let matchPromoCaseValue
+    if (Cookies.get("NOTMATCHPROMO")) {
+      getMatchPromoCaseCookies = JSON.parse(Cookies.get("NOTMATCHPROMO"))
+      matchPromoCaseValue = getMatchPromoCaseCookies.theBool
+    }
+
     return (
-      <CartView noTable={valueTable} paymentType={paymentType} paymentOption={paymentOption} indexOptionPay={indexOptionPay} phoneNum={phone_number} selectedPromo={getSelectedPromo} />
+      <CartView noTable={valueTable} paymentType={paymentType} paymentOption={paymentOption} indexOptionPay={indexOptionPay} phoneNum={phone_number} selectedPromo={getSelectedPromo} notMatchPromo={matchPromoCaseValue} />
     );
   }
 }

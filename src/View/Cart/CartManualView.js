@@ -316,7 +316,7 @@ class CartManualView extends React.Component {
           localStorage.removeItem("MANUAL_PAYMENT_TYPE")
           localStorage.removeItem("MANUAL_PHONE_NUMBER")
           localStorage.removeItem("MANUAL_SELECTED_PROMO")
-          Cookies.remove("NOTMATCHPROMO")
+          Cookies.remove("MANUAL_NOTMATCHPROMO")
           Cookies.remove("MANUAL_TOTALPAYMENT")
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
@@ -604,7 +604,7 @@ class CartManualView extends React.Component {
             localStorage.removeItem("MANUAL_PAYMENT_TYPE")
             localStorage.removeItem("MANUAL_PHONE_NUMBER")
             localStorage.removeItem("MANUAL_SELECTED_PROMO")
-            Cookies.remove("NOTMATCHPROMO")
+            Cookies.remove("MANUAL_NOTMATCHPROMO")
             Cookies.remove("MANUAL_TOTALPAYMENT")
             this.setState({ loadButton: true })
             this.props.DoneLoad()
