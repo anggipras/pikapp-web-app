@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import { connect } from "react-redux";
-import { LoadingButton, DoneLoad } from '../../Redux/Actions'
+import { LoadingButton, DoneLoad, IsManualTxn } from '../../Redux/Actions'
 import pikappLogo from '../../Asset/Logo/logo4x.png';
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
@@ -99,6 +99,7 @@ class OrderConfirmationView extends React.Component {
             });
         } else if (localStorage.getItem("payment")) {
             var dataPayment = JSON.parse(localStorage.getItem("payment"));
+            this.props.IsManualTxn(localStorage.getItem("isManualTxn"));
 
             if (dataPayment.paymentType === "PAY_BY_CASHIER") {
                 this.setState({ paymentType: "PAY_BY_CASHIER" });
@@ -117,6 +118,8 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentOption: "Pembayaran ShopeePay" });
                 this.setState({ paymentImage: ShopeePayment });
             }
+
+            // var isManualTxn = localStorage.getItem("isManualTxn");
 
             this.setState({ dataOrder: dataPayment },
             () => {
@@ -847,4 +850,4 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { LoadingButton, DoneLoad })(OrderConfirmationView)
+export default connect(Mapstatetoprops, { LoadingButton, DoneLoad, IsManualTxn })(OrderConfirmationView)

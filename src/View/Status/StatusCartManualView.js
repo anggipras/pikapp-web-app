@@ -13,6 +13,8 @@ import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import NoTransaction from "../../Asset/Icon/notrans.png";
 import ManualIcon from "../../Asset/Icon/call.png";
 import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
@@ -72,6 +74,7 @@ export class StatusCartManualView extends React.Component {
         order_type: "",
         order_status: "",
         payment_status: "",
+        payment_method: "",
         order_platform: "",
         total_product_price: 0,
         total_discount: 0,
@@ -160,7 +163,7 @@ export class StatusCartManualView extends React.Component {
       });
   }
 
-  contentStatus = (value, bimg, blab, pimg, plab) => {
+  contentStatus = (value, bimg, blab, pimg, plab, pmethod, plogo) => {
     let formatDate = value.transactionTime;
     return (
       <div
@@ -193,6 +196,18 @@ export class StatusCartManualView extends React.Component {
               <span className="status-cartmanual-datetext">Tanggal Pengiriman : </span><span className="status-cartmanual-dateinfo">{moment(value.shipping.shipping_time).format("DD MMMM YYYY, H:mm")}</span>
           </div>
           <div className="status-cartmanual-content-border"></div>
+
+          <div className="status-cartmanual-paymentservice">
+            <span>
+              <img
+                className="status-cartmanual-paymentservice-logo"
+                src={plogo}
+                alt=""
+              />
+            </span>
+
+            <h3 className="status-cartmanual-paymentservice-words">{pmethod}</h3>
+          </div>
 
           <div className="status-cartmanual-transaction-topSide">
               <h3 className="status-cartmanual-content-paymentstatus">Status Pembayaran</h3>
@@ -275,8 +290,10 @@ export class StatusCartManualView extends React.Component {
     backColor,
     bizImage,
     bizLabel,
-    payImage,
-    payLabel
+    payColor,
+    payLabel,
+    payMethod,
+    payImage
   ) => {
     return (
       <div key={ind} className="status-cartmanual-Content">
@@ -287,7 +304,7 @@ export class StatusCartManualView extends React.Component {
           <div className="status-cartmanual-transaction-title">{thestatus}</div>
         </div>
 
-        {this.contentStatus(value, bizImage, bizLabel, payImage, payLabel)}
+        {this.contentStatus(value, bizImage, bizLabel, payColor, payLabel, payMethod, payImage)}
       </div>
     );
   };
@@ -379,6 +396,7 @@ export class StatusCartManualView extends React.Component {
     let payImage;
     let payLabel;
     let payColor;
+    let payMethod;
 
     let currentState = this.state.statusIndex;
       let data = this.state.data;
@@ -413,9 +431,43 @@ export class StatusCartManualView extends React.Component {
             payColor = "#F4B55B";
         }
 
+        if (value.payment_method === "WALLET_OVO") {
+          payImage = OvoPayment;
+          payMethod = "Ovo";
+        } else if (value.payment_method === "WALLET_DANA") {
+          payImage = DanaPayment;
+          payMethod = "DANA";
+        } else if (value.payment_method === "WALLET_SHOPEEPAY") {
+          payImage = ShopeePayment;
+          payMethod = "ShopeePay";
+        }
+
         let thestatus;
         let backColor;
-        if (value.order_status === "ON_PROCESS") {
+        if (value.order_status === "OPEN") {
+          return (
+            <div key={ind} className="status-cartmanual-Content">
+              <div
+                className="status-cartmanual-transaction-header"
+                style={{ backgroundColor: "#F4B55B" }}
+              >
+                <div className="status-cartmanual-transaction-title">
+                    Menunggu Pembayaran
+                </div>
+              </div>
+              {this.contentStatus(
+                value,
+                bizImage,
+                bizLabel,
+                payColor,
+                payLabel,
+                payMethod,
+                payImage
+              )}
+            </div>
+          );
+        }
+        else if (value.order_status === "ON_PROCESS") {
           return (
             <div key={ind} className="status-cartmanual-Content">
               <div
@@ -431,7 +483,9 @@ export class StatusCartManualView extends React.Component {
                 bizImage,
                 bizLabel,
                 payColor,
-                payLabel
+                payLabel,
+                payMethod,
+                payImage
               )}
             </div>
           );
@@ -446,7 +500,9 @@ export class StatusCartManualView extends React.Component {
               bizImage,
               bizLabel,
               payColor,
-              payLabel
+              payLabel,
+              payMethod,
+              payImage
             );
         } 
         else if (value.order_status === "FINALIZE") {
@@ -460,7 +516,9 @@ export class StatusCartManualView extends React.Component {
               bizImage,
               bizLabel,
               payColor,
-              payLabel
+              payLabel,
+              payMethod,
+              payImage
             );
         }
         else if (value.order_status === "CLOSE") {
@@ -474,7 +532,9 @@ export class StatusCartManualView extends React.Component {
               bizImage,
               bizLabel,
               payColor,
-              payLabel
+              payLabel,
+              payMethod,
+              payImage
             );
         }  
         else if (value.order_status === "CANCELLED") {
@@ -488,7 +548,9 @@ export class StatusCartManualView extends React.Component {
             bizImage,
             bizLabel,
             payColor,
-            payLabel
+            payLabel,
+            payMethod,
+            payImage
           );
         } else if (value.order_status === "FAILED") {
           thestatus = "Batal";
@@ -501,7 +563,9 @@ export class StatusCartManualView extends React.Component {
             bizImage,
             bizLabel,
             payColor,
-            payLabel
+            payLabel,
+            payMethod,
+            payImage
           );
         } 
       });

@@ -410,10 +410,12 @@ class ProductView extends React.Component {
             if(value.mid) {
               this.setState({ isManualTxn : false });
               this.props.IsManualTxn(false);
+              localStorage.setItem("isManualTxn", false);
             } else {
               this.setState({ isManualTxn : true });
               this.props.IsManualTxn(true);
               console.log("aaa" + this.props.AuthRedu.isManualTxn);
+              localStorage.setItem("isManualTxn", true);
             }
 
             this.setState({ totalProduct : res.data.results.products.length });
