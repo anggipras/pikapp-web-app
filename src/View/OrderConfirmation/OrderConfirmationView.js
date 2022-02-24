@@ -348,7 +348,7 @@ class OrderConfirmationView extends React.Component {
             if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
                 this.setState({ isSubmit: true });
                 this.setState({ showResponsePayment: true });
-            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR" || resultModal.status === "UNPAID") {
+            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
                 this.setState({ isSubmit: true });
                 this.setState({ showResponsePayment: false });
             }
@@ -387,7 +387,7 @@ class OrderConfirmationView extends React.Component {
                 if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
                     this.setState({ isSubmit: true });
                     this.setState({ showResponsePayment: true });
-                } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR" || resultModal.status === "UNPAID") {
+                } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
                     this.setState({ isSubmit: true });
                     this.setState({ showResponsePayment: false });
                 }
