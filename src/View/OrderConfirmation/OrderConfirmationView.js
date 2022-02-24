@@ -253,7 +253,7 @@ class OrderConfirmationView extends React.Component {
                 })
                 .catch((err) => {
                 });
-        }, 60000);
+        }, 40000);
     }
 
     countDown = () => {
@@ -402,7 +402,7 @@ class OrderConfirmationView extends React.Component {
             .catch((err) => {
                 console.log(err);
             });
-        }, 60000);
+        }, 40000);
     }
 
     getStatusPaymentDelivery = () => {
