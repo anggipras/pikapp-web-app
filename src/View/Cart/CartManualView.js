@@ -670,7 +670,7 @@ class CartManualView extends React.Component {
             }, 1000);
           }
           else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-            this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+            this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
             setTimeout(() => {
               let filterOtherCart = storageData.filter(valFilter => {
                 return valFilter.mid !== currentCartMerchant.mid
