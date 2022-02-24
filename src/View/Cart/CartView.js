@@ -55,6 +55,7 @@ class CartView extends React.Component {
   state = {
     phoneNumberState: this.props.phoneNum ? this.props.phoneNum : '',
     selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
+    notMatchPromo: false,
     changeUI: true,
     showModal: false,
     currentModalTitle: "",
@@ -324,21 +325,51 @@ class CartView extends React.Component {
       }
     }
     if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
-      if (this.state.indexOptionEat != data) {
-        this.setState({ selectedPromo: null })
-        localStorage.removeItem("SELECTED_PROMO")
-      }
+      let getSelectedPromo
       if (data == 0) {
+        if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+          getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+          let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("DINE_IN") && finalProduct[0].totalPrice >= promoMinPrice) {
+            this.setState({ notMatchPromo: false })
+          } else {
+             this.setState({ notMatchPromo: true })
+          }
+        }
         this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
       } else {
+        if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+          getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+          let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && finalProduct[0].totalPrice >= promoMinPrice) {
+            this.setState({ notMatchPromo: false })
+          } else {
+             this.setState({ notMatchPromo: true })
+          }
+        }
         this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
       }
     } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
-      let checkIndexOptionPay = JSON.parse(localStorage.getItem("PAYMENT_TYPE"))
-      if (checkIndexOptionPay) {
-        if (checkIndexOptionPay.indexOptionPay != data) {
-          this.setState({ selectedPromo: null })
-          localStorage.removeItem("SELECTED_PROMO")
+      let getSelectedPromo
+      if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+        getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+        let eatMethod = this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type
+        let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+        let paymentTypeData = ""
+        if (data === 0) {
+          paymentTypeData = "PAY_BY_CASHIER"
+        } else if (data === 1) {
+          paymentTypeData = "WALLET_OVO"
+        } else if (data === 2) {
+          paymentTypeData = "WALLET_DANA"
+        } else if (data === 3) {
+          paymentTypeData = "WALLET_SHOPEEPAY"
+        }
+
+        if (getSelectedPromo.promo_payment_method.includes(paymentTypeData) && getSelectedPromo.promo_shipment_method.includes(eatMethod) && finalProduct[0].totalPrice >= promoMinPrice) {
+          this.setState({ notMatchPromo: false })
+        } else {
+           this.setState({ notMatchPromo: true })
         }
       }
       if (data === 0) {
@@ -1142,7 +1173,7 @@ class CartView extends React.Component {
                                 <div className="promoCart-selectiondetail-border"></div>
 
                                 <div className='promoCart-selectiondetail-desc'>
-                                    <div>{this.state.selectedPromo.promo_title}</div>
+                                    <div style={{color: this.state.notMatchPromo ? "red" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
                                 </div>
                               </div>
                               :

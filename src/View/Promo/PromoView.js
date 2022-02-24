@@ -373,6 +373,7 @@ const PromoView = () => {
             if (manualTxnVar == 0) {
                 localStorage.setItem("SELECTED_PROMO", JSON.stringify(selectedPromoData))
             } else {
+                Cookies.set("NOTMATCHPROMO", { theBool: false })
                 localStorage.setItem("MANUAL_SELECTED_PROMO", JSON.stringify(selectedPromoData))
             }
             window.history.go(-1)

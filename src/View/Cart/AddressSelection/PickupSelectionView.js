@@ -8,6 +8,7 @@ import LocationIcon from '../../../Asset/Icon/location-icon.png'
 import KurirIcon from '../../../Asset/Icon/kurir.png'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import Cookies from "js-cookie";
 
 const PickupSelectionView = () => {
     let history = useHistory()
@@ -142,20 +143,32 @@ const PickupSelectionView = () => {
     const handleSave = () => {
         if(CartRedu.pickupType === 0) {
             // Save pickup takeaway data
-            if (JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))) {
-                let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
-                if (shipmentTypeCookies.indexShipment != 0) {
-                    localStorage.removeItem("MANUAL_SELECTED_PROMO")
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                let paymentTypeCookies = JSON.parse(localStorage.getItem("MANUAL_PAYMENT_TYPE"))
+                let paymentType = paymentTypeCookies.paymentType
+                let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
+                let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+                if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && totalPaymentManualCart >= promoMinPrice) {
+                    Cookies.set("NOTMATCHPROMO", { theBool: false })
+                } else {
+                    Cookies.set("NOTMATCHPROMO", { theBool: true })
                 }
             }
             localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "PICKUP", indexShipment: 0 }))
             window.history.go(-1)
         } else if(CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice) {
             // Save pickup delivery data
-            if (JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))) {
-                let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
-                if (shipmentTypeCookies.indexShipment != 1) {
-                    localStorage.removeItem("MANUAL_SELECTED_PROMO")
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                let paymentTypeCookies = JSON.parse(localStorage.getItem("MANUAL_PAYMENT_TYPE"))
+                let paymentType = paymentTypeCookies.paymentType
+                let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
+                let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+                if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes("DELIVERY") && totalPaymentManualCart >= promoMinPrice) {
+                    Cookies.set("NOTMATCHPROMO", { theBool: false })
+                } else {
+                    Cookies.set("NOTMATCHPROMO", { theBool: true })
                 }
             }
             dispatch({ type: 'PICKUPTYPE', payload: 1 })

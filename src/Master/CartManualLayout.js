@@ -2,6 +2,7 @@ import React from "react";
 import CartManualView from "../View/Cart/CartManualView";
 import { connect } from "react-redux";
 import { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber } from '../Redux/Actions'
+import Cookies from "js-cookie";
 
 class CartManualLayout extends React.Component {
   componentDidMount() {
@@ -37,8 +38,15 @@ class CartManualLayout extends React.Component {
       getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
     }
 
+    let getMatchPromoCaseCookies
+    let matchPromoCaseValue
+    if (Cookies.get("NOTMATCHPROMO")) {
+      getMatchPromoCaseCookies = JSON.parse(Cookies.get("NOTMATCHPROMO"))
+      matchPromoCaseValue = getMatchPromoCaseCookies.theBool
+    }
+
     return (
-      <CartManualView selectedPromo={getSelectedPromo} />
+      <CartManualView selectedPromo={getSelectedPromo} notMatchPromo={matchPromoCaseValue} />
     );
   }
 }

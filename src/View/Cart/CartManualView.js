@@ -61,6 +61,7 @@ var phoneNumber = ''
 class CartManualView extends React.Component {
     state = {
       selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
+      notMatchPromo: this.props.notMatchPromo !== undefined ? this.props.notMatchPromo : false,
       changeUI: true,
       showModal: false,
       currentModalTitle: "",
@@ -315,6 +316,8 @@ class CartManualView extends React.Component {
           localStorage.removeItem("MANUAL_PAYMENT_TYPE")
           localStorage.removeItem("MANUAL_PHONE_NUMBER")
           localStorage.removeItem("MANUAL_SELECTED_PROMO")
+          Cookies.remove("NOTMATCHPROMO")
+          Cookies.remove("MANUAL_TOTALPAYMENT")
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -601,6 +604,8 @@ class CartManualView extends React.Component {
             localStorage.removeItem("MANUAL_PAYMENT_TYPE")
             localStorage.removeItem("MANUAL_PHONE_NUMBER")
             localStorage.removeItem("MANUAL_SELECTED_PROMO")
+            Cookies.remove("NOTMATCHPROMO")
+            Cookies.remove("MANUAL_TOTALPAYMENT")
             this.setState({ loadButton: true })
             this.props.DoneLoad()
           }, 1000);
@@ -1057,6 +1062,7 @@ class CartManualView extends React.Component {
           discountPrice: 0,
         },
       ]
+      Cookies.set("MANUAL_TOTALPAYMENT", totalPaymentShow)
 
       // let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shippingPrice) + this.state.insurancePrice;
 
@@ -1312,7 +1318,7 @@ class CartManualView extends React.Component {
                                 <div className="promoCart-selectiondetail-border"></div>
 
                                 <div className='promoCart-selectiondetail-desc'>
-                                    <div>{this.state.selectedPromo.promo_title}</div>
+                                    <div style={{color: this.state.notMatchPromo ? "red" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
                                 </div>
                               </div>
                               :
