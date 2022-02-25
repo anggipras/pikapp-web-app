@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
     pickupType: -1, //PICKUP PAGE
+    pickupTitleType: "",
     fullAddress: "",
     postalCode : "",
     shipperNotes: "",
@@ -8,6 +9,7 @@ const INITIAL_STATE = {
     shippingDateType : "", //SHIPPING DATE PAGE
     shippingDate : "",
     paymentType: -1, //PAYMENT PAGE
+    paymentTitleType: "",
     paymentMethod : "",
     phoneNumber: "",
     customerName: "",
@@ -42,6 +44,8 @@ export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case "PICKUPTYPE":
             return { ...state, pickupType: action.payload }
+        case "REMAPPICKUPTYPE":
+            return { ...state, pickupType: action.indexShipment, pickupTitleType: action.shipmentType }
         case "FULLADDRESS":
             return { ...state, fullAddress: action.payload }
         case "POSTALCODE":
@@ -58,6 +62,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, shippingDate: action.payload }
         case "PAYMENTTYPE":
             return { ...state, paymentType: action.payload }
+        case "REMAPPAYMENTTYPE":
+            return { ...state, paymentType: action.indexPayment, paymentTitleType: action.paymentType }
         case "PAYMENTMETHOD":
             return { ...state, paymentMethod: action.payload }
         case "PHONENUMBER":
@@ -112,8 +118,6 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, insuranceCheckbox: action.payload }
         case "INSURANCEPRICE":
             return { ...state, insurancePrice: action.payload }
-        // case "DATADETAILTXN":
-        //     return { ...state, dataDetailTxn: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

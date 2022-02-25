@@ -1,19 +1,21 @@
 import React from "react";
-import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
-import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
+import eatMethodIcon from "../../Asset/Icon/ic_eatmethod.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
+import paymentMethodIcon from "../../Asset/Icon/ic_paymentmethod.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import DanaPayment from "../../Asset/Icon/dana_icon.png";
 import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
-import checklistLogo from "../../Asset/Icon/checklist.png";
+import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
+import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
+import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
+import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
 import Axios from "axios";
 import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
@@ -21,9 +23,8 @@ import NotifModal from '../../Component/Modal/NotifModal'
 import { connect } from "react-redux";
 import { EditMenuCart, IsMerchantQR, DataOrder } from '../../Redux/Actions'
 import Loader from 'react-loader-spinner'
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-// import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig'
 import moment from "moment";
@@ -54,15 +55,18 @@ var phoneNumber = ''
 
 class CartView extends React.Component {
   state = {
+    phoneNumberState: this.props.phoneNum ? this.props.phoneNum : '',
+    selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
+    notMatchPromo: this.props.notMatchPromo !== undefined ? this.props.notMatchPromo : false,
     changeUI: true,
     showModal: false,
     currentModalTitle: "",
-    paymentOption: "Pembayaran Di Kasir",
-    paymentType: "PAY_BY_CASHIER",
+    paymentOption: this.props.paymentOption ? this.props.paymentOption : "Pembayaran Di Kasir",
+    paymentType: this.props.paymentType ? this.props.paymentType : "PAY_BY_CASHIER",
     biz_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "DINE_IN" : "TAKE_AWAY" : "DINE_IN",
     eat_type: this.props.noTable !== undefined ? this.props.noTable > 0 ? "Makan Di Tempat" : "Bungkus / Takeaway" : "Makan Di Tempat",
     indexOptionEat: this.props.noTable !== undefined ? this.props.noTable > 0 ? 0 : 1 : 0,
-    indexOptionPay: 0,
+    indexOptionPay: this.props.indexOptionPay !== undefined ? this.props.indexOptionPay : -1,
     currentModal: [
       {
         image: "",
@@ -77,7 +81,6 @@ class CartView extends React.Component {
     indexEdit: 0,
     updateData: '',
     successMessage: '',
-    // isEmailVerified : false,
     isShowCounterTime : false,
     countHit : 0,
     counterTime : 120,
@@ -128,21 +131,11 @@ class CartView extends React.Component {
 
   componentDidMount() {
     firebaseAnalytics.logEvent("cart_visited")
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    //   is_email_verified: true
-    // };
-
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
     this.sendTracking();
 
     this.sendTracking();
+
+    phoneNumber = this.state.phoneNumberState
 
     if(window.innerWidth < 700) {
       this.state.steptour.splice(2,1);
@@ -155,13 +148,6 @@ class CartView extends React.Component {
     } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
       this.setState({ startTour : true});
     }
-
-    // this.setState({ isEmailVerified: auth.is_email_verified });
-
-    // if (this.state.isEmailVerified === false) {
-    //   this.handleReloadEmail();
-    // }
-
   }
 
   componentDidUpdate() {
@@ -217,8 +203,10 @@ class CartView extends React.Component {
         currentModal: finalProduct
       });
     } else if (data === "payment-checking") {
-      this.setState({ showModal: true });
-      this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+      if (this.state.indexOptionPay != -1 && !this.state.notMatchPromo) {
+        this.setState({ showModal: true });
+        this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+      }
     }
   }
 
@@ -285,6 +273,10 @@ class CartView extends React.Component {
         cart.splice(1)
         localStorage.setItem("cart", JSON.stringify(newAllCart))
         window.history.back()
+        localStorage.removeItem("PAYMENT_TYPE")
+        localStorage.removeItem("PHONE_NUMBER")
+        localStorage.removeItem("SELECTED_PROMO")
+        Cookies.remove("NOTMATCHPROMO")
       } else {
         let filterMerchantCart = newAllCart.filter(valueCart => {
           return valueCart.mid === mid
@@ -338,38 +330,76 @@ class CartView extends React.Component {
       }
     }
     if (this.state.currentModalTitle === "Pilih Cara Makan Anda") {
+      let getSelectedPromo
       if (data == 0) {
+        if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+          getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+          let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("DINE_IN") && finalProduct[0].totalPrice >= promoMinPrice) {
+            Cookies.set("NOTMATCHPROMO", { theBool: false })
+            this.setState({ notMatchPromo: false })
+          } else {
+            Cookies.set("NOTMATCHPROMO", { theBool: true })
+            this.setState({ notMatchPromo: true })
+          }
+        }
         this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
       } else {
+        if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+          getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+          let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && finalProduct[0].totalPrice >= promoMinPrice) {
+            Cookies.set("NOTMATCHPROMO", { theBool: false })
+            this.setState({ notMatchPromo: false })
+          } else {
+            Cookies.set("NOTMATCHPROMO", { theBool: true }) 
+            this.setState({ notMatchPromo: true })
+          }
+        }
         this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
       }
     } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
+      let getSelectedPromo
+      if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+        getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+        let eatMethod = this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type
+        let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+        let paymentTypeData = ""
+        if (data === 0) {
+          paymentTypeData = "PAY_BY_CASHIER"
+        } else if (data === 1) {
+          paymentTypeData = "WALLET_OVO"
+        } else if (data === 2) {
+          paymentTypeData = "WALLET_DANA"
+        } else if (data === 3) {
+          paymentTypeData = "WALLET_SHOPEEPAY"
+        }
+
+        if (getSelectedPromo.promo_payment_method.includes(paymentTypeData) && getSelectedPromo.promo_shipment_method.includes(eatMethod) && finalProduct[0].totalPrice >= promoMinPrice) {
+          Cookies.set("NOTMATCHPROMO", { theBool: false })
+          this.setState({ notMatchPromo: false })
+        } else {
+          Cookies.set("NOTMATCHPROMO", { theBool: true })
+          this.setState({ notMatchPromo: true })
+        }
+      }
       if (data === 0) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 }))
         this.setState({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 })
       } else if (data === 1) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_OVO", paymentOption: "OVO", indexOptionPay: data }))
         this.setState({ paymentType: "WALLET_OVO", paymentOption: "OVO", indexOptionPay: data })
       } else if (data === 2) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_DANA", paymentOption: "DANA", indexOptionPay: data }))
         this.setState({ paymentType: "WALLET_DANA", paymentOption: "DANA", indexOptionPay: data })
       } else if (data === 3) {
+        localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_SHOPEEPAY", paymentOption: "ShopeePay", indexOptionPay: data }))
         this.setState({ paymentType: "WALLET_SHOPEEPAY", paymentOption: "ShopeePay", indexOptionPay: data })
       }
     }
   }
 
   handlePayment = () => {
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
-    // if (auth.isLogged === false) {
-    //   window.history.back()
-    // }
     this.props.LoadingButton()
 
     const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
@@ -420,11 +450,6 @@ class CartView extends React.Component {
     }
     expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
 
-    // let windowReference
-    // if(this.state.paymentType === "WALLET_DANA") {
-    //   windowReference = window.open();
-    // }
-
     var requestData = {
       products: selectedProd,
       payment_with: this.state.paymentType,
@@ -435,8 +460,6 @@ class CartView extends React.Component {
       phone_number: phoneNumber,
       expiry_date: expiryDate
     }
-
-    // console.log(requestData);
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
@@ -515,12 +538,7 @@ class CartView extends React.Component {
             localStorage.removeItem("lastTable")
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
-            // window.location.assign(res.data.results[0].checkout_url_mobile);
             window.location.href = res.data.results[0].checkout_url_mobile;
-            // const link = res.data.results[0].checkout_url_mobile;
-            // windowReference.location = link;
-            // this.setState({ loadButton: true })
-            // this.props.DoneLoad()
           }, 1000);
         }
         else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
@@ -542,10 +560,12 @@ class CartView extends React.Component {
             localStorage.removeItem("fctable")
             localStorage.removeItem("counterPayment");
             window.location.assign(res.data.results[0].checkout_url_deeplink);
-            // this.setState({ loadButton: true })
-            // this.props.DoneLoad()
           }, 1000);
         }
+        localStorage.removeItem("PAYMENT_TYPE")
+        localStorage.removeItem("PHONE_NUMBER")
+        localStorage.removeItem("SELECTED_PROMO")
+        Cookies.remove("NOTMATCHPROMO")
       })
       .catch((err) => {
         if (err.response.data !== undefined) {
@@ -574,7 +594,7 @@ class CartView extends React.Component {
         return newlistArr += `${val2.name}, `
       })
     })
-    return <h5 className='cartList-content-choice'>{newlistArr}</h5>
+    return <h5 className='cartList-content-choice' style={{display: "flex"}}><h5 className='cartList-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan :</h5>{newlistArr}</h5>
   }
 
   onEditCart = (ind, mid) => {
@@ -663,17 +683,6 @@ class CartView extends React.Component {
     });
     localStorage.setItem('cart', JSON.stringify(allCart))
     this.setState({ updateData: 'updated' })
-
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
 
     let newNotes = ''
     currentExt.listcheckbox.forEach(val => {
@@ -854,6 +863,8 @@ class CartView extends React.Component {
 
   isPhoneNum = (num) => {
     phoneNumber = num
+    this.setState({ phoneNumberState: num })
+    localStorage.setItem("PHONE_NUMBER", JSON.stringify(num))
   }
 
   sendTracking() {
@@ -879,7 +890,7 @@ class CartView extends React.Component {
       }
     })
     .then((res) => {
-      console.log(res.data.results);
+      console.log("SUCCEED");
     })
     .catch((err) => {
       console.log(err);
@@ -903,22 +914,6 @@ class CartView extends React.Component {
         this.setState({ changeUI: false })
       }
     }
-
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    //   is_email_verified: true
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
-    // if (auth.isLogged === false) {
-    //   var lastLink = { value: window.location.href }
-    //   Cookies.set("lastLink", lastLink, { expires: 1 })
-    // }
 
     let modal;
     if (this.state.showModal === true) {
@@ -961,13 +956,13 @@ class CartView extends React.Component {
                 <div className='cartList-content-detail-left'>
                   <h2 className='cartList-content-title'>{food.foodName}</h2>
                   {this.newListAllChoices(food)}
-                  <h5 className='cartList-content-notes'>{food.foodNote}</h5>
-                  <h3 className='cartList-content-price'>{Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                  <h3 className='cartList-content-price'>Rp {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                  <h5 className='cartList-content-notes' style={{display: food.foodNote == ""? "none":"block"}}>{food.foodNote}</h5>
                 </div>
 
                 <div className='cartList-content-detail-right'>
                   <div className='cartList-editButton' onClick={() => this.onEditCart(index, store.mid)}>
-                    <div className='cartList-editWord'>EDIT</div>
+                    <div className='cartList-editWord'>Ubah</div>
                   </div>
 
                   <div className='cartList-amountBox'>
@@ -1001,23 +996,19 @@ class CartView extends React.Component {
     let detailView = storeList.map((store, index) => {
       if (store.mid === currentCartMerchant.mid) {
         return (
-          <div key={index} className='cart-storeBox'>
-            <div className='cart-storeBox-header'>
-              <div className='cart-storeBox-title'>
+          <div key={index} className='cart-customerinfo'>
+            <div className='cart-customerinfo-header'>
+              <div className='cart-customerinfo-title'>
                 Detail Restoran
               </div>
-
-              {/* <div className='cart-storeBox-distance'>
-                {store.storeDistance}
-              </div> */}
             </div>
 
-            <div className='cart-storeBox-content'>
-              <h2 className='cart-storeBox-descTitle'>
+            <div className='cart-customerinfo-content'>
+              <h2 className='cart-detailcontent-address'>
                 {store.storeName}
               </h2>
 
-              <h4 className='cart-storeBox-descAddress'>
+              <h4 className='cart-detailcontent-addressdesc'>
                 {store.storeAdress}
               </h4>
             </div>
@@ -1027,10 +1018,12 @@ class CartView extends React.Component {
     });
 
     let totalPaymentShow = 0
+    let totalItem = 0
     let selectedMerch = storeList.filter(store => {
       return store.mid === currentCartMerchant.mid
     });
 
+    totalItem = selectedMerch[0].food.length;
     selectedMerch[0].food.forEach(thefood => {
       totalPaymentShow += thefood.foodTotalPrice
     })
@@ -1059,8 +1052,6 @@ class CartView extends React.Component {
       paymentImage = ShopeePayment
     }
 
-    // this.setState({ dataOrder : { totalPayment : totalPaymentShow, paymentType : this.state.paymentType }});
-
     if (this.state.changeUI) {
       return (
         <div style={{ display: 'flex', position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -1074,29 +1065,41 @@ class CartView extends React.Component {
       )
     }
 
+    let tableNumberOfCart = localStorage.getItem("table") ? localStorage.getItem("table") : "0"
+
     return (
       <>
         <div className='cartLayout'>
-          {/* {
-          !this.state.isEmailVerified ?
-          <div className='verificationMsg'>
-            <div className='message'>Verifikasi Email Anda</div>
-            <div className='messageSend'>
-              <span>Email Verifikasi Telah Dirim ke Alamat Email Teregistrasi: <span className="txtBold"> {auth.email} </span> </span>. Belum Masuk ? 
-              { this.state.counterTime !== 0 && this.state.countHit > 0 ? <span className="txtIndent" disabled={true}>Kirim Ulang</span> : <span className="txtUnderline" onClick={() => this.handleResendEmail()}>Kirim Ulang</span> }
-              { this.state.isShowCounterTime ? <span className="txtIndent"> {this.state.counterTime} sec </span> : <span> </span>}
-            </div>
-          </div>
-          :
-          <div></div>
-          } */}
           <div className='cartTitle'>
             <span className='logopikappCenter' onClick={() => window.history.back()} >
               <img className='LogoPikappCart' src={ArrowBack} alt='' />
             </span>
-
-            <h2 className='confirmationOrder'>Konfirmasi Pesanan Anda</h2>
+            <div className='confirmationOrder'>Pesanan Anda</div>
           </div>
+
+          {
+            this.state.notMatchPromo ?
+            <div className="promo-alert-paymentnotselected">
+                <span className="promo-alert-icon">
+                    <img className="alert-icon" src={PromoAlert} alt='' />
+                </span>
+
+                <div className="promo-alert-title">Voucher tidak bisa digunakan, silahkan ubah terlebih dahulu</div>
+            </div>
+            :
+            null
+          }
+
+          {
+            tableNumberOfCart != "0" ?
+            <div className='cartTableNumber-layout'>
+              <div className='cartTableNumber-Title'>Nomor Meja</div>
+
+              <div className="cartTableNumber-Number">{tableNumberOfCart}</div>
+            </div>
+            :
+            null
+          }
 
           <div className='cartContent'>
             <div className='cart-LeftSide'>
@@ -1105,6 +1108,9 @@ class CartView extends React.Component {
                   <h4 className='cartList-title'>
                     Item Yang Dibeli
                   </h4>
+                  <h4 className='cartmanual-List-itembox'>
+                      {totalItem} Item
+                    </h4>
                 </div>
 
                 {contentView}
@@ -1115,120 +1121,153 @@ class CartView extends React.Component {
               <div className='flex-RightSide'>
                 {detailView}
 
-                <div className='cart-foodService' onClick={() => this.handleDetail("eat-method")}>
-                  <div className='cart-foodService-header'>
-                    <div className='cart-foodService-title'>
-                      Pilih Cara Makan Anda
-                    </div>
+                <div className='cart-serviceType' onClick={() => this.handleDetail("eat-method")}>
+                  <div className='cart-detailContent'>
+                        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                          <div className='cart-leftSide'>
+                              <img className='cart-foodService-img-icon' src={eatMethodIcon} alt='' />
+                              <div className='cart-title'>Pilih Cara Makan</div>
+                            </div>
 
-                    <div className='cart-foodService-selectButton' >
-                      <img className='cart-foodService-selectIcon' src={ArrowDownColor} alt='' />
-                    </div>
-                  </div>
+                            <span className="cart-arrowright">
+                              <img className="cart-arrowright-icon" src={ArrowRight} />
+                            </span>
+                        </div>
 
-                  <div className='cart-foodService-content'>
-                    <div className='cart-foodService-descArea'>
-                      <span>
-                        <img className='cart-foodService-logo' src={eatImage} alt='' />
-                      </span>
+                        <div className='cart-selectiondetail'>
+                          <div className="cart-selectiondetail-border"></div>
 
-                      <h3 className='cart-foodService-words'>
-                        {this.state.eat_type}
-                      </h3>
-                    </div>
+                          <div className='cart-selectiondetail-desc'>
+                              <div>{this.state.eat_type}</div>
+                          </div>
+                        </div>
                   </div>
                 </div>
 
-                <div className='cart-paymentService' onClick={() => this.handleDetail("pay-method")}>
-                  <div className='cart-paymentService-header'>
-                    <div className='cart-paymentService-title'>
-                      Bayar Pakai Apa?
-                    </div>
+                <div className='cart-serviceType' onClick={() => this.handleDetail("pay-method")}>
+                  <div className='cart-detailContent'>
+                        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                          <div className='cart-leftSide'>
+                              <img className='cart-foodService-img-icon' src={paymentMethodIcon} alt='' />
+                              <div className='cart-title'>Pilih Metode Pembayaran</div>
+                            </div>
 
-                    <div className='cart-paymentService-selectButton'>
-                      <img className='cart-paymentService-selectIcon' src={ArrowDownColor} alt='' />
-                    </div>
-                  </div>
-
-                  <div className='cart-paymentService-content'>
-                    <div className='cart-paymentService-descAreaBro'>
-                      <span>
-                        <img className='cart-paymentService-logo' src={paymentImage} alt='' />
-                      </span>
-
-                      <h3 className='cart-paymentService-words'>
-                        {this.state.paymentOption}
+                            <span className="cart-arrowright">
+                              <img className="cart-arrowright-icon" src={ArrowRight} />
+                            </span>
+                        </div>
 
                         {
-                          this.state.paymentOption === 'OVO' ?
-                            <div className='cart-paymentService-ovo'>
-                              No. Anda: {phoneNumber}
+                          this.state.indexOptionPay != -1 ?
+                          <div className='cart-selectiondetail'>
+                            <div className="cart-selectiondetail-border"></div>
+
+                            <div className='cart-selectiondetail-desc'>
+                                <img src={paymentImage} style={{width: "20px", height: "20px", marginRight: "14px"}} />
+                                <div>{this.state.paymentOption}</div>
+                                {
+                                  this.state.paymentOption === 'OVO' ?
+                                    this.state.phoneNumberState != '' ?
+                                      <div>{`(${phoneNumber})`}</div>
+                                      : null
+                                    : null
+                                }
                             </div>
-                            : null
+                          </div>
+                          :
+                          null
                         }
-                      </h3>
-                    </div>
                   </div>
                 </div>
 
-                {/* <div className='cart-checkoutArea'>
-                  <div className='cart-TotalAmount' onClick={() => this.handleDetail("payment-detail")}>
-                    <h3 className='cart-TotalAmount-title'>Total Bayar</h3>
+                <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
+                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                      <div className='promoCart-detailContent'>
+                            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                              <div className='promoCart-leftSide'>
+                                  <img className='promoCart-img-icon' src={VoucherIcon} alt='' />
+                                  <div className='promoCart-title'>Voucher Diskon</div>
+                                </div>
 
-                    <div className='cart-TotalAmount-bottom'>
-                      <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
+                                <span className="promoCart-arrowright">
+                                  <img className="promoCart-arrowright-icon" src={ArrowRight} />
+                                </span>
+                            </div>
 
-                      <img className='cart-TotalAmount-detailArrow' src={ArrowDownColor} alt='' />
-                    </div>
+                            {
+                              this.state.selectedPromo != null ?
+                              <div className='promoCart-selectiondetail'>
+                                <div className="promoCart-selectiondetail-border"></div>
+
+                                <div className='promoCart-selectiondetail-desc'>
+                                  { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
+                                  <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
+                                </div>
+                              </div>
+                              :
+                              null
+                            }
+                      </div>
+                    </Link>
                   </div>
 
-                  <div className='cart-OrderButton buttonorder' onClick={() => this.handleDetail("payment-checking")}>
-                    <div className='cart-OrderButton-content'>
-                      <span className='cart-OrderButton-Frame'>
-                        <img className='cart-OrderButton-checklist' src={checklistLogo} alt='' />
-                      </span>
+                <div className='cart-summarypayment'>
+                    <div className='cart-detailcontent-payment'>
+                      <div>
+                      <div className='cart-detailprice-header'>
+                        <div className='cart-detailprice-title'>
+                          Ringkasan Belanja
+                        </div>
+                      </div>
 
-                      <h1 className='cart-OrderButton-word'>PESAN</h1>
+                      <div className='cart-detailprice-desc'>
+                        <div className='orderDetail-detailprice-word'>
+                          <div>Total Harga ({totalItem} Item(s))</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</div>
+                        </div>
+                      </div>
+
+                      <div className='cart-detailprice-desc'>
+                        <div className='orderDetail-detailprice-word'>
+                          <div>Total Diskon Item</div>
+                          <div>Rp. 0</div>
+                        </div>
+                      </div>
+                      
+                      </div>
                     </div>
-
-                    <span>
-                      <img className='cart-OrderButton-orderArrow' src={ArrowRightWhite} alt='' />
-                    </span>
                   </div>
-                </div> */}
               </div>
 
             </div>
           </div>
         </div>
 
-        <div className='cartLayout-mob'>
-          <div className='cart-checkoutArea-mob'>
+        <div className='cart-Layout'>
+          <div className='cart-checkoutArea'>
 
-            <div className='cart-TotalAmount-mob' onClick={() => this.handleDetail("payment-detail")}>
-              <h3 className='cart-TotalAmount-title-mob'>Total Bayar</h3>
+            <div className='cart-TotalAmount'>
+              <h3 className='cart-TotalAmount-title'>Total Harga</h3>
 
-              <div className='cart-TotalAmount-bottom-mob'>
-                <h2 className='cart-TotalAmount-price-mob'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
-
-                <span className='cart-TotalAmount-detailArrowCenter-mob'>
-                  <img className='cart-TotalAmount-detailArrow-mob' src={ArrowDownColor} alt='' />
-                </span>
+              <div className='cart-TotalAmount-bottom'>
+                <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
               </div>
             </div>
-
-            <div className='cart-OrderButton-mob buttonorder' onClick={() => this.handleDetail("payment-checking")}>
-              <div className='cart-OrderButton-content-mob'>
-                <span className='cart-OrderButton-Frame-mob'>
-                  <img className='cart-OrderButton-checklist-mob' src={checklistLogo} alt='' />
-                </span>
-
-                <h1 className='cart-OrderButton-word-mob'>PESAN</h1>
+            
+            <div className='cart-OrderButton buttonorder' 
+            onClick={() => this.handleDetail("payment-checking")} 
+            style={{ backgroundColor: 
+              this.state.indexOptionPay == -1 ? 
+              '#aaaaaa'
+              :
+                this.state.notMatchPromo ?
+                '#aaaaaa'
+                :
+                '#4bb7ac'
+              }} >
+              <div className='cart-OrderButton-content'>
+                <h1 className='cart-OrderButton-word'>Buat Pesanan</h1>
               </div>
-
-              <span className='cart-OrderButton-orderArrowCenter-mob'>
-                <img className='cart-OrderButton-orderArrow-mob' src={ArrowRightWhite} alt='' />
-              </span>
             </div>
           </div>
         </div>

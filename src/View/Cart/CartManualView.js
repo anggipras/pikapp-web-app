@@ -10,6 +10,8 @@ import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import InfoIcon from "../../Asset/Icon/info-icon.png";
+import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
+import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import CartModal from "../../Component/Modal/CartModal";
 import { cart } from "../../App";
 import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
@@ -31,6 +33,7 @@ import moment from "moment";
 import DeliveryIcon from "../../Asset/Icon/delivery.png";
 import ShippingDate from "../../Asset/Icon/shipping-date.png";
 import PaymentMethod from "../../Asset/Icon/payment-method.png";
+import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
@@ -61,6 +64,8 @@ var phoneNumber = ''
 
 class CartManualView extends React.Component {
     state = {
+      selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
+      notMatchPromo: this.props.notMatchPromo !== undefined ? this.props.notMatchPromo : false,
       changeUI: true,
       showModal: false,
       currentModalTitle: "",
@@ -207,8 +212,8 @@ class CartManualView extends React.Component {
       if(this.props.CartRedu) {
 
         this.state.currentModal.forEach((value) => {
-          if(value.option === this.props.CartRedu.paymentMethod) {
-            this.setState({ paymentImage: value.icon, paymentType: value.type });
+          if(value.type == this.props.CartRedu.paymentTitleType) {
+            this.setState({ paymentImage: value.icon, paymentType: value.type, paymentOption: value.option });
           }
         })
 
@@ -358,8 +363,13 @@ class CartManualView extends React.Component {
         if (newAllCart.length < 2) {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
-          // window.history.back()
           window.location.href = '/store?username=' + selectedMerchant[0].mid;
+          localStorage.removeItem("SHIPMENT_TYPE")
+          localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+          localStorage.removeItem("MANUAL_PHONE_NUMBER")
+          localStorage.removeItem("MANUAL_SELECTED_PROMO")
+          Cookies.remove("MANUAL_NOTMATCHPROMO")
+          Cookies.remove("MANUAL_TOTALPAYMENT")
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -368,7 +378,6 @@ class CartManualView extends React.Component {
           if (filterMerchantCart.length) {
             this.setState({ updateData: 'updated' })
           } else {
-            // window.history.back()
             window.location.href = '/store?username=' + selectedMerchant[0].mid;
           }
         }
@@ -656,6 +665,12 @@ class CartManualView extends React.Component {
               localStorage.removeItem("lastTable")
               localStorage.removeItem("fctable")
               localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
               this.setState({ loadButton: true })
               this.props.DoneLoad()
             }, 1000);
@@ -678,8 +693,12 @@ class CartManualView extends React.Component {
               localStorage.removeItem("lastTable")
               localStorage.removeItem("fctable")
               localStorage.removeItem("counterPayment");
-              // this.setState({ loadButton: true })
-              // this.props.DoneLoad()
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
               window.location.href = res.data.results[0].checkout_url_mobile;
             }, 1000);
           }
@@ -701,8 +720,12 @@ class CartManualView extends React.Component {
               localStorage.removeItem("lastTable")
               localStorage.removeItem("fctable")
               localStorage.removeItem("counterPayment");
-              // this.setState({ loadButton: true })
-              // this.props.DoneLoad()
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
               window.location.assign(res.data.results[0].checkout_url_deeplink);
             }, 1000);
           }
@@ -734,7 +757,7 @@ class CartManualView extends React.Component {
           return newlistArr += `${val2.name}, `
         })
       })
-      return <h5 className='cartmanual-List-content-choice'>{newlistArr}</h5>
+      return <h5 className='cartmanual-List-content-choice' style={{display: "flex"}}><h5 className='cartmanual-List-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan :</h5>{newlistArr}</h5>
     }
   
     onEditCart = (ind, mid) => {
@@ -1083,8 +1106,8 @@ class CartManualView extends React.Component {
                   <div className='cartmanual-List-content-detail-left'>
                     <h2 className='cartmanual-List-content-title'>{food.foodName}</h2>
                     {this.newListAllChoices(food)}
-                    <h5 className='cartmanual-List-content-notes'>Tambahan : {food.foodNote}</h5>
-                    <h3 className='cartmanual-List-content-price'>Rp. {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                    <h3 className='cartmanual-List-content-price'>Rp {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
+                    <h5 className='cartmanual-List-content-notes' style={{display: food.foodNote == ""? "none":"block"}}>{food.foodNote}</h5>
                   </div>
   
                   <div className='cartmanual-List-content-detail-right'>
@@ -1161,8 +1184,7 @@ class CartManualView extends React.Component {
           discountPrice: 0,
         },
       ]
-
-      // let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shippingPrice) + this.state.insurancePrice;
+      Cookies.set("MANUAL_TOTALPAYMENT", totalPaymentShow)
 
       let totalFinalProduct = totalPaymentShow + Number(this.state.cartReduData.shippingPrice) + this.state.insurancePrice;
   
@@ -1178,9 +1200,7 @@ class CartManualView extends React.Component {
       } else if (this.state.paymentType === "WALLET_OVO") {
         paymentImage = OvoPayment
       }
-  
-      // this.setState({ dataOrder : { totalPayment : totalPaymentShow, paymentType : this.state.paymentType }});
-  
+    
       if (this.state.changeUI) {
         return (
           <div style={{ display: 'flex', position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -1203,6 +1223,19 @@ class CartManualView extends React.Component {
                 </span>
                 <div className="cartmanual-title">Checkout</div>
             </div>
+
+            {
+              this.state.notMatchPromo ?
+              <div className="promo-alert-paymentnotselected">
+                  <span className="promo-alert-icon">
+                      <img className="alert-icon" src={PromoAlert} alt='' />
+                  </span>
+
+                  <div className="promo-alert-title">Voucher tidak bisa digunakan, silahkan ubah terlebih dahulu</div>
+              </div>
+              :
+              null
+            }
   
             <div className='cartmanual-Content'>
               <div className='cartmanual-LeftSide'>
@@ -1377,14 +1410,14 @@ class CartManualView extends React.Component {
                         </Link>
                         </div>
                         {
-                          this.state.cartReduData.paymentMethod != "" ?
+                          this.props.CartRedu.paymentType != -1 ?
                           <div className='cartmanual-paymentdetail'>
                             <div className="cartmanual-paymentdetail-border"></div>
 
                             <div className='cartmanual-paymentdetail-desc'>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                   <img style={{height: '25px', width: '25px'}} src={this.state.paymentImage} />
-                                  <div style={{marginLeft: '10px'}}>{this.state.cartReduData.paymentMethod}</div>
+                                  <div style={{marginLeft: '10px'}}>{this.state.paymentOption}</div>
                                 </div>
                                 {
                                   this.state.cartReduData.phoneNumber !== "" ?
@@ -1399,6 +1432,37 @@ class CartManualView extends React.Component {
                         }
                       </div>
                     </div>
+                  </div>
+
+                  <div className='promoCart-voucherinfo'>
+                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.props.CartRedu.paymentType }, cartStatus : { totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                      <div className='promoCart-detailContent'>
+                            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                              <div className='promoCart-leftSide'>
+                                  <img className='promoCart-img-icon' src={VoucherIcon} alt='' />
+                                  <div className='promoCart-title'>Voucher Diskon</div>
+                                </div>
+
+                                <span className="promoCart-arrowright">
+                                  <img className="promoCart-arrowright-icon" src={ArrowRight} />
+                                </span>
+                            </div>
+
+                            {
+                              this.state.selectedPromo != null ?
+                              <div className='promoCart-selectiondetail'>
+                                <div className="promoCart-selectiondetail-border"></div>
+
+                                <div className='promoCart-selectiondetail-desc'>
+                                  { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
+                                  <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
+                                </div>
+                              </div>
+                              :
+                              null
+                            }
+                      </div>
+                    </Link>
                   </div>
 
                   <div className='cartmanual-summarypayment'>

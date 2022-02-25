@@ -2031,6 +2031,53 @@ body {
   }
 }
 
+// Promo Start
+.promo-voucherinfo {
+  display: flex;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.promo-detailContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  border: 0.5px solid #aaaaaa;
+  padding: 14px;
+  margin: 16px;
+}
+
+.promo-leftSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo-img-icon {
+  width: 25px;
+  height: 18px;
+}
+
+.promo-title {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  color: #111111;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.promo-arrowright {
+  display: flex;
+}
+
+.promo-arrowright-icon {
+  height: 23px;
+  width: 23px;
+}
+// Promo End
+
 .merchantdetail-link-section {
   display: flex;
   justify-content: flex-start;

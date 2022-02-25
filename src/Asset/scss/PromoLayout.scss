@@ -1,0 +1,300 @@
+@font-face {
+    font-family: "SF-Compact-Rounded";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Medium";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Medium.otf);
+}
+
+@font-face {
+    font-family: "SF-Compact-Rounded-Semibold";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+body {
+    background-color: lightgrey;
+    display: flex;
+    justify-content: center;
+}
+
+// Promo Apply Button Start
+.promoPage-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 480px;
+    width: 100vw;
+    min-height: 100vh;
+    padding: 0px 0px 20px 0px;
+    background-color: #ffffff;
+}
+
+.promoPage-topSide {
+    display: flex;
+    flex-direction: column;
+}
+
+.promoPage-header {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid lightgrey;
+    padding: 14px 14px 14px 14px;
+}
+
+.backArrow-icon {
+    width: 23px;
+    height: 23px;
+}
+
+.promoPage-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bolder;
+    font-size: 20px;
+    color: #111111;
+    margin-left: 16px;
+}
+// Promo Apply Button End
+
+// Promo List Start
+.promoPage-section {
+    margin-top: 14px;
+}
+
+.promolistbox-section, .promolistbox-section-disabled {
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-bottom: 7px;
+}
+
+.promolistbox-section input[type="radio"], .promolistbox-section-disabled input[type="radio"] {
+    display: none;
+}
+
+.promolistbox-section label, .promolistbox-section-disabled label {
+    border: 1px solid #aaaaaa;
+    box-sizing: border-box;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.promolistbox-section input[type="radio"]:checked + label, 
+.promolistbox-section input[type="radio"]:checked + label .promolist-bottomInfo-layout {
+    border-color: #4bb7ac;
+    background-color: #E6FBF9;
+}
+
+.promolistbox-section-disabled input[type="radio"] + label {
+    border-color: #aaaaaa;
+    background-color: #dbdbdb;
+}
+
+.promolistbox-section input[type="radio"]:checked + label .promolist-circle-name,
+.promolistbox-section-disabled input[type="radio"]:checked + label .promolist-circle-name {
+    color: #111111;
+}
+
+.promolist-side {
+    padding: 14px;
+}
+
+.promolist-circle-name {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    color: #111111;
+}
+
+.promolist-detail {
+    margin-top: 10px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #111111;
+}
+
+.promolist-detail-minOrder, .promolist-detail-maxDiscount {
+    margin-top: 5px;
+}
+
+.promolist-bottomInfo-layout {
+    display: flex;
+    border-top: 1px solid #aaaaaa;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: #ececec;
+    padding: 14px;
+}
+
+.promolistbox-section-disabled input[type="radio"] + label .promolist-bottomInfo-layout {
+    border-color: #aaaaaa;
+    background-color: #cfcccc;
+}
+
+.promolist-payment-layout {
+    margin-left: 12px;
+}
+
+.promolistbox-section input[type="radio"]:checked + label .promolist-shipment-layout,
+.promolistbox-section input[type="radio"]:checked + label .promolist-payment-layout {
+    border-color: #4bb7ac;
+}
+
+.promolist-shipment-layout, .promolist-payment-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #aaaaaa;
+    border-radius: 28px;
+    background-color: #ffffff;
+    padding: 7px 10px;
+}
+
+.promolistbox-section-disabled input[type="radio"] + label .promolist-shipment-layout,
+.promolistbox-section-disabled input[type="radio"] + label .promolist-payment-layout {
+    background-color: #dbdbdb;
+}
+
+.promolist-shipment-circleLayout, .promolist-payment-circleLayout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0eaff;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
+
+.promolistbox-section-disabled input[type="radio"] + label .promolist-shipment-circleLayout,
+.promolistbox-section-disabled input[type="radio"] + label .promolist-payment-circleLayout {
+    background-color: #cfcccc;
+}
+
+.promolistbox-section input[type="radio"]:checked + label .promolist-shipment-icon,
+.promolistbox-section input[type="radio"]:checked + label .promolist-payment-icon {
+    filter: brightness(0) saturate(100%) invert(60%) sepia(53%) saturate(394%) hue-rotate(125deg) brightness(96%) contrast(90%);
+}
+
+.promolist-shipment-icon, .promolist-payment-icon {
+    width: 15px;
+    height: 15px;
+    filter: brightness(0) saturate(100%) invert(34%) sepia(22%) saturate(2977%) hue-rotate(203deg) brightness(94%) contrast(96%);
+}
+
+.promolistbox-section-disabled input[type="radio"] + label .promolist-shipment-icon, 
+.promolistbox-section-disabled input[type="radio"] + label .promolist-payment-icon {
+    width: 15px;
+    height: 15px;
+    filter: brightness(0) saturate(100%) invert(26%) sepia(99%) saturate(8%) hue-rotate(45deg) brightness(87%) contrast(92%);
+}
+
+.promolist-shipment-text, .promolist-payment-text {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    color: #111111;
+    margin-left: 10px;
+}
+// Promo List End
+
+.promo-alert-paymentnotselected {
+    margin: 14px 14px 0px 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FBE5C6;
+    border: 1px solid #e88901;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 14px;
+}
+
+.promo-alert-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-icon {
+    width: 18px;
+    height: 16px;
+}
+
+.promo-alert-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    color: #e88901;
+    margin-left: 14px;
+}
+
+.promoPage-button-layout {
+    position: fixed;
+    bottom: 0;
+    max-width: 480px;
+    width: 100vw;
+    padding: 14px;
+    background-color: #ffffff;
+}
+
+.promoPage-button {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 100%;
+    border-radius: 8px;
+
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+}
+
+.selectedPromo-title {
+    margin-left: 14px;
+    margin-top: 14px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: #aaaaaa;
+}
+
+.disabledPromo-title {
+    margin-left: 14px;
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: #111111;
+}
+
+@media (max-width: 450px) {
+    .promo-alert-title {
+        font-size: 10px;
+    }
+
+    .promolist-shipment-text, .promolist-payment-text {
+        font-size: 8px;
+    }
+}

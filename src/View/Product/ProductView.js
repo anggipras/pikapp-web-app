@@ -35,6 +35,8 @@ import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
+import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
+import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 
 var currentExt = {
   detailCategory: [
@@ -409,12 +411,13 @@ class ProductView extends React.Component {
 
             if(value.mid) {
               this.setState({ isManualTxn : false });
+              Cookies.set("isManualTxn", 0)
               this.props.IsManualTxn(false);
               localStorage.setItem("isManualTxn", false);
             } else {
               this.setState({ isManualTxn : true });
+              Cookies.set("isManualTxn", 1)
               this.props.IsManualTxn(true);
-              console.log("aaa" + this.props.AuthRedu.isManualTxn);
               localStorage.setItem("isManualTxn", true);
             }
 
@@ -1572,6 +1575,22 @@ class ProductView extends React.Component {
             }
           </div>
         </div> */}
+
+        <div className='promo-voucherinfo'>
+          <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
+            <div className='promo-detailContent'>
+                  <div className='promo-leftSide'>
+                    <img className='promo-img-icon' src={VoucherIcon} alt='' />
+                    <div className='promo-title'>3 Voucher Diskon Tersedia</div>
+                  </div>
+
+                  <span className="promo-arrowright">
+                    <img className="promo-arrowright-icon" src={ArrowRight} />
+                  </span>
+            </div>
+          </Link>
+        </div>
+
         <div className='merchant-section' style={{ backgroundColor: "white" }}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>

@@ -17,7 +17,6 @@ import OrderDetailManualLayout  from "./Master/OrderDetailManualLayout";
 import ManualTxn from "./Master/ManualTransaction";
 import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
-// import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
 import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
 import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
@@ -29,6 +28,7 @@ import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
 import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 import StatusCartManualLayout from "./Master/StatusCartManualLayout";
 import TrackingDeliveryLayout from "./Master/TrackingDeliveryLayout";
+import PromoView from "./View/Promo/PromoView";
 export var cart = [
     {
         mid: "",
@@ -81,16 +81,8 @@ function countDown(){
 function App() {
     const dispatch = useDispatch();
     const [tokenFound, setTokenFound] = useState('');
-    // getToken(setTokenFound);
 
     dispatch({ type: 'FCMTOKEN', payload: tokenFound });
-
-    // if (Cookies.get("auth") === undefined) {
-    //     let deleteCart = JSON.parse(localStorage.getItem("cart"))
-    //     let newCart = []
-    //     newCart.push(deleteCart[0])
-    //     localStorage.setItem('cart', JSON.stringify(newCart))
-    // }
 
     if(localStorage.getItem("counterPayment")) {
         timeLeft = setInterval(() => countDown(), 1000);
@@ -110,6 +102,7 @@ function App() {
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
             {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
+            <Route exact path="/promo" component={PromoView} />
             <Route path="/profile" component={() => <ProfileLayout />} />
             <Route path="/reset-pin/:pintoken" component={ResetPin} />
             <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />

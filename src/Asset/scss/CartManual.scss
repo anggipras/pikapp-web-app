@@ -164,11 +164,10 @@ body {
   font-family: "SF-Compact-Rounded", sans-serif;
   font-style: normal;
   font-weight: normal;
-  // font-size: 15px;
   font-size: 12px;
   line-height: 20px;
   text-transform: capitalize;
-  color: #767676;
+  color: #111111;
   max-width: 150px;
 }
 
@@ -180,7 +179,7 @@ body {
   font-size: 15px;
   line-height: 20px;
   text-transform: capitalize;
-  color: #494949;
+  color: #4056c6;
 }
 
 .cartmanual-List-content-detail-right {
@@ -277,7 +276,7 @@ body {
   // height: 29px;
   width: 25px;
   height: 25px;
-  border-radius: 5px;
+  border-radius: 15px;
   background-color: #ffffff;
   cursor: pointer;
   border: 1px solid #4bb7ac;
@@ -1264,6 +1263,67 @@ body {
   // padding: 0px 0px 0px 12px;
   // border-top: 1px solid #c4c4c4;
 }
+
+// Promo Cart Section Start
+.promoCart-voucherinfo {
+  display: flex;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.promoCart-detailContent {
+  border-radius: 8px;
+  border: 0.5px solid #aaaaaa;
+  padding: 14px;
+  margin: 14px;
+}
+
+.promoCart-leftSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promoCart-img-icon {
+  width: 23px;
+  height: 15px;
+}
+
+.promoCart-title {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  color: #111111;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.promoCart-arrowright {
+  display: flex;
+}
+
+.promoCart-arrowright-icon {
+  height: 23px;
+  width: 23px;
+}
+
+.promoCart-selectiondetail {
+  margin-top: 10px;
+}
+
+.promoCart-selectiondetail-border {
+  border-top : 1px solid #c4c4c4;
+}
+
+.promoCart-selectiondetail-desc {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #111111;
+  margin-top: 10px;
+}
+// Promo Cart Section End
 
 .cartmanual-summarypayment {
   // min-width: 480px;

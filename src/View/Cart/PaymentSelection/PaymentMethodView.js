@@ -36,13 +36,16 @@ const PaymentMethodView = () => {
         if (CartRedu.paymentType === 0 && phoneNum && isAlertNumber === "") {
             dispatch({ type: 'PHONENUMBER', payload: phoneNum })
             dispatch({ type: 'PAYMENTMETHOD', payload: paymentMethod })
+            localStorage.setItem("MANUAL_PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_OVO", indexPayment: 0 }))
+            localStorage.setItem("MANUAL_PHONE_NUMBER", JSON.stringify({ phoneNumber: phoneNum }))
             window.history.go(-1)
         } else if(CartRedu.paymentType === -1) {
             console.log("CANNOT GO THROUGH")
         } else {
-            // console.log("CANNOT GO THROUGH")
             dispatch({ type: 'PHONENUMBER', payload: "" })
             dispatch({ type: 'PAYMENTMETHOD', payload: paymentMethod })
+            localStorage.setItem("MANUAL_PAYMENT_TYPE", JSON.stringify({ paymentType: `WALLET_${paymentMethod.toUpperCase()}`, indexPayment: CartRedu.paymentType }))
+            localStorage.setItem("MANUAL_PHONE_NUMBER", JSON.stringify({ phoneNumber: "" }))
             window.history.go(-1)
         }
     }
