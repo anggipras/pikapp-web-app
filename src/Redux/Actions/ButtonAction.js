@@ -249,3 +249,17 @@ export const OvoPhoneNumber = (data) => {
         payload: data
     }
 }
+
+export const ShippingDateType = (data) => {
+    return {
+        type: 'SHIPPINGDATETYPE',
+        payload: data
+    }
+}
+
+export const ShippingDate = (data) => {
+    return {
+        type: 'SHIPPINGDATE',
+        payload: data
+    }
+}
