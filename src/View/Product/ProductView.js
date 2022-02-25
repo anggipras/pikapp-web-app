@@ -413,10 +413,12 @@ class ProductView extends React.Component {
               this.setState({ isManualTxn : false });
               Cookies.set("isManualTxn", 0)
               this.props.IsManualTxn(false);
+              localStorage.setItem("isManualTxn", false);
             } else {
               this.setState({ isManualTxn : true });
               Cookies.set("isManualTxn", 1)
               this.props.IsManualTxn(true);
+              localStorage.setItem("isManualTxn", true);
             }
 
             this.setState({ totalProduct : res.data.results.products.length });

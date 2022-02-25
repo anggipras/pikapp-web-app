@@ -10,6 +10,7 @@ const INITIAL_STATE = {
     shippingDate : "",
     paymentType: -1, //PAYMENT PAGE
     paymentTitleType: "",
+    paymentMethod : "",
     phoneNumber: "",
     customerName: "",
     customerPhoneNumber: "",
@@ -63,6 +64,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, paymentType: action.payload }
         case "REMAPPAYMENTTYPE":
             return { ...state, paymentType: action.indexPayment, paymentTitleType: action.paymentType }
+        case "PAYMENTMETHOD":
+            return { ...state, paymentMethod: action.payload }
         case "PHONENUMBER":
             return { ...state, phoneNumber: action.payload }
         case "CUSTOMERNAME":
@@ -115,8 +118,6 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, insuranceCheckbox: action.payload }
         case "INSURANCEPRICE":
             return { ...state, insurancePrice: action.payload }
-        // case "DATADETAILTXN":
-        //     return { ...state, dataDetailTxn: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:

@@ -5,6 +5,8 @@ import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
+import DanaPayment from "../../Asset/Icon/dana_icon.png";
+import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import InfoIcon from "../../Asset/Icon/info-icon.png";
@@ -75,9 +77,29 @@ class CartManualView extends React.Component {
       indexOptionPay: 0,
       currentModal: [
         {
-          image: "",
-          option: "",
+          image: "cashier",
+          option: "Pembayaran Di Kasir",
+          icon: CashierPayment,
+          type: "PAY_BY_CASHIER"
         },
+        {
+          image: "ovo",
+          option: "OVO",
+          icon: OvoPayment,
+          type: "WALLET_OVO"
+        },
+        {
+          image: "dana",
+          option: "DANA",
+          icon: DanaPayment,
+          type: "WALLET_DANA"
+        },
+        {
+          image: "shopee",
+          option: "ShopeePay",
+          icon: ShopeePayment,
+          type: "WALLET_SHOPEEPAY"
+        }
       ],
       loadButton: false,
       showMenuDet: false,
@@ -151,6 +173,8 @@ class CartManualView extends React.Component {
         shippingDateType : "", //SHIPPING DATE PAGE
         shippingDate : "",
         paymentType: -1, //PAYMENT PAGE
+        paymentImage : null,
+        paymentMethod : "",
         phoneNumber: "",
         customerName: "",
         customerPhoneNumber: "",
@@ -166,7 +190,8 @@ class CartManualView extends React.Component {
         shippingDesc : "",
         shippingCode : "",
         courierServiceType : ""
-      }
+      },
+      paymentImage: ""
     };
 
     componentDidMount() {
@@ -185,7 +210,18 @@ class CartManualView extends React.Component {
       // }
 
       if(this.props.CartRedu) {
+
+        this.state.currentModal.forEach((value) => {
+          if(value.type == this.props.CartRedu.paymentTitleType) {
+            this.setState({ paymentImage: value.icon, paymentType: value.type, paymentOption: value.option });
+          }
+        })
+
         this.setState({ cartReduData : this.props.CartRedu, insuranceCheckbox : this.props.CartRedu.insuranceCheckbox, insurancePrice : this.props.CartRedu.insurancePrice });
+      }
+
+      if(this.props.CartRedu.pickupType === 0) {
+        this.setState({ cartReduData : { ...this.props.CartRedu, shippingPrice: 0 }, insuranceCheckbox : false, insurancePrice : 0});
       }
       
       if(this.props.CartRedu.shippingDate) {
@@ -232,11 +268,23 @@ class CartManualView extends React.Component {
             {
               image: "cashier",
               option: "Pembayaran Di Kasir",
+              icon: CashierPayment
             },
             {
               image: "ovo",
               option: "OVO",
+              icon: OvoPayment
             },
+            {
+              image: "dana",
+              option: "DANA",
+              icon: DanaPayment
+            },
+            {
+              image: "shopee",
+              option: "ShopeePay",
+              icon: ShopeePayment
+            }
           ],
         });
       } else if (data === "payment-detail") {
@@ -309,11 +357,13 @@ class CartManualView extends React.Component {
             newAllCart.push(store)
           }
         });
+
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
   
         if (newAllCart.length < 2) {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
-          window.history.back()
+          window.location.href = '/store?username=' + selectedMerchant[0].mid;
           localStorage.removeItem("SHIPMENT_TYPE")
           localStorage.removeItem("MANUAL_PAYMENT_TYPE")
           localStorage.removeItem("MANUAL_PHONE_NUMBER")
@@ -328,7 +378,7 @@ class CartManualView extends React.Component {
           if (filterMerchantCart.length) {
             this.setState({ updateData: 'updated' })
           } else {
-            window.history.back()
+            window.location.href = '/store?username=' + selectedMerchant[0].mid;
           }
         }
       }
@@ -459,8 +509,10 @@ class CartManualView extends React.Component {
       if (this.state.paymentType === 'PAY_BY_CASHIER') {
         newDate += 1800000
         phoneNumber = ''
-      } else {
+      } else if (this.state.paymentType === 'WALLET_OVO') {
         newDate += 60000
+      } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
+        newDate += 600000
       }
       expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
 
@@ -492,8 +544,6 @@ class CartManualView extends React.Component {
 
       // let totalPayment = finalProduct[0].totalPrice + Number(this.props.CartRedu.shippingPrice)
 
-      let totalPayment = finalProduct[0].totalPrice + Number(this.state.cartReduData.shippingPrice)
-
       let pickupType = ''
       let shipperName = ''
       let shipperType = ''
@@ -513,6 +563,17 @@ class CartManualView extends React.Component {
       if(this.state.cartReduData.pickupType === 0) {
         pickupType = "PICKUP";
         shipperName = "Pickup Sendiri";
+        shipperPrice = 0;
+        shipperType = "";
+        shipperCategoryType = "";
+        customerInfo.customer_address = "";
+        customerInfo.customer_address_detail = "";
+        customerInfo.latitude = 0;
+        customerInfo.longitude = 0;
+        customerInfo.subdistrict_name = "";
+        customerInfo.city = "";
+        customerInfo.province = "";
+        customerInfo.postal_code = "";
       } else {
         pickupType = "DELIVERY";
         shipperName = this.state.cartReduData.shippingCode;
@@ -549,6 +610,7 @@ class CartManualView extends React.Component {
         shipping_service_type_category: shipperCategoryType
       }
 
+      let totalPayment = finalProduct[0].totalPrice + Number(shipperPrice)
   
       var requestData = {
         products: selectedProd,
@@ -585,32 +647,88 @@ class CartManualView extends React.Component {
         data: requestData,
       })
         .then((res) => {
-          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-          setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter => {
-              return valFilter.mid !== currentCartMerchant.mid
-            })
-            var dataOrder = {
-              transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.total_payment,
-              paymentType : this.state.paymentType,
-              transactionTime : newDate
-            };
-            this.props.DataOrder(dataOrder);
-            localStorage.setItem("payment", JSON.stringify(dataOrder));
-            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("lastTable")
-            localStorage.removeItem("fctable")
-            localStorage.removeItem("counterPayment");
-            localStorage.removeItem("SHIPMENT_TYPE")
-            localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-            localStorage.removeItem("MANUAL_PHONE_NUMBER")
-            localStorage.removeItem("MANUAL_SELECTED_PROMO")
-            Cookies.remove("MANUAL_NOTMATCHPROMO")
-            Cookies.remove("MANUAL_TOTALPAYMENT")
-            this.setState({ loadButton: true })
-            this.props.DoneLoad()
-          }, 1000);
+          if(this.state.paymentType === 'WALLET_OVO') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
+              this.setState({ loadButton: true })
+              this.props.DoneLoad()
+            }, 1000);
+          }
+          else if(this.state.paymentType === 'WALLET_DANA') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
+              window.location.href = res.data.results[0].checkout_url_mobile;
+            }, 1000);
+          }
+          else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
+              window.location.assign(res.data.results[0].checkout_url_deeplink);
+            }, 1000);
+          }
         })
         .catch((err) => {
           if (err.response.data !== undefined) {
@@ -932,7 +1050,9 @@ class CartManualView extends React.Component {
         return valCart.mid === currentCartMerchant.mid
       })
       if (filterCart.length === 0) {
-        window.history.go(-1)
+        // window.history.go(-1)
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+        window.location.href = '/store?username=' + selectedMerchant[0].mid;
       } else {
         if (this.state.changeUI) {
           this.setState({ changeUI: false })
@@ -1066,8 +1186,6 @@ class CartManualView extends React.Component {
       ]
       Cookies.set("MANUAL_TOTALPAYMENT", totalPaymentShow)
 
-      // let totalFinalProduct = totalPaymentShow + Number(this.props.CartRedu.shippingPrice) + this.state.insurancePrice;
-
       let totalFinalProduct = totalPaymentShow + Number(this.state.cartReduData.shippingPrice) + this.state.insurancePrice;
   
       let paymentImage;
@@ -1082,9 +1200,7 @@ class CartManualView extends React.Component {
       } else if (this.state.paymentType === "WALLET_OVO") {
         paymentImage = OvoPayment
       }
-  
-      // this.setState({ dataOrder : { totalPayment : totalPaymentShow, paymentType : this.state.paymentType }});
-  
+    
       if (this.state.changeUI) {
         return (
           <div style={{ display: 'flex', position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -1294,16 +1410,21 @@ class CartManualView extends React.Component {
                         </Link>
                         </div>
                         {
-                          this.state.cartReduData.phoneNumber != "" ?
+                          this.props.CartRedu.paymentType != -1 ?
                           <div className='cartmanual-paymentdetail'>
                             <div className="cartmanual-paymentdetail-border"></div>
 
                             <div className='cartmanual-paymentdetail-desc'>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                  <img style={{height: '25px', width: '25px'}} src={OvoPayment} />
-                                  <div style={{marginLeft: '10px'}}>OVO</div>
+                                  <img style={{height: '25px', width: '25px'}} src={this.state.paymentImage} />
+                                  <div style={{marginLeft: '10px'}}>{this.state.paymentOption}</div>
                                 </div>
-                                <div>{this.state.cartReduData.phoneNumber}</div>
+                                {
+                                  this.state.cartReduData.phoneNumber !== "" ?
+                                  <div>{this.state.cartReduData.phoneNumber}</div>
+                                  :
+                                  <></>
+                                }
                             </div>
                           </div>
                           :

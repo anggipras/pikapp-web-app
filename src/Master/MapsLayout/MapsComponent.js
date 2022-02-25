@@ -165,8 +165,8 @@ class MapsComponent extends Component {
                     })
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
                     this.setState({ address: results[0].formatted_address });
-                    // this.props.FormattedAddress(results[0].formatted_address);
-                    this.props.FormattedAddress(this.props.CartRedu.streetName + " " + this.props.CartRedu.streetNumber);
+                    this.props.FormattedAddress(results[0].formatted_address.split(",")[0]);
+                    // this.props.FormattedAddress(this.props.CartRedu.streetName + " " + this.props.CartRedu.streetNumber);
                     this.props.Center([this.props.CartRedu.lat, this.props.CartRedu.lng]);
                 } else {
                     window.alert('No results found');
