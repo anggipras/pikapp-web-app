@@ -183,7 +183,7 @@ export class StatusCartManualView extends React.Component {
                   value.shipping.shipping_service_type_category !== null ?
                   <span>{value.shipping.shipping_method} - {value.shipping.shipping_service_type_category}</span>
                   :
-                  <span>{value.shipping.shipping_method}</span>
+                  <span>Diambil Sendiri</span>
                 }
               </h3>
               {/* <img className='status-cartmanual-content-icon' src={ManualIcon}></img> */}
@@ -267,14 +267,17 @@ export class StatusCartManualView extends React.Component {
               <h3 className="status-cartmanual-content-totalprice">Rp {Intl.NumberFormat("id-ID").format(value.total_payment)}</h3>
             </div>
             {
-              value.order_status === "DELIVER" ?
-              <Link to="/tracking" style={{ textDecoration: "none" }}>
-                <div className='status-cartmanual-tracking' >
-                  <div className='status-cartmanual-tracking-button'>
-                    <h1 className='status-cartmanual-tracking-word'>Lacak</h1>
+              value.order_type === "DELIVERY" ?
+                value.order_status === "DELIVER" ?
+                <Link to="/tracking" style={{ textDecoration: "none" }}>
+                  <div className='status-cartmanual-tracking' >
+                    <div className='status-cartmanual-tracking-button'>
+                      <h1 className='status-cartmanual-tracking-word'>Lacak</h1>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+                :
+                <></>
               :
               <></>
             }
@@ -490,8 +493,13 @@ export class StatusCartManualView extends React.Component {
             </div>
           );
         } else if (value.order_status === "DELIVER") {
-            thestatus = "Dikirim";
-            backColor = "#4BB7AC";
+            if(value.order_type === "DELIVERY") {
+              thestatus = "Dikirim";
+              backColor = "#4BB7AC";
+            } else {
+              thestatus = "Siap Diambil";
+              backColor = "#4BB7AC";
+            }
             return this.eachStatusList(
               value,
               ind,
@@ -506,8 +514,13 @@ export class StatusCartManualView extends React.Component {
             );
         } 
         else if (value.order_status === "FINALIZE") {
-            thestatus = "Sampai";
-            backColor = "#4BB7AC";
+            if(value.order_type === "DELIVERY") {
+              thestatus = "Sampai";
+              backColor = "#4BB7AC";
+            } else {
+              thestatus = "Sudah Diambil"; 
+              backColor = "#4BB7AC";
+            }
             return this.eachStatusList(
               value,
               ind,
