@@ -1,7 +1,7 @@
 import React from "react";
 import CartManualView from "../View/Cart/CartManualView";
 import { connect } from "react-redux";
-import { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber } from '../Redux/Actions'
+import { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber, ShippingDateType, ShippingDate, CustomerName, CustomerPhoneNumber } from '../Redux/Actions'
 import Cookies from "js-cookie";
 
 class CartManualLayout extends React.Component {
@@ -45,10 +45,38 @@ class CartManualLayout extends React.Component {
       matchPromoCaseValue = getMatchPromoCaseCookies.theBool
     }
 
+    let customerName
+    if (Cookies.get("MANUAL_CUSTOMER_NAME")) {
+      let getCustomerNameCookies = JSON.parse(Cookies.get("MANUAL_CUSTOMER_NAME"))
+      customerName = getCustomerNameCookies.custName
+      this.props.CustomerName(customerName);
+    }
+
+    let customerPhoneNumber
+    if (Cookies.get("MANUAL_CUSTOMER_PHONENUM")) {
+      let getCustomerPhoneNumberCookies = JSON.parse(Cookies.get("MANUAL_CUSTOMER_PHONENUM"))
+      customerPhoneNumber = getCustomerPhoneNumberCookies.phoneNum
+      this.props.CustomerPhoneNumber(customerPhoneNumber);
+    }
+
+    let shipmentDateType
+    if (Cookies.get("SHIPMENTDATETYPE")) {
+      let getShipmentDateTypeCookies = JSON.parse(Cookies.get("SHIPMENTDATETYPE"))
+      shipmentDateType = getShipmentDateTypeCookies.shipmentDateType
+      this.props.ShippingDateType(shipmentDateType)
+    }
+
+    let shipmentDate
+    if (Cookies.get("SHIPMENTDATE")) {
+      let getShipmentDateCookies = JSON.parse(Cookies.get("SHIPMENTDATE"))
+      shipmentDate = getShipmentDateCookies.shipmentDate
+      this.props.ShippingDate(shipmentDate)
+    }
+
     return (
       <CartManualView selectedPromo={getSelectedPromo} notMatchPromo={matchPromoCaseValue} />
     );
   }
 }
 
-export default connect(null, { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber })(CartManualLayout)
+export default connect(null, { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber, ShippingDateType, ShippingDate, CustomerName, CustomerPhoneNumber })(CartManualLayout)
