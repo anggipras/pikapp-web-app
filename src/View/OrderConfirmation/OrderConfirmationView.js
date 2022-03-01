@@ -99,7 +99,7 @@ class OrderConfirmationView extends React.Component {
             });
         } else if (localStorage.getItem("payment")) {
             var dataPayment = JSON.parse(localStorage.getItem("payment"));
-            this.props.IsManualTxn(localStorage.getItem("isManualTxn"));
+            this.props.IsManualTxn(JSON.parse(localStorage.getItem("isManualTxn")));
 
             if (dataPayment.paymentType === "PAY_BY_CASHIER") {
                 this.setState({ paymentType: "PAY_BY_CASHIER" });
@@ -131,6 +131,16 @@ class OrderConfirmationView extends React.Component {
                 }
             });
         }
+
+        setInterval(async () => {
+            if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
+                if(this.props.AuthRedu.isManualTxn) {
+                    this.showResponsePaymentDelivery();
+                } else {
+                    this.showResponsePaymentDineIn();
+                }
+            }
+        }, 30000);
     }
 
     componentDidUpdate() {
@@ -142,13 +152,13 @@ class OrderConfirmationView extends React.Component {
             localStorage.setItem("counterPayment", this.state.counterTime);
         }
 
-        if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
-            if(this.props.AuthRedu.isManualTxn) {
-                this.showResponsePaymentDelivery();
-            } else {
-                this.showResponsePaymentDineIn();
-            }
-        }
+        // if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
+        //     if(this.props.AuthRedu.isManualTxn) {
+        //         this.showResponsePaymentDelivery();
+        //     } else {
+        //         this.showResponsePaymentDineIn();
+        //     }
+        // }
     }
 
     componentWillMount() {
@@ -219,7 +229,7 @@ class OrderConfirmationView extends React.Component {
         // }
         // localStorage.setItem("responsePayment", JSON.stringify(res));
 
-        setInterval(async () => {
+        // setInterval(async () => {
             let uuid = uuidV4();
             uuid = uuid.replace(/-/g, "");
             const date = new Date().toISOString();
@@ -253,7 +263,7 @@ class OrderConfirmationView extends React.Component {
                 })
                 .catch((err) => {
                 });
-        }, 40000);
+        // }, 40000);
     }
 
     countDown = () => {
@@ -365,7 +375,7 @@ class OrderConfirmationView extends React.Component {
     }
 
     showResponsePaymentDelivery = () => {
-        setInterval(async () => {
+        // setInterval(async () => {
             let uuid = uuidV4();
             uuid = uuid.replace(/-/g, "");
             const date = new Date().toISOString();
@@ -402,7 +412,7 @@ class OrderConfirmationView extends React.Component {
             .catch((err) => {
                 console.log(err);
             });
-        }, 40000);
+        // }, 40000);
     }
 
     getStatusPaymentDelivery = () => {
