@@ -1400,3 +1400,26 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { 
 	-webkit-appearance: none;
 }
+
+.cart-merchant-hour-status-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.cart-merchant-hour-status-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.cart-merchant-hour-status-text {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: #ffffff;
+}

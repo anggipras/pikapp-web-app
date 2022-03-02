@@ -37,6 +37,7 @@ import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
+import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
 
 var currentExt = {
   detailCategory: [
@@ -191,7 +192,10 @@ class CartManualView extends React.Component {
         shippingCode : "",
         courierServiceType : ""
       },
-      paymentImage: ""
+      paymentImage: "",
+      merchantHourStatus: null, // OPEN OR CLOSE
+      merchantHourOpenTime: null, // ex: 10:00
+      merchantHourGracePeriod: null // ex: 30
     };
 
     componentDidMount() {
@@ -246,6 +250,8 @@ class CartManualView extends React.Component {
       if (this.state.notMatchPromo) {
         this.setState({ disabledSubmitButton : true})
       }
+
+      this.setState({ merchantHourStatus : "CLOSE", merchantHourOpenTime : "10:00", merchantHourGracePeriod : "30" })
     }
 
     handleDetail(data) {
@@ -994,6 +1000,25 @@ class CartManualView extends React.Component {
       }
     }
 
+    merchantHourStatusWarning = () => {
+      if (this.state.merchantHourStatus == "CLOSE") {
+        return (
+          <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="cart-merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="cart-merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourOpenTime} WIB</div>
+          </div>
+        )
+      } else if (this.state.merchantHourStatus == "OPEN") {
+        return (
+          <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+            <div className="cart-merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+          </div>
+        )
+      } else {
+        return null
+      }
+    }
+
     render() {
       if (this.state.loadButton) {
         return <Redirect to='/orderconfirmation' />
@@ -1178,6 +1203,7 @@ class CartManualView extends React.Component {
                 </span>
                 <div className="cartmanual-title">Checkout</div>
             </div>
+            {this.merchantHourStatusWarning()}
 
             {
               this.state.notMatchPromo ?

@@ -1535,28 +1535,34 @@ class ProductView extends React.Component {
                   }
                 </div> */}
                 <img className='merchant-storeimg-logo' src={this.state.data.logo} alt='' />
-                <div className='merchant-name'>
-                  <div className='merchant-mainName'>
-                    {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}
-                  </div>
+                <Link to={{ pathname: "/merchant-profile", state: { merchantLogo: this.state.data.logo, merchantName: this.state.data.title, merchantAddress: this.state.data.address} }} style={{ textDecoration: "none" }}>
+                  <div className='merchant-name'>
+                    <div className='merchant-mainName'>
+                      <div className="merchant-mainName-title">
+                        {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}
+                      </div>
 
-                  <div className='merchant-categName'>
-                    <div className='merchant-allcateg'>{this.state.data.category}</div>
-                    <div className='merchant-starInfo'>
-                      {
-                        // this.state.data.rating ?
-                        //   <>
-                        //     <img className='star-img' src={StarIcon} alt='' />
-                        //     <div className='merchant-star'>{this.state.data.rating}</div>
-                        //   </>
-                        //   :
-                        //   null
-                        // <Skeleton width={50} />
-                      }
-                      {/* <div className='star-votes'>(50+ Upvotes)</div> */}
+                      <img src={ArrowRight} className="merchant-mainName-img" />
+                    </div>
+
+                    <div className='merchant-categName'>
+                      <div className='merchant-allcateg'>{this.state.data.category}</div>
+                      <div className='merchant-starInfo'>
+                        {
+                          // this.state.data.rating ?
+                          //   <>
+                          //     <img className='star-img' src={StarIcon} alt='' />
+                          //     <div className='merchant-star'>{this.state.data.rating}</div>
+                          //   </>
+                          //   :
+                          //   null
+                          // <Skeleton width={50} />
+                        }
+                        {/* <div className='star-votes'>(50+ Upvotes)</div> */}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
               <div className='merchant-call-sec' onClick={() => this.handlePhone(this.state.data.phone)}>
                 <div className='merchant-call'>
