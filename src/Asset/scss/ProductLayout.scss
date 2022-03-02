@@ -2231,3 +2231,26 @@ body {
 .merchant-carousel {
   z-index: -1;
 }
+
+.merchant-hour-status-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.merchant-hour-status-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.merchant-hour-status-text {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: #ffffff;
+}

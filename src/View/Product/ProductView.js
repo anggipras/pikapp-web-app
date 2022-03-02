@@ -37,6 +37,7 @@ import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
+import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
 
 var currentExt = {
   detailCategory: [
@@ -150,7 +151,10 @@ class ProductView extends React.Component {
     }],
     productCategpersizeOri: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     searchProduct : "",
-    hiddenBanner : false
+    hiddenBanner : false,
+    merchantHourStatus: null, // OPEN OR CLOSE
+    merchantHourOpenTime: null, // ex: 10:00
+    merchantHourGracePeriod: null // ex: 30
   };
 
   timeout = null
@@ -422,6 +426,7 @@ class ProductView extends React.Component {
             }
 
             this.setState({ totalProduct : res.data.results.products.length });
+            this.setState({ merchantHourStatus : "CLOSE", merchantHourOpenTime : "10:00", merchantHourGracePeriod : "30" })
           }).catch(err => {
             console.log(err)
             newImage = Storeimg
@@ -979,7 +984,19 @@ class ProductView extends React.Component {
                 return (
                   <div key={indprod} className='product-merchant'>
                     <div className='product-img'>
-                      <img src={product.foodImage} className='product-imgContent' alt='' />
+                      <img 
+                        src={product.foodImage} 
+                        className='product-imgContent' 
+                        alt=''
+                        style={{
+                          filter: !this.state.isManualTxn ?
+                              this.state.merchantHourStatus == "CLOSE" ?
+                              "grayscale(100%)"
+                              :
+                              "none"
+                            :
+                            "none"
+                        }} />
                     </div>
 
                     {/* desktop view */}
@@ -1028,11 +1045,23 @@ class ProductView extends React.Component {
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
                     </div> */}
-                    <div className="merchantdetail-cart-button-sec">
-                      <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
-                        <span className="merchantdetail-cart-text">+ Keranjang</span>
+                    {
+                      !this.state.isManualTxn ?
+                        this.state.merchantHourStatus == "CLOSE" ?
+                        null
+                        :
+                        <div className="merchantdetail-cart-button-sec">
+                          <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
+                            <span className="merchantdetail-cart-text">+ Keranjang</span>
+                          </div>
+                        </div>
+                      :
+                      <div className="merchantdetail-cart-button-sec">
+                        <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
+                          <span className="merchantdetail-cart-text">+ Keranjang</span>
+                        </div>
                       </div>
-                    </div>
+                    }
 
                     {/* mobile view */}
                     <div className='product-detail-mob'>
@@ -1323,6 +1352,25 @@ class ProductView extends React.Component {
     });
   }
 
+  merchantHourStatusWarning = () => {
+    if (this.state.merchantHourStatus == "CLOSE") {
+      return (
+        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+          <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourOpenTime} WIB</div>
+        </div>
+      )
+    } else if (this.state.merchantHourStatus == "OPEN") {
+      return (
+        <div className="merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+          <div className="merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+        </div>
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     let cartButton;
     const value = queryString.parse(window.location.search);
@@ -1436,14 +1484,24 @@ class ProductView extends React.Component {
               </div>
             </Link>
           }
-        </div>     
+        </div>
+        {this.merchantHourStatusWarning()}     
         <div className="merchant-carousel" style={{ opacity: this.state.hiddenBanner ? "0.5" : "1", transition: this.state.hiddenBanner ? "opacity 0.5s" : "opacity 1s" }}>
           <Carousel className="merchant-carousel">
             <Carousel.Item className="merchant-carousel">
               <img
                 className="storeBanner"
                 src={this.state.data.image}
-                style={{ objectFit: 'cover' }}
+                style={{ 
+                  objectFit: 'cover', 
+                  filter: !this.state.isManualTxn ? 
+                    this.state.merchantHourStatus == "CLOSE" ?
+                    "grayscale(100%)" 
+                    :
+                    "none"
+                  : 
+                  "none"
+                }}
               />
               {/* <div className='iconBanner'>
                 {
