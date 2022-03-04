@@ -260,7 +260,7 @@ class ProductView extends React.Component {
         let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
         let stateData = { ...this.state.data };
-        stateData.mid = mid;
+        stateData.mid = currentMerchant.mid;
         stateData.title = currentMerchant.storeName;
         stateData.image = currentMerchant.storeImage;
         stateData.logo = currentMerchant.storeLogo;
