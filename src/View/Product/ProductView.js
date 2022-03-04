@@ -178,17 +178,19 @@ class ProductView extends React.Component {
     const value = queryString.parse(window.location.search);
     var mid = "";
     var notab = "";
+    var username = "";
     if(value.mid) {
       // this.setState({ isManualTxn : false });
       mid = value.mid;
       notab = value.table || ""
     } else {
       // this.setState({ isManualTxn : true });
-      mid = value.username;
+      // mid = value.username;
+      username = value.username;
     }
 
     this.sendTracking(mid);
-    this.getLinkTree(mid);
+    this.getLinkTree(username);
 
     // let longlatAddress
     let addressRoute
@@ -206,7 +208,7 @@ class ProductView extends React.Component {
     let longitude = 106.71789
     let longlat = { lat: latitude, lon: longitude }
     localStorage.setItem("longlat", JSON.stringify(longlat))
-    addressRoute = address + "home/v2/detail/merchant/" + longitude + "/" + latitude + "/"
+    addressRoute = address + "home/v3/detail/merchant/" + longitude + "/" + latitude + "/"
 
     let uuid = uuidV4();
     uuid = uuid.replace(/-/g, "");
@@ -220,6 +222,7 @@ class ProductView extends React.Component {
         "x-client-id": clientId,
         "token": "PUBLIC",
         "mid": mid,
+        "domain": username
       },
       method: "GET"
     })
@@ -1140,12 +1143,12 @@ class ProductView extends React.Component {
     }
   }
 
-  getLinkTree = (mid) => {
+  getLinkTree = (username) => {
     let uuid = uuidV4();
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
 
-    Axios(address + "home/v1/link-tree-list/" + mid, {
+    Axios(address + "home/v1/link-tree-list-by-domain/" + username, {
       headers: {
         "Content-Type": "application/json",
         "x-request-id": uuid,
