@@ -33,6 +33,21 @@ const ShippingDateView = () => {
         option: "Custom Tanggal"
     }
     ])
+    const [merchantHourStatus, setMerchantHourStatus] = useState({
+        minutes_remaining: null,
+        open_time: null,
+        merchant_status: null,
+        close_time: null,
+    })
+
+    useEffect(() => {
+        setMerchantHourStatus({
+            minutes_remaining: "30",
+            open_time: "10:00",
+            merchant_status: "CLOSE",
+            close_time: "23:59",
+        })
+    }, [])
 
     const onChangeRadio = (ind) => {
         dispatch({ type: 'SHIPPINGDATETYPE', payload: ind })
@@ -89,29 +104,34 @@ const ShippingDateView = () => {
 
         return (
             <div>
+                {
+                    merchantHourStatus.merchant_status == "OPEN" ?
+                    <div>
+                        <div className='shippingdate-detailContent'>
+                            <div className='shippingdate-radioSection'>
+                                <input type='radio' id='now' onChange={() => onChangeRadio(0)} name={'DATETYPE'} />
+                                <label htmlFor='now'>
+                                    <div className='shippingdate-radioSide'>
+                                        <div className='shippingdate-radioTitle'>Sekarang</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    null
+                }
                 <div>
                     <div className='shippingdate-detailContent'>
                         <div className='shippingdate-radioSection'>
-                        <input type='radio' id='now' onChange={() => onChangeRadio(0)} name={'DATETYPE'} />
-                            <label htmlFor='now'>
+                            <input type='radio' id='custom' onChange={() => onChangeRadio(1)} name={'DATETYPE'} />
+                            <label htmlFor='custom'>
                                 <div className='shippingdate-radioSide'>
-                                    <div className='shippingdate-radioTitle'>Sekarang</div>
+                                    <div className='shippingdate-radioTitle'>Custom Tanggal</div>
                                 </div>
+                                <img className='shippingdate-radio-image' src={ShippingDate} alt='' />
                             </label>
                         </div>
-                    </div>
-                </div>
-            <div>
-                <div className='shippingdate-detailContent'>
-                    <div className='shippingdate-radioSection'>
-                    <input type='radio' id='custom' onChange={() => onChangeRadio(1)} name={'DATETYPE'} />
-                        <label htmlFor='custom'>
-                            <div className='shippingdate-radioSide'>
-                                <div className='shippingdate-radioTitle'>Custom Tanggal</div>
-                            </div>
-                            <img className='shippingdate-radio-image' src={ShippingDate} alt='' />
-                        </label>
-                    </div>
                     </div>
                 </div>  
             </div>

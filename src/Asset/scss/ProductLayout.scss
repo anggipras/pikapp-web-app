@@ -145,15 +145,26 @@ body {
   }
 
   .merchant-mainName {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .merchant-mainName-title {
     font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
-    // font-size: 40px;
     font-size: 1rem;
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
-    margin-bottom: 5px;
+  }
+
+  .merchant-mainName-img {
+    width: 18px;
+    height: 18px;
+    filter: contrast(30%);
   }
 
   .merchant-allcateg {
@@ -2231,3 +2242,181 @@ body {
 .merchant-carousel {
   z-index: -1;
 }
+
+.merchant-hour-status-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.merchant-hour-status-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.merchant-hour-status-text {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+// MERCHANT DETAIL PROFILE START
+$size14px: 14px;
+$size20px: 20px;
+.merchdetailprofile-Layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FFFFFF;
+}
+
+.merchdetailprofile-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 14px 14px 14px;
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid lightgrey;
+}
+
+.merchdetailprofile-back {
+  margin-right: 14px;
+}
+
+.merchdetailprofile-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.merchdetailprofile-logo {
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+}
+
+.merchdetailprofile-title {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 10px;
+}
+
+.merchdetailprofile-cart-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $size20px;
+  margin-left: $size14px;
+  margin-right: $size14px;
+  border: 1px solid #CFCCCC;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.merchdetailprofile-cart-startSide {
+  display: flex;
+  align-items: center;
+}
+
+.merchdetailprofile-cart-image {
+  width: 34px;
+  height: 34px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-cart-title, .merchdetailprofile-cart-detail {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 18px;
+  color: #111111;
+}
+
+.merchdetailprofile-cart-title {
+  margin-bottom: 10px;
+}
+
+.merchdetailprofile-cart-detail {
+  font-size: 16px;
+  line-height: 16px;
+  color: #767676;
+}
+
+.merchdetailprofile-cart-arrow {
+  width: 24px;
+  height: 24px;
+}
+
+.merchdetailprofile-shopTitle-layout, .merchdetailprofile-shopAddress-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: $size20px;
+  margin-left: $size14px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-shopAddress-layout {
+  align-items: flex-start;
+}
+
+.merchdetailprofile-shopTitle-image, .merchdetailprofile-shopAddress-image, .merchdetailprofile-shopSchedule-image {
+  width: 28px;
+  height: 28px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-shopTitle-title, .merchdetailprofile-shopAddress-title {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 20px;
+  line-height: 20px;
+  color: #111111;
+}
+
+.merchdetailprofile-shopAddress-title {
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.merchdetailprofile-shopSchedule-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: $size20px;
+  margin-left: $size14px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-shopSchedule-contentLayout {
+  width: 100%;
+}
+
+.merchdetailprofile-shopSchedule-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.merchdetailprofile-shopSchedule-days, .merchdetailprofile-shopSchedule-hours {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: #111111;
+}
+
+// MERCHANT DETAIL PROFILE END
