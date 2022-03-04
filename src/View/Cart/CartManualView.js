@@ -251,7 +251,28 @@ class CartManualView extends React.Component {
         this.setState({ disabledSubmitButton : true})
       }
 
-      this.setState({ merchantHourStatus : "CLOSE", merchantHourOpenTime : "10:00", merchantHourGracePeriod : "30" })
+      let uuid = uuidV4();
+      uuid = uuid.replace(/-/g, "");
+      const date = new Date().toISOString();
+      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+      Axios(address + "merchant/v1/shop/status/", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "token": "PUBLIC",
+          "mid": selectedMerchant[0].mid,
+        },
+        method: "GET"
+      }).then((shopStatusRes) => {
+        let merchantHourCheckingResult = shopStatusRes.data.results
+        this.setState({ 
+          merchantHourStatus: merchantHourCheckingResult.merchant_status, 
+          merchantHourOpenTime: merchantHourCheckingResult.open_time, 
+          merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining
+         })
+      })
     }
 
     handleDetail(data) {
@@ -1009,11 +1030,15 @@ class CartManualView extends React.Component {
           </div>
         )
       } else if (this.state.merchantHourStatus == "OPEN") {
-        return (
-          <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
-            <div className="cart-merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
-          </div>
-        )
+        if (this.state.merchantHourGracePeriod <= 30) {
+          return (
+            <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+              <div className="cart-merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+            </div>
+          )
+        } else {
+          return null
+        }
       } else {
         return null
       }
