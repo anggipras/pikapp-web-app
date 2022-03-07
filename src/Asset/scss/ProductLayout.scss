@@ -144,13 +144,6 @@ body {
     margin-left: 0px;
   }
 
-  .merchant-mainName {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 5px;
-  }
-
   .merchant-mainName-title {
     font-family: "Montserrat", sans-serif;
     font-style: normal;
@@ -159,12 +152,6 @@ body {
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
-  }
-
-  .merchant-mainName-img {
-    width: 18px;
-    height: 18px;
-    filter: contrast(30%);
   }
 
   .merchant-allcateg {
@@ -2267,6 +2254,19 @@ body {
 }
 
 // MERCHANT DETAIL PROFILE START
+.merchant-mainName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.merchant-mainName-img {
+  width: 18px;
+  height: 18px;
+  filter: contrast(30%);
+}
+
 $size14px: 14px;
 $size20px: 20px;
 .merchdetailprofile-Layout {

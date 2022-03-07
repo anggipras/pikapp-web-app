@@ -1152,11 +1152,24 @@ class ProductView extends React.Component {
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
                     </div> */}
-                    <div className='merchantdetail-cart-button-secmob'>
-                      <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
-                        <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
+
+                    {
+                      !this.state.isManualTxn ?
+                        this.state.merchantHourStatus == "CLOSE" ?
+                        null
+                        :
+                        <div className='merchantdetail-cart-button-secmob'>
+                          <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
+                            <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
+                          </div>
+                        </div>
+                      :
+                      <div className='merchantdetail-cart-button-secmob'>
+                        <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
+                          <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
+                        </div>
                       </div>
-                    </div>
+                    }
                   </div>
                 )
               })
@@ -1416,9 +1429,6 @@ class ProductView extends React.Component {
   }
 
   merchantHourStatusWarning = () => {
-    console.log(this.state.merchantHourStatus);
-    console.log(this.state.merchantHourOpenTime);
-    console.log(this.state.merchantHourGracePeriod);
     if (this.state.merchantHourStatus == "CLOSE") {
       return (
         <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>

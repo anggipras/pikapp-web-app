@@ -56,6 +56,42 @@ body {
     margin-left: 16px;
 }
 
+// shipping date warning start
+.shippingdate-alert-paymentnotselected {
+    margin: 14px 14px 0px 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FBE5C6;
+    border: 1px solid #e88901;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 14px;
+}
+
+.shippingdate-alert-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-icon {
+    width: 18px;
+    height: 16px;
+}
+
+.shippingdate-alert-title {
+    font-family: "SF-Compact-Rounded", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    color: #e88901;
+    margin-left: 14px;
+}
+// shipping date warning end
+
 .shippingdate-detailContent {
     display: flex;
     height: 100%;
