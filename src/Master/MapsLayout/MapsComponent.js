@@ -138,8 +138,6 @@ class MapsComponent extends Component {
         // }
 
         geocoder.geocode({ 'location': { lat: this.props.CartRedu.lat, lng: this.props.CartRedu.lng } }, (results, status) => {
-            console.log(results);
-            console.log(status);
             if (status === 'OK') {
                 if (results[0]) {
                     this.zoom = 12;
@@ -152,12 +150,14 @@ class MapsComponent extends Component {
                         }
                         if(res.types[0] == "administrative_area_level_3") {
                             this.props.District(res.short_name);
+                            localStorage.setItem("DISTRICT", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "postal_code") {
                             this.props.PostalCode(res.short_name);
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             this.props.City(res.short_name);
+                            localStorage.setItem("CITY", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             this.props.Province(res.short_name);
@@ -166,7 +166,7 @@ class MapsComponent extends Component {
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
                     this.setState({ address: results[0].formatted_address });
                     this.props.FormattedAddress(results[0].formatted_address.split(",")[0]);
-                    // this.props.FormattedAddress(this.props.CartRedu.streetName + " " + this.props.CartRedu.streetNumber);
+                    localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(results[0].formatted_address.split(",")[0]))
                     this.props.Center([this.props.CartRedu.lat, this.props.CartRedu.lng]);
                 } else {
                     window.alert('No results found');

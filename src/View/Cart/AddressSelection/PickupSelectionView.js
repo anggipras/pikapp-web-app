@@ -155,6 +155,13 @@ const PickupSelectionView = () => {
                     Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
                 }
             }
+            localStorage.removeItem("SHIPPERNOTES")
+            localStorage.removeItem("SHIPPINGTYPE")
+            localStorage.removeItem("SHIPPING_WITH_COURIER")
+            localStorage.removeItem("FORMATTEDADDRESS")
+            localStorage.removeItem("DISTRICT")
+            localStorage.removeItem("CITY")
+
             localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "PICKUP", indexShipment: 0 }))
             window.history.go(-1)
         } else if(CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice) {

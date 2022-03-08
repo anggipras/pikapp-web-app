@@ -403,6 +403,12 @@ class CartManualView extends React.Component {
           localStorage.removeItem("MANUAL_PAYMENT_TYPE")
           localStorage.removeItem("MANUAL_PHONE_NUMBER")
           localStorage.removeItem("MANUAL_SELECTED_PROMO")
+          localStorage.removeItem("SHIPPERNOTES")
+          localStorage.removeItem("SHIPPINGTYPE")
+          localStorage.removeItem("SHIPPING_WITH_COURIER")
+          localStorage.removeItem("FORMATTEDADDRESS")
+          localStorage.removeItem("DISTRICT")
+          localStorage.removeItem("CITY")
           Cookies.remove("MANUAL_NOTMATCHPROMO")
           Cookies.remove("MANUAL_TOTALPAYMENT")
           Cookies.remove("SHIPMENTDATETYPE")
@@ -676,6 +682,12 @@ class CartManualView extends React.Component {
                   localStorage.removeItem("MANUAL_PAYMENT_TYPE")
                   localStorage.removeItem("MANUAL_PHONE_NUMBER")
                   localStorage.removeItem("MANUAL_SELECTED_PROMO")
+                  localStorage.removeItem("SHIPPERNOTES")
+                  localStorage.removeItem("SHIPPINGTYPE")
+                  localStorage.removeItem("SHIPPING_WITH_COURIER")
+                  localStorage.removeItem("FORMATTEDADDRESS")
+                  localStorage.removeItem("DISTRICT")
+                  localStorage.removeItem("CITY")
                   Cookies.remove("MANUAL_NOTMATCHPROMO")
                   Cookies.remove("MANUAL_TOTALPAYMENT")
                   Cookies.remove("SHIPMENTDATETYPE")
@@ -708,6 +720,12 @@ class CartManualView extends React.Component {
                   localStorage.removeItem("MANUAL_PAYMENT_TYPE")
                   localStorage.removeItem("MANUAL_PHONE_NUMBER")
                   localStorage.removeItem("MANUAL_SELECTED_PROMO")
+                  localStorage.removeItem("SHIPPERNOTES")
+                  localStorage.removeItem("SHIPPINGTYPE")
+                  localStorage.removeItem("SHIPPING_WITH_COURIER")
+                  localStorage.removeItem("FORMATTEDADDRESS")
+                  localStorage.removeItem("DISTRICT")
+                  localStorage.removeItem("CITY")
                   Cookies.remove("MANUAL_NOTMATCHPROMO")
                   Cookies.remove("MANUAL_TOTALPAYMENT")
                   Cookies.remove("SHIPMENTDATETYPE")
@@ -739,6 +757,12 @@ class CartManualView extends React.Component {
                   localStorage.removeItem("MANUAL_PAYMENT_TYPE")
                   localStorage.removeItem("MANUAL_PHONE_NUMBER")
                   localStorage.removeItem("MANUAL_SELECTED_PROMO")
+                  localStorage.removeItem("SHIPPERNOTES")
+                  localStorage.removeItem("SHIPPINGTYPE")
+                  localStorage.removeItem("SHIPPING_WITH_COURIER")
+                  localStorage.removeItem("FORMATTEDADDRESS")
+                  localStorage.removeItem("DISTRICT")
+                  localStorage.removeItem("CITY")
                   Cookies.remove("MANUAL_NOTMATCHPROMO")
                   Cookies.remove("MANUAL_TOTALPAYMENT")
                   Cookies.remove("SHIPMENTDATETYPE")
@@ -1032,12 +1056,38 @@ class CartManualView extends React.Component {
 
         this.props.InsurancePrice(finalNumber);
         this.props.InsuranceCheckbox(e.target.checked);
+        if (JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))) {
+          let shipmentWithCourier = JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))
+          let shippingWithCourier = {
+            shippingName: shipmentWithCourier.shippingName,
+            shippingPrice: shipmentWithCourier.shippingPrice,
+            shippingDesc: shipmentWithCourier.shippingDesc,
+            courierServiceType: shipmentWithCourier.courierServiceType,
+            shippingCode: shipmentWithCourier.shippingCode,
+            insuranceCheckbox: e.target.checked,
+            insurancePrice: finalNumber
+          }
+          localStorage.setItem("SHIPPING_WITH_COURIER", JSON.stringify(shippingWithCourier))
+        }
       } else {
         this.setState({ insurancePrice: 0});
         this.setState({ insuranceCheckbox: e.target.checked });
 
         this.props.InsurancePrice(0);
         this.props.InsuranceCheckbox(e.target.checked);
+        if (JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))) {
+          let shipmentWithCourier = JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))
+          let shippingWithCourier = {
+            shippingName: shipmentWithCourier.shippingName,
+            shippingPrice: shipmentWithCourier.shippingPrice,
+            shippingDesc: shipmentWithCourier.shippingDesc,
+            courierServiceType: shipmentWithCourier.courierServiceType,
+            shippingCode: shipmentWithCourier.shippingCode,
+            insuranceCheckbox: e.target.checked,
+            insurancePrice: 0
+          }
+          localStorage.setItem("SHIPPING_WITH_COURIER", JSON.stringify(shippingWithCourier))
+        }
       }
     }
 

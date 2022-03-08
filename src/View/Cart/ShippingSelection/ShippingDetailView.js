@@ -48,6 +48,16 @@ const ShippingDetailView = () => {
     }, [courierList])
 
     const handleSave = () => {
+        let shippingWithCourier = {
+            shippingName: courierName,
+            shippingPrice: courierPrice,
+            shippingDesc: courierDesc,
+            courierServiceType: courierService,
+            shippingCode: courierCode,
+            insuranceCheckbox: false,
+            insurancePrice: 0
+        }
+        localStorage.setItem("SHIPPING_WITH_COURIER", JSON.stringify(shippingWithCourier))
         dispatch({ type: 'SHIPPINGNAME', payload: courierName });
         dispatch({ type: 'SHIPPINGPRICE', payload: courierPrice });
         dispatch({ type: 'SHIPPINGDESC', payload: courierDesc });
