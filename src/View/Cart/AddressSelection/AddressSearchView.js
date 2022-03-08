@@ -61,12 +61,14 @@ const AddressSearchView = () => {
                         }
                         if(res.types[0] == "administrative_area_level_3") {
                             dispatch({ type: 'DISTRICT', payload: res.short_name })
+                            localStorage.setItem("DISTRICT", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "postal_code") {
                             dispatch({ type: 'POSTALCODE', payload: res.short_name })
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             dispatch({ type: 'CITY', payload: res.short_name })
+                            localStorage.setItem("CITY", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             dispatch({ type: 'PROVINCE', payload: res.short_name })
@@ -74,7 +76,7 @@ const AddressSearchView = () => {
                     })
 
                     dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address.split(",")[0] })
-                    // dispatch({ type: 'FORMATTEDADDRESS', payload: CartRedu.streetName + " " + CartRedu.streetNumber })
+                    localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(results[0].formatted_address.split(",")[0]))
                     dispatch({ type: 'CENTER', payload: [CartRedu.lat, CartRedu.lng] })
                     dispatch({ type: 'SEARCHINPUT', payload: results[0].formatted_address })
                 } else {

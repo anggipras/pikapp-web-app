@@ -1,7 +1,21 @@
 import React from "react";
 import CartManualView from "../View/Cart/CartManualView";
 import { connect } from "react-redux";
-import { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber, ShippingDateType, ShippingDate, CustomerName, CustomerPhoneNumber } from '../Redux/Actions'
+import { 
+  ReMapPickupType, 
+  ReMapPaymentType, 
+  OvoPhoneNumber, 
+  ShippingDateType, 
+  ShippingDate, 
+  CustomerName, 
+  CustomerPhoneNumber,
+  ShipmentTypeDelivery,
+  ShipmentNotesDelivery,
+  FormattedAddress,
+  District,
+  City,
+  ShipmentWithCourier 
+} from '../Redux/Actions'
 import Cookies from "js-cookie";
 
 class CartManualLayout extends React.Component {
@@ -73,10 +87,63 @@ class CartManualLayout extends React.Component {
       this.props.ShippingDate(shipmentDate)
     }
 
+    // Delivery Option Selected
+    if (JSON.parse(localStorage.getItem("SHIPPINGTYPE"))) {
+      let shippingType = JSON.parse(localStorage.getItem("SHIPPINGTYPE"))
+      this.props.ShipmentTypeDelivery(shippingType)
+    }
+
+    if (JSON.parse(localStorage.getItem("SHIPPERNOTES"))) {
+      let shippingNotes = JSON.parse(localStorage.getItem("SHIPPERNOTES"))
+      this.props.ShipmentNotesDelivery(shippingNotes)
+    }
+
+    if (JSON.parse(localStorage.getItem("FORMATTEDADDRESS"))) {
+      let formattedAddress = JSON.parse(localStorage.getItem("FORMATTEDADDRESS"))
+      this.props.FormattedAddress(formattedAddress)
+    }
+
+    if (JSON.parse(localStorage.getItem("DISTRICT"))) {
+      let district = JSON.parse(localStorage.getItem("DISTRICT"))
+      this.props.District(district)
+    }
+
+    if (JSON.parse(localStorage.getItem("CITY"))) {
+      let city = JSON.parse(localStorage.getItem("CITY"))
+      this.props.City(city)
+    }
+
+    if (JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))) {
+      let shipmentWithCourier = JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))
+      this.props.ShipmentWithCourier(
+        shipmentWithCourier.shippingName,
+        shipmentWithCourier.shippingPrice,
+        shipmentWithCourier.shippingDesc,
+        shipmentWithCourier.courierServiceType,
+        shipmentWithCourier.shippingCode,
+        shipmentWithCourier.insuranceCheckbox,
+        shipmentWithCourier.insurancePrice,
+        )
+    }
+
     return (
       <CartManualView selectedPromo={getSelectedPromo} notMatchPromo={matchPromoCaseValue} />
     );
   }
 }
 
-export default connect(null, { ReMapPickupType, ReMapPaymentType, OvoPhoneNumber, ShippingDateType, ShippingDate, CustomerName, CustomerPhoneNumber })(CartManualLayout)
+export default connect(null, { 
+  ReMapPickupType, 
+  ReMapPaymentType, 
+  OvoPhoneNumber, 
+  ShippingDateType, 
+  ShippingDate, 
+  CustomerName, 
+  CustomerPhoneNumber,
+  ShipmentTypeDelivery,
+  ShipmentNotesDelivery,
+  FormattedAddress,
+  District,
+  City,
+  ShipmentWithCourier
+})(CartManualLayout)

@@ -263,3 +263,31 @@ export const ShippingDate = (data) => {
         payload: data
     }
 }
+
+// Delivery Option Selected
+export const ShipmentTypeDelivery = (data) => {
+    return {
+        type: 'SHIPPINGTYPE',
+        payload: data
+    }
+}
+
+export const ShipmentNotesDelivery = (data) => {
+    return {
+        type: 'SHIPPERNOTES',
+        payload: data
+    }
+}
+
+export const ShipmentWithCourier = (shippingName, shippingPrice, shippingDesc, courierServiceType, shippingCode, insuranceCheckbox, insurancePrice) => {
+    return {
+        type: 'SHIPPINGWITHCOURIER',
+        shippingName, 
+        shippingPrice, 
+        shippingDesc, 
+        courierServiceType, 
+        shippingCode, 
+        insuranceCheckbox, 
+        insurancePrice
+    }
+}

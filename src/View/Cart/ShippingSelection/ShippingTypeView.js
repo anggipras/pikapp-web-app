@@ -106,7 +106,6 @@ const ShippingTypeView = () => {
                 })
     
                 setShippingList(response);
-                console.log(response);
             } else {
                 setNoDataCourier(true);
             }
@@ -122,6 +121,7 @@ const ShippingTypeView = () => {
 
     const handleSave = (shippingtype, courier) => {
         dispatch({ type: 'SHIPPINGTYPE', payload: shippingtype })
+        localStorage.setItem("SHIPPINGTYPE", JSON.stringify(shippingtype))
         dispatch({ type: 'COURIERLIST', payload: courier })
         history.push('./detail')
     }
@@ -129,6 +129,7 @@ const ShippingTypeView = () => {
     const goBack = () => {
         if(CartRedu.shippingName === "") {
             dispatch({ type: 'SHIPPINGTYPE', payload: "" })
+            localStorage.setItem("SHIPPINGTYPE", JSON.stringify(""))
         }
         window.history.go(-1)
     }

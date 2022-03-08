@@ -118,6 +118,15 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, insuranceCheckbox: action.payload }
         case "INSURANCEPRICE":
             return { ...state, insurancePrice: action.payload }
+        case "SHIPPINGWITHCOURIER":
+            return { ...state, 
+                shippingName: action.shippingName, 
+                shippingPrice: action.shippingPrice,
+                shippingDesc: action.shippingDesc,
+                courierServiceType: action.courierServiceType,
+                shippingCode: action.shippingCode,
+                insuranceCheckbox: action.insuranceCheckbox,
+                insurancePrice: action.insurancePrice }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:
