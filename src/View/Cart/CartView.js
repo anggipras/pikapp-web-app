@@ -12,6 +12,7 @@ import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
 import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
+import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
 import CartModal from "../../Component/Modal/CartModal";
 import CartCancelModal from "../../Component/Modal/CartCancel";
 import { cart } from "../../App";
@@ -129,12 +130,13 @@ class CartView extends React.Component {
         )
       }
     ],
+    merchantHourStatus: null, // OPEN OR CLOSE
+    merchantHourOpenTime: null, // ex: 10:00
+    merchantHourGracePeriod: null // ex: 30
   };
 
   componentDidMount() {
     firebaseAnalytics.logEvent("cart_visited")
-    this.sendTracking();
-
     this.sendTracking();
 
     phoneNumber = this.state.phoneNumberState
@@ -150,6 +152,29 @@ class CartView extends React.Component {
     } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
       this.setState({ startTour : true});
     }
+
+    let uuid = uuidV4();
+    uuid = uuid.replace(/-/g, "");
+    const date = new Date().toISOString();
+    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+    Axios(address + "merchant/v1/shop/status/", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-request-id": uuid,
+        "x-request-timestamp": date,
+        "x-client-id": clientId,
+        "token": "PUBLIC",
+        "mid": selectedMerchant[0].mid,
+      },
+      method: "GET"
+    }).then((shopStatusRes) => {
+      let merchantHourCheckingResult = shopStatusRes.data.results
+      this.setState({ 
+        merchantHourStatus: merchantHourCheckingResult.merchant_status, 
+        merchantHourOpenTime: merchantHourCheckingResult.open_time, 
+        merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining
+        })
+    }).catch((err) => console.log(err))
   }
 
   componentDidUpdate() {
@@ -919,6 +944,29 @@ class CartView extends React.Component {
     });
   }
 
+  merchantHourStatusWarning = () => {
+    if (this.state.merchantHourStatus == "CLOSE") {
+      return (
+        <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+          <img className="cart-merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+          <div className="cart-merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourOpenTime} WIB</div>
+        </div>
+      )
+    } else if (this.state.merchantHourStatus == "OPEN") {
+      if (this.state.merchantHourGracePeriod <= 30) {
+        return (
+          <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+            <div className="cart-merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+          </div>
+        )
+      } else {
+        return null
+      }
+    } else {
+      return null
+    }
+  }
+
   render() {
     if (this.state.loadButton) {
       return <Redirect to='/orderconfirmation' />
@@ -1111,6 +1159,7 @@ class CartView extends React.Component {
             </span>
             <div className='confirmationOrder'>Pesanan Anda</div>
           </div>
+          {this.merchantHourStatusWarning()}
 
           {
             this.state.notMatchPromo ?
