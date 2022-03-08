@@ -125,7 +125,8 @@ function App() {
             <Route path="/cartmanual/payment" component={PaymentMethodView} />
             <Route path="/cartmanual" component={() => <CartManualLayout />} />
             <Route path="/tracking" component={() => <TrackingDeliveryLayout />} />
-            <Route exact path="/:username" component={ManualTxn} />
+            {/* <Route exact path="/:username" component={ManualTxn} /> */}
+            <Route exact path="/:username" component={(props) => <ProductLayout {...props}/>} />
             <Route path="/" component={() => <StoreLayout />} />
         </Switch>
     )

@@ -35,6 +35,7 @@ import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
+import { withRouter } from 'react-router-dom';
 
 var currentExt = {
   detailCategory: [
@@ -66,6 +67,7 @@ class ProductView extends React.Component {
     isLogin: false,
     data: {
       mid: "",
+      username : "",
       title: "",
       image: "",
       logo: "",
@@ -186,7 +188,7 @@ class ProductView extends React.Component {
     } else {
       // this.setState({ isManualTxn : true });
       // mid = value.username;
-      username = value.username;
+      username = this.props.match.params.username;
     }
 
     this.sendTracking(mid);
@@ -228,8 +230,10 @@ class ProductView extends React.Component {
     })
       .then((res) => {
         // console.log(res.data.results);
+        res.data.results.username = username;
         var currentMerchant = {
           mid: "",
+          username: "",
           storeName: "",
           storeDesc: "",
           distance: "",
@@ -241,6 +245,7 @@ class ProductView extends React.Component {
           storeCateg: []
         };
         currentMerchant.mid = res.data.results.mid;
+        currentMerchant.username = username;
         currentMerchant.storeName = res.data.results.merchant_name;
         currentMerchant.storeDesc = "Desc";
         currentMerchant.distance = res.data.results.merchant_distance;
@@ -261,6 +266,7 @@ class ProductView extends React.Component {
 
         let stateData = { ...this.state.data };
         stateData.mid = currentMerchant.mid;
+        stateData.username = currentMerchant.username;
         stateData.title = currentMerchant.storeName;
         stateData.image = currentMerchant.storeImage;
         stateData.logo = currentMerchant.storeLogo;
@@ -1652,4 +1658,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { ValidQty, OpenSelect, IsManualTxn })(ProductView)
+export default withRouter(connect(Mapstatetoprops, { ValidQty, OpenSelect, IsManualTxn })(ProductView))

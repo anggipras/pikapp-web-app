@@ -359,7 +359,7 @@ class CartManualView extends React.Component {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
           // window.history.back()
-          window.location.href = '/store?username=' + selectedMerchant[0].mid;
+          window.location.href = '/' + selectedMerchant[0].username;
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -369,7 +369,7 @@ class CartManualView extends React.Component {
             this.setState({ updateData: 'updated' })
           } else {
             // window.history.back()
-            window.location.href = '/store?username=' + selectedMerchant[0].mid;
+            window.location.href = '/' + selectedMerchant[0].username;
           }
         }
       }
@@ -1029,7 +1029,7 @@ class CartManualView extends React.Component {
       if (filterCart.length === 0) {
         // window.history.go(-1)
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
-        window.location.href = '/store?username=' + selectedMerchant[0].mid;
+        window.location.href = '/' + selectedMerchant[0].username;
       } else {
         if (this.state.changeUI) {
           this.setState({ changeUI: false })
