@@ -149,6 +149,16 @@ class OrderConfirmationView extends React.Component {
         }
     }
 
+    componentWillMount() {
+        // client.onopen = () => {
+        //     console.log('WebSocket Client Connected');
+        // };
+        // client.onmessage = (message) => {
+        //     let dataFromServer = JSON.parse(message.data);
+        //     console.log(dataFromServer);
+        // };
+    }
+
     backToHome = () => {
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
         let noTable = localStorage.getItem('table');
