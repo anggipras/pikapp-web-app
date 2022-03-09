@@ -102,7 +102,6 @@ function App() {
             <Route path="/store" component={() => <ProductLayout />} />
             <Route exact path="/merchant-profile" component={MerchantDetailProfile} />
             <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
-            {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
             <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
             <Route exact path="/promo" component={PromoView} />
             <Route path="/profile" component={() => <ProfileLayout />} />

@@ -190,29 +190,16 @@ class ProductView extends React.Component {
     var notab = "";
     var username = "";
     if(value.mid) {
-      // this.setState({ isManualTxn : false });
       mid = value.mid;
       notab = value.table || ""
     } else {
-      // this.setState({ isManualTxn : true });
       username = this.props.match.params.username;
     }
 
     this.sendTracking(mid);
     this.getLinkTree(username);
 
-    // let longlatAddress
     let addressRoute
-    // if (JSON.parse(localStorage.getItem('longlat'))) {
-    //   longlatAddress = JSON.parse(localStorage.getItem('longlat'))
-    //   addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
-    // }
-    // if (navigator.geolocation) { //SHUTDOWN FOR A WHILE
-    //   navigator.geolocation.getCurrentPosition(position => {
-    //     let latitude = position.coords.latitude
-    //     let longitude = position.coords.longitude
-    //   })
-    // }
     let latitude = -6.28862
     let longitude = 106.71789
     let longlat = { lat: latitude, lon: longitude }
@@ -236,7 +223,6 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        // console.log(res.data.results);
         res.data.results.username = username;
         var currentMerchant = {
           mid: "",
@@ -402,9 +388,7 @@ class ProductView extends React.Component {
           },
           method: "GET"
         }).then((shopStatusRes) => {
-          // console.log(shopStatusRes.data.results);
           let merchantHourCheckingResult = shopStatusRes.data.results
-
           this.setState({ 
             merchantHourStatus: merchantHourCheckingResult.merchant_status, 
             merchantHourOpenTime: merchantHourCheckingResult.open_time, 
@@ -653,7 +637,6 @@ class ProductView extends React.Component {
   handleAddCart = () => {
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
-    // const mid = value.mid;
     const mid = this.state.data.mid;
     this.setModal(false);
     var isStorePresent = false;
@@ -906,16 +889,6 @@ class ProductView extends React.Component {
       showConfirmButton: false,
       timer: 1500
     })
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
 
     let newNotes = ''
     currentExt.listcheckbox.forEach(val => {
@@ -983,11 +956,7 @@ class ProductView extends React.Component {
   }
 
   stopAndLoadMore = (ind) => {
-    // console.log(ind);
-    // console.log(this.state.idCateg[ind]);
-    // console.log(this.state.productPage[ind]);
     if (this.state.productCategpersize[ind].category_products.length < this.state.allProductsandCategories[ind].category_products.length) {
-      // console.log('testloadmore');
       var openidCateg = [...this.state.idCateg]
       openidCateg[ind] += this.state.size
 
@@ -996,7 +965,6 @@ class ProductView extends React.Component {
 
       this.setState({ idCateg: openidCateg, productPage: openproductPage, boolpage: true, choosenIndCateg: ind })
     } else {
-      // console.log('nambah');
       var num = this.state.counterLoad
       num++
       this.setState({ counterLoad: num, choosenIndCateg: ind })
@@ -1008,10 +976,7 @@ class ProductView extends React.Component {
     this.state.productCategpersize.forEach((val, ind) => {
       var wrappedElement = document.getElementById(ind)
       if (this.isBottom(wrappedElement)) {
-        // console.log(this.state.counterLoad, 'counterLoad');
-        // console.log(wrappedElement.id, 'wrap');
         if (wrappedElement.id == this.state.counterLoad) {
-          // console.log(ind, 'selected index');
           document.removeEventListener('scroll', this.loadMoreMerchant)
           this.stopAndLoadMore(ind)
         }
@@ -1236,10 +1201,8 @@ class ProductView extends React.Component {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
     localStorage.setItem('productTour', 0);
-    // if(this.props.AuthRedu.isMerchantQR === true) {
     localStorage.setItem('merchantFlow', 0);
     localStorage.setItem('storeTour', 0);
-    // }
   }
 
   hideFailedModal(isShow){
@@ -1274,7 +1237,6 @@ class ProductView extends React.Component {
       method: "GET",  
     })
     .then((res) => {
-      console.log(res.data.results);
       var linkData = [];
 
       res.data.results.forEach((data, index) => {
@@ -1312,7 +1274,6 @@ class ProductView extends React.Component {
   }
 
   goToExternalLink = (link) => {
-    // window.location.href = link;
     window.open(link, '_blank');
 
     let uuid = uuidV4();
@@ -1366,7 +1327,6 @@ class ProductView extends React.Component {
         productSize.forEach((categProd) => {
           dataSearch.forEach((allprod) => {
             if (categProd.category_id == String(allprod.category)) { 
-              // productPerCateg.push(allprod)
               categProd.category_products.push(allprod);
             }
             categoryId.push(categProd.category_id);
@@ -1413,8 +1373,6 @@ class ProductView extends React.Component {
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
 
-    // const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
-
     Axios(address + "home/v1/event/add", {
       headers: {
         "Content-Type": "application/json",
@@ -1431,7 +1389,7 @@ class ProductView extends React.Component {
       }
     })
     .then((res) => {
-      console.log(res.data.results);
+      console.log("SUCCEED");
     })
     .catch((err) => {
       console.log(err);
@@ -1560,13 +1518,10 @@ class ProductView extends React.Component {
         el.scrollIntoView(true);
 
         var heightHeader = 140;
-        // const y = el.getBoundingClientRect().top - 800;
-        // el.scrollIntoView({ top :y, block: "start", inline: "nearest", behavior: "smooth" })
 
         var scrollY = window.scrollY;
 
         if(scrollY) {
-          // window.scroll(0, scrollY - heightHeader);
           window.scroll({top: scrollY - heightHeader, left: 0, behavior: 'smooth' });
         }
 
@@ -1769,29 +1724,6 @@ class ProductView extends React.Component {
         <div className='merchant-section' style={{ backgroundColor: "white" }}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>
-              {/* <div className='select-category'>
-                <div className='listCategory'>
-                  <h2 className='categoryName'>{this.state.categName}</h2>
-
-                  <div className='arrow-based' onClick={() => this.changeMenu()} >
-                    <img className='arrowicon' src={ArrowIcon} alt='' />
-                  </div>
-                </div>
-
-                {
-                  this.props.AllRedu.openSelect ?
-                    <div className='custom-options'>
-                      <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
-                      {
-                        this.state.productCategpersize.map((menuCategory, index) => (
-                          <span key={index} className='custom-option' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
-                        ))
-                      }
-                    </div>
-                    :
-                    null
-                }
-              </div> */}
               <div className='merchantdetail-category-section'>
                 {
                   this.state.productCategpersize.map((menuCategory, index) => (

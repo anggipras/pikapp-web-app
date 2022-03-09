@@ -40,7 +40,6 @@ const ShippingTypeView = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        // setIsLoading(true);
         let allProduct = [];
         let currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"));
 
@@ -164,12 +163,6 @@ const ShippingTypeView = () => {
 
     return (
         <>  
-            {/* {
-                !isLoading ?
-                <Loader loaded={isLoading} options={options} className="spinner"/>
-                :
-                <></>
-            } */}
             <Loader loaded={isLoading} options={options} className="spinner"/>
             <div className="shippingSelection-layout">
                 <div className="shippingSelection-topSide">

@@ -48,8 +48,6 @@ const AddressSearchView = () => {
         const geocoder = new mapApi.Geocoder;
 
         geocoder.geocode({ 'location': { lat: CartRedu.lat, lng: CartRedu.lng } }, (results, status) => {
-            console.log(results);
-            console.log(status);
             if (status === 'OK') {
                 if (results[0]) {
                     results[0].address_components.map((res) => {

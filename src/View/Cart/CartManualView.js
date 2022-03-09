@@ -27,7 +27,6 @@ import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumbe
 import Loader from 'react-loader-spinner'
 import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-// import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig';
 import moment from "moment";
@@ -112,7 +111,6 @@ class CartManualView extends React.Component {
       indexEdit: 0,
       updateData: '',
       successMessage: '',
-      // isEmailVerified : false,
       isShowCounterTime : false,
       countHit : 0,
       counterTime : 120,
@@ -210,12 +208,6 @@ class CartManualView extends React.Component {
       } else {
         this.state.steptour.pop();
       }
-
-      // if (localStorage.getItem("cartTour") == 1) {
-      //   this.setState({ startTour : true});
-      // } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-      //   this.setState({ startTour : true});
-      // }
 
       if(this.props.CartRedu) {
 

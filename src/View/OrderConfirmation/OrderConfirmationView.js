@@ -90,7 +90,6 @@ class OrderConfirmationView extends React.Component {
             }
             this.setState({ dataOrder: this.props.AllRedu.dataOrder },
             () => {
-                // this.getStatusPaymentDineIn();
                 if(this.props.AuthRedu.isManualTxn) {
                     this.getStatusPaymentDelivery();
                 } else {
@@ -119,11 +118,8 @@ class OrderConfirmationView extends React.Component {
                 this.setState({ paymentImage: ShopeePayment });
             }
 
-            // var isManualTxn = localStorage.getItem("isManualTxn");
-
             this.setState({ dataOrder: dataPayment },
             () => {
-                // this.getStatusPaymentDineIn();
                 if(this.props.AuthRedu.isManualTxn) {
                     this.getStatusPaymentDelivery();
                 } else {
@@ -151,24 +147,6 @@ class OrderConfirmationView extends React.Component {
         } else {
             localStorage.setItem("counterPayment", this.state.counterTime);
         }
-
-        // if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
-        //     if(this.props.AuthRedu.isManualTxn) {
-        //         this.showResponsePaymentDelivery();
-        //     } else {
-        //         this.showResponsePaymentDineIn();
-        //     }
-        // }
-    }
-
-    componentWillMount() {
-        // client.onopen = () => {
-        //     console.log('WebSocket Client Connected');
-        // };
-        // client.onmessage = (message) => {
-        //     let dataFromServer = JSON.parse(message.data);
-        //     console.log(dataFromServer);
-        // };
     }
 
     backToHome = () => {
@@ -179,11 +157,9 @@ class OrderConfirmationView extends React.Component {
         } else {
             window.location.href = '/store?mid=' + selectedMerchant[0].mid + '&table=' + noTable.toString();
         }
-        // window.history.back()
     }
 
     goToStatus = () => {
-        // localStorage.setItem("counterPayment", this.state.counterTime);
         window.location.href = '/status';
     }
 
@@ -229,41 +205,38 @@ class OrderConfirmationView extends React.Component {
         // }
         // localStorage.setItem("responsePayment", JSON.stringify(res));
 
-        // setInterval(async () => {
-            let uuid = uuidV4();
-            uuid = uuid.replace(/-/g, "");
-            const date = new Date().toISOString();
-            Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-request-id": uuid,
-                    "x-request-timestamp": date,
-                    "x-client-id": clientId
-                },
-                method: "GET",
-            })
-                .then((res) => {
-                    console.log(res.data.results);
-                    var results = res.data.results;
-                    var resultModal = { ...this.currentModal }
-                    resultModal.transactionId = results.transaction_id
-                    resultModal.status = results.status
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId
+            },
+            method: "GET",
+        })
+            .then((res) => {
+                var results = res.data.results;
+                var resultModal = { ...this.currentModal }
+                resultModal.transactionId = results.transaction_id
+                resultModal.status = results.status
 
-                    if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
-                        this.setState({ isSubmit: true });
-                        this.setState({ showResponsePayment: true });
-                    } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
-                        this.setState({ isSubmit: true });
-                        this.setState({ showResponsePayment: false });
-                    }
+                if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                    this.setState({ isSubmit: true });
+                    this.setState({ showResponsePayment: true });
+                } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                    this.setState({ isSubmit: true });
+                    this.setState({ showResponsePayment: false });
+                }
 
-                    this.setState({
-                        currentModal: resultModal
-                    })
+                this.setState({
+                    currentModal: resultModal
                 })
-                .catch((err) => {
-                });
-        // }, 40000);
+            })
+            .catch((err) => {
+            });
     }
 
     countDown = () => {
@@ -331,7 +304,6 @@ class OrderConfirmationView extends React.Component {
     }
 
     copyTxnId = () => {
-        // window.clipboardData.setData("Text", this.state.dataOrder.transactionId);
         copy(this.state.dataOrder.transactionId, {
             debug: true,
             message: 'Transaction ID Copy to Clipboard',
@@ -352,7 +324,6 @@ class OrderConfirmationView extends React.Component {
             method: "GET",
         })
         .then((res) => {
-            console.log(res.data.results);
             var results = res.data.results;
             var resultModal = { ...this.currentModal }
             resultModal.transactionId = results.transaction_id
@@ -375,44 +346,42 @@ class OrderConfirmationView extends React.Component {
     }
 
     showResponsePaymentDelivery = () => {
-        // setInterval(async () => {
-            let uuid = uuidV4();
-            uuid = uuid.replace(/-/g, "");
-            const date = new Date().toISOString();
-            let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
-            Axios(historyTransAPI, {
-            headers: {
-                "Content-Type": "application/json",
-                "x-request-id": uuid,
-                "x-request-timestamp": date,
-                "x-client-id": clientId,
-                "invoice" : this.state.dataOrder.transactionId
-            },
-            method: "GET",
-            })
-            .then((res) => {
-                var results = res.data.results;
-                
-                var resultModal = { ...this.currentModal }
-                resultModal.transactionId = results.transaction_id
-                resultModal.status = results.payment_status
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
+        Axios(historyTransAPI, {
+        headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+            "invoice" : this.state.dataOrder.transactionId
+        },
+        method: "GET",
+        })
+        .then((res) => {
+            var results = res.data.results;
+            
+            var resultModal = { ...this.currentModal }
+            resultModal.transactionId = results.transaction_id
+            resultModal.status = results.payment_status
 
-                if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
-                    this.setState({ isSubmit: true });
-                    this.setState({ showResponsePayment: true });
-                } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
-                    this.setState({ isSubmit: true });
-                    this.setState({ showResponsePayment: false });
-                }
+            if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: true });
+            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: false });
+            }
 
-                this.setState({
-                    currentModal: resultModal
-                })
+            this.setState({
+                currentModal: resultModal
             })
-            .catch((err) => {
-                console.log(err);
-            });
-        // }, 40000);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     getStatusPaymentDelivery = () => {
@@ -497,19 +466,15 @@ class OrderConfirmationView extends React.Component {
                                             </div>
                                             <div className='menu-counter-order'>
                                                 {
-                                                // this.state.counterTime < 10 ?
-                                                //     <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
-                                                //     :
-                                                //     <span className="txtIndent"> 00 : {this.state.counterTime} </span>
-                                                <span className="txtIndent">
-                                                    {this.state.timerMinutes < 10
-                                                        ? `0${this.state.timerMinutes}`
-                                                        : this.state.timerMinutes}
-                                                    :
-                                                    {this.state.timerSeconds < 10
-                                                        ? `0${this.state.timerSeconds}`
-                                                        : this.state.timerSeconds}
-                                                </span>
+                                                    <span className="txtIndent">
+                                                        {this.state.timerMinutes < 10
+                                                            ? `0${this.state.timerMinutes}`
+                                                            : this.state.timerMinutes}
+                                                        :
+                                                        {this.state.timerSeconds < 10
+                                                            ? `0${this.state.timerSeconds}`
+                                                            : this.state.timerSeconds}
+                                                    </span>
                                                 }
                                             </div>
                                         </div>
@@ -542,7 +507,6 @@ class OrderConfirmationView extends React.Component {
                                                 <h3 className='order-transaction-words'>
                                                     {this.state.dataOrder.transactionId}
                                                 </h3>
-                                                {/* <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => {navigator.clipboard.writeText(this.state.dataOrder.transactionId)}}></img> */}
                                                 <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => this.copyTxnId()}></img>
                                             </div>
                                         </div>
@@ -608,7 +572,6 @@ class OrderConfirmationView extends React.Component {
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -636,7 +599,6 @@ class OrderConfirmationView extends React.Component {
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -676,11 +638,6 @@ class OrderConfirmationView extends React.Component {
                                             </div>
                                             <div className='menu-counter-order'>
                                                 {
-                                                    // this.state.counterTime < 10 ?
-                                                    //     <span className="txtIndent"> 00 : 0{this.state.counterTime} </span>
-                                                    //     :
-                                                    //     <span className="txtIndent"> 00 : {this.state.counterTime} </span>
-
                                                     <span className="txtIndent">
                                                         {this.state.timerMinutes < 10
                                                         ? `0${this.state.timerMinutes}`
@@ -721,7 +678,6 @@ class OrderConfirmationView extends React.Component {
                                                 <h3 className='order-transaction-words'>
                                                     {this.state.dataOrder.transactionId}
                                                 </h3>
-                                                {/* <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => {navigator.clipboard.writeText(this.state.dataOrder.transactionId)}}></img> */}
                                                 <img className='order-transaction-copyicon' src={CopyIcon} onClick={() => this.copyTxnId()}></img>
                                             </div>
                                         </div>
@@ -787,7 +743,6 @@ class OrderConfirmationView extends React.Component {
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -814,7 +769,6 @@ class OrderConfirmationView extends React.Component {
                                                     {
                                                         this.props.AuthRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
-                                                        {/* <Link to={"/status"} style={{ textDecoration: "none" }} className="submitButton-order"> */}
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
