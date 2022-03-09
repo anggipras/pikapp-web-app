@@ -58,6 +58,7 @@ class OrderConfirmationView extends React.Component {
         }
 
         let counter = localStorage.getItem("counterPayment");
+        this.props.IsManualTxn(JSON.parse(localStorage.getItem("isManualTxn")));
 
         if (localStorage.getItem("counterPayment")) {
             if (counter != 0) {
