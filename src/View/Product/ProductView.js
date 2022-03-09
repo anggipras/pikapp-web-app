@@ -35,6 +35,7 @@ import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
+import { withRouter } from 'react-router-dom';
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
@@ -69,6 +70,7 @@ class ProductView extends React.Component {
     isLogin: false,
     data: {
       mid: "",
+      username : "",
       title: "",
       image: "",
       logo: "",
@@ -154,7 +156,9 @@ class ProductView extends React.Component {
     hiddenBanner : false,
     merchantHourStatus: null, // OPEN OR CLOSE
     merchantHourOpenTime: null, // ex: 10:00
-    merchantHourGracePeriod: null // ex: 30
+    merchantHourGracePeriod: null, // ex: 30
+    merchantHourNextOpenDay: null, // ex: Sunday
+    merchantHourNextOpenTime: null // ex: 10:00
   };
 
   timeout = null
@@ -191,7 +195,7 @@ class ProductView extends React.Component {
       notab = value.table || ""
     } else {
       // this.setState({ isManualTxn : true });
-      username = value.username;
+      username = this.props.match.params.username;
     }
 
     this.sendTracking(mid);
@@ -233,8 +237,10 @@ class ProductView extends React.Component {
     })
       .then((res) => {
         // console.log(res.data.results);
+        res.data.results.username = username;
         var currentMerchant = {
           mid: "",
+          username: "",
           storeName: "",
           storeDesc: "",
           distance: "",
@@ -246,6 +252,7 @@ class ProductView extends React.Component {
           storeCateg: []
         };
         currentMerchant.mid = res.data.results.mid;
+        currentMerchant.username = username;
         currentMerchant.storeName = res.data.results.merchant_name;
         currentMerchant.storeDesc = "Desc";
         currentMerchant.distance = res.data.results.merchant_distance;
@@ -266,6 +273,7 @@ class ProductView extends React.Component {
 
         let stateData = { ...this.state.data };
         stateData.mid = currentMerchant.mid;
+        stateData.username = currentMerchant.username;
         stateData.title = currentMerchant.storeName;
         stateData.image = currentMerchant.storeImage;
         stateData.logo = currentMerchant.storeLogo;
@@ -400,7 +408,9 @@ class ProductView extends React.Component {
           this.setState({ 
             merchantHourStatus: merchantHourCheckingResult.merchant_status, 
             merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-            merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining
+            merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
+            merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
+            merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time
            })
           this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
           this.setState({ productCategpersizeOri : this.state.productCategpersize });
@@ -1430,12 +1440,33 @@ class ProductView extends React.Component {
 
   merchantHourStatusWarning = () => {
     if (this.state.merchantHourStatus == "CLOSE") {
-      return (
-        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-          <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourOpenTime} WIB</div>
-        </div>
-      )
+      const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+      let nowDate = new Date()
+      if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
+          </div>
+        )
+      } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+          </div>
+        )
+      } else {
+        let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
+        let finalNextOpenDay = weekdayId[nextOpenDay]
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+          </div>
+        )
+      }
     } else if (this.state.merchantHourStatus == "OPEN") {
       if (this.state.merchantHourGracePeriod <= 30) {
         return (
@@ -1812,4 +1843,4 @@ const Mapstatetoprops = (state) => {
   }
 }
 
-export default connect(Mapstatetoprops, { ValidQty, OpenSelect, IsManualTxn })(ProductView)
+export default withRouter(connect(Mapstatetoprops, { ValidQty, OpenSelect, IsManualTxn })(ProductView))
