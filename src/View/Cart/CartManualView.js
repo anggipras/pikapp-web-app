@@ -506,278 +506,292 @@ class CartManualView extends React.Component {
       }).then((shopStatusRes) => {
         let merchantHourCheckingResult = shopStatusRes.data.results
         if (merchantHourCheckingResult.minutes_remaining < "2") {
-          this.setState({ cancelCartModal: true })
+          if (this.state.cartReduData.shippingDateType == 1) {
+            this.paymentProcess()
+          } else {
+            this.setState({ cancelCartModal: true })
+          }
+        } else if(merchantHourCheckingResult.minutes_remaining < "31") {
+          if (this.state.cartReduData.shippingDateType == 1) {
+            this.paymentProcess()
+          } else {
+            this.setState({ cancelCartModal: true })
+          }
         } else {
-          this.props.LoadingButton()
-          const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-          let storageData = JSON.parse(localStorage.getItem('cart'))
-          let noTab = this.props.noTable ? this.props.noTable : 0
-          let allMenu = storageData.filter(filterCart => {
-            return filterCart.mid === currentCartMerchant.mid
-          })
-          let selectedProd = []
-      
-          allMenu[0].food.forEach(selectMenu => {
-            let newlistArr = ''
-            let extraprice = 0
-            selectMenu.foodListCheckbox.forEach((val) => {
-              val.forEach((val2) => {
-                newlistArr += `${val2.name}, `
-                extraprice += val2.price
-              })
-            })
-      
-            selectMenu.foodListRadio.forEach((val) => {
-              val.forEach((val2) => {
-                newlistArr += `${val2.name}, `
-                extraprice += val2.price
-              })
-            })
-      
-            newlistArr += selectMenu.foodNote
-            extraprice = extraprice.toString()
-      
-            selectedProd.push({
-              product_id: selectMenu.productId,
-              product_name: selectMenu.foodName,
-              product_price: Number(selectMenu.foodPrice),
-              notes: newlistArr,
-              quantity: selectMenu.foodAmount,
-              discount: 0,
-              extra_price: Number(extraprice),
-              extra_menus: [],
-            })
-          })
-      
-          let newDate = new Date().getTime()
-          let expiryDate = ''
-          if (this.state.paymentType === 'PAY_BY_CASHIER') {
-            newDate += 1800000
-            phoneNumber = ''
-          } else if (this.state.paymentType === 'WALLET_OVO') {
-            newDate += 60000
-          } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
-            newDate += 600000
-          }
-          expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
-
-          let customerInfo = {
-            customer_name: this.state.customerName,
-            customer_address: this.state.cartReduData.fullAddress,
-            customer_address_detail: this.state.cartReduData.shipperNotes,
-            customer_phone_number: "0" + this.state.customerPhoneNumber,
-            latitude: this.state.cartReduData.lat,
-            longitude: this.state.cartReduData.lng,
-            subdistrict_name: this.state.cartReduData.district,
-            city: this.state.cartReduData.city,
-            province: this.state.cartReduData.province,
-            postal_code: this.state.cartReduData.postalCode,
-          }
-
-          let pickupType = ''
-          let shipperName = ''
-          let shipperType = ''
-          let shipperCategoryType = ''
-          let shipperPrice = 0
-
-          if(this.state.cartReduData.pickupType === 0) {
-            pickupType = "PICKUP";
-            shipperName = "Pickup Sendiri";
-            shipperPrice = 0;
-            shipperType = "";
-            shipperCategoryType = "";
-            customerInfo.customer_address = "";
-            customerInfo.customer_address_detail = "";
-            customerInfo.latitude = 0;
-            customerInfo.longitude = 0;
-            customerInfo.subdistrict_name = "";
-            customerInfo.city = "";
-            customerInfo.province = "";
-            customerInfo.postal_code = "";
-          } else {
-            pickupType = "DELIVERY";
-            shipperName = this.state.cartReduData.shippingCode;
-            shipperPrice = this.state.cartReduData.shippingPrice;
-            shipperType = this.state.cartReduData.courierServiceType;
-            shipperCategoryType = this.state.cartReduData.shippingType;
-          }
-
-          let shippingTime = '';
-          let shippingType = '';
-
-          if(this.state.cartReduData.shippingDateType === 0) {
-            shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
-            shippingType = "NOW";
-          } else {
-            shippingTime = moment(new Date(this.state.cartReduData.shippingDate)).format("yyyy-MM-DD HH:mm:ss");
-            shippingType = "CUSTOM";
-          }
-
-          let shippingMethod = {
-            shipping_method: shipperName,
-            shipping_cost: shipperPrice,
-            shipping_time: shippingTime,
-            shipping_time_type: shippingType,
-            shipping_insurance: this.state.insurancePrice,
-            shipping_service_type: shipperType,
-            shipping_service_type_category: shipperCategoryType
-          }
-
-          let totalPayment = finalProduct[0].totalPrice + Number(shipperPrice)
-      
-          var requestData = {
-            products: selectedProd,
-            shipping : shippingMethod,
-            customer : customerInfo,
-            mid: currentCartMerchant.mid,
-            order_type: pickupType,
-            order_platform: "PIKAPP",
-            total_product_price: finalProduct[0].totalPrice,
-            payment_method: this.state.paymentType,
-            billing_phone_number: this.state.cartReduData.phoneNumber,
-            order_status: "OPEN",
-            total_discount: 0,
-            total_payment: totalPayment + this.state.insurancePrice,
-            expiry_date: expiryDate
-          }
-        
-          let uuid = uuidV4();
-          uuid = uuid.replace(/-/g, "");
-          const date = new Date().toISOString();
-          
-          Axios(address + "pos/v2/web/transaction/add/", {
-            headers: {
-              "Content-Type": "application/json",
-              "x-request-id": uuid,
-              "x-request-timestamp": date,
-              "x-client-id": clientId,
-            },
-            method: "POST",
-            data: requestData,
-          })
-            .then((res) => {
-              if(this.state.paymentType === 'WALLET_OVO') {
-                this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.total_payment,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  localStorage.removeItem("SHIPMENT_TYPE")
-                  localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-                  localStorage.removeItem("MANUAL_PHONE_NUMBER")
-                  localStorage.removeItem("MANUAL_SELECTED_PROMO")
-                  localStorage.removeItem("SHIPPERNOTES")
-                  localStorage.removeItem("SHIPPINGTYPE")
-                  localStorage.removeItem("SHIPPING_WITH_COURIER")
-                  localStorage.removeItem("FORMATTEDADDRESS")
-                  localStorage.removeItem("DISTRICT")
-                  localStorage.removeItem("CITY")
-                  Cookies.remove("MANUAL_NOTMATCHPROMO")
-                  Cookies.remove("MANUAL_TOTALPAYMENT")
-                  Cookies.remove("SHIPMENTDATETYPE")
-                  Cookies.remove("SHIPMENTDATE")
-                  Cookies.remove("MANUAL_CUSTOMER_NAME")
-                  Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
-                  this.setState({ loadButton: true })
-                  this.props.DoneLoad()
-                }, 1000);
-              }
-              else if(this.state.paymentType === 'WALLET_DANA') {
-                this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.total_payment,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  localStorage.removeItem("SHIPMENT_TYPE")
-                  localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-                  localStorage.removeItem("MANUAL_PHONE_NUMBER")
-                  localStorage.removeItem("MANUAL_SELECTED_PROMO")
-                  localStorage.removeItem("SHIPPERNOTES")
-                  localStorage.removeItem("SHIPPINGTYPE")
-                  localStorage.removeItem("SHIPPING_WITH_COURIER")
-                  localStorage.removeItem("FORMATTEDADDRESS")
-                  localStorage.removeItem("DISTRICT")
-                  localStorage.removeItem("CITY")
-                  Cookies.remove("MANUAL_NOTMATCHPROMO")
-                  Cookies.remove("MANUAL_TOTALPAYMENT")
-                  Cookies.remove("SHIPMENTDATETYPE")
-                  Cookies.remove("SHIPMENTDATE")
-                  Cookies.remove("MANUAL_CUSTOMER_NAME")
-                  Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
-                  window.location.href = res.data.results[0].checkout_url_mobile;
-                }, 1000);
-              }
-              else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-                this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.total_payment,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  localStorage.removeItem("SHIPMENT_TYPE")
-                  localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-                  localStorage.removeItem("MANUAL_PHONE_NUMBER")
-                  localStorage.removeItem("MANUAL_SELECTED_PROMO")
-                  localStorage.removeItem("SHIPPERNOTES")
-                  localStorage.removeItem("SHIPPINGTYPE")
-                  localStorage.removeItem("SHIPPING_WITH_COURIER")
-                  localStorage.removeItem("FORMATTEDADDRESS")
-                  localStorage.removeItem("DISTRICT")
-                  localStorage.removeItem("CITY")
-                  Cookies.remove("MANUAL_NOTMATCHPROMO")
-                  Cookies.remove("MANUAL_TOTALPAYMENT")
-                  Cookies.remove("SHIPMENTDATETYPE")
-                  Cookies.remove("SHIPMENTDATE")
-                  Cookies.remove("MANUAL_CUSTOMER_NAME")
-                  Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
-                  window.location.assign(res.data.results[0].checkout_url_deeplink);
-                }, 1000);
-              }
-            })
-            .catch((err) => {
-              if (err.response.data !== undefined) {
-                alert(err.response.data.err_message)
-                this.props.DoneLoad()
-              }
-            });
+          this.paymentProcess()
         }
       }).catch((err) => console.log(err))
     };
+
+    paymentProcess = () => {
+      this.props.LoadingButton()
+      const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+      let storageData = JSON.parse(localStorage.getItem('cart'))
+      let noTab = this.props.noTable ? this.props.noTable : 0
+      let allMenu = storageData.filter(filterCart => {
+        return filterCart.mid === currentCartMerchant.mid
+      })
+      let selectedProd = []
+  
+      allMenu[0].food.forEach(selectMenu => {
+        let newlistArr = ''
+        let extraprice = 0
+        selectMenu.foodListCheckbox.forEach((val) => {
+          val.forEach((val2) => {
+            newlistArr += `${val2.name}, `
+            extraprice += val2.price
+          })
+        })
+  
+        selectMenu.foodListRadio.forEach((val) => {
+          val.forEach((val2) => {
+            newlistArr += `${val2.name}, `
+            extraprice += val2.price
+          })
+        })
+  
+        newlistArr += selectMenu.foodNote
+        extraprice = extraprice.toString()
+  
+        selectedProd.push({
+          product_id: selectMenu.productId,
+          product_name: selectMenu.foodName,
+          product_price: Number(selectMenu.foodPrice),
+          notes: newlistArr,
+          quantity: selectMenu.foodAmount,
+          discount: 0,
+          extra_price: Number(extraprice),
+          extra_menus: [],
+        })
+      })
+  
+      let newDate = new Date().getTime()
+      let expiryDate = ''
+      if (this.state.paymentType === 'PAY_BY_CASHIER') {
+        newDate += 1800000
+        phoneNumber = ''
+      } else if (this.state.paymentType === 'WALLET_OVO') {
+        newDate += 60000
+      } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
+        newDate += 600000
+      }
+      expiryDate = moment(new Date(newDate)).format("yyyy-MM-DD HH:mm:ss")
+
+      let customerInfo = {
+        customer_name: this.state.customerName,
+        customer_address: this.state.cartReduData.fullAddress,
+        customer_address_detail: this.state.cartReduData.shipperNotes,
+        customer_phone_number: "0" + this.state.customerPhoneNumber,
+        latitude: this.state.cartReduData.lat,
+        longitude: this.state.cartReduData.lng,
+        subdistrict_name: this.state.cartReduData.district,
+        city: this.state.cartReduData.city,
+        province: this.state.cartReduData.province,
+        postal_code: this.state.cartReduData.postalCode,
+      }
+
+      let pickupType = ''
+      let shipperName = ''
+      let shipperType = ''
+      let shipperCategoryType = ''
+      let shipperPrice = 0
+
+      if(this.state.cartReduData.pickupType === 0) {
+        pickupType = "PICKUP";
+        shipperName = "Pickup Sendiri";
+        shipperPrice = 0;
+        shipperType = "";
+        shipperCategoryType = "";
+        customerInfo.customer_address = "";
+        customerInfo.customer_address_detail = "";
+        customerInfo.latitude = 0;
+        customerInfo.longitude = 0;
+        customerInfo.subdistrict_name = "";
+        customerInfo.city = "";
+        customerInfo.province = "";
+        customerInfo.postal_code = "";
+      } else {
+        pickupType = "DELIVERY";
+        shipperName = this.state.cartReduData.shippingCode;
+        shipperPrice = this.state.cartReduData.shippingPrice;
+        shipperType = this.state.cartReduData.courierServiceType;
+        shipperCategoryType = this.state.cartReduData.shippingType;
+      }
+
+      let shippingTime = '';
+      let shippingType = '';
+
+      if(this.state.cartReduData.shippingDateType === 0) {
+        shippingTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
+        shippingType = "NOW";
+      } else {
+        shippingTime = moment(new Date(this.state.cartReduData.shippingDate)).format("yyyy-MM-DD HH:mm:ss");
+        shippingType = "CUSTOM";
+      }
+
+      let shippingMethod = {
+        shipping_method: shipperName,
+        shipping_cost: shipperPrice,
+        shipping_time: shippingTime,
+        shipping_time_type: shippingType,
+        shipping_insurance: this.state.insurancePrice,
+        shipping_service_type: shipperType,
+        shipping_service_type_category: shipperCategoryType
+      }
+
+      let totalPayment = finalProduct[0].totalPrice + Number(shipperPrice)
+  
+      var requestData = {
+        products: selectedProd,
+        shipping : shippingMethod,
+        customer : customerInfo,
+        mid: currentCartMerchant.mid,
+        order_type: pickupType,
+        order_platform: "PIKAPP",
+        total_product_price: finalProduct[0].totalPrice,
+        payment_method: this.state.paymentType,
+        billing_phone_number: this.state.cartReduData.phoneNumber,
+        order_status: "OPEN",
+        total_discount: 0,
+        total_payment: totalPayment + this.state.insurancePrice,
+        expiry_date: expiryDate
+      }
+    
+      let uuid = uuidV4();
+      uuid = uuid.replace(/-/g, "");
+      const date = new Date().toISOString();
+      
+      Axios(address + "pos/v2/web/transaction/add/", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+        },
+        method: "POST",
+        data: requestData,
+      })
+        .then((res) => {
+          if(this.state.paymentType === 'WALLET_OVO') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              localStorage.removeItem("SHIPPERNOTES")
+              localStorage.removeItem("SHIPPINGTYPE")
+              localStorage.removeItem("SHIPPING_WITH_COURIER")
+              localStorage.removeItem("FORMATTEDADDRESS")
+              localStorage.removeItem("DISTRICT")
+              localStorage.removeItem("CITY")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
+              Cookies.remove("SHIPMENTDATETYPE")
+              Cookies.remove("SHIPMENTDATE")
+              Cookies.remove("MANUAL_CUSTOMER_NAME")
+              Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+              this.setState({ loadButton: true })
+              this.props.DoneLoad()
+            }, 1000);
+          }
+          else if(this.state.paymentType === 'WALLET_DANA') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              localStorage.removeItem("SHIPPERNOTES")
+              localStorage.removeItem("SHIPPINGTYPE")
+              localStorage.removeItem("SHIPPING_WITH_COURIER")
+              localStorage.removeItem("FORMATTEDADDRESS")
+              localStorage.removeItem("DISTRICT")
+              localStorage.removeItem("CITY")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
+              Cookies.remove("SHIPMENTDATETYPE")
+              Cookies.remove("SHIPMENTDATE")
+              Cookies.remove("MANUAL_CUSTOMER_NAME")
+              Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+              window.location.href = res.data.results[0].checkout_url_mobile;
+            }, 1000);
+          }
+          else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+            this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+            setTimeout(() => {
+              let filterOtherCart = storageData.filter(valFilter => {
+                return valFilter.mid !== currentCartMerchant.mid
+              })
+              var dataOrder = {
+                transactionId : res.data.results[0].transaction_id,
+                totalPayment : requestData.total_payment,
+                paymentType : this.state.paymentType,
+                transactionTime : newDate
+              };
+              this.props.DataOrder(dataOrder);
+              localStorage.setItem("payment", JSON.stringify(dataOrder));
+              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+              localStorage.removeItem("lastTable")
+              localStorage.removeItem("fctable")
+              localStorage.removeItem("counterPayment");
+              localStorage.removeItem("SHIPMENT_TYPE")
+              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+              localStorage.removeItem("MANUAL_PHONE_NUMBER")
+              localStorage.removeItem("MANUAL_SELECTED_PROMO")
+              localStorage.removeItem("SHIPPERNOTES")
+              localStorage.removeItem("SHIPPINGTYPE")
+              localStorage.removeItem("SHIPPING_WITH_COURIER")
+              localStorage.removeItem("FORMATTEDADDRESS")
+              localStorage.removeItem("DISTRICT")
+              localStorage.removeItem("CITY")
+              Cookies.remove("MANUAL_NOTMATCHPROMO")
+              Cookies.remove("MANUAL_TOTALPAYMENT")
+              Cookies.remove("SHIPMENTDATETYPE")
+              Cookies.remove("SHIPMENTDATE")
+              Cookies.remove("MANUAL_CUSTOMER_NAME")
+              Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+              window.location.assign(res.data.results[0].checkout_url_deeplink);
+            }, 1000);
+          }
+        })
+        .catch((err) => {
+          if (err.response.data !== undefined) {
+            alert(err.response.data.err_message)
+            this.props.DoneLoad()
+          }
+        });
+    }
   
     notifModal = () => {
       if (this.props.AllRedu.buttonLoad === false) {
