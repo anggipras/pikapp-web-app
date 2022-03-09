@@ -61,18 +61,12 @@ const AddressInputView = () => {
                                     <img className="address-location-icon" src={LocationPoint} />
                                 </span>
                                 <div className="deliverySelection-addressLayout">
-                                    {/* <div className="deliverySelection-addressTitle">
-                                        {CartRedu.formattedAddress}
-                                    </div> */}
                                     <div className="deliverySelection-addressTitle">
                                         { CartRedu.formattedAddress ? <></> : "Alamat Pengiriman" }
                                     </div>
                                     <div className="deliverySelection-addressInputted">
                                         { CartRedu.formattedAddress ? <span className="deliverySelection-blackNotes">{CartRedu.formattedAddress}</span> : "Masukkan alamat pengiriman sekarang" }
                                     </div>
-                                    {/* <div className="deliverySelection-addressInputted">
-                                        { CartRedu.shipperNotes ? <span className="deliverySelection-greenNotes"><span className="deliverySelection-grayNotes">{CartRedu.shipperNotes}</span></span> : null}
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

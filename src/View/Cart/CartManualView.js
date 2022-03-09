@@ -27,7 +27,6 @@ import { EditMenuCart, IsMerchantQR, DataOrder, CustomerName, CustomerPhoneNumbe
 import Loader from 'react-loader-spinner'
 import { Link, Redirect } from "react-router-dom";
 import { LoadingButton, DoneLoad } from '../../Redux/Actions'
-// import Swal from 'sweetalert2';
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig';
 import moment from "moment";
@@ -112,7 +111,6 @@ class CartManualView extends React.Component {
       indexEdit: 0,
       updateData: '',
       successMessage: '',
-      // isEmailVerified : false,
       isShowCounterTime : false,
       countHit : 0,
       counterTime : 120,
@@ -197,7 +195,9 @@ class CartManualView extends React.Component {
       paymentImage: "",
       merchantHourStatus: null, // OPEN OR CLOSE
       merchantHourOpenTime: null, // ex: 10:00
-      merchantHourGracePeriod: null // ex: 30
+      merchantHourGracePeriod: null, // ex: 30
+      merchantHourNextOpenDay: null, // ex: Sunday
+      merchantHourNextOpenTime: null // ex: 10:00
     };
 
     componentDidMount() {
@@ -208,12 +208,6 @@ class CartManualView extends React.Component {
       } else {
         this.state.steptour.pop();
       }
-
-      // if (localStorage.getItem("cartTour") == 1) {
-      //   this.setState({ startTour : true});
-      // } else if ((localStorage.getItem('cartMerchant') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-      //   this.setState({ startTour : true});
-      // }
 
       if(this.props.CartRedu) {
 
@@ -272,7 +266,9 @@ class CartManualView extends React.Component {
         this.setState({ 
           merchantHourStatus: merchantHourCheckingResult.merchant_status, 
           merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-          merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining
+          merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
+          merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
+          merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time
          })
       }).catch((err) => console.log(err))
     }
@@ -398,7 +394,7 @@ class CartManualView extends React.Component {
         if (newAllCart.length < 2) {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
-          window.location.href = '/store?username=' + selectedMerchant[0].mid;
+          window.location.href = '/' + selectedMerchant[0].username;
           localStorage.removeItem("SHIPMENT_TYPE")
           localStorage.removeItem("MANUAL_PAYMENT_TYPE")
           localStorage.removeItem("MANUAL_PHONE_NUMBER")
@@ -423,7 +419,7 @@ class CartManualView extends React.Component {
           if (filterMerchantCart.length) {
             this.setState({ updateData: 'updated' })
           } else {
-            window.location.href = '/store?username=' + selectedMerchant[0].mid;
+            window.location.href = '/' + selectedMerchant[0].username;
           }
         }
       }
@@ -1093,12 +1089,33 @@ class CartManualView extends React.Component {
 
     merchantHourStatusWarning = () => {
       if (this.state.merchantHourStatus == "CLOSE") {
-        return (
-          <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-            <img className="cart-merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-            <div className="cart-merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourOpenTime} WIB</div>
-          </div>
-        )
+        const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+        let nowDate = new Date()
+        if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
+            </div>
+          )
+        } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+            </div>
+          )
+        } else {
+          let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
+          let finalNextOpenDay = weekdayId[nextOpenDay]
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+            </div>
+          )
+        }
       } else if (this.state.merchantHourStatus == "OPEN") {
         if (this.state.merchantHourGracePeriod <= 30) {
           return (
@@ -1127,7 +1144,7 @@ class CartManualView extends React.Component {
       if (filterCart.length === 0) {
         // window.history.go(-1)
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
-        window.location.href = '/store?username=' + selectedMerchant[0].mid;
+        window.location.href = '/' + selectedMerchant[0].username;
       } else {
         if (this.state.changeUI) {
           this.setState({ changeUI: false })

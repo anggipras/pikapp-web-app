@@ -88,7 +88,6 @@ class OrderDetailView extends React.Component {
             var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
             transactionId = dataDetail.transactionId;
         }
-        console.log(this.state);
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
@@ -102,7 +101,6 @@ class OrderDetailView extends React.Component {
             method: "GET",
         })
             .then((res) => {
-                console.log(res.data.results);
                 var results = res.data.results;
                 var resultModal = { ...this.currentModal }
                 resultModal.transactionId = results.transaction_id

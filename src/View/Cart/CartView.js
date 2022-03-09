@@ -132,7 +132,9 @@ class CartView extends React.Component {
     ],
     merchantHourStatus: null, // OPEN OR CLOSE
     merchantHourOpenTime: null, // ex: 10:00
-    merchantHourGracePeriod: null // ex: 30
+    merchantHourGracePeriod: null, // ex: 30
+    merchantHourNextOpenDay: null, // ex: Sunday
+    merchantHourNextOpenTime: null // ex: 10:00
   };
 
   componentDidMount() {
@@ -172,7 +174,9 @@ class CartView extends React.Component {
       this.setState({ 
         merchantHourStatus: merchantHourCheckingResult.merchant_status, 
         merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-        merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining
+        merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
+        merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
+        merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time
         })
     }).catch((err) => console.log(err))
   }
@@ -782,102 +786,6 @@ class CartView extends React.Component {
       });
   }
 
-  // handleReloadEmail = () => {
-  //   var auth = {
-  //     isLogged: false,
-  //     token: "",
-  //     new_event: true,
-  //     recommendation_status: false,
-  //     email: "",
-  //     is_email_verified: true
-  //   };
-
-  //   if (Cookies.get("auth") !== undefined) {
-  //     auth = JSON.parse(Cookies.get("auth"))
-  //   }
-
-  //   if (auth.is_email_verified === false) {
-  //     console.log(auth)
-  //     let uuid = uuidV4();
-  //     uuid = uuid.replace(/-/g, "");
-  //     const date = new Date().toISOString();
-  //     let signature = sha256(clientId + ":" + auth.email + ":" + secret + ":" + date, secret)
-  //     Axios(address + "home/v2/customer-info", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "x-request-id": uuid,
-  //         "x-request-timestamp": date,
-  //         "x-client-id": clientId,
-  //         "x-signature": signature,
-  //         "token": auth.token,
-  //       },
-  //       method: "GET",
-  //     })
-  //       .then((res) => {
-  //         let data = res.data.results
-  //         auth.is_email_verified = data.is_email_verified;
-  //         Cookies.set("auth", auth, { expires: 1 });
-  //         this.setState({ isEmailVerified: auth.is_email_verified });
-  //       })
-  //       .catch((err) => {
-  //       });
-  //   }
-  // }
-
-  // handleResendEmail = () => {
-  //   this.setState({ countHit: this.state.countHit + 1 });
-
-  //   var auth = {
-  //     isLogged: false,
-  //     token: "",
-  //     new_event: true,
-  //     recommendation_status: false,
-  //     email: "",
-  //     is_email_verified : true
-  //   };
-
-  //   if (Cookies.get("auth") !== undefined) {
-  //     auth = JSON.parse(Cookies.get("auth"))
-  //   }
-
-  //   let uuid = uuidV4();
-  //   uuid = uuid.replace(/-/g, "");
-  //   const date = new Date().toISOString();
-  //   Axios(address + "auth/resend-email/" + auth.email + "/", {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "x-request-id": uuid,
-  //       "x-request-timestamp": date,
-  //       "x-client-id": clientId
-  //     },
-  //     method: "GET",
-  //   })
-  //     .then((res) => {
-  //       Swal.fire({
-  //           position: 'top',
-  //           icon: 'success',
-  //           title: 'Email telah terkirim. Silahkan periksa email Anda.',
-  //           showConfirmButton: true,
-  //           confirmButtonColor: "#4bb7ac",
-  //           confirmButtonText: "OK",
-  //           closeOnConfirm: false,
-  //           // timer: 3000
-  //       }).then(() => {
-  //           if(this.state.countHit > 1) {
-  //             this.setState({ counterTime : 300});
-  //           } else {
-  //             this.setState({ counterTime : 120});
-  //           }
-            
-  //           this.setState({ isShowCounterTime : true });
-  //           this.countDownTime();
-  //       })
-  //     })
-  //     .catch((err) => {
-  //     });
-
-  // }
-
   countDownTime = () => {
     this.interval = setInterval(
       () => this.setState((state)=> ({ counterTime: this.state.counterTime - 1 })),
@@ -946,12 +854,33 @@ class CartView extends React.Component {
 
   merchantHourStatusWarning = () => {
     if (this.state.merchantHourStatus == "CLOSE") {
-      return (
-        <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-          <img className="cart-merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-          <div className="cart-merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourOpenTime} WIB</div>
-        </div>
-      )
+      const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+      let nowDate = new Date()
+      if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
+          </div>
+        )
+      } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+          </div>
+        )
+      } else {
+        let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
+        let finalNextOpenDay = weekdayId[nextOpenDay]
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+          </div>
+        )
+      }
     } else if (this.state.merchantHourStatus == "OPEN") {
       if (this.state.merchantHourGracePeriod <= 30) {
         return (

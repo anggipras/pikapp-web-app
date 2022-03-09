@@ -20,17 +20,6 @@ const ShippingDetailView = () => {
     const [courierList, setCourierList] = useState([])
 
     useEffect(() => {
-        // CartRedu.courierList.map((ship, ind) => {
-        //     if(CartRedu.shippingName !== "") {
-        //         if(ship.name === CartRedu.shippingName) {
-        //             ship.imagestatus = true;
-        //         } else {
-        //             ship.imagestatus = false;
-        //         }
-        //     } else {
-        //         ship.imagestatus = false;
-        //     }
-        // })
         CartRedu.courierList.map((ship, ind) => {
             if(CartRedu.shippingName !== "") {
                 if(ship.name === CartRedu.shippingName) {
@@ -91,9 +80,6 @@ const ShippingDetailView = () => {
     }
 
     const goBack = () => {
-        // dispatch({ type: 'SHIPPINGNAME', payload: "" })
-        // dispatch({ type: 'SHIPPINGPRICE', payload: "" });
-        // dispatch({ type: 'SHIPPINGDESC', payload: "" });
         window.history.go(-1)
     }
 
@@ -119,16 +105,6 @@ const ShippingDetailView = () => {
                     <div className='shippingDetail-radioButton'>
                         <img style={{display: courier.imagestatus ? null : 'none'}} class="shippingDetail-checkimg" src={CheckIcon} />
                     </div>
-
-                    {/* <div className='shippingDetail-radioButton'>
-                        <div class="pretty p-image p-round p-jelly">
-                            <input type="radio" name="icon_solid" onChange={() => onChangeRadio(1, courier, ind)} defaultChecked={radioStatus === 1 ? true : false} />
-                            <div class="state">
-                                <img class="image" src={CheckIcon} />
-                                <label></label>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             )
         })

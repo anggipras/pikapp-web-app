@@ -94,29 +94,6 @@ class StoreView extends React.Component {
     const value = queryString.parse(window.location.search);
     var merchant = "";
 
-    // if (navigator.geolocation) { //SHUTDOWN FOR A WHILE
-    //   navigator.geolocation.getCurrentPosition(position => {
-    //     let latitude = 0;
-    //     let longitude = 0;
-
-    //     if(position) {
-    //       let latitude = position.coords.latitude
-    //       let longitude = position.coords.longitude
-    //       let longlat = { lat: latitude, lon: longitude }
-    //       console.log(latitude, longitude);
-    //       this.setState({ lat: latitude, lon: longitude })
-    //       localStorage.setItem("longlat", JSON.stringify(longlat))
-    //     } else {
-    //       let latitude = 1;
-    //       let longitude = 1;
-    //       let longlat = { lat: latitude, lon: longitude }
-    //       console.log(latitude, longitude);
-    //       this.setState({ lat: latitude, lon: longitude })
-    //       localStorage.setItem("longlat", JSON.stringify(longlat))
-    //     }
-    //   });
-    // }
-
     let latitude = -6.28862
     let longitude = 106.71789
     let longlat = { lat: latitude, lon: longitude }
@@ -130,14 +107,11 @@ class StoreView extends React.Component {
       var getLocation = JSON.parse(localStorage.getItem("longlat"))
       latitude = getLocation.lat
       longitude = getLocation.lon
-    } else {
-      // window.location.href = "/login"
-    }
+    } 
 
     if (auth.isLogged === false) {
       var lastLink = { value: window.location.href }
       Cookies.set("lastLink", lastLink, { expires: 1 })
-      // window.location.href = "/login"
     }
     else {
       longitude = value.longitude || longitude
@@ -193,7 +167,6 @@ class StoreView extends React.Component {
         }
       })
         .then((res) => {
-          // console.log(res.data.results);
           stateDataFC = { ...this.state.data };
           let responseDatas = res.data;
           stateDataFC.data.pop();
@@ -268,7 +241,6 @@ class StoreView extends React.Component {
         }
       })
         .then((res) => {
-          // console.log(res.data.results);
           stateData = { ...this.state.data };
           let responseDatas = res.data;
           stateData.data.pop();
@@ -460,7 +432,6 @@ class StoreView extends React.Component {
     if (wrappedElement !== null) {
       if (this.state.idCol <= this.state.page) {
         if (this.isBottom(wrappedElement)) {
-          // console.log('testloadmore');
           this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
           document.removeEventListener('scroll', this.loadMoreMerchant)
         }
@@ -539,7 +510,6 @@ class StoreView extends React.Component {
       localStorage.setItem('table', 0)
         localStorage.setItem('lastTable', 0)
     }
-    // console.log(this.state.data.data);
     const storeDatas = this.state.data.data.map((data) => {
       return data;
     });
@@ -586,7 +556,6 @@ class StoreView extends React.Component {
                   <div className='merchantList-storeCategory'>{cardData.storeCateg}</div>
                   :
                   null
-                // <Skeleton style={{ paddingTop: 10, width: "100%", height: "100%" }} />
               }
             </div>
           </div>
@@ -596,14 +565,6 @@ class StoreView extends React.Component {
 
     return (
       <div className='merchantList-background'>
-        {/* <div className="storeColumn">
-          <h6 className="" style={{ textAlign: "left" }}>
-            Lokasi:
-            </h6>
-          <p className="storeLabel" style={{ textAlign: "left" }}>
-            {this.state.location || <Skeleton height={20} />}
-          </p>
-        </div> */}
         <div>
           <div className='merchantList-grid'>
             {allCards}

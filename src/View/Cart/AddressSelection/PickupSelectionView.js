@@ -123,19 +123,6 @@ const PickupSelectionView = () => {
                         <img className="address-open-icon" src={ArrowGo} />
                     </span>
                 </div>
-
-                {/* <div className="deliverySelection-shipperName">
-                    <div className="deliverySelection-shipperName-title">Nama Kurir <span style={{color: "red"}}>*</span></div>
-                    <input onChange={handleShipperName} className="deliverySelection-shipperName-inputArea" placeholder="Masukkan nama kurir disini..." defaultValue={CartRedu.shipperName}/>
-                </div>
-
-                <div className="deliverySelection-shipperPrice">
-                    <div className="deliverySelection-shipperPrice-title">Ongkos Kirim <span style={{color: "red"}}>*</span></div>
-                    <div className="deliverySelection-shipperPrice-layout">
-                        <div className="deliverySelection-shipperPrice-currency">Rp</div>
-                        <input onChange={handleShipperPrice} type='number' inputMode='numeric' className="deliverySelection-shipperPrice-inputArea" placeholder="Masukkan ongkos kirim disini..." defaultValue={CartRedu.shipperPrice}/>
-                    </div>
-                </div> */}
             </div>
         )
     }

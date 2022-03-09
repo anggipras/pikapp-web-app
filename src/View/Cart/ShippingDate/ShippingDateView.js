@@ -42,6 +42,8 @@ const ShippingDateView = () => {
         open_time: null,
         merchant_status: null,
         close_time: null,
+        next_open_day: null,
+        next_open_time: null
     })
 
     useEffect(() => {
@@ -66,6 +68,8 @@ const ShippingDateView = () => {
                 open_time: merchantHourCheckingResult.open_time,
                 merchant_status: merchantHourCheckingResult.merchant_status,
                 close_time: merchantHourCheckingResult.close_time,
+                next_open_day: merchantHourCheckingResult.next_open_day,
+                next_open_time: merchantHourCheckingResult.next_open_time
             })
         })
     }, [])
@@ -77,14 +81,43 @@ const ShippingDateView = () => {
             moment.updateLocale('id', idLocale);
             setChoiceDate(true);
             var today = new Date();
-            if (merchantHourStatus.minutes_remaining < "31") {
-                var openHour = merchantHourStatus.open_time.split(":")
-                today.setDate(today.getDate() + 1)
-                today.setHours(parseInt(openHour[0]) + 1)
-                today.setMinutes(parseInt(openHour[1]))
+
+            if (merchantHourStatus.merchant_status == "CLOSE") {
+                const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                let nowDate = new Date()
+                if (weekday[nowDate.getDay()] == merchantHourStatus.next_open_day) {
+                    var openHour = merchantHourStatus.open_time.split(":")
+                    today.setHours(parseInt(openHour[0]) + 1)
+                    today.setMinutes(parseInt(openHour[1]))
+                } else if(weekday[nowDate.getDay()+1] == merchantHourStatus.next_open_day) {   
+                    var openHour = merchantHourStatus.next_open_time.split(":")
+                    today.setHours(parseInt(openHour[0]) + 1)
+                    today.setMinutes(parseInt(openHour[1]))
+                } else {
+                    let nextOpenDayInd = weekday.indexOf(merchantHourStatus.next_open_day)
+                    let nowOpenDayInd = nowDate.getDay()
+                    let countDay
+                    if (nextOpenDayInd > nowOpenDayInd) {
+                        countDay = nextOpenDayInd - nowOpenDayInd
+                    } else {
+                        countDay = (6 - nowOpenDayInd) + (1 + nextOpenDayInd)
+                    }
+                    today.setDate(today.getDate() + countDay)
+                    var openHour = merchantHourStatus.next_open_time.split(":")
+                    today.setHours(parseInt(openHour[0]) + 1)
+                    today.setMinutes(parseInt(openHour[1]))
+                }
             } else {
-                today.setHours(today.getHours() + 2);
+                if (merchantHourStatus.minutes_remaining < "31") {
+                    var openHour = merchantHourStatus.open_time.split(":")
+                    today.setDate(today.getDate() + 1)
+                    today.setHours(parseInt(openHour[0]) + 1)
+                    today.setMinutes(parseInt(openHour[1]))
+                } else {
+                    today.setHours(today.getHours() + 2);
+                }
             }
+
             var convertDate = moment(new Date(today)).format("yyyy-MM-DD");
             var convertTime = moment(new Date(today)).format("HH");
             setCurrentDate(convertDate);
@@ -221,18 +254,57 @@ const ShippingDateView = () => {
 
     const shippingDateWarning = () => {
         if (merchantHourStatus.merchant_status != null) {
-            if (merchantHourStatus.minutes_remaining < "31") {
-                return (
-                    <div className="shippingdate-alert-paymentnotselected">
-                        <span className="shippingdate-alert-icon">
-                            <img className="alert-icon" src={PromoAlert} alt='' />
-                        </span>
-        
-                        <div className="shippingdate-alert-title">Toko akan tutup, Pengiriman hanya dapat dilakukan esok hari</div>
-                    </div>
-                )
+            if (merchantHourStatus.merchant_status == "CLOSE") {
+                const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+                let nowDate = new Date()
+                if (weekday[nowDate.getDay()] == merchantHourStatus.next_open_day) {
+                    return (
+                        <div className="shippingdate-alert-paymentnotselected">
+                            <span className="shippingdate-alert-icon">
+                                <img className="alert-icon" src={PromoAlert} alt='' />
+                            </span>
+            
+                            <div className="shippingdate-alert-title">Toko masih tutup, Pengiriman hanya dapat dilakukan ketika toko buka</div>
+                        </div>
+                    )
+                } else if(weekday[nowDate.getDay()+1] == merchantHourStatus.next_open_day) {   
+                    return (
+                        <div className="shippingdate-alert-paymentnotselected">
+                            <span className="shippingdate-alert-icon">
+                                <img className="alert-icon" src={PromoAlert} alt='' />
+                            </span>
+            
+                            <div className="shippingdate-alert-title">Toko sudah tutup, Pengiriman hanya dapat dilakukan esok hari</div>
+                        </div>
+                    )
+                } else {
+                    let nextOpenDay = weekday.indexOf(merchantHourStatus.next_open_day)
+                    let finalNextOpenDay = weekdayId[nextOpenDay]
+                    return (
+                        <div className="shippingdate-alert-paymentnotselected">
+                            <span className="shippingdate-alert-icon">
+                                <img className="alert-icon" src={PromoAlert} alt='' />
+                            </span>
+            
+                            <div className="shippingdate-alert-title">Toko sudah tutup, Pengiriman hanya dapat dilakukan hari {finalNextOpenDay}</div>
+                        </div>
+                    )
+                }
             } else {
-                return null
+                if (merchantHourStatus.minutes_remaining < "31") {
+                    return (
+                        <div className="shippingdate-alert-paymentnotselected">
+                            <span className="shippingdate-alert-icon">
+                                <img className="alert-icon" src={PromoAlert} alt='' />
+                            </span>
+            
+                            <div className="shippingdate-alert-title">Toko akan tutup, Pengiriman hanya dapat dilakukan esok hari</div>
+                        </div>
+                    )
+                } else {
+                    return null
+                }
             }
         } else {
             return null
