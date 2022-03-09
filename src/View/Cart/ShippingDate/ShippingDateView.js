@@ -90,6 +90,7 @@ const ShippingDateView = () => {
                     today.setHours(parseInt(openHour[0]) + 1)
                     today.setMinutes(parseInt(openHour[1]))
                 } else if(weekday[nowDate.getDay()+1] == merchantHourStatus.next_open_day) {   
+                    today.setDate(today.getDate() + 1)
                     var openHour = merchantHourStatus.next_open_time.split(":")
                     today.setHours(parseInt(openHour[0]) + 1)
                     today.setMinutes(parseInt(openHour[1]))

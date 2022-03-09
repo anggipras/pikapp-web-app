@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import closeNarrow from '../../Asset/Icon/closeNarrow.png'
+import moment from "moment";
 
 const CartCancel = (props) => {
 
@@ -35,7 +36,7 @@ const CartCancel = (props) => {
                                 <div className='cartCancel-divider' />
                                 <div className='cartCancel-bottom-datetime'>
                                     <div className='cartCancel-bottom-datetime-title'>Tanggal dan Jam</div>
-                                    <div className='cartCancel-bottom-datetime-detail'>16 Feb 2022, 21:03</div>
+                                    <div className='cartCancel-bottom-datetime-detail'>{moment(new Date()).format("DD MMM YYYY, HH:mm")}</div>
                                 </div>
                             </div>
                         </div>
