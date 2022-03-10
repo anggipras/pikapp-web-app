@@ -1883,22 +1883,22 @@ body {
 
   //Product Start
   .product-img {
-    width: 114px;
-    height: auto;
+    width: 164px;
+    height: 164px;
   }
 
   .product-detail-mob {
-    width: 200px;
+    width: 130px;
     margin-left: 20px;
   }
 
   .product-name-mob {
-    max-width: 140px;
+    max-width: 130px;
     width: auto;
   }
 
   .product-desc-mob {
-    max-width: 140px;
+    max-width: 130px;
     width: auto;
   }
   //Product End
@@ -1946,6 +1946,24 @@ body {
   .cartIcon-content {
     min-width: 336px;
     max-width: 336px;
+  }
+  
+  .product-merchant {
+    max-width: 164px;
+    height: 290px;
+  }
+
+  .merchantdetail-cart-button-mob {
+    width: 129px;
+  }
+
+  .mainLayout {
+    max-width: 480px !important;
+    width: 100vw;
+  }
+
+  .cartIcon-layout {
+    width: 100vw;
   }
 }
 
