@@ -58,7 +58,6 @@ class OrderConfirmationView extends React.Component {
         }
 
         let counter = localStorage.getItem("counterPayment");
-        // this.props.IsManualTxn(JSON.parse(localStorage.getItem("isManualTxn")));
 
         if (localStorage.getItem("counterPayment")) {
             if (counter != 0) {
@@ -72,6 +71,8 @@ class OrderConfirmationView extends React.Component {
         }
 
         if (Object.keys(this.props.AllRedu.dataOrder).length !== 0) {
+            this.props.IsManualTxn(JSON.parse(localStorage.getItem("isManualTxn")));
+            
             if (this.props.AllRedu.dataOrder.paymentType === "PAY_BY_CASHIER") {
                 this.setState({ paymentType: "PAY_BY_CASHIER" });
                 this.setState({ paymentOption: "Pembayaran Di Kasir" });
@@ -91,7 +92,7 @@ class OrderConfirmationView extends React.Component {
             }
             this.setState({ dataOrder: this.props.AllRedu.dataOrder },
             () => {
-                if(this.props.AuthRedu.isManualTxn) {
+                if(this.props.AllRedu.isManualTxn) {
                     this.getStatusPaymentDelivery();
                 } else {
                     this.getStatusPaymentDineIn();
@@ -121,7 +122,7 @@ class OrderConfirmationView extends React.Component {
 
             this.setState({ dataOrder: dataPayment },
             () => {
-                if(this.props.AuthRedu.isManualTxn) {
+                if(this.props.AllRedu.isManualTxn) {
                     this.getStatusPaymentDelivery();
                 } else {
                     this.getStatusPaymentDineIn();
@@ -131,7 +132,7 @@ class OrderConfirmationView extends React.Component {
 
         setInterval(async () => {
             if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
-                if(this.props.AuthRedu.isManualTxn) {
+                if(this.props.AllRedu.isManualTxn) {
                     this.showResponsePaymentDelivery();
                 } else {
                     this.showResponsePaymentDineIn();
@@ -163,7 +164,7 @@ class OrderConfirmationView extends React.Component {
     backToHome = () => {
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
         let noTable = localStorage.getItem('table');
-        if(this.props.AuthRedu.isManualTxn) {
+        if(this.props.AllRedu.isManualTxn) {
             window.location.href = '/' + selectedMerchant[0].username;
         } else {
             window.location.href = '/store?mid=' + selectedMerchant[0].mid + '&table=' + noTable.toString();
@@ -581,7 +582,7 @@ class OrderConfirmationView extends React.Component {
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
-                                                        this.props.AuthRedu.isManualTxn ?
+                                                        this.props.AllRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
@@ -608,7 +609,7 @@ class OrderConfirmationView extends React.Component {
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
-                                                        this.props.AuthRedu.isManualTxn ?
+                                                        this.props.AllRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
@@ -752,7 +753,7 @@ class OrderConfirmationView extends React.Component {
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
-                                                        this.props.AuthRedu.isManualTxn ?
+                                                        this.props.AllRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
@@ -778,7 +779,7 @@ class OrderConfirmationView extends React.Component {
                                                 <div className='buttonSide-order'>
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
-                                                        this.props.AuthRedu.isManualTxn ?
+                                                        this.props.AllRedu.isManualTxn ?
                                                         <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
