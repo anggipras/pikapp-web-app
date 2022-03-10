@@ -185,6 +185,13 @@ export const StreetNumber = (data) => {
     }
 }
 
+export const FullAddress = (data) => {
+    return {
+        type: 'FULLADDRESS',
+        payload: data
+    }
+}
+
 export const StreetName = (data) => {
     return {
         type: 'STREETNAME',

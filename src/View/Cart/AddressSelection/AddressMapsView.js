@@ -38,7 +38,9 @@ const AddressMapsView = () => {
             navigator.geolocation.getCurrentPosition((position) => {
                 dispatch({ type: 'CENTER', payload: [position.coords.latitude, position.coords.longitude] })
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
+                localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
+                localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
             });
         }
@@ -60,6 +62,7 @@ const AddressMapsView = () => {
                         }
                         if(res.types[0] == "postal_code") {
                             dispatch({ type: 'POSTALCODE', payload: res.short_name })
+                            localStorage.setItem("POSTALCODE", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             dispatch({ type: 'CITY', payload: res.short_name })
@@ -67,6 +70,7 @@ const AddressMapsView = () => {
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             dispatch({ type: 'PROVINCE', payload: res.short_name })
+                            localStorage.setItem("PROVINCE", JSON.stringify(res.short_name))
                         }
                     })
 

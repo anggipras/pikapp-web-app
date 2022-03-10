@@ -24,7 +24,9 @@ const AddressSearchView = () => {
     const addPlace = (place) => {
         dispatch({ type: 'PLACES', payload: [place] })
         dispatch({ type: 'LAT', payload: place.geometry.location.lat() })
+        localStorage.setItem("LAT", JSON.stringify(place.geometry.location.lat()))
         dispatch({ type: 'LNG', payload: place.geometry.location.lng() })
+        localStorage.setItem("LNG", JSON.stringify(place.geometry.location.lng()))
         dispatch({ type: 'ISMARKERCHANGE', payload: true })
     };
 
@@ -33,7 +35,9 @@ const AddressSearchView = () => {
             navigator.geolocation.getCurrentPosition((position) => {
                 dispatch({ type: 'CENTER', payload: [position.coords.latitude, position.coords.longitude] })
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
+                localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
+                localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 dispatch({ type: 'STREETNUMBER', payload: ""})
                 dispatch({ type: 'STREETNAME', payload: "" })
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
@@ -63,6 +67,7 @@ const AddressSearchView = () => {
                         }
                         if(res.types[0] == "postal_code") {
                             dispatch({ type: 'POSTALCODE', payload: res.short_name })
+                            localStorage.setItem("POSTALCODE", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             dispatch({ type: 'CITY', payload: res.short_name })
@@ -70,6 +75,7 @@ const AddressSearchView = () => {
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             dispatch({ type: 'PROVINCE', payload: res.short_name })
+                            localStorage.setItem("PROVINCE", JSON.stringify(res.short_name))
                         }
                     })
 

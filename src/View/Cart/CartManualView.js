@@ -395,22 +395,7 @@ class CartManualView extends React.Component {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
           window.location.href = '/' + selectedMerchant[0].username;
-          localStorage.removeItem("SHIPMENT_TYPE")
-          localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-          localStorage.removeItem("MANUAL_PHONE_NUMBER")
-          localStorage.removeItem("MANUAL_SELECTED_PROMO")
-          localStorage.removeItem("SHIPPERNOTES")
-          localStorage.removeItem("SHIPPINGTYPE")
-          localStorage.removeItem("SHIPPING_WITH_COURIER")
-          localStorage.removeItem("FORMATTEDADDRESS")
-          localStorage.removeItem("DISTRICT")
-          localStorage.removeItem("CITY")
-          Cookies.remove("MANUAL_NOTMATCHPROMO")
-          Cookies.remove("MANUAL_TOTALPAYMENT")
-          Cookies.remove("SHIPMENTDATETYPE")
-          Cookies.remove("SHIPMENTDATE")
-          Cookies.remove("MANUAL_CUSTOMER_NAME")
-          Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+          this.removeStorage()
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
             return valueCart.mid === mid
@@ -690,22 +675,7 @@ class CartManualView extends React.Component {
               localStorage.removeItem("lastTable")
               localStorage.removeItem("fctable")
               localStorage.removeItem("counterPayment");
-              localStorage.removeItem("SHIPMENT_TYPE")
-              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-              localStorage.removeItem("MANUAL_PHONE_NUMBER")
-              localStorage.removeItem("MANUAL_SELECTED_PROMO")
-              localStorage.removeItem("SHIPPERNOTES")
-              localStorage.removeItem("SHIPPINGTYPE")
-              localStorage.removeItem("SHIPPING_WITH_COURIER")
-              localStorage.removeItem("FORMATTEDADDRESS")
-              localStorage.removeItem("DISTRICT")
-              localStorage.removeItem("CITY")
-              Cookies.remove("MANUAL_NOTMATCHPROMO")
-              Cookies.remove("MANUAL_TOTALPAYMENT")
-              Cookies.remove("SHIPMENTDATETYPE")
-              Cookies.remove("SHIPMENTDATE")
-              Cookies.remove("MANUAL_CUSTOMER_NAME")
-              Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+              this.removeStorage()
               this.setState({ loadButton: true })
               this.props.DoneLoad()
             }, 1000);
@@ -728,22 +698,7 @@ class CartManualView extends React.Component {
               localStorage.removeItem("lastTable")
               localStorage.removeItem("fctable")
               localStorage.removeItem("counterPayment");
-              localStorage.removeItem("SHIPMENT_TYPE")
-              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-              localStorage.removeItem("MANUAL_PHONE_NUMBER")
-              localStorage.removeItem("MANUAL_SELECTED_PROMO")
-              localStorage.removeItem("SHIPPERNOTES")
-              localStorage.removeItem("SHIPPINGTYPE")
-              localStorage.removeItem("SHIPPING_WITH_COURIER")
-              localStorage.removeItem("FORMATTEDADDRESS")
-              localStorage.removeItem("DISTRICT")
-              localStorage.removeItem("CITY")
-              Cookies.remove("MANUAL_NOTMATCHPROMO")
-              Cookies.remove("MANUAL_TOTALPAYMENT")
-              Cookies.remove("SHIPMENTDATETYPE")
-              Cookies.remove("SHIPMENTDATE")
-              Cookies.remove("MANUAL_CUSTOMER_NAME")
-              Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+              this.removeStorage()
               window.location.href = res.data.results[0].checkout_url_mobile;
             }, 1000);
           }
@@ -765,22 +720,7 @@ class CartManualView extends React.Component {
               localStorage.removeItem("lastTable")
               localStorage.removeItem("fctable")
               localStorage.removeItem("counterPayment");
-              localStorage.removeItem("SHIPMENT_TYPE")
-              localStorage.removeItem("MANUAL_PAYMENT_TYPE")
-              localStorage.removeItem("MANUAL_PHONE_NUMBER")
-              localStorage.removeItem("MANUAL_SELECTED_PROMO")
-              localStorage.removeItem("SHIPPERNOTES")
-              localStorage.removeItem("SHIPPINGTYPE")
-              localStorage.removeItem("SHIPPING_WITH_COURIER")
-              localStorage.removeItem("FORMATTEDADDRESS")
-              localStorage.removeItem("DISTRICT")
-              localStorage.removeItem("CITY")
-              Cookies.remove("MANUAL_NOTMATCHPROMO")
-              Cookies.remove("MANUAL_TOTALPAYMENT")
-              Cookies.remove("SHIPMENTDATETYPE")
-              Cookies.remove("SHIPMENTDATE")
-              Cookies.remove("MANUAL_CUSTOMER_NAME")
-              Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+              this.removeStorage()
               window.location.assign(res.data.results[0].checkout_url_deeplink);
             }, 1000);
           }
@@ -791,6 +731,30 @@ class CartManualView extends React.Component {
             this.props.DoneLoad()
           }
         });
+    }
+
+    removeStorage = () => {
+      localStorage.removeItem("SHIPMENT_TYPE")
+      localStorage.removeItem("MANUAL_PAYMENT_TYPE")
+      localStorage.removeItem("MANUAL_PHONE_NUMBER")
+      localStorage.removeItem("MANUAL_SELECTED_PROMO")
+      localStorage.removeItem("SHIPPERNOTES")
+      localStorage.removeItem("SHIPPINGTYPE")
+      localStorage.removeItem("SHIPPING_WITH_COURIER")
+      localStorage.removeItem("FULLADDRESS")
+      localStorage.removeItem("FORMATTEDADDRESS")
+      localStorage.removeItem("LAT")
+      localStorage.removeItem("LNG")
+      localStorage.removeItem("DISTRICT")
+      localStorage.removeItem("CITY")
+      localStorage.removeItem("POSTALCODE")
+      localStorage.removeItem("PROVINCE")
+      Cookies.remove("MANUAL_NOTMATCHPROMO")
+      Cookies.remove("MANUAL_TOTALPAYMENT")
+      Cookies.remove("SHIPMENTDATETYPE")
+      Cookies.remove("SHIPMENTDATE")
+      Cookies.remove("MANUAL_CUSTOMER_NAME")
+      Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
     }
   
     notifModal = () => {

@@ -63,7 +63,9 @@ class MapsComponent extends Component {
         });
 
         this.props.Lat(mouse.lat);
+        localStorage.setItem("LAT", JSON.stringify(mouse.lat))
         this.props.Lng(mouse.lng);
+        localStorage.setItem("LNG", JSON.stringify(mouse.lng))
         this.props.IsMarkerChange(true);
     }
     onMarkerInteractionMouseUp = (childKey, childProps, mouse) => {
@@ -96,7 +98,9 @@ class MapsComponent extends Component {
         });
         
         this.props.Lat(value.lat);
+        localStorage.setItem("LAT", JSON.stringify(value.lat))
         this.props.Lng(value.lng);
+        localStorage.setItem("LNG", JSON.stringify(value.lng))
         this.props.IsMarkerChange(true);
         // this._generateAddress();
     }
@@ -154,6 +158,7 @@ class MapsComponent extends Component {
                         }
                         if(res.types[0] == "postal_code") {
                             this.props.PostalCode(res.short_name);
+                            localStorage.setItem("POSTALCODE", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             this.props.City(res.short_name);
@@ -161,6 +166,7 @@ class MapsComponent extends Component {
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             this.props.Province(res.short_name);
+                            localStorage.setItem("PROVINCE", JSON.stringify(res.short_name))
                         }
                     })
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
@@ -191,7 +197,9 @@ class MapsComponent extends Component {
                 if(this.props.CartRedu.lat === 0) {
                     this.props.Center([position.coords.latitude, position.coords.longitude]);
                     this.props.Lat(position.coords.latitude);
+                    localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                     this.props.Lng(position.coords.longitude);
+                    localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 }
             });
         }
@@ -203,7 +211,9 @@ class MapsComponent extends Component {
 
                 this.props.Center([position.coords.latitude, position.coords.longitude]);
                 this.props.Lat(position.coords.latitude);
+                localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                 this.props.Lng(position.coords.longitude);
+                localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 this.props.IsMarkerChange(false);
                 this.props.StreetNumber("");
                 this.props.StreetName("");

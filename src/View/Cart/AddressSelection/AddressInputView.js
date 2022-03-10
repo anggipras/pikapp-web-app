@@ -12,10 +12,12 @@ const AddressInputView = () => {
 
     const handleFullAddress = (e) => {
         dispatch({ type: 'FULLADDRESS', payload: e.target.value })
+        localStorage.setItem("FULLADDRESS", JSON.stringify(e.target.value))
     }
 
     const handlePostalCode = (e) => {
         dispatch({ type: 'POSTALCODE', payload: e.target.value })
+        localStorage.setItem("POSTALCODE", JSON.stringify(e.target.value))
     }
 
     const handleShipperNotes = (e) => {
@@ -33,7 +35,9 @@ const AddressInputView = () => {
         dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
         localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(""))
         dispatch({ type: 'FULLADDRESS', payload: "" })
+        localStorage.setItem("FULLADDRESS", JSON.stringify(""))
         dispatch({ type: 'POSTALCODE', payload: "" })
+        localStorage.setItem("POSTALCODE", JSON.stringify(""))
         dispatch({ type: 'SHIPPERNOTES', payload: "" })
         localStorage.setItem("SHIPPERNOTES", JSON.stringify(""))
         window.history.go(-1)
