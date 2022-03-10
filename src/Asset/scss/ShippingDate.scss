@@ -330,6 +330,16 @@ body {
     border-radius: 0.25rem;
 }
 
+.shippingdate-timepicker-close {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 14px;
+    height: 55px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
 .MuiOutlinedInput-adornedEnd {
     padding-right: 0px !important;
 }
