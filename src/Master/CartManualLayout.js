@@ -14,7 +14,12 @@ import {
   FormattedAddress,
   District,
   City,
-  ShipmentWithCourier 
+  ShipmentWithCourier ,
+  FullAddress,
+  Lat,
+  Lng,
+  PostalCode,
+  Province
 } from '../Redux/Actions'
 import Cookies from "js-cookie";
 
@@ -103,6 +108,26 @@ class CartManualLayout extends React.Component {
       this.props.FormattedAddress(formattedAddress)
     }
 
+    if (JSON.parse(localStorage.getItem("FULLADDRESS"))) {
+      let fullAddress = JSON.parse(localStorage.getItem("FULLADDRESS"))
+      this.props.FullAddress(fullAddress)
+    }
+
+    if (JSON.parse(localStorage.getItem("LAT"))) {
+      let lat = JSON.parse(localStorage.getItem("LAT"))
+      this.props.Lat(lat)
+    }
+
+    if (JSON.parse(localStorage.getItem("LNG"))) {
+      let lng = JSON.parse(localStorage.getItem("LNG"))
+      this.props.Lng(lng)
+    }
+
+    if (JSON.parse(localStorage.getItem("POSTALCODE"))) {
+      let postalCode = JSON.parse(localStorage.getItem("POSTALCODE"))
+      this.props.PostalCode(postalCode)
+    }
+
     if (JSON.parse(localStorage.getItem("DISTRICT"))) {
       let district = JSON.parse(localStorage.getItem("DISTRICT"))
       this.props.District(district)
@@ -111,6 +136,11 @@ class CartManualLayout extends React.Component {
     if (JSON.parse(localStorage.getItem("CITY"))) {
       let city = JSON.parse(localStorage.getItem("CITY"))
       this.props.City(city)
+    }
+
+    if (JSON.parse(localStorage.getItem("PROVINCE"))) {
+      let province = JSON.parse(localStorage.getItem("PROVINCE"))
+      this.props.Province(province)
     }
 
     if (JSON.parse(localStorage.getItem("SHIPPING_WITH_COURIER"))) {
@@ -145,5 +175,10 @@ export default connect(null, {
   FormattedAddress,
   District,
   City,
-  ShipmentWithCourier
+  ShipmentWithCourier,
+  FullAddress,
+  Lat,
+  Lng,
+  PostalCode,
+  Province
 })(CartManualLayout)
