@@ -24,6 +24,7 @@ const ShippingDateView = () => {
     const [choiceDate, setChoiceDate] = useState(false)
     const [currentDate, setCurrentDate] = useState("");
     const [currentTime, setCurrentTime] = useState("");
+    const [closeTime, setCloseTime] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     const [isTomorrow, setIsTomorrow] = useState(false);
@@ -81,20 +82,27 @@ const ShippingDateView = () => {
             moment.updateLocale('id', idLocale);
             setChoiceDate(true);
             var today = new Date();
+            var todayEnd = new Date();
 
             if (merchantHourStatus.merchant_status == "CLOSE") {
                 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
                 let nowDate = new Date()
-                if (weekday[nowDate.getDay()] == merchantHourStatus.next_open_day) {
+                if (weekday[nowDate.getDay()] == merchantHourStatus.next_open_day) { 
                     var openHour = merchantHourStatus.open_time.split(":")
-                    today.setHours(parseInt(openHour[0]) + 1)
+                    var closeHour = merchantHourStatus.close_time.split(":")
+                    today.setHours(parseInt(openHour[0]))
                     today.setMinutes(parseInt(openHour[1]))
-                } else if(weekday[nowDate.getDay()+1] == merchantHourStatus.next_open_day) {   
+                    todayEnd.setHours(parseInt(closeHour[0]))
+                    todayEnd.setMinutes(parseInt(closeHour[1]))
+                } else if(weekday[nowDate.getDay()+1] == merchantHourStatus.next_open_day) { // set time, open next day  
                     today.setDate(today.getDate() + 1)
                     var openHour = merchantHourStatus.next_open_time.split(":")
-                    today.setHours(parseInt(openHour[0]) + 1)
+                    var closeHour = merchantHourStatus.close_time.split(":") //LATER NEED TO BE CHANGED BY NEXT_CLOSE_TIME
+                    today.setHours(parseInt(openHour[0]))
                     today.setMinutes(parseInt(openHour[1]))
-                } else {
+                    todayEnd.setHours(parseInt(closeHour[0]))
+                    todayEnd.setMinutes(parseInt(closeHour[1]))
+                } else { // set time, next day is close, open at specific day
                     let nextOpenDayInd = weekday.indexOf(merchantHourStatus.next_open_day)
                     let nowOpenDayInd = nowDate.getDay()
                     let countDay
@@ -105,30 +113,42 @@ const ShippingDateView = () => {
                     }
                     today.setDate(today.getDate() + countDay)
                     var openHour = merchantHourStatus.next_open_time.split(":")
-                    today.setHours(parseInt(openHour[0]) + 1)
+                    var closeHour = merchantHourStatus.close_time.split(":")
+                    today.setHours(parseInt(openHour[0]))
                     today.setMinutes(parseInt(openHour[1]))
+                    todayEnd.setHours(parseInt(closeHour[0]))
+                    todayEnd.setMinutes(parseInt(closeHour[1]))
                 }
-            } else {
+            } else { // set time, rest of time till near close
                 if (merchantHourStatus.minutes_remaining < "31") {
                     var openHour = merchantHourStatus.open_time.split(":")
+                    var closeHour = merchantHourStatus.close_time.split(":")
                     today.setDate(today.getDate() + 1)
-                    today.setHours(parseInt(openHour[0]) + 1)
-                    today.setMinutes(parseInt(openHour[1]))
+                    today.setHours(parseInt(openHour[0]))
+                    today.setMinutes(parseInt(openHour[1]) + 30)
+                    todayEnd.setHours(parseInt(closeHour[0]))
+                    todayEnd.setMinutes(parseInt(closeHour[1]))
                 } else {
-                    today.setHours(today.getHours() + 2);
+                    var closeHour = merchantHourStatus.close_time.split(":")
+                    today.setHours(today.getHours());
+                    today.setMinutes(30)
+                    todayEnd.setHours(parseInt(closeHour[0]))
+                    todayEnd.setMinutes(parseInt(closeHour[1]))
                 }
             }
 
             var convertDate = moment(new Date(today)).format("yyyy-MM-DD");
             var convertTime = moment(new Date(today)).format("HH");
+            var convertCloseTime = moment(new Date(todayEnd)).format("HH");
             setCurrentDate(convertDate);
             setCurrentTime(convertTime);
+            setCloseTime(convertCloseTime);
             setSelectedDate(convertDate);
             setSelectedTime(convertTime);
         } else {
             setChoiceDate(false);
             var today = new Date();
-            today.setHours(today.getHours() + 2);
+            today.setHours(today.getHours() + 1);
             setSelectedDate(today);
         }
         
@@ -226,8 +246,8 @@ const ShippingDateView = () => {
                     className={"shippingdate-timepicker"}
                     format={24}
                     start={currentTime} 
-                    end="18:00" 
-                    step={120}
+                    end={closeTime} 
+                    step={30}
                     value={selectedTime}
                     onChange={handleShippingTime}
                 />
