@@ -13,6 +13,32 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+    font-family: "Inter-Regular";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+  }
+  
+  @font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Medium.ttf);
+  }
+  
+  @font-face {
+    font-family: "Inter-SemiBold";
+    src: url(../Font/FontInter/Inter-SemiBold.ttf);
+  }
+  
+  @font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+  }
+  
+  // Font-family Inter
+  $fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+  $fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+  $fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+  $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 .modalMenuDetail {
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
@@ -23,7 +49,6 @@
     top: 0;
     left: 0;
     overflow: hidden; /* Enable scroll if needed */
-    // padding-top: 0px; /* Location of the content container */
 }
 
 .modal-content-menudetail {
@@ -90,7 +115,6 @@
     width: 47%;
     height: 100%;
     display: flex;
-    // justify-content: space-between;
     flex-direction: column;
     padding: 61px 25px 52px 39px;
     box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.05);
@@ -219,10 +243,6 @@
 }
 
 .menuButton {
-    //menu button bottom section
-    // position: sticky;
-    // bottom: 0;
-    // right: 0;
     height: 133px;
     padding: 17px 23px 19px 18px;
     box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.1);
@@ -393,7 +413,7 @@
 
     .mob-menu-price {
         width: auto;
-        font-family: "SF-Compact-Rounded", sans-serif;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
         font-weight: 600;
         line-height: 20px;
@@ -402,7 +422,6 @@
         color: #111111;
         min-width: 78px;
         font-size: 22px;
-        margin-top: 45px;
     }
 
     .mob-menuButton {
@@ -421,7 +440,7 @@
     }
 
     .mob-add-words {
-        font-family: "Montserrat", sans-serif;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
         font-weight: bold;
         text-transform: capitalize;
@@ -470,7 +489,7 @@
 
     .mob-modal-content-menudetail {
         background-color: white;
-        width: 540px; /* Width in proportion to its parent container*/
+        width: 450px; /* Width in proportion to its parent container*/
         height: auto; /* Height in proportion to its parent container */
         margin: auto; /* Auto margin according to the element width */
         border: none;
@@ -556,9 +575,9 @@
     }
 
     .mob-menu-name {
-        font-family: "Montserrat", sans-serif;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: bold;
+        font-weight: 700;
         text-transform: capitalize;
         color: #111111;
         max-width: 181px;
@@ -567,7 +586,7 @@
     }
 
     .mob-menu-category {
-        font-family: "SF-Compact-Rounded", sans-serif;
+        font-family: $fontFamily-Inter-Regular;
         font-weight: 500;
         font-style: normal;
         color: #767676;
@@ -595,7 +614,7 @@
 
     .mob-menu-price {
         width: auto;
-        font-family: "SF-Compact-Rounded", sans-serif;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
         font-weight: 600;
         line-height: 20px;
@@ -604,7 +623,6 @@
         color: #111111;
         min-width: 78px;
         font-size: 22px;
-        margin-top: 45px;
     }
 
     .mob-menuButton {
