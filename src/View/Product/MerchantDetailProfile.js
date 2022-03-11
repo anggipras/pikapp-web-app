@@ -126,8 +126,6 @@ const MerchantDetailProfile = () => {
                     <div className="merchdetailprofile-title">{merchantName}</div>
                 </div>
 
-                {cartButton()}
-
                 <div className="merchdetailprofile-shopTitle-layout">
                     <img className="merchdetailprofile-shopTitle-image" src={ShopIcon} alt='' />
                     <div className="merchdetailprofile-shopTitle-title">Info Toko</div>

@@ -3,6 +3,32 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+// Font-family Inter
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 body {
   background-color: white !important;
 }
@@ -2341,9 +2367,9 @@ $size20px: 20px;
 }
 
 .merchdetailprofile-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: 800;
   font-size: 20px;
   color: #111111;
   margin-left: 10px;
@@ -2415,18 +2441,22 @@ $size20px: 20px;
   margin-right: $size14px;
 }
 
-.merchdetailprofile-shopTitle-title, .merchdetailprofile-shopAddress-title {
-  font-family: "SF-Compact-Rounded", sans-serif;
+.merchdetailprofile-shopTitle-title {
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bolder;
-  font-size: 20px;
-  line-height: 20px;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 18px;
   color: #111111;
 }
 
 .merchdetailprofile-shopAddress-title {
-  font-weight: normal;
-  font-size: 18px;
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #111111;
 }
 
 .merchdetailprofile-shopSchedule-layout {
@@ -2450,10 +2480,10 @@ $size20px: 20px;
 }
 
 .merchdetailprofile-shopSchedule-days, .merchdetailprofile-shopSchedule-hours {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 20px;
   color: #111111;
 }

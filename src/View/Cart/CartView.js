@@ -90,7 +90,7 @@ class CartView extends React.Component {
     startTour : false,
     steptour:[
       {
-        selector: '.cart-foodService',
+        selector: '.cart-serviceDeliveryType',
         content : () => (
           <div>
             <h4>Mau makan dimana?</h4>
@@ -100,12 +100,12 @@ class CartView extends React.Component {
         ),
       },
       {
-        selector: '.cart-paymentService',
+        selector: '.cart-servicePaymentType',
         content : () => (
           <div>
             <h4>Bayar pakai apa?</h4>
             <br />
-            <span>Kami menyediakan 2 tipe pembayaran, secara OVO ataupun bayar di kasir</span>
+            <span>Kami menyediakan beberapa tipe pembayaran, secara e-wallet ataupun bayar di kasir</span>
           </div>
         )
       },
@@ -120,12 +120,12 @@ class CartView extends React.Component {
         )
       },
       {
-        selector: '.cart-OrderButton-mob',
+        selector: '.cart-OrderButton',
         content : () => (
           <div>
             <h4>Sudah siap makan?</h4>
             <br />
-            <span>Silakan tekan tombol Order untuk melakukan pembayaran (psstt, untuk pembayaran di kasir, jangan lupa ke kasir ya!)</span>
+            <span>Silakan tekan tombol Buat Pesanan untuk melakukan pembayaran (psstt, untuk pembayaran di kasir, jangan lupa ke kasir ya!)</span>
           </div>
         )
       }
@@ -645,7 +645,13 @@ class CartView extends React.Component {
         return newlistArr += `${val2.name}, `
       })
     })
-    return <h5 className='cartList-content-choice' style={{display: "flex"}}><h5 className='cartList-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan :</h5>{newlistArr}</h5>
+    if (newlistArr == "") {
+      return null
+    } else {  
+      return <div className='cartList-content-choice' style={{display: "flex", fontWeight: "bold", color: "black"}}>
+        Tambahan<div style={{marginLeft: "5px", marginRight: "5px"}}>:</div><span className='cartList-content-notes'>{newlistArr}</span>
+        </div>
+    }
   }
 
   onEditCart = (ind, mid) => {
@@ -966,10 +972,17 @@ class CartView extends React.Component {
 
               <div className='cartList-content-detail'>
                 <div className='cartList-content-detail-left'>
-                  <h2 className='cartList-content-title'>{food.foodName}</h2>
+                  <div className='cartList-content-title'>{food.foodName}</div>
                   {this.newListAllChoices(food)}
-                  <h3 className='cartList-content-price'>Rp {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
-                  <h5 className='cartList-content-notes' style={{display: food.foodNote == ""? "none":"block"}}>{food.foodNote}</h5>
+                  <div className='cartList-content-specialnotes' style={{display: food.foodNote == ""? "none":"block"}}>
+                    {
+                      food.foodNote != "" ?
+                      `Catatan : ${food.foodNote}`
+                      :
+                      null
+                    }
+                  </div>
+                  <div className='cartList-content-price'>Rp {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</div>
                 </div>
 
                 <div className='cartList-content-detail-right'>
@@ -1134,7 +1147,7 @@ class CartView extends React.Component {
               <div className='flex-RightSide'>
                 {detailView}
 
-                <div className='cart-serviceType' onClick={() => this.handleDetail("eat-method")}>
+                <div className='cart-serviceDeliveryType' onClick={() => this.handleDetail("eat-method")}>
                   <div className='cart-detailContent'>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                           <div className='cart-leftSide'>
@@ -1157,7 +1170,7 @@ class CartView extends React.Component {
                   </div>
                 </div>
 
-                <div className='cart-serviceType' onClick={() => this.handleDetail("pay-method")}>
+                <div className='cart-servicePaymentType' onClick={() => this.handleDetail("pay-method")}>
                   <div className='cart-detailContent'>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                           <div className='cart-leftSide'>
@@ -1279,7 +1292,7 @@ class CartView extends React.Component {
                 '#4bb7ac'
               }} >
               <div className='cart-OrderButton-content'>
-                <h1 className='cart-OrderButton-word'>Buat Pesanan</h1>
+                <div className='cart-OrderButton-word'>Buat Pesanan</div>
               </div>
             </div>
           </div>
