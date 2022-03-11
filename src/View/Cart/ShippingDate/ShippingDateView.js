@@ -25,6 +25,7 @@ const ShippingDateView = () => {
     const [currentDate, setCurrentDate] = useState("");
     const [currentTime, setCurrentTime] = useState("");
     const [closeTime, setCloseTime] = useState("");
+    const [closeOrOpen, setCloseOrOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     const [isTomorrow, setIsTomorrow] = useState(false);
@@ -44,7 +45,8 @@ const ShippingDateView = () => {
         merchant_status: null,
         close_time: null,
         next_open_day: null,
-        next_open_time: null
+        next_open_time: null,
+        next_close_time: null
     })
 
     useEffect(() => {
@@ -70,7 +72,8 @@ const ShippingDateView = () => {
                 merchant_status: merchantHourCheckingResult.merchant_status,
                 close_time: merchantHourCheckingResult.close_time,
                 next_open_day: merchantHourCheckingResult.next_open_day,
-                next_open_time: merchantHourCheckingResult.next_open_time
+                next_open_time: merchantHourCheckingResult.next_open_time,
+                next_close_time: merchantHourCheckingResult.next_close_time
             })
         })
     }, [])
@@ -97,7 +100,7 @@ const ShippingDateView = () => {
                 } else if(weekday[nowDate.getDay()+1] == merchantHourStatus.next_open_day) { // set time, open next day  
                     today.setDate(today.getDate() + 1)
                     var openHour = merchantHourStatus.next_open_time.split(":")
-                    var closeHour = merchantHourStatus.close_time.split(":") //LATER NEED TO BE CHANGED BY NEXT_CLOSE_TIME
+                    var closeHour = merchantHourStatus.next_close_time.split(":") //LATER NEED TO BE CHANGED BY NEXT_CLOSE_TIME
                     today.setHours(parseInt(openHour[0]))
                     today.setMinutes(parseInt(openHour[1]))
                     todayEnd.setHours(parseInt(closeHour[0]))
@@ -113,7 +116,7 @@ const ShippingDateView = () => {
                     }
                     today.setDate(today.getDate() + countDay)
                     var openHour = merchantHourStatus.next_open_time.split(":")
-                    var closeHour = merchantHourStatus.close_time.split(":")
+                    var closeHour = merchantHourStatus.next_close_time.split(":")
                     today.setHours(parseInt(openHour[0]))
                     today.setMinutes(parseInt(openHour[1]))
                     todayEnd.setHours(parseInt(closeHour[0]))
@@ -146,6 +149,7 @@ const ShippingDateView = () => {
             setSelectedDate(convertDate);
             setSelectedTime(convertTime);
         } else {
+            setCloseOrOpen(false)
             setChoiceDate(false);
             var today = new Date();
             today.setHours(today.getHours() + 1);
@@ -160,11 +164,46 @@ const ShippingDateView = () => {
         var pickDate = moment(new Date(e)).format("yyyy-MM-DD");
 
         if(pickDate !== today) {
-            setIsTomorrow(true);
-            e.setHours(e.getHours() + 1);
-            var convertTime = moment(new Date(e)).format("HH");
-            setCurrentTime(convertTime);
-            setSelectedTime(convertTime);
+            let uuid = uuidV4();
+            uuid = uuid.replace(/-/g, "");
+            const date = new Date().toISOString();
+            let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+            Axios(address + "merchant/v1/shop/management/list/", {
+                headers: {
+                "Content-Type": "application/json",
+                "x-request-id": uuid,
+                "x-request-timestamp": date,
+                "x-client-id": clientId,
+                "token": "PUBLIC",
+                "mid": selectedMerchant[0].mid,
+                },
+                method: "GET"
+            }).then((res) => {
+                let timeManagement = res.data.results.time_management
+                const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                let filteredDay = timeManagement.filter(valDay => {
+                    return valDay.days == weekday[e.getDay()].toLocaleUpperCase()
+                })
+                let selectedDayStart = new Date();
+                let selectedDayEnd = new Date();
+                if (filteredDay[0].open_time == "00:00" && filteredDay[0].close_time == "00:00") {
+                    setCloseOrOpen(true)
+                } else {
+                    setIsTomorrow(true);
+                    setCloseOrOpen(false)
+                    let selectedDayOpenHour = filteredDay[0].open_time.split(":")
+                    let selectedDayCloseHour = filteredDay[0].close_time.split(":")
+                    selectedDayStart.setHours(parseInt(selectedDayOpenHour[0]))
+                    selectedDayStart.setMinutes(parseInt(selectedDayOpenHour[1]))
+                    selectedDayEnd.setHours(parseInt(selectedDayCloseHour[0]))
+                    selectedDayEnd.setMinutes(parseInt(selectedDayCloseHour[1]))
+                    let convertTime = moment(new Date(selectedDayStart)).format("HH");
+                    let convertCloseTime = moment(new Date(selectedDayEnd)).format("HH");
+                    setCurrentTime(convertTime);
+                    setCloseTime(convertCloseTime);
+                    setSelectedTime(convertTime);
+                }
+            }).catch((err) => console.log(err))
         } else {
             setIsTomorrow(false);
         }
@@ -242,15 +281,22 @@ const ShippingDateView = () => {
                     </MuiPickersUtilsProvider>
                 </div>
                 <div>
-                <TimePicker 
-                    className={"shippingdate-timepicker"}
-                    format={24}
-                    start={currentTime} 
-                    end={closeTime} 
-                    step={30}
-                    value={selectedTime}
-                    onChange={handleShippingTime}
-                />
+                {
+                    !closeOrOpen?
+                    <TimePicker 
+                        className={"shippingdate-timepicker"}
+                        format={24}
+                        start={currentTime} 
+                        end={closeTime} 
+                        step={30}
+                        value={selectedTime}
+                        onChange={handleShippingTime}
+                    />
+                    :
+                    <div className="shippingdate-timepicker-close">
+                        Tutup
+                    </div>
+                }
                 </div>
             </div>
         )
@@ -266,11 +312,15 @@ const ShippingDateView = () => {
             dispatch({ type: 'SHIPPINGDATE', payload: selectedDate});
         }
         
-        window.history.back();
+        if (!closeOrOpen) {
+            window.history.back();
+        }
     }
 
     const goBack = () => {
-        window.history.back();
+        if (!closeOrOpen) {
+            window.history.back();
+        }
     }
 
     const shippingDateWarning = () => {
