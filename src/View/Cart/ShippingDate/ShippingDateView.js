@@ -186,7 +186,7 @@ const ShippingDateView = () => {
                 })
                 let selectedDayStart = new Date();
                 let selectedDayEnd = new Date();
-                if (filteredDay[0].daily_status == "CLOSE") {
+                if (filteredDay[0].open_time == "00:00" && filteredDay[0].close_time == "00:00") {
                     setCloseOrOpen(true)
                 } else {
                     setIsTomorrow(true);

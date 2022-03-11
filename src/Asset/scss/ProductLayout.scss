@@ -2287,6 +2287,25 @@ body {
   filter: contrast(30%);
 }
 
+.merchant-divider-dot {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 0px;
+  color: #aaaaaa;
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+.merchant-openClose-status {
+  font-family: "SF-Compact-Rounded", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+}
+
 $size14px: 14px;
 $size20px: 20px;
 .merchdetailprofile-Layout {

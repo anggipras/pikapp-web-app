@@ -9,6 +9,7 @@ import ClockIcon from "../../Asset/Icon/ic_clock_green.png";
 import CartIcon from "../../Asset/Icon/ic_shopping_cart.png";
 import { v4 as uuidV4 } from "uuid";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
+import { Link } from "react-router-dom";
 
 const MerchantDetailProfile = () => {
     const location = useLocation()
@@ -92,18 +93,21 @@ const MerchantDetailProfile = () => {
             return selectedMerchant[0].mid === cartVal.mid
         })
         if (filterMerchantCart.length != 0) {
+            let isManualTxn = JSON.parse(localStorage.getItem("isManualTxn"))
             return (
-                <div className="merchdetailprofile-cart-layout">
-                    <div className="merchdetailprofile-cart-startSide">
-                        <img className="merchdetailprofile-cart-image" src={CartIcon} alt='' />
-                        <div className="merchdetailprofile-cart-titleSide">
-                            <div className="merchdetailprofile-cart-title">Pesanan Saya</div>
-                            <div className="merchdetailprofile-cart-detail">Cek Pesanan Saya Sekarang</div>
+                <Link to={isManualTxn ? "/cartmanual" : "/cart"} style={{ textDecoration: "none" }}>
+                    <div className="merchdetailprofile-cart-layout">
+                        <div className="merchdetailprofile-cart-startSide">
+                            <img className="merchdetailprofile-cart-image" src={CartIcon} alt='' />
+                            <div className="merchdetailprofile-cart-titleSide">
+                                <div className="merchdetailprofile-cart-title">Pesanan Saya</div>
+                                <div className="merchdetailprofile-cart-detail">Cek Pesanan Saya Sekarang</div>
+                            </div>
                         </div>
-                    </div>
 
-                    <img className="merchdetailprofile-cart-arrow" src={ArrowRight} alt='' />
-                </div>
+                        <img className="merchdetailprofile-cart-arrow" src={ArrowRight} alt='' />
+                    </div>
+                </Link>
             )
         } else {
             return null

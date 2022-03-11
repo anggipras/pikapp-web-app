@@ -1613,19 +1613,20 @@ class ProductView extends React.Component {
 
                     <div className='merchant-categName'>
                       <div className='merchant-allcateg'>{this.state.data.category}</div>
-                      <div className='merchant-starInfo'>
+                      {/* <div className='merchant-starInfo'>
                         {
-                          // this.state.data.rating ?
-                          //   <>
-                          //     <img className='star-img' src={StarIcon} alt='' />
-                          //     <div className='merchant-star'>{this.state.data.rating}</div>
-                          //   </>
-                          //   :
-                          //   null
-                          // <Skeleton width={50} />
+                          this.state.data.rating ?
+                            <>
+                              <img className='star-img' src={StarIcon} alt='' />
+                              <div className='merchant-star'>{this.state.data.rating}</div>
+                            </>
+                            :
+                            null
                         }
-                        {/* <div className='star-votes'>(50+ Upvotes)</div> */}
-                      </div>
+                        <div className='star-votes'>(50+ Upvotes)</div>
+                      </div> */}
+                      {this.state.data.category != "" ? <div className="merchant-divider-dot">.</div> : null}
+                      <div className="merchant-openClose-status" style={{color: this.state.merchantHourStatus == "CLOSE" ? "#dc6a84" : "#4bb7ac"}}>{this.state.merchantHourStatus == "CLOSE" ? "Tutup" : "Buka"}</div>
                     </div>
                   </div>
                 </Link>
