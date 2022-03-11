@@ -18,7 +18,8 @@ import ProfileIcon from '../../Asset/Icon/avatar.png'
 import OpenHourIcon from '../../Asset/Icon/hour.png'
 import CoinIcon from '../../Asset/Icon/coin.png'
 import LocationIcon from '../../Asset/Icon/location.png'
-import PhoneIcon from '../../Asset/Icon/phone.png'
+import PhoneIcon from '../../Asset/Icon/phone.png';
+import WhatsAppIcon from '../../Asset/Icon/whatsapp-icon.png';
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import OrderStatusIcon from '../../Asset/Icon/order-icon-green.png'
@@ -1631,12 +1632,12 @@ class ProductView extends React.Component {
                   </div>
                 </Link>
               </div>
-              <div className='merchant-call-sec' onClick={() => this.handlePhone(this.state.data.phone)}>
-                <div className='merchant-call'>
-                  <span className='merchantCall-icon'>
-                    <img className='merchantCall-img' src={PhoneIcon} alt='' />
-                  </span>
-                </div>
+              <div onClick={() => this.handlePhone(this.state.data.phone)}>
+                {/* <div className='merchant-call'> */}
+                  {/* <span className='merchantCall-icon'> */}
+                    <img className='merchant-call-sec' src={WhatsAppIcon} alt='' />
+                  {/* </span> */}
+                {/* </div> */}
               </div>
             </div>
           </div>
@@ -1729,7 +1730,7 @@ class ProductView extends React.Component {
                 {
                   this.state.productCategpersize.map((menuCategory, index) => (
                       <div key={index} className='merchantdetail-category-itembox' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>
-                        <span className="merchantdetail-category-text">{menuCategory.category_name.toLocaleLowerCase()}</span>
+                        <div className="merchantdetail-category-text">{menuCategory.category_name.toLocaleLowerCase()}</div>
                       </div>
                   ))
                 }
