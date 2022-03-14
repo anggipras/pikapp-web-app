@@ -13,6 +13,31 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 @media (min-width: 768px) {
   .tracking-delivery-Layout {
     width: 480px !important;
@@ -58,7 +83,7 @@
 }
 
 .tracking-delivery-titletext {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bolder;
   font-size: 20px;
@@ -95,7 +120,7 @@
 }
 
 .tracking-delivery-transactionid {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -106,7 +131,7 @@
 }
 
 .tracking-delivery-transactiondate {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -130,7 +155,7 @@
 
 .tracking-delivery-transaction-merchName {
   font-size: 17px;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   line-height: 20px;
@@ -152,7 +177,7 @@
 }
 
 .tracking-delivery-item {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
@@ -167,7 +192,7 @@
 }
 
 .tracking-delivery-datetext {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -201,7 +226,7 @@
 }
 
 .tracking-delivery-content-hour {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
@@ -214,7 +239,7 @@
 }
 
 .tracking-delivery-content-item {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
@@ -225,7 +250,7 @@
 }
 
 .tracking-delivery-content-detail {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
@@ -236,7 +261,7 @@
 }
 
 .tracking-delivery-content-desc {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
@@ -254,7 +279,7 @@
 
 .tracking-delivery-content-totalitem {
   font-size: 17px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   line-height: 20px;
@@ -269,7 +294,7 @@
 
 .tracking-delivery-content-totalprice {
   font-size: 17px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   line-height: 20px;
@@ -291,7 +316,7 @@
 }
 
 .tracking-delivery-content-price {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -321,7 +346,7 @@
 }
 
 .tracking-delivery-courier-phone {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -334,7 +359,7 @@
 
 .tracking-delivery-courier-name {
   font-size: 16px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   line-height: 20px;
@@ -364,7 +389,7 @@
 }
 
 .tracking-delivery-content-call {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -375,7 +400,18 @@
 }
 
 .tracking-delivery-info-order {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+.tracking-delivery-info-status {
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -386,7 +422,7 @@
 }
 
 .tracking-delivery-dateinfo {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -414,7 +450,7 @@
   margin-left: 14px;
   margin-right: 14px;
 
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: 700;
   text-align: center;

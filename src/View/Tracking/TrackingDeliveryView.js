@@ -217,7 +217,7 @@ class TrackingDeliveryView extends React.Component {
             return (
                 <div className="tracking-delivery-section-subtotal">
                     <h3 className="tracking-delivery-info-order">Status Pengiriman</h3>
-                    <h3 className="tracking-delivery-info-order" style={{ color : color }}>{statusDesc}</h3>
+                    <h3 className="tracking-delivery-info-status" style={{ color : color }}>{statusDesc}</h3>
                 </div>
             )
         }

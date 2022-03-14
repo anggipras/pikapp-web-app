@@ -13,6 +13,31 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+    font-family: "Inter-Regular";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+    font-family: "Inter-SemiBold";
+    src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 body {
     background-color: lightgrey;
     display: flex;
@@ -48,7 +73,7 @@ body {
 }
 
 .shippingSelection-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     font-size: 20px;
@@ -94,7 +119,7 @@ body {
     margin-left: 14px;
     margin-right: 14px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: 700;
     text-align: center;
@@ -107,7 +132,7 @@ body {
 }
 
 .shippingSelection-shippingName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: gray;
@@ -123,7 +148,7 @@ body {
 }
 
 .shippingSelection-shippingDetail {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     color: gray;
@@ -139,7 +164,7 @@ body {
 }
 
 .shippingSelection-blackNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -147,7 +172,7 @@ body {
 }
 
 .shippingSelection-grayNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     color: #111111;
@@ -189,7 +214,7 @@ body {
 }
 
 .shippingDetail-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     font-size: 20px;
@@ -232,7 +257,7 @@ body {
     margin-left: 14px;
     margin-right: 14px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: 700;
     text-align: center;
@@ -248,7 +273,7 @@ body {
 }
 
 .shippingDetail-shippingName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: gray;
@@ -264,7 +289,7 @@ body {
 }
 
 .shippingDetail-shippingDetail {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     color: gray;
@@ -280,7 +305,7 @@ body {
 }
 
 .shippingDetail-blackNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -289,7 +314,7 @@ body {
 }
 
 .shippingDetail-grayNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     color: #111111;

@@ -13,6 +13,31 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+    font-family: "Inter-Regular";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+    font-family: "Inter-SemiBold";
+    src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 body {
     background-color: lightgrey;
     display: flex;
@@ -48,7 +73,7 @@ body {
 }
 
 .pickupSelection-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     font-size: 20px;
@@ -106,7 +131,7 @@ body {
 }
 
 .pickup-radioTitle {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -124,7 +149,7 @@ body {
     margin-left: 14px;
     margin-right: 14px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: 700;
     text-align: center;
@@ -173,7 +198,7 @@ body {
 }
 
 .deliverySelection-addressTitle {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -181,9 +206,9 @@ body {
 }
 
 .deliverySelection-addressInputted {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 400;
     color: gray;
     font-size: 12px;
 
@@ -196,7 +221,7 @@ body {
 }
 
 .deliverySelection-blackNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -205,7 +230,7 @@ body {
 }
 
 .deliverySelection-grayNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #aaaaaa;
@@ -214,7 +239,7 @@ body {
 }
 
 .deliverySelection-greenNotes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #4bb7ac;
@@ -233,7 +258,7 @@ body {
 }
 
 .deliverySelection-shipperName-title, .deliverySelection-shipperPrice-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -254,7 +279,7 @@ body {
     border: 1px solid #4bb7ac;
     border-radius: 8px 0px 0px 8px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -284,7 +309,7 @@ body {
 }
 
 .addressInput-fullAddress-title, .addressInput-shipperNotes-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     color: #111111;
@@ -332,7 +357,7 @@ body {
 }
 
 .paymentMethod-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bolder;
     font-size: 20px;
@@ -350,7 +375,7 @@ body {
 }
 
 .ewallet-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 18px;
@@ -408,7 +433,7 @@ body {
 }
 
 .payment-radioTitle {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-weight: bolder;
     color: #111111;
@@ -425,7 +450,7 @@ body {
 }
 
 .payment-ovoNumber-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -443,7 +468,7 @@ body {
 }
 
 .payment-extraClass {
-    font-family: "SF-Compact-Rounded", sans-serif !important;
+    font-family: $fontFamily-Inter-Regular !important;
     font-style: normal !important;
     font-weight: 500 !important;
     font-size: 10px !important;
@@ -465,7 +490,7 @@ body {
 }
 
 .payment-ovoNumber-alert {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: 500;
     font-size: 10px;
@@ -495,7 +520,7 @@ body {
     margin-left: 14px;
     margin-right: 14px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: 700;
     text-align: center;
@@ -541,7 +566,7 @@ body {
 }
 
 .addressmaps-mainname {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     // font-size: 40px;
@@ -553,7 +578,7 @@ body {
 }
 
 .addressmaps-detailinfo-text {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 12px;
     font-weight: normal;
@@ -712,7 +737,7 @@ body {
 }
 
 .addressmaps-location-mainName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 14px;
     font-weight: normal;
@@ -749,7 +774,7 @@ body {
 }
 
 .addresssearch-location-mainName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 14px;
     font-weight: normal;
