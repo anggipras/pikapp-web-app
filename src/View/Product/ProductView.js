@@ -1495,7 +1495,10 @@ class ProductView extends React.Component {
               <Link to={"/cart"}>
                 <div className='cartIcon-layout'>
                   <div className='cartIcon-content'>
-                    <div className='cartItem-total'>{filterMerchantCart[0].food.length} Items</div>
+                    <div>
+                      <div className='cartItem-total'>{filterMerchantCart[0].food.length} Items</div>
+                      <div className="cartItem-merchantname">Dari {this.state.data.title}</div>
+                    </div>
                     <div className='cartItem-price'>Rp. {Intl.NumberFormat("id-ID").format(totalCartIcon)} <img className="cartItem-icon" src={ShoppingBagLogo}></img></div>
                   </div>
                 </div>
