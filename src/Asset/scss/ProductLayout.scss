@@ -50,7 +50,9 @@ body {
   .storeBanner {
     width: 100%;
     // height: 433px;
-    height: 16vw;
+    // height: 16vw;
+    min-height: 170px;
+    max-height: 200px;
     display: block;
     position: relative;
   }
@@ -171,7 +173,7 @@ body {
   }
 
   .merchant-mainName-title {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 1rem;
@@ -181,7 +183,7 @@ body {
   }
 
   .merchant-allcateg {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 12px;
     font-weight: normal;
@@ -200,7 +202,7 @@ body {
   }
 
   .merchant-starInfo .merchant-star {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 25px;
     font-weight: 500;
     line-height: 20px;
@@ -209,7 +211,7 @@ body {
   }
 
   .merchant-starInfo .star-votes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 25px;
     font-weight: 500;
     line-height: 20px;
@@ -301,7 +303,7 @@ body {
   }
 
   .top-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 25px;
     // font-weight: bold;
     // line-height: 25px;
@@ -314,7 +316,7 @@ body {
   }
 
   .bottom-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 20px;
     font-size: 10px;
     font-weight: normal;
@@ -378,7 +380,7 @@ body {
   }
 
   .custom-optionCloser {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 30px;
@@ -391,7 +393,7 @@ body {
   }
 
   .custom-option {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 30px;
@@ -408,7 +410,7 @@ body {
   }
 
   .categoryName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 12px;
     font-weight: 500;
@@ -490,7 +492,7 @@ body {
   .product-categ {
     position: relative;
     width: 100%;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     // font-size: 40px;
@@ -589,7 +591,7 @@ body {
   }
 
   .product-star-rating {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     font-style: normal;
@@ -601,11 +603,11 @@ body {
   .product-name {
     // width: 181px;
     width: 179px;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-weight: bold;
     // font-size: 18px;
-    font-size: 13px;
+    font-size: 15px;
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
@@ -625,7 +627,7 @@ body {
   .product-desc {
     // width: 181px;
     width: 179px;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     // font-size: 12px;
@@ -650,7 +652,7 @@ body {
   .product-price {
     // width: 177px;
     width: auto;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     // font-size: 22px;
@@ -676,7 +678,7 @@ body {
   }
 
   .pikappInfo {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -763,7 +765,7 @@ body {
 
   .merchantList-ratingScore,
   .merchantList-location {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 17px;
@@ -773,7 +775,7 @@ body {
   }
 
   .merchantList-distance {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 17px;
@@ -782,7 +784,7 @@ body {
   }
 
   .merchantList-storeName {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 25px;
@@ -799,7 +801,7 @@ body {
   }
 
   .merchantList-storeCategory {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 17px;
@@ -856,7 +858,7 @@ body {
 
   .cartItem-total,
   .cartItem-price {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     // font-size: 27px;
@@ -947,7 +949,7 @@ body {
   }
 
   .cartItem-merchantname {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-size: 27px;
     font-size: 15px;
@@ -1042,6 +1044,8 @@ body {
   .storeBanner {
     width: 100%;
     height: 50vw;
+    // min-height: 50vw;
+    max-height: 200px;
     display: block;
     position: relative;
   }
@@ -1141,7 +1145,7 @@ body {
   }
 
   .merchant-mainName {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 1ren;
@@ -1152,7 +1156,7 @@ body {
   }
 
   .merchant-allcateg {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
@@ -1170,7 +1174,7 @@ body {
   }
 
   .merchant-starInfo .merchant-star {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -1179,7 +1183,7 @@ body {
   }
 
   .merchant-starInfo .star-votes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -1257,7 +1261,7 @@ body {
   }
 
   .top-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -1267,7 +1271,7 @@ body {
   }
 
   .bottom-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 10px;
     font-weight: normal;
     line-height: 10px;
@@ -1318,7 +1322,7 @@ body {
   }
 
   .custom-optionCloser {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 12px;
@@ -1331,7 +1335,7 @@ body {
   }
 
   .custom-option {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 12px;
@@ -1348,7 +1352,7 @@ body {
   }
 
   .categoryName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     font-style: normal;
@@ -1413,7 +1417,7 @@ body {
   .product-categ {
     position: relative;
     width: 100%;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
@@ -1499,7 +1503,7 @@ body {
   }
 
   .product-star-rating-mob {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 10px;
     font-weight: 500;
     font-style: normal;
@@ -1510,10 +1514,10 @@ body {
 
   .product-name-mob {
     width: 160px;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-weight: bold;
-    font-size: 13px;
+    font-size: 15px;
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
@@ -1530,7 +1534,7 @@ body {
   .product-desc-mob {
     white-space: pre-line;
     width: 179px;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1551,7 +1555,7 @@ body {
 
   .product-price-mob {
     width: auto;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -1579,7 +1583,7 @@ body {
   }
   
   .merchantdetail-cart-text-mob {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     // font-size: 22px;
@@ -1598,7 +1602,7 @@ body {
   }
 
   .pikappInfo {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -1679,7 +1683,7 @@ body {
 
   .merchantList-ratingScore,
   .merchantList-location {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 10px;
@@ -1689,7 +1693,7 @@ body {
   }
 
   .merchantList-distance {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1698,7 +1702,7 @@ body {
   }
 
   .merchantList-storeName {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -1715,7 +1719,7 @@ body {
   }
 
   .merchantList-storeCategory {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1759,7 +1763,7 @@ body {
 
   .cartItem-total,
   .cartItem-price {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 17px;
@@ -1849,7 +1853,7 @@ body {
   }
 
   .cartItem-merchantname {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-size: 27px;
     font-size: 15px;
@@ -2105,11 +2109,11 @@ body {
 }
 
 .promo-title {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bolder;
   color: #111111;
-  font-size: 18px;
+  font-size: 14px;
   margin-left: 10px;
 }
 
@@ -2175,7 +2179,7 @@ body {
 }
 
 .merchantdetail-cart-text {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   // font-size: 22px;
@@ -2229,10 +2233,10 @@ body {
 
 
 .merchantdetail-category-text {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   // font-size: 22px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
@@ -2255,10 +2259,10 @@ body {
 }
 
 .merchant-totalmenu-text {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   // font-size: 22px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
@@ -2298,7 +2302,7 @@ body {
 }
 
 .merchant-hour-status-text {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
@@ -2320,7 +2324,7 @@ body {
 }
 
 .merchant-divider-dot {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 30px;
@@ -2332,7 +2336,7 @@ body {
 }
 
 .merchant-openClose-status {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
@@ -2406,7 +2410,7 @@ $size20px: 20px;
 }
 
 .merchdetailprofile-cart-title, .merchdetailprofile-cart-detail {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
