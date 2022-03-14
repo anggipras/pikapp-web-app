@@ -72,10 +72,10 @@
 .titleSelection {
     font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 25px;
     line-height: 20px;
-    letter-spacing: 0.05em;
+    letter-spacing: normal;
     text-transform: capitalize;
     color: #111111;
 }
@@ -263,9 +263,9 @@
 }
 
 .minus-sym {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 25px;
     letter-spacing: 0.05em;
     color: #ffffff;
@@ -274,7 +274,7 @@
 .number-area {
     font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 35px;
     letter-spacing: 0.05em;
     text-transform: capitalize;
@@ -295,9 +295,9 @@
 }
 
 .plus-sym {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 25px;
     letter-spacing: 0.05em;
     color: #ffffff;

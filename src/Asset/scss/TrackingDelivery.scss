@@ -85,7 +85,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .tracking-delivery-titletext {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: normal;
   font-size: 20px;
   color: #111111;
   margin-left: 16px;
@@ -157,7 +157,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   font-size: 17px;
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   line-height: 20px;
   color: #111111;
   margin-bottom: 8px;
@@ -241,7 +241,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .tracking-delivery-content-item {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;
@@ -413,7 +413,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .tracking-delivery-info-status {
   font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 100;
   font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;

@@ -75,7 +75,7 @@ body {
 .pickupSelection-title {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     font-size: 20px;
     color: #111111;
     margin-left: 16px;
@@ -131,9 +131,9 @@ body {
 }
 
 .pickup-radioTitle {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 100;
     color: #111111;
     font-size: 18px;
     margin-left: 10px;
@@ -151,7 +151,7 @@ body {
 
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: 700;
+    font-weight: normal;
     text-align: center;
     font-size: 18px;
     color: white;
@@ -198,9 +198,9 @@ body {
 }
 
 .deliverySelection-addressTitle {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 500;
     color: #111111;
     font-size: 12px;
 }
@@ -221,18 +221,18 @@ body {
 }
 
 .deliverySelection-blackNotes {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-Medium;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 500;
     color: #111111;
     font-size: 12px;
     text-transform: capitalize;
 }
 
 .deliverySelection-grayNotes {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-Medium;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 500;
     color: #aaaaaa;
     font-size: 12px;
     text-transform: capitalize;
@@ -241,7 +241,7 @@ body {
 .deliverySelection-greenNotes {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     color: #4bb7ac;
     font-size: 12px;
 }
@@ -260,7 +260,7 @@ body {
 .deliverySelection-shipperName-title, .deliverySelection-shipperPrice-title {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     color: #111111;
     font-size: 14px;
 }
@@ -309,9 +309,9 @@ body {
 }
 
 .addressInput-fullAddress-title, .addressInput-shipperNotes-title {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-Medium;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 500;
     color: #111111;
     font-size: 14px;
 }
@@ -359,7 +359,7 @@ body {
 .paymentMethod-title {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     font-size: 20px;
     color: #111111;
     margin-left: 16px;
@@ -522,7 +522,7 @@ body {
 
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: 700;
+    font-weight: normal;
     text-align: center;
     font-size: 18px;
     color: white;
@@ -568,7 +568,7 @@ body {
 .addressmaps-mainname {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: normal;
     // font-size: 40px;
     font-size: 1rem;
     line-height: 20px;

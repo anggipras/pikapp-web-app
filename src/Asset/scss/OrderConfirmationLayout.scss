@@ -88,7 +88,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   height: 100%;
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   // font-size: 25px;
   font-size: 20px;
   line-height: 20px;
@@ -764,9 +764,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
 .order-transaction-title {
     font-size: 15px;
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
@@ -844,9 +844,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .wordsButton-order {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 1rem;
     text-transform: capitalize;
     color: #ffffff;
@@ -854,15 +854,16 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .linkWords-order {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 1rem;
     line-height: 1.5;
     text-transform: capitalize;
     color: #4bb7ac;
     margin-top: 10px;
     cursor: pointer;
+    padding-left: 8px;
 }
 
 .buttonPayment-order {
@@ -1373,9 +1374,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
     .menu-name-order {
         max-width: 600px;
-        font-family: $fontFamily-Inter-Bold;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: bold;
+        font-weight: 100;
         font-size: 20px;
         text-transform: capitalize;
         color: #000000;
@@ -1425,9 +1426,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     }
     
     .wordsButton-order {
-        font-family: $fontFamily-Inter-Bold;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: bold;
+        font-weight: 100;
         font-size: 1rem;
         text-transform: capitalize;
         color: #ffffff;
@@ -1435,15 +1436,16 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     }
     
     .linkWords-order {
-        font-family: $fontFamily-Inter-Bold;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: bold;
+        font-weight: 100;
         font-size: 1rem;
         line-height: 1.5;
         text-transform: capitalize;
         color: #4bb7ac;
         margin-top: 10px;
         cursor: pointer;
+        // padding-left: 8px;
     }
 
     .buttonPayment-order {

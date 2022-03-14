@@ -164,9 +164,9 @@ body {
 }
 
 .shippingSelection-blackNotes {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 100;
     color: #111111;
     font-size: 15px;
 }
@@ -305,9 +305,9 @@ body {
 }
 
 .shippingDetail-blackNotes {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 100;
     color: #111111;
     font-size: 15px;
     text-transform: capitalize;

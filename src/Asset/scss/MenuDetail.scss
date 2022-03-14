@@ -159,8 +159,8 @@
 }
 
 .menu-star-rating {
-    font-family: "SF-Compact-Rounded-Medium", sans-serif;
-    font-weight: 600;
+    font-family: $fontFamily-Inter-SemiBold;
+    font-weight: 100;
     font-style: normal;
     font-size: 20px;
     color: #000000;
@@ -170,9 +170,9 @@
 
 .menu-name {
     max-width: 300px;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 32px;
     text-transform: capitalize;
     color: #000000;
@@ -180,7 +180,7 @@
 }
 
 .menu-category {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Medium;
     font-style: normal;
     font-weight: 500;
     font-size: 24px;
@@ -192,9 +192,9 @@
 .menu-price {
     min-width: 160px;
     width: auto;
-    font-family: "SF-Compact-Rounded-Semibold", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 30px;
     line-height: 20px;
     letter-spacing: 0.05em;
@@ -219,9 +219,9 @@
 
 .menuDesc-title {
     width: 100%;
-    font-family: "SF-Compact-Rounded-Semibold", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 28px;
     line-height: 20px;
     letter-spacing: 0.05em;
@@ -232,7 +232,7 @@
 .menuDesc-content {
     white-space: pre-line;
     width: 100%;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 23px;
@@ -262,9 +262,9 @@
 }
 
 .add-words {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 28px;
     line-height: 20px;
     text-transform: capitalize;
@@ -363,8 +363,8 @@
     }
 
     .mob-menu-star-rating {
-        font-family: "SF-Compact-Rounded", sans-serif;
-        font-weight: 600;
+        font-family: $fontFamily-Inter-SemiBold;
+        font-weight: 100;
         font-style: normal;
         color: #111111;
         text-transform: capitalize;
@@ -373,9 +373,9 @@
     }
 
     .mob-menu-name {
-        font-family: "Montserrat", sans-serif;
+        font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: bold;
+        font-weight: 100;
         text-transform: capitalize;
         color: #111111;
         max-width: 181px;
@@ -384,7 +384,7 @@
     }
 
     .mob-menu-category {
-        font-family: "SF-Compact-Rounded", sans-serif;
+        font-family: $fontFamily-Inter-Medium;
         font-weight: 500;
         font-style: normal;
         color: #767676;
@@ -400,7 +400,7 @@
 
     .mob-menu-desc {
         white-space: pre-line;
-        font-family: "SF-Compact-Rounded", sans-serif;
+        font-family: $fontFamily-Inter-Regular;
         font-style: normal;
         font-weight: normal;
         text-transform: capitalize;
@@ -415,9 +415,9 @@
         width: auto;
         font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 100;
         line-height: 20px;
-        letter-spacing: 0.05em;
+        letter-spacing: normal;
         text-transform: capitalize;
         color: #111111;
         min-width: 78px;
@@ -565,8 +565,8 @@
     }
 
     .mob-menu-star-rating {
-        font-family: "SF-Compact-Rounded", sans-serif;
-        font-weight: 600;
+        font-family: $fontFamily-Inter-SemiBold;
+        font-weight: 100;
         font-style: normal;
         color: #111111;
         text-transform: capitalize;
@@ -577,7 +577,7 @@
     .mob-menu-name {
         font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: 700;
+        font-weight: 100;
         text-transform: capitalize;
         color: #111111;
         max-width: 181px;
@@ -601,7 +601,7 @@
     }
 
     .mob-menu-desc {
-        font-family: "SF-Compact-Rounded", sans-serif;
+        font-family: $fontFamily-Inter-Regular;
         font-style: normal;
         font-weight: normal;
         text-transform: capitalize;
@@ -616,9 +616,9 @@
         width: auto;
         font-family: $fontFamily-Inter-SemiBold;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 100;
         line-height: 20px;
-        letter-spacing: 0.05em;
+        letter-spacing: normal;
         text-transform: capitalize;
         color: #111111;
         min-width: 78px;
@@ -641,9 +641,9 @@
     }
 
     .mob-add-words {
-        font-family: "Montserrat", sans-serif;
+        font-family: $fontFamily-Inter-Bold;
         font-style: normal;
-        font-weight: bold;
+        font-weight: normal;
         text-transform: capitalize;
         color: #ffffff;
         line-height: 20px;
