@@ -13,6 +13,32 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+// Font-family Inter
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 @media (min-width: 768px) {
   .orderDetailLayout {
     width: 480px !important;
@@ -57,10 +83,9 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: bold;
-  // font-size: 25px;
+  font-weight: 700;
   font-size: 20px;
   line-height: 20px;
   text-transform: capitalize;
@@ -103,11 +128,11 @@
 }
 
 .orderDetailList-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: bold;
-  font-size: 17px;
-  line-height: 20px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 18px;
   text-transform: capitalize;
   color: #111111;
 }
@@ -148,11 +173,11 @@
 }
 
 .orderDetailList-content-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 20px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
   text-transform: capitalize;
   color: #111111;
   max-width: 150px;
@@ -160,24 +185,23 @@
 
 .orderDetailList-content-choice,
 .orderDetailList-content-notes {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  line-height: 20px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 14px;
   text-transform: capitalize;
   color: #767676;
   max-width: 150px;
 }
 
 .orderDetailList-content-price {
-  font-family: "SF-Compact-Rounded-Semibold", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  // font-weight: bold;
-  font-size: 17px;
-  line-height: 20px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
   text-transform: capitalize;
-  // color: #111111;
   color: #767676;
 }
 
@@ -423,20 +447,20 @@
 }
 
 .orderDetail-transaction-title-unpaid {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: bold;
-  font-size: 17px;
+  font-weight: 700;
+  font-size: 15px;
   line-height: 20px;
   text-transform: capitalize;
   color: #ffffff;
 }
 
 .orderDetail-transaction-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: bold;
-  font-size: 17px;
+  font-weight: 600;
+  font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
@@ -468,7 +492,11 @@
   display: flex;
   justify-content: start;
   align-items: center;
-  font-weight: bold;
+  font-family: $fontFamily-Inter-Medium;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .orderDetail-transaction-descArea-content {
@@ -476,6 +504,11 @@
   justify-content: start;
   align-items: center;
   color: #767676;
+  font-family: $fontFamily-Inter-Medium;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .orderDetail-transaction-payment {
@@ -490,7 +523,12 @@
   justify-content: space-between;
   align-items: center;
   color: #111111;
-  font-weight: bold;
+  margin-top: 10px;
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
 }
 
 .orderDetail-transaction-paymentoption {
@@ -499,7 +537,11 @@
   align-items: center;
   color: #767676;
   margin-bottom: 10px;
-  // border-bottom: 1px solid #c4c4c4;
+  font-family: $fontFamily-Inter-Medium;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .orderDetail-transaction-payment-price {
@@ -508,7 +550,11 @@
   align-items: center;
   color: #767676;
   margin-top: 10px;
-  // border-top: 1px solid #c4c4c4;
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 14px;
 }
 
 .orderDetail-payment-border {
@@ -758,10 +804,11 @@
 }
 
 .wordsButton-orderDetail {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: bold;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
   text-transform: capitalize;
   color: #ffffff;
   text-align: center;
@@ -770,7 +817,7 @@
 .menu-counter-orderdetail {
   width: 75px;
   color: #ffffff;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .orderdetail-transaction-logo {
@@ -1181,7 +1228,7 @@
   .menu-counter-orderdetail {
     width: 60px;
     color: #ffffff;
-    font-weight: bold;
+    font-weight: 700;
   }
 
   .orderDetail-transaction-detail {

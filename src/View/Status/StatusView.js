@@ -259,7 +259,7 @@ export class StatusView extends React.Component {
           </div>
 
           <div className="orderList-transaction-centerSide">
-            {value.quantity} | Rp {Intl.NumberFormat("id-ID").format(value.totalPrice)}
+            {value.quantity} item(s) | Rp {Intl.NumberFormat("id-ID").format(value.totalPrice)}
           </div>
 
           <div className="orderList-transaction-bottomSide">
