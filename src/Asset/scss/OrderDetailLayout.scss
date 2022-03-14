@@ -438,7 +438,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   background-color: #ffffff;
   color: #DC6A84;
   height: 40px;
-  padding: 0px 0px 0px 15px;
+  padding: 0px 15px 0px 15px;
   border-radius: 8px 8px 0px 0px;
 }
 
@@ -815,9 +815,14 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .menu-counter-orderdetail {
-  width: 75px;
-  color: #DC6A84;
+  // width: 75px;
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
   font-weight: 700;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: capitalize;
+  color: #DC6A84;
 }
 
 .orderdetail-transaction-logo {
@@ -1251,12 +1256,6 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     text-transform: capitalize;
     color: #ffffff;
     text-align: center;
-  }
-
-  .menu-counter-orderdetail {
-    width: 60px;
-    color: #ffffff;
-    font-weight: 700;
   }
 
   .orderDetail-transaction-detail {
