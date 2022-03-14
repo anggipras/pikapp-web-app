@@ -586,7 +586,7 @@ class OrderDetailView extends React.Component {
                                             <div className='buttonPayment-orderDetail'>
                                                 <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
                                                     <div className="wordsButton-orderDetail">
-                                                        CARA PEMBAYARAN
+                                                        Cara Pembayaran
                                                     </div>
                                                 </div>
                                             </div>

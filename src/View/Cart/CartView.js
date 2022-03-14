@@ -509,6 +509,7 @@ class CartView extends React.Component {
             phone_number: phoneNumber,
             expiry_date: expiryDate
           }
+          console.log({requestData});
       
           let uuid = uuidV4();
           uuid = uuid.replace(/-/g, "");

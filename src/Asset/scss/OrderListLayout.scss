@@ -13,6 +13,32 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+// Font-family Inter
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 .orderListLayout {
   width: 100vw;
   padding: 20px 117px 20px 107px;
@@ -161,10 +187,10 @@
 }
 
 .orderList-transaction-title {
-  font-size: 17px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 15px;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 20px;
   text-transform: capitalize;
   color: #ffffff;
@@ -172,9 +198,9 @@
 
 .orderList-transaction-counttimer {
   font-size: 15px;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 20px;
   text-transform: capitalize;
   color: #ffffff;
@@ -192,10 +218,10 @@
 }
 
 .orderList-transaction-merchName {
-  font-size: 17px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   line-height: 20px;
   color: #111111;
   margin-bottom: 8px;
@@ -210,10 +236,10 @@
 }
 
 .orderList-transaction-timeTrans {
-  font-size: 15px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-size: 14px;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   line-height: 15px;
   color: #767676;
 }
@@ -222,10 +248,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-size: 16px;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   line-height: 15px;
   color: #767676;
   margin-bottom: 15px;
@@ -247,10 +273,10 @@
 
 .orderList-foodService-words,
 .orderList-paymentService-words {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
+  font-weight: 400;
+  font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
