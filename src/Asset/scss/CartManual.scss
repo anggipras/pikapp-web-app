@@ -1453,3 +1453,18 @@ input[type=number]::-webkit-outer-spin-button {
   line-height: 20px;
   color: #ffffff;
 }
+
+.cart-manual-content-choice,
+.cart-manual-content-notes {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 12px;
+  text-transform: capitalize;
+  color: #111111;
+}
+
+.cart-manual-content-choice {
+  margin-top: 5px;
+}

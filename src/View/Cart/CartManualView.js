@@ -780,8 +780,8 @@ class CartManualView extends React.Component {
       //   <span className='cartmanual-List-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan : <span className='cartmanual-List-content-choice' style={{display: "flex"}}>{newlistArr}</span></span>
         
       //   </div>
-      return <div className='cartList-content-choice' style={{display: "flex", fontWeight: "bold", color: "black"}}>
-        Tambahan<div style={{marginLeft: "5px", marginRight: "5px"}}>:</div><span className='cartList-content-notes'>{newlistArr}</span>
+      return <div className='cart-manual-content-choice' style={{display: "flex", fontWeight: "bold", color: "black"}}>
+        Tambahan<div style={{marginLeft: "5px", marginRight: "5px"}}>:</div><span className='cart-manual-content-notes'>{newlistArr}</span>
         </div>
     }
   
