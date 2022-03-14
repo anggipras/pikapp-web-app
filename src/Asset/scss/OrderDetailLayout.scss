@@ -43,15 +43,15 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   .orderDetailLayout {
     width: 480px !important;
     // margin-left: 31%;
-    padding: 20px 17px 26px 17px;
-    background-color: #ffffff;
+    // padding: 20px 17px 26px 17px;
+    background-color: #f0f1f2;
   }
 }
 
 .orderDetailLayout {
   // width: 98vw;
   // padding: 20px 117px 20px 107px;
-  background-color: #ffffff;
+  background-color: #f0f1f2;
 }
 
 .orderDetailTitle {
@@ -108,12 +108,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
 //orderDetailList start
 .orderDetailList {
-  max-width: 477px;
   width: auto;
-  box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: #e5e5e5;
-  margin-bottom: 30px;
+  background-color: #ffffff;
+  margin-bottom: 10px;
 }
 
 .orderDetailList-header {
@@ -121,7 +118,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background-color: #f5f6f7;
+  background-color: #ffffff;
   height: 40px;
   padding-top: 7px;
   padding-left: 14.5px;
@@ -141,14 +138,14 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   display: flex;
   justify-content: space-between;
   background-color: #ffffff;
-  padding: 22.5px 17.5px 36px 14.5px;
+  padding: 18px 12.5px 14px 13px;
   margin-bottom: 7px;
 }
 
 .orderDetailList-content-frame {
   width: 100px;
   height: 100px;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -156,11 +153,11 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .orderDetailList-content-detail {
-  width: 300px;
+  width: 330px;
   display: flex;
   justify-content: space-between;
 }
@@ -202,7 +199,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   font-size: 16px;
   line-height: 16px;
   text-transform: capitalize;
-  color: #767676;
+  color: #4056c6;
 }
 
 .orderDetailList-content-detail-right {
@@ -238,6 +235,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .orderDetailList-amountBox {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 }
 
 .orderDetailList-amountBox-inside {
@@ -378,23 +378,20 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 //orderDetailtransaction start
 .orderDetail-transaction-detail {
   // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
   // min-width: 477px;
   width: auto;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   cursor: pointer;
-  border: 1px solid #c4c4c4;
   background-color: #ffffff;
+  margin-top: 10px;
 }
 
 .orderDetail-transaction {
   // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  min-width: 450px;
+  min-width: 480px;
   width: auto;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   cursor: pointer;
-  border: 1px solid #c4c4c4;
   background-color: #ffffff;
 }
 
@@ -417,10 +414,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   align-items: center;
   justify-content: space-between;
   // box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.05);
-  background-color: #f5f6f7;
+  background-color: #ffffff;
   height: 40px;
-  padding: 0px 0px 0px 15px;
-  border-radius: 8px 8px 0px 0px;
+  padding: 0px 0px 0px 12px;
 }
 
 .orderDetail-transaction-title-detail {
@@ -439,8 +435,8 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   align-items: center;
   justify-content: space-between;
   // box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.05);
-  background-color: #DC6A84;
-  color: #f5f6f7;
+  background-color: #ffffff;
+  color: #DC6A84;
   height: 40px;
   padding: 0px 0px 0px 15px;
   border-radius: 8px 8px 0px 0px;
@@ -453,7 +449,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   font-size: 15px;
   line-height: 20px;
   text-transform: capitalize;
-  color: #ffffff;
+  color: #DC6A84;
 }
 
 .orderDetail-transaction-title {
@@ -497,13 +493,13 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
+  color: #767676;
 }
 
 .orderDetail-transaction-descArea-content {
   display: flex;
   justify-content: start;
   align-items: center;
-  color: #767676;
   font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   font-weight: 500;
@@ -548,7 +544,6 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #767676;
   margin-top: 10px;
   font-family: $fontFamily-Inter-Regular;
   font-style: normal;
@@ -787,12 +782,17 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .buttonPayment-orderDetail {
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: #ffffff;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  margin: 0;
 }
 
 .submitPayment-orderDetail {
   display: flex;
-  width: 100%;
+  width: 98%;
   height: 50px;
   background-color: #4bb7ac;
   color: #ffffff;
@@ -804,9 +804,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .wordsButton-orderDetail {
-  font-family: $fontFamily-Inter-Regular;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: normal;
   font-size: 16px;
   line-height: 16px;
   text-transform: capitalize;
@@ -816,7 +816,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
 .menu-counter-orderdetail {
   width: 75px;
-  color: #ffffff;
+  color: #DC6A84;
   font-weight: 700;
 }
 
@@ -826,12 +826,41 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   margin-right: 3px;
 }
 
+.orderdetail-txnstatus-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.orderdetail-txnstatus-Title {
+  font-family: $fontFamily-Inter-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 16px;
+  color: #111111;
+}
+
+.orderdetail-txnstatus-Number{
+  font-family: $fontFamily-Inter-SemiBold;
+  font-style: normal;
+  font-weight: 100;
+  font-size: 16px;
+  line-height: 16px;
+  color: #DC6A84;
+
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
 //orderDetailCheckout end
 
 @media (max-width: 768px) {
   .orderDetailLayout {
     width: 100vw;
-    padding: 20px 17px 26px 17px;
   }
 
   .LogoPikapporderDetail {
@@ -861,14 +890,14 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   }
 
   //orderDetailList start
-  .orderDetailList {
-    max-width: 381px;
-    margin-bottom: 30px;
-  }
+  // .orderDetailList {
+  //   max-width: 381px;
+  //   margin-bottom: 30px;
+  // }
 
   .orderDetailList-header {
     height: 32px;
-    padding-top: 4px;
+    padding-top: 10px;
     padding-left: 11px;
   }
 
@@ -989,9 +1018,8 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
   //orderDetailtransaction start
   .orderDetail-transaction {
-    min-width: 381px;
-    max-width: 381px;
-    margin-bottom: 24px;
+    min-width: 420px;
+    max-width: 420px;
   }
 
   .orderDetail-transaction-header {
@@ -1198,7 +1226,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   .buttonPayment-orderDetail {
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 10px;
   }
   
@@ -1216,9 +1244,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   }
 
   .wordsButton-orderDetail {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 1rem;
     text-transform: capitalize;
     color: #ffffff;
@@ -1233,12 +1261,10 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
   .orderDetail-transaction-detail {
     // box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
     min-width: 0px;
     width: auto;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     cursor: pointer;
-    border: 1px solid #c4c4c4;
     background-color: #ffffff;
   }
   //orderDetailCheckout end
@@ -1984,4 +2010,39 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     padding: 5px 17px 26px 17px;
     min-height: 725px;
   }
+}
+
+.manual-orderdetail-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 10px 14px 10px;
+  background-color: #FFFFFF !important;
+}
+
+.manual-orderdetail-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.manual-orderdetail-titletext {
+  font-family: $fontFamily-Inter-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 16px;
+}
+
+.manual-orderdetail-itembox {
+  border-radius: 3px;
+  margin-left: 10px;
+  background-color: #E0EAFF;
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  // font-size: 17px;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 4px;
+  color: #4056C6;
+  text-transform: capitalize;
 }

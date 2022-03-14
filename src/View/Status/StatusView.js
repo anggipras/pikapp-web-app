@@ -250,6 +250,10 @@ export class StatusView extends React.Component {
             )
           }
         >
+          <div>
+            <h3 className="status-cart-transactionid">ID Transaksi: {value.transactionId}</h3>
+          </div>
+
           <div className="orderList-transaction-topSide">
             <h3 className="orderList-transaction-merchName">{value.title}</h3>
 
@@ -261,6 +265,8 @@ export class StatusView extends React.Component {
           <div className="orderList-transaction-centerSide">
             {value.quantity} item(s) | Rp {Intl.NumberFormat("id-ID").format(value.totalPrice)}
           </div>
+
+          <div className="status-cart-content-border"></div>
 
           <div className="orderList-transaction-bottomSide">
             <div className="orderList-transaction-foodService">
@@ -791,7 +797,7 @@ export class StatusView extends React.Component {
     let { statusIndex, statusList } = this.state;
     let viewSize = (
       <>
-        <div className="modal-header-orderList">
+        {/* <div className="modal-header-orderList">
           <span
             className="logopikappCenterBack"
             onClick={() => window.history.back()}
@@ -800,6 +806,13 @@ export class StatusView extends React.Component {
           </span>
 
           <div className="menu-title-orderList">Daftar Transaksi</div>
+        </div> */}
+
+        <div className="status-cart-header">
+          <span className="status-cart-back" onClick={() => window.history.back()}>
+            <img className="status-cart-backicon" src={ArrowBack} alt='' />
+          </span>
+          <div className="status-cart-titletext">Daftar Transaksi</div>
         </div>
 
         <div
@@ -813,23 +826,43 @@ export class StatusView extends React.Component {
           </span>
         </div>
 
-        <div className="orderListWrapper">{this.contentMainView()}</div>
+        {/* <div className="orderListWrapper">{this.contentMainView()}</div> */}
+        <div className="status-cart-Wrapper">
+          {this.contentMainView()}
+        </div>
       </>
     );
 
     return (
-      <div className="orderListLayout">
-        <div className="orderListTitle">
-          <span className="logoCenterOrderList">
-            <img className="LogoPikappOrderList" src={pikappLogo} alt="" />
+      // <div className="orderListLayout">
+      //   <div className="orderListTitle">
+      //     <span className="logoCenterOrderList">
+      //       <img className="LogoPikappOrderList" src={pikappLogo} alt="" />
+      //     </span>
+      //   </div>
+
+      //   <div className="modalOrderList">
+      //     {!this.state.isMobile ? (
+      //       <div className="modal-content-orderList">{viewSize}</div>
+      //     ) : (
+      //       <div className="modal-content-orderList-mob">{viewSize}</div>
+      //     )}
+      //   </div>
+      //   {this.statusDialog()}
+      //   {this.showRegisterDialog()}
+      // </div>
+      <div className="status-cart-Layout">
+        <div className="status-cart-Title">
+          <span className="logoCenter-status-cart">
+            <img className="LogoPikapp-status-cart" src={pikappLogo} alt="" />
           </span>
         </div>
 
-        <div className="modalOrderList">
+        <div className="modal-status-cart">
           {!this.state.isMobile ? (
-            <div className="modal-content-orderList">{viewSize}</div>
+            <div className="modal-content-status-cart">{viewSize}</div>
           ) : (
-            <div className="modal-content-orderList-mob">{viewSize}</div>
+            <div className="modal-content-status-cart-mob">{viewSize}</div>
           )}
         </div>
         {this.statusDialog()}

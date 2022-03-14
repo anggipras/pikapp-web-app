@@ -13,6 +13,31 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+    font-family: "Inter-Regular";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+    font-family: "Inter-SemiBold";
+    src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 .modalMenuDetail-payment {
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
@@ -96,9 +121,9 @@
 
 .menu-name-payment {
     max-width: 600px;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 25px;
     text-transform: capitalize;
     color: #000000;
@@ -106,7 +131,7 @@
 }
 
 .mob-menu-category-payment {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Medium;
     font-weight: 500;
     font-style: normal;
     color: #767676;
