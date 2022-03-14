@@ -126,7 +126,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     // min-height: 422px;
-    min-height: 70px;
+    min-height: 69px;
     height: auto;
   }
 
@@ -175,11 +175,12 @@ body {
   .merchant-mainName-title {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 1rem;
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
+    font-size: 20px;
   }
 
   .merchant-allcateg {
@@ -494,7 +495,7 @@ body {
     width: 100%;
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    // font-weight: bold;
     // font-size: 40px;
     font-size: 20px;
     line-height: 20px;
@@ -652,9 +653,9 @@ body {
   .product-price {
     // width: 177px;
     width: auto;
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     // font-size: 22px;
     font-size: 15px;
     line-height: 20px;
@@ -784,7 +785,7 @@ body {
   }
 
   .merchantList-storeName {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 25px;
@@ -856,11 +857,21 @@ body {
     animation-duration: 0.5s;
   }
 
-  .cartItem-total,
-  .cartItem-price {
+  .cartItem-total {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
+    // font-size: 27px;
+    font-size: 16px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #ffffff;
+  }
+
+  .cartItem-price {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-weight: 100;
     // font-size: 27px;
     font-size: 16px;
     line-height: 20px;
@@ -1107,7 +1118,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 70px;
+    min-height: 69px;
     height: auto;
   }
 
@@ -1419,7 +1430,7 @@ body {
     width: 100%;
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 20px;
     line-height: 20px;
     text-transform: capitalize;
@@ -1438,7 +1449,7 @@ body {
     max-width: 184px;
     // width: 100%;
     // height: 128px;
-    height: 308px;
+    height: 318px;
     border-radius: 15px;
     background-color: #ffffff;
     // border: 0.5px solid #aaaaaa;
@@ -1555,18 +1566,18 @@ body {
 
   .product-price-mob {
     width: auto;
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 15px;
     line-height: 20px;
     text-transform: capitalize;
-    letter-spacing: 0.05em;
+    letter-spacing: normal;
     color: #111111;
     // padding-top: 32px;
     // padding-right: 10px;
     padding-top: 7px;
-    padding-bottom: 7px;
+    padding-bottom: 10px;
   }
 
   .merchantdetail-cart-button-mob {
@@ -1583,9 +1594,9 @@ body {
   }
   
   .merchantdetail-cart-text-mob {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     // font-size: 22px;
     font-size: 15px;
     line-height: 20px;
@@ -1702,7 +1713,7 @@ body {
   }
 
   .merchantList-storeName {
-    font-family: $fontFamily-Inter-Bold;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -1761,11 +1772,20 @@ body {
     animation-duration: 0.4s;
   }
 
-  .cartItem-total,
-  .cartItem-price {
+  .cartItem-total {
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
+    font-size: 17px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #ffffff;
+  }
+
+  .cartItem-price {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-weight: 100;
     font-size: 17px;
     line-height: 20px;
     text-transform: capitalize;
@@ -2083,7 +2103,7 @@ body {
   cursor: pointer;
   background-color: #ffffff;
   position: sticky;
-  top: 60px;
+  top: 59px;
   z-index: 3;
 }
 
@@ -2109,9 +2129,9 @@ body {
 }
 
 .promo-title {
-  font-family: $fontFamily-Inter-Bold;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: normal;
   color: #111111;
   font-size: 14px;
   margin-left: 10px;

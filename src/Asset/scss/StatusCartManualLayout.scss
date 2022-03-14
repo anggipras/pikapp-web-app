@@ -229,7 +229,7 @@
     font-size: 17px;
     font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     line-height: 20px;
     color: #111111;
     margin-bottom: 8px;
@@ -409,7 +409,7 @@
   .status-cartmanual-content-paymentinfo {
     font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 100;
     font-size: 14px;
     line-height: 15px;
     text-transform: capitalize;
@@ -479,9 +479,9 @@
 
   .status-cartmanual-content-totalprice {
     font-size: 17px;
-    font-family: $fontFamily-Inter-Bold;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     line-height: 20px;
     color: #111111;
     margin-bottom: 8px;
@@ -575,7 +575,7 @@
     }
   
     .status-cartmanual-transaction-title {
-      font-size: 15px;
+      font-size: 17px;
     }
   
     .status-cartmanual-transaction-content {
@@ -583,8 +583,8 @@
     }
   
     .status-cartmanual-transaction-merchName {
-      font-size: $font768size;
-      font-weight: 600;
+      font-size: 17px;
+      font-weight: 100;
       margin-bottom: 6px;
       max-width: 200px;
     }
@@ -721,7 +721,7 @@
 .status-cartmanual-titletext {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: normal;
   font-size: 20px;
   color: #111111;
   margin-left: 16px;

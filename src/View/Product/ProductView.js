@@ -439,6 +439,20 @@ class ProductView extends React.Component {
           else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
             this.setState({ startTour: true });
           }
+
+          if(value.mid) {
+            this.setState({ isManualTxn : false });
+            Cookies.set("isManualTxn", 0)
+            this.props.IsManualTxn(false);
+            localStorage.setItem("isManualTxn", false);
+          } else {
+            this.setState({ isManualTxn : true });
+            Cookies.set("isManualTxn", 1)
+            this.props.IsManualTxn(true);
+            localStorage.setItem("isManualTxn", true);
+          }
+
+          this.setState({ totalProduct : res.data.results.products.length });
         })
 
         // let newImage = Storeimg

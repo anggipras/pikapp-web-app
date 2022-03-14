@@ -776,7 +776,13 @@ class CartManualView extends React.Component {
           return newlistArr += `${val2.name}, `
         })
       })
-      return <h5 className='cartmanual-List-content-choice' style={{display: "flex"}}><h5 className='cartmanual-List-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan :</h5>{newlistArr}</h5>
+      // return <div>
+      //   <span className='cartmanual-List-content-notes' style={{fontWeight: "bold", color: "black"}}>Tambahan : <span className='cartmanual-List-content-choice' style={{display: "flex"}}>{newlistArr}</span></span>
+        
+      //   </div>
+      return <div className='cartList-content-choice' style={{display: "flex", fontWeight: "bold", color: "black"}}>
+        Tambahan<div style={{marginLeft: "5px", marginRight: "5px"}}>:</div><span className='cartList-content-notes'>{newlistArr}</span>
+        </div>
     }
   
     onEditCart = (ind, mid) => {
@@ -1189,8 +1195,8 @@ class CartManualView extends React.Component {
                   <div className='cartmanual-List-content-detail-left'>
                     <h2 className='cartmanual-List-content-title'>{food.foodName}</h2>
                     {this.newListAllChoices(food)}
+                    <h5 className='cartmanual-List-content-notes' style={{display: food.foodNote == ""? "none":"block"}}>Catatan : {food.foodNote}</h5>
                     <h3 className='cartmanual-List-content-price'>Rp {Intl.NumberFormat("id-ID").format(food.foodTotalPrice)}</h3>
-                    <h5 className='cartmanual-List-content-notes' style={{display: food.foodNote == ""? "none":"block"}}>{food.foodNote}</h5>
                   </div>
   
                   <div className='cartmanual-List-content-detail-right'>

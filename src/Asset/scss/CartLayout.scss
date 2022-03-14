@@ -63,7 +63,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .confirmationOrder {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 800;
+  font-weight: normal;
   font-size: 20px;
   color: #111111;
   margin-left: 16px;
@@ -82,7 +82,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cartTableNumber-Title {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 800;
+  font-weight: normal;
   font-size: 16px;
   line-height: 16px;
   color: #111111;
@@ -91,7 +91,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cartTableNumber-Number{
   font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 100;
   font-size: 16px;
   line-height: 16px;
   color: #DC6A84;
@@ -135,9 +135,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cart-customerinfo-title {
   font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 18px;
+  font-weight: 100;
+  font-size: 15px;
+  line-height: 20px;
   text-transform: capitalize;
   color: #111111;
 }
@@ -176,7 +176,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .cart-customerinfo-words {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
@@ -190,23 +190,23 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cart-detailcontent-address {
   font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;
   color: #4bb7ac;
   width: auto;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 .cart-detailcontent-addressdesc {
   font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 20px;
   text-transform: capitalize;
-  letter-spacing: 0.05em;
+  letter-spacing: normal;
   color: #767676;
   width: auto;
 }
@@ -237,7 +237,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cart-title {
   font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 100;
   color: #111111;
   font-size: 16px;
   margin-left: 10px;
@@ -306,7 +306,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cartList-title {
   font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 100;
   font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;
@@ -350,7 +350,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 
 .cartList-content-title {
   font-family: $fontFamily-Inter-Medium;
-  font-weight: 600;
+  font-weight: 500;
   font-style: normal;
   font-size: 15px;
   line-height: 20px;
@@ -385,7 +385,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .cartList-content-price {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-size: 15px;
   line-height: 20px;
@@ -415,7 +415,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cartList-editWord {
   font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
   line-height: 14px;
   letter-spacing: 0.05em;
@@ -448,9 +448,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .cartList-minusSym {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 25px;
   letter-spacing: 0.05em;
   color: #4bb7ac;
@@ -460,7 +460,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cartList-numberArea {
   font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   letter-spacing: 0.05em;
   text-transform: capitalize;
@@ -482,9 +482,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 }
 
 .cartList-plusSym {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 25px;
   letter-spacing: 0.05em;
   color: #4bb7ac;
@@ -615,7 +615,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cart-detailprice-title {
   font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 100;
   font-size: 15px;
   line-height: 20px;
   text-transform: capitalize;
@@ -684,7 +684,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cart-TotalAmount-price {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 800;
+  font-weight: normal;
   font-size: 18px;
   text-transform: capitalize;
   color: #4bb7ac;
@@ -708,11 +708,14 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   background-color: #4bb7ac;
   box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
   border-radius: 10px;
-  padding: 12px 12px 13px 19px;
+  padding: 12px 12px 12px 14px;
   max-width: 165px;
   min-width: 148px;
   width: auto;
   height: 51px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cart-OrderButton-content {
@@ -742,8 +745,8 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
 .cart-OrderButton-word {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 800;
-  font-size: 16px;
+  font-weight: normal;
+  font-size: 15px;
   line-height: 20px;
   text-transform: capitalize;
   color: #ffffff;
@@ -778,9 +781,9 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 15px;
   text-transform: capitalize;
   color: #ffffff;
@@ -791,7 +794,7 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-size: 12px;
   line-height: 20px;
@@ -904,9 +907,9 @@ $size20px: 20px;
 }
 
 .cartCancel-content-title {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: normal;
   text-align: center;
   font-size: 28px;
   color: #111111;
@@ -914,9 +917,9 @@ $size20px: 20px;
 }
 
 .cartCancel-content-detail, .cartCancel-content-message, .cartCancel-bottom-datetime-title, .cartCancel-bottom-datetime-detail {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: normal;
   text-align: center;
   font-size: 18px;
   color: #111111;
@@ -974,9 +977,9 @@ $size20px: 20px;
   width: 100%;
   border-radius: 8px;
 
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 700;
+  font-weight: normal;
   text-align: center;
   font-size: 18px;
   color: white;
