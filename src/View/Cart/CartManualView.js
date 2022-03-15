@@ -197,7 +197,8 @@ class CartManualView extends React.Component {
       merchantHourOpenTime: null, // ex: 10:00
       merchantHourGracePeriod: null, // ex: 30
       merchantHourNextOpenDay: null, // ex: Sunday
-      merchantHourNextOpenTime: null // ex: 10:00
+      merchantHourNextOpenTime: null, // ex: 10:00
+      merchantHourAutoOnOff: null // ex: true or false
     };
 
     componentDidMount() {
@@ -268,8 +269,12 @@ class CartManualView extends React.Component {
           merchantHourOpenTime: merchantHourCheckingResult.open_time, 
           merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
           merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-          merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time
+          merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
+          merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
          })
+         if (!merchantHourCheckingResult.auto_on_off) {
+           this.setState({ disabledSubmitButton: true })
+         } 
       }).catch((err) => console.log(err))
     }
 
@@ -1072,46 +1077,55 @@ class CartManualView extends React.Component {
     }
 
     merchantHourStatusWarning = () => {
-      if (this.state.merchantHourStatus == "CLOSE") {
-        const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-        const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-        let nowDate = new Date()
-        if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
-          return (
-            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-              <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
-            </div>
-          )
-        } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
-          return (
-            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-              <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
-            </div>
-          )
-        } else {
-          let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
-          let finalNextOpenDay = weekdayId[nextOpenDay]
-          return (
-            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-              <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
-            </div>
-          )
-        }
-      } else if (this.state.merchantHourStatus == "OPEN") {
-        if (this.state.merchantHourGracePeriod <= 30) {
-          return (
-            <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
-              <div className="cart-merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
-            </div>
-          )
+      if (this.state.merchantHourAutoOnOff) {
+        if (this.state.merchantHourStatus == "CLOSE") {
+          const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+          const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+          let nowDate = new Date()
+          if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
+            return (
+              <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+                <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+                <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
+              </div>
+            )
+          } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
+            return (
+              <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+                <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+                <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+              </div>
+            )
+          } else {
+            let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
+            let finalNextOpenDay = weekdayId[nextOpenDay]
+            return (
+              <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+                <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+                <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+              </div>
+            )
+          }
+        } else if (this.state.merchantHourStatus == "OPEN") {
+          if (this.state.merchantHourGracePeriod <= 30) {
+            return (
+              <div className="cart-merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+                <div className="cart-merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+              </div>
+            )
+          } else {
+            return null
+          }
         } else {
           return null
         }
       } else {
-        return null
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+          </div>
+        )
       }
     }
 
