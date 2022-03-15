@@ -28,6 +28,7 @@ $fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
 $fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
 $fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
 $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+$merchantdetail-link-icon-Height: 15px;
 
 body {
   background-color: white !important;
@@ -1052,9 +1053,7 @@ body {
   }
 
   .merchantdetail-link-icon {
-    // width: 100px;
-    height: 25px;
-    padding: 5px;
+    height: $merchantdetail-link-icon-Height;
   }
 
 }
@@ -1951,8 +1950,7 @@ body {
   }
 
   .merchantdetail-link-icon {
-    height: 25px;
-    padding: 5px;
+    height: $merchantdetail-link-icon-Height;
   }
 }
 
@@ -2055,8 +2053,7 @@ body {
   }
 
   .merchantdetail-link-icon {
-    height: 25px;
-    padding: 5px;
+    height: $merchantdetail-link-icon-Height;
   }
 }
 
@@ -2117,8 +2114,7 @@ body {
   }
 
   .merchantdetail-link-icon {
-    height: 25px;
-    padding: 5px;
+    height: $merchantdetail-link-icon-Height;
   }
 }
 
@@ -2216,21 +2212,14 @@ body {
   cursor: pointer;
   border-radius: 5px;
   background-color: #ffffff;
-  padding: 0px 4px 0px 4px;
+  padding: 5px;
   margin-right: 10px;
-  // box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.05);
   border: 1px solid #CFCCCC;
-  height: 40px;
+  max-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-// .merchantdetail-link-icon {
-//   // width: 100px;
-//   height: 25px;
-//   padding: 5px;
-// }
 
 .merchantdetail-cart-button {
   cursor: pointer;
