@@ -107,7 +107,7 @@ body {
     // width: 100vw;
     max-width: 480px !important;
     // min-height: 422px;
-    min-height: 70px;
+    min-height: 50px;
     height: auto;
     position: sticky;
     top: 140px;
@@ -126,7 +126,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     // min-height: 422px;
-    min-height: 69px;
+    min-height: 50px;
     height: auto;
   }
 
@@ -333,7 +333,7 @@ body {
 
   .merchant-category {
     position: relative;
-    margin-top: 10px;
+    // margin-top: 10px;
     padding-left: 17px;
     padding-right: 19px;
     // margin-top: 110px;
@@ -511,6 +511,7 @@ body {
     // padding-left: 8px;
     // padding-top: 54px;
     margin-top: 23px;
+    width: 455px;
   }
 
   .product-merchant {
@@ -1043,6 +1044,13 @@ body {
     display: none;
   }
 
+  .product-merchant-container {
+    width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -1103,7 +1111,7 @@ body {
   .merchant-section {
     position: relative;
     width: 100vw;
-    min-height: 70px;
+    min-height: 50px;
     height: auto;
     position: sticky;
     top: 140px;
@@ -1118,7 +1126,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 69px;
+    min-height: 50px;
     height: auto;
   }
 
@@ -1295,7 +1303,7 @@ body {
 
   .merchant-category {
     position: relative;
-    margin-top: 10px;
+    // margin-top: 10px;
     padding-left: 17px;
     padding-right: 19px;
     width: 100vw;
@@ -1442,6 +1450,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin-top: 23px;
+    width: 400px;
   }
 
   .product-merchant {
@@ -1924,6 +1933,17 @@ body {
   .merchantdetail-cart-button-sec {
     display: none;
   }
+
+  .product-merchant-container {
+    width: 190px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchdetailprofile-shopSchedule-hours {
+    width: 110px;
+  }
 }
 
 @media (max-width: 380px) {
@@ -2014,6 +2034,14 @@ body {
 
   .cartIcon-layout {
     width: 100vw;
+  }
+
+  .product-merchant-container {
+    width: 170px;
+  }
+
+  .list-product {
+    width: 360px;
   }
 }
 
@@ -2114,7 +2142,7 @@ body {
   border-radius: 8px;
   border: 0.5px solid #aaaaaa;
   padding: 14px;
-  margin: 16px;
+  margin: 17px;
 }
 
 .promo-leftSide {
@@ -2400,7 +2428,7 @@ $size20px: 20px;
 .merchdetailprofile-title {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 800;
+  font-weight: normal;
   font-size: 20px;
   color: #111111;
   margin-left: 10px;
@@ -2475,7 +2503,7 @@ $size20px: 20px;
 .merchdetailprofile-shopTitle-title {
   font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 800;
+  font-weight: normal;
   font-size: 18px;
   line-height: 18px;
   color: #111111;
@@ -2484,7 +2512,7 @@ $size20px: 20px;
 .merchdetailprofile-shopAddress-title {
   font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: 500;
+  font-weight: normal;
   font-size: 16px;
   line-height: 24px;
   color: #111111;
@@ -2510,13 +2538,26 @@ $size20px: 20px;
   margin-bottom: 8px;
 }
 
-.merchdetailprofile-shopSchedule-days, .merchdetailprofile-shopSchedule-hours {
+.merchdetailprofile-shopSchedule-days {
   font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: 500;
+  font-weight: normal;
   font-size: 16px;
   line-height: 20px;
   color: #111111;
+}
+
+.merchdetailprofile-shopSchedule-hours {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  color: #111111;
+  display: flex;
+  justify-content: flex-start;
+  width: 110px;
+  white-space: nowrap;
 }
 
 // MERCHANT DETAIL PROFILE END
