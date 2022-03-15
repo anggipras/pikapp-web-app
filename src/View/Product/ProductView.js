@@ -1749,7 +1749,7 @@ class ProductView extends React.Component {
           </div>
         </div> */}
 
-        <div className='promo-voucherinfo'>
+        {/* <div className='promo-voucherinfo'>
           <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
             <div className='promo-detailContent'>
                   <div className='promo-leftSide'>
@@ -1762,7 +1762,7 @@ class ProductView extends React.Component {
                   </span>
             </div>
           </Link>
-        </div>
+        </div> */}
 
         <div className='merchant-section' style={{ backgroundColor: "white" }}>
           <div className='inside-merchantSection'>

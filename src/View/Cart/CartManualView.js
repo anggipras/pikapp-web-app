@@ -1328,7 +1328,7 @@ class CartManualView extends React.Component {
             </div>
             {this.merchantHourStatusWarning()}
 
-            {
+            {/* {
               this.state.notMatchPromo ?
               <div className="promo-alert-paymentnotselected">
                   <span className="promo-alert-icon">
@@ -1339,7 +1339,7 @@ class CartManualView extends React.Component {
               </div>
               :
               null
-            }
+            } */}
   
             <div className='cartmanual-Content'>
               <div className='cartmanual-LeftSide'>
@@ -1538,7 +1538,7 @@ class CartManualView extends React.Component {
                     </div>
                   </div>
 
-                  <div className='promoCart-voucherinfo'>
+                  {/* <div className='promoCart-voucherinfo'>
                     <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.props.CartRedu.paymentType }, cartStatus : { totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                       <div className='promoCart-detailContent'>
                             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -1567,7 +1567,7 @@ class CartManualView extends React.Component {
                             }
                       </div>
                     </Link>
-                  </div>
+                  </div> */}
 
                   <div className='cartmanual-summarypayment'>
                     <div className='cartmanual-detailcontent-payment'>
