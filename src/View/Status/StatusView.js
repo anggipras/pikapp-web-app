@@ -815,15 +815,17 @@ export class StatusView extends React.Component {
           <div className="status-cart-titletext">Daftar Transaksi</div>
         </div>
 
-        <div
-          className="orderList-filter"
-          onClick={() => this.handleStatus(true)}
-        >
-          <div className="orderList-filterName">{statusList[statusIndex]}</div>
+        <div className="status-cart-filter">
+          <div
+            className="orderList-filter"
+            onClick={() => this.handleStatus(true)}
+          >
+            <div className="orderList-filterName">{statusList[statusIndex]}</div>
 
-          <span className="orderList-filterArrow">
-            <img className="orderList-arrowDown" src={ArrowDownColor} alt="" />
-          </span>
+            <span className="orderList-filterArrow">
+              <img className="orderList-arrowDown" src={ArrowDownColor} alt="" />
+            </span>
+          </div>
         </div>
 
         {/* <div className="orderListWrapper">{this.contentMainView()}</div> */}

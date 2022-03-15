@@ -128,7 +128,6 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   box-sizing: border-box;
   border-radius: 10px;
   padding: 5px 13px;
-  margin-bottom: 13px;
   margin-left: 13px;
   cursor: pointer;
   width: fit-content;
@@ -368,7 +367,7 @@ $font768size: 13px;
 }
 
 .status-cart-Layout {
-  background-color: #ffffff;
+  background-color: #f0f1f2;
   height: 100vh;
 }
 
@@ -403,7 +402,7 @@ $font768size: 13px;
 }
 
 .modal-content-status-cart {
-  background-color: #ffffff;
+  background-color: #f0f1f2;
   position: relative;
   // max-width: 588px; /* Max width where it stops expanding */
   max-width: 480px; /* Max width where it stops expanding */
@@ -436,6 +435,12 @@ $font768size: 13px;
   border-top : 1px solid #c4c4c4;
 }
 
+.status-cart-filter {
+  width: 100%;
+  background-color: #ffffff;
+  padding-bottom: 13px;
+}
+
 @media (max-width: 768px) {
   .orderListLayout {
     width: 100vw;
@@ -457,7 +462,6 @@ $font768size: 13px;
 
   .orderList-filter {
     padding: 5px 10px;
-    margin-bottom: 13px;
     width: fit-content;
     background-color: #ffffff;
   }
