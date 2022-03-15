@@ -1051,6 +1051,12 @@ body {
     align-items: center;
   }
 
+  .merchantdetail-link-icon {
+    // width: 100px;
+    height: 25px;
+    padding: 5px;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -1944,6 +1950,11 @@ body {
   .merchdetailprofile-shopSchedule-hours {
     width: 110px;
   }
+
+  .merchantdetail-link-icon {
+    height: 25px;
+    padding: 5px;
+  }
 }
 
 @media (max-width: 380px) {
@@ -2042,6 +2053,11 @@ body {
 
   .list-product {
     width: 360px;
+  }
+
+  .merchantdetail-link-icon {
+    height: 25px;
+    padding: 5px;
   }
 }
 
@@ -2206,11 +2222,11 @@ body {
   justify-content: center;
 }
 
-.merchantdetail-link-icon {
-  // width: 100px;
-  height: 25px;
-  padding: 5px;
-}
+// .merchantdetail-link-icon {
+//   // width: 100px;
+//   height: 25px;
+//   padding: 5px;
+// }
 
 .merchantdetail-cart-button {
   cursor: pointer;
