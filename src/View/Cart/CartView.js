@@ -1117,7 +1117,7 @@ class CartView extends React.Component {
           </div>
           {this.merchantHourStatusWarning()}
 
-          {
+          {/* {
             this.state.notMatchPromo ?
             <div className="promo-alert-paymentnotselected">
                 <span className="promo-alert-icon">
@@ -1128,7 +1128,7 @@ class CartView extends React.Component {
             </div>
             :
             null
-          }
+          } */}
 
           {
             tableNumberOfCart != "0" ?
@@ -1220,36 +1220,36 @@ class CartView extends React.Component {
                   </div>
                 </div>
 
-                <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
-                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
-                      <div className='promoCart-detailContent'>
-                            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                              <div className='promoCart-leftSide'>
-                                  <img className='promoCart-img-icon' src={VoucherIcon} alt='' />
-                                  <div className='promoCart-title'>Voucher Diskon</div>
-                                </div>
-
-                                <span className="promoCart-arrowright">
-                                  <img className="promoCart-arrowright-icon" src={ArrowRight} />
-                                </span>
-                            </div>
-
-                            {
-                              this.state.selectedPromo != null ?
-                              <div className='promoCart-selectiondetail'>
-                                <div className="promoCart-selectiondetail-border"></div>
-
-                                <div className='promoCart-selectiondetail-desc'>
-                                  { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
-                                  <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
-                                </div>
+                {/* <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
+                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                    <div className='promoCart-detailContent'>
+                          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                            <div className='promoCart-leftSide'>
+                                <img className='promoCart-img-icon' src={VoucherIcon} alt='' />
+                                <div className='promoCart-title'>Voucher Diskon</div>
                               </div>
-                              :
-                              null
-                            }
-                      </div>
-                    </Link>
-                  </div>
+
+                              <span className="promoCart-arrowright">
+                                <img className="promoCart-arrowright-icon" src={ArrowRight} />
+                              </span>
+                          </div>
+
+                          {
+                            this.state.selectedPromo != null ?
+                            <div className='promoCart-selectiondetail'>
+                              <div className="promoCart-selectiondetail-border"></div>
+
+                              <div className='promoCart-selectiondetail-desc'>
+                                { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
+                                <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
+                              </div>
+                            </div>
+                            :
+                            null
+                          }
+                    </div>
+                  </Link>
+                </div> */}
 
                 <div className='cart-summarypayment'>
                     <div className='cart-detailcontent-payment'>
