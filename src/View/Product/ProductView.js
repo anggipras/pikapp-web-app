@@ -1597,7 +1597,8 @@ class ProductView extends React.Component {
                 className="storeBanner"
                 src={this.state.data.image}
                 style={{ 
-                  objectFit: 'cover', 
+                  maxHeight: "100%",
+                  maxHeight: "100%",
                   filter: this.state.merchantHourAutoOnOff?
                     !this.state.isManualTxn ? 
                       this.state.merchantHourStatus == "CLOSE" ?
