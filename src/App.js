@@ -14,11 +14,10 @@ import ResetPin from "./View/ResetPin/ResetPinView";
 import OrderConfirmationLayout from "./Master/OrderConfirmationLayout";
 import OrderDetailLayout from "./Master/OrderDetailLayout";
 import OrderDetailManualLayout  from "./Master/OrderDetailManualLayout";
-import ManualTxn from "./Master/ManualTransaction";
 import CartManualLayout from "./Master/CartManualLayout";
 import { Route, Switch } from "react-router-dom";
-// import Cookies from "js-cookie";
 import { useDispatch } from 'react-redux'
+import ScrollToTop from './ScrollToTop' 
 import PickupSelectionView from "./View/Cart/AddressSelection/PickupSelectionView";
 import AddressInputView from "./View/Cart/AddressSelection/AddressInputView";
 import AddressMapsView from "./View/Cart/AddressSelection/AddressMapsView";
@@ -29,6 +28,8 @@ import ShippingDateView from "./View/Cart/ShippingDate/ShippingDateView";
 import PaymentMethodView from "./View/Cart/PaymentSelection/PaymentMethodView";
 import StatusCartManualLayout from "./Master/StatusCartManualLayout";
 import TrackingDeliveryLayout from "./Master/TrackingDeliveryLayout";
+import PromoView from "./View/Promo/PromoView";
+import MerchantDetailProfile from "./View/Product/MerchantDetailProfile";
 export var cart = [
     {
         mid: "",
@@ -81,53 +82,48 @@ function countDown(){
 function App() {
     const dispatch = useDispatch();
     const [tokenFound, setTokenFound] = useState('');
-    // getToken(setTokenFound);
 
     dispatch({ type: 'FCMTOKEN', payload: tokenFound });
-
-    // if (Cookies.get("auth") === undefined) {
-    //     let deleteCart = JSON.parse(localStorage.getItem("cart"))
-    //     let newCart = []
-    //     newCart.push(deleteCart[0])
-    //     localStorage.setItem('cart', JSON.stringify(newCart))
-    // }
 
     if(localStorage.getItem("counterPayment")) {
         timeLeft = setInterval(() => countDown(), 1000);
     }
 
     return (
-        <Switch>
-            <Route path="/login" component={() => <AuthLayout isLogin={true} />} />
-            <Route
-                path="/register"
-                component={() => <AuthLayout isLogin={false} />}
-            />
-            <Route path="/cart" component={() => <CartLayout />} />
-            <Route path="/status" component={() => <StatusLayout />} />
-            <Route path="/statuscartmanual" component={() => <StatusCartManualLayout />} />
-            <Route path="/store" component={() => <ProductLayout />} />
-            <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
-            {/* <Route exact path="/d/:username" component={ManualTxn} /> */}
-            <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
-            <Route path="/profile" component={() => <ProfileLayout />} />
-            <Route path="/reset-pin/:pintoken" component={ResetPin} />
-            <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
-            <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
-            <Route path="/orderdetaildelivery" component={() => <OrderDetailManualLayout />} />
-            <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
-            <Route exact path="/cartmanual/pickup/location" component={AddressMapsView} />
-            <Route exact path="/cartmanual/pickup/search" component={AddressSearchView} />
-            <Route exact path="/cartmanual/pickup/shipping" component={ShippingTypeView} />
-            <Route exact path="/cartmanual/pickup/detail" component={ShippingDetailView} />
-            <Route path="/cartmanual/pickup" component={PickupSelectionView} />
-            <Route path="/cartmanual/shipping" component={ShippingDateView} />
-            <Route path="/cartmanual/payment" component={PaymentMethodView} />
-            <Route path="/cartmanual" component={() => <CartManualLayout />} />
-            <Route path="/tracking" component={() => <TrackingDeliveryLayout />} />
-            <Route exact path="/:username" component={ManualTxn} />
-            <Route path="/" component={() => <StoreLayout />} />
-        </Switch>
+        <ScrollToTop>
+            <Switch>
+                <Route path="/login" component={() => <AuthLayout isLogin={true} />} />
+                <Route
+                    path="/register"
+                    component={() => <AuthLayout isLogin={false} />}
+                />
+                <Route path="/cart" component={() => <CartLayout />} />
+                <Route path="/status" component={() => <StatusLayout />} />
+                <Route path="/statuscartmanual" component={() => <StatusCartManualLayout />} />
+                <Route path="/store" component={() => <ProductLayout />} />
+                <Route exact path="/merchant-profile" component={MerchantDetailProfile} />
+                <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
+                <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
+                <Route exact path="/promo" component={PromoView} />
+                <Route path="/profile" component={() => <ProfileLayout />} />
+                <Route path="/reset-pin/:pintoken" component={ResetPin} />
+                <Route path="/orderconfirmation" component={() => <OrderConfirmationLayout />} />
+                <Route path="/orderdetail" component={() => <OrderDetailLayout />} />
+                <Route path="/orderdetaildelivery" component={() => <OrderDetailManualLayout />} />
+                <Route exact path="/cartmanual/pickup/address" component={AddressInputView} />
+                <Route exact path="/cartmanual/pickup/location" component={AddressMapsView} />
+                <Route exact path="/cartmanual/pickup/search" component={AddressSearchView} />
+                <Route exact path="/cartmanual/pickup/shipping" component={ShippingTypeView} />
+                <Route exact path="/cartmanual/pickup/detail" component={ShippingDetailView} />
+                <Route path="/cartmanual/pickup" component={PickupSelectionView} />
+                <Route path="/cartmanual/shipping" component={ShippingDateView} />
+                <Route path="/cartmanual/payment" component={PaymentMethodView} />
+                <Route path="/cartmanual" component={() => <CartManualLayout />} />
+                <Route path="/tracking" component={() => <TrackingDeliveryLayout />} />
+                <Route exact path="/:username" component={(props) => <ProductLayout {...props}/>} />
+                <Route path="/" component={() => <StoreLayout />} />
+            </Switch>
+        </ScrollToTop>
     )
 }
 

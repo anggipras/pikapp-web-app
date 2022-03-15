@@ -8,6 +8,7 @@ import LocationIcon from '../../../Asset/Icon/location-icon.png'
 import KurirIcon from '../../../Asset/Icon/kurir.png'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import Cookies from "js-cookie";
 
 const PickupSelectionView = () => {
     let history = useHistory()
@@ -122,19 +123,6 @@ const PickupSelectionView = () => {
                         <img className="address-open-icon" src={ArrowGo} />
                     </span>
                 </div>
-
-                {/* <div className="deliverySelection-shipperName">
-                    <div className="deliverySelection-shipperName-title">Nama Kurir <span style={{color: "red"}}>*</span></div>
-                    <input onChange={handleShipperName} className="deliverySelection-shipperName-inputArea" placeholder="Masukkan nama kurir disini..." defaultValue={CartRedu.shipperName}/>
-                </div>
-
-                <div className="deliverySelection-shipperPrice">
-                    <div className="deliverySelection-shipperPrice-title">Ongkos Kirim <span style={{color: "red"}}>*</span></div>
-                    <div className="deliverySelection-shipperPrice-layout">
-                        <div className="deliverySelection-shipperPrice-currency">Rp</div>
-                        <input onChange={handleShipperPrice} type='number' inputMode='numeric' className="deliverySelection-shipperPrice-inputArea" placeholder="Masukkan ongkos kirim disini..." defaultValue={CartRedu.shipperPrice}/>
-                    </div>
-                </div> */}
             </div>
         )
     }
@@ -142,10 +130,43 @@ const PickupSelectionView = () => {
     const handleSave = () => {
         if(CartRedu.pickupType === 0) {
             // Save pickup takeaway data
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                let paymentTypeCookies = JSON.parse(localStorage.getItem("MANUAL_PAYMENT_TYPE"))
+                let paymentType = paymentTypeCookies.paymentType
+                let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
+                let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+                if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && totalPaymentManualCart >= promoMinPrice) {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
+                } else {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
+                }
+            }
+            localStorage.removeItem("SHIPPERNOTES")
+            localStorage.removeItem("SHIPPINGTYPE")
+            localStorage.removeItem("SHIPPING_WITH_COURIER")
+            localStorage.removeItem("FORMATTEDADDRESS")
+            localStorage.removeItem("DISTRICT")
+            localStorage.removeItem("CITY")
+
+            localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "PICKUP", indexShipment: 0 }))
             window.history.go(-1)
         } else if(CartRedu.formattedAddress && CartRedu.shippingName && CartRedu.shippingPrice) {
             // Save pickup delivery data
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                let paymentTypeCookies = JSON.parse(localStorage.getItem("MANUAL_PAYMENT_TYPE"))
+                let paymentType = paymentTypeCookies.paymentType
+                let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
+                let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+                if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes("DELIVERY") && totalPaymentManualCart >= promoMinPrice) {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
+                } else {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
+                }
+            }
             dispatch({ type: 'PICKUPTYPE', payload: 1 })
+            localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "DELIVERY", indexShipment: 1 }))
             window.history.go(-1)
         }
     }

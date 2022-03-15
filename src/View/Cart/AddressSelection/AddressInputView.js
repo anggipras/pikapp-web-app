@@ -12,28 +12,34 @@ const AddressInputView = () => {
 
     const handleFullAddress = (e) => {
         dispatch({ type: 'FULLADDRESS', payload: e.target.value })
+        localStorage.setItem("FULLADDRESS", JSON.stringify(e.target.value))
     }
 
     const handlePostalCode = (e) => {
         dispatch({ type: 'POSTALCODE', payload: e.target.value })
+        localStorage.setItem("POSTALCODE", JSON.stringify(e.target.value))
     }
 
     const handleShipperNotes = (e) => {
         dispatch({ type: 'SHIPPERNOTES', payload: e.target.value })
+        localStorage.setItem("SHIPPERNOTES", JSON.stringify(e.target.value))
     }
 
     const handleSave = () => {
         if (CartRedu.fullAddress) {
-            // window.history.go(-1)
             window.history.go('-1')
         }
     }
 
     const goBack = () => {
         dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
+        localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(""))
         dispatch({ type: 'FULLADDRESS', payload: "" })
+        localStorage.setItem("FULLADDRESS", JSON.stringify(""))
         dispatch({ type: 'POSTALCODE', payload: "" })
+        localStorage.setItem("POSTALCODE", JSON.stringify(""))
         dispatch({ type: 'SHIPPERNOTES', payload: "" })
+        localStorage.setItem("SHIPPERNOTES", JSON.stringify(""))
         window.history.go(-1)
     }
 
@@ -59,18 +65,12 @@ const AddressInputView = () => {
                                     <img className="address-location-icon" src={LocationPoint} />
                                 </span>
                                 <div className="deliverySelection-addressLayout">
-                                    {/* <div className="deliverySelection-addressTitle">
-                                        {CartRedu.formattedAddress}
-                                    </div> */}
                                     <div className="deliverySelection-addressTitle">
                                         { CartRedu.formattedAddress ? <></> : "Alamat Pengiriman" }
                                     </div>
                                     <div className="deliverySelection-addressInputted">
                                         { CartRedu.formattedAddress ? <span className="deliverySelection-blackNotes">{CartRedu.formattedAddress}</span> : "Masukkan alamat pengiriman sekarang" }
                                     </div>
-                                    {/* <div className="deliverySelection-addressInputted">
-                                        { CartRedu.shipperNotes ? <span className="deliverySelection-greenNotes"><span className="deliverySelection-grayNotes">{CartRedu.shipperNotes}</span></span> : null}
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

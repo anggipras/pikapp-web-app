@@ -88,7 +88,6 @@ class OrderDetailView extends React.Component {
             var dataDetail = JSON.parse(localStorage.getItem("dataDetail"));
             transactionId = dataDetail.transactionId;
         }
-        console.log(this.state);
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
@@ -102,7 +101,6 @@ class OrderDetailView extends React.Component {
             method: "GET",
         })
             .then((res) => {
-                console.log(res.data.results);
                 var results = res.data.results;
                 var resultModal = { ...this.currentModal }
                 resultModal.transactionId = results.transaction_id
@@ -346,23 +344,56 @@ class OrderDetailView extends React.Component {
             }
 
             return (
-                <div className='orderDetail-transaction-header-detail' style={{ backgroundColor: backColor }}>
-                    <div className='orderDetail-transaction-title-detail'>
-                        {statusDesc}
-                    </div>
+                // <div className='orderDetail-transaction-header-detail' style={{ backgroundColor: backColor }}>
+                //     <div className='orderDetail-transaction-title-detail'>
+                //         {statusDesc}
+                //     </div>
+                // </div>
+
+                <div className='orderdetail-txnstatus-layout'>
+                    <div className='orderdetail-txnstatus-Title' style={{ color: backColor }}></div>
+
+                    <div className="orderdetail-txnstatus-Number">{statusDesc}</div>
                 </div>
             )
         }
 
         return (
             <div className='orderDetailLayout'>
-                <div className='orderDetailTitle'>
+                {/* <div className='orderDetailTitle'>
                     <span className='logopikappCenter' onClick={() => this.goBack()} >
                         <img className='LogoPikapporderDetail' src={ArrowBack} alt='' />
                     </span>
 
                     <h2 className='confirmationOrderDetail'>Detail Transaksi</h2>
+                </div> */}
+
+                <div className="manual-orderdetail-header">
+                    <span className="manual-orderdetail-back" onClick={() => window.history.back()}>
+                        <img className="manual-orderdetail-backicon" src={ArrowBack} alt='' />
+                    </span>
+                    <div className="manual-orderdetail-titletext">Detail Transaksi</div>
                 </div>
+
+                {
+                    this.state.currentModal.status === "OPEN" ?
+                        <div className='orderDetail-transaction-header-unpaid'>
+                            <div className='orderDetail-transaction-title-unpaid'>
+                                Menunggu Pembayaran
+                            </div>
+                            <div className='menu-counter-orderdetail'>
+                                {this.state.currentModal.timerMinutes < 10
+                                    ? `0${this.state.currentModal.timerMinutes}`
+                                    : this.state.currentModal.timerMinutes}
+                                :
+                                {this.state.currentModal.timerSeconds < 10
+                                    ? `0${this.state.currentModal.timerSeconds}`
+                                    : this.state.currentModal.timerSeconds}
+                            </div>
+                        </div>
+                        :
+                        headerTransaction()
+                }
 
                 {
                     // !this.state.isMobile ?
@@ -487,23 +518,23 @@ class OrderDetailView extends React.Component {
                                 <div className='orderDetail-transaction-detail'>
 
                                     {
-                                        this.state.currentModal.status === "OPEN" ?
-                                            <div className='orderDetail-transaction-header-unpaid'>
-                                                <div className='orderDetail-transaction-title-unpaid'>
-                                                    Menunggu Pembayaran
-                                                </div>
-                                                <div className='menu-counter-orderdetail'>
-                                                    {this.state.currentModal.timerMinutes < 10
-                                                        ? `0${this.state.currentModal.timerMinutes}`
-                                                        : this.state.currentModal.timerMinutes}
-                                                    :
-                                                    {this.state.currentModal.timerSeconds < 10
-                                                        ? `0${this.state.currentModal.timerSeconds}`
-                                                        : this.state.currentModal.timerSeconds}
-                                                </div>
-                                            </div>
-                                            :
-                                            headerTransaction()
+                                        // this.state.currentModal.status === "OPEN" ?
+                                        //     <div className='orderDetail-transaction-header-unpaid'>
+                                        //         <div className='orderDetail-transaction-title-unpaid'>
+                                        //             Menunggu Pembayaran
+                                        //         </div>
+                                        //         <div className='menu-counter-orderdetail'>
+                                        //             {this.state.currentModal.timerMinutes < 10
+                                        //                 ? `0${this.state.currentModal.timerMinutes}`
+                                        //                 : this.state.currentModal.timerMinutes}
+                                        //             :
+                                        //             {this.state.currentModal.timerSeconds < 10
+                                        //                 ? `0${this.state.currentModal.timerSeconds}`
+                                        //                 : this.state.currentModal.timerSeconds}
+                                        //         </div>
+                                        //     </div>
+                                        //     :
+                                        //     headerTransaction()
                                     }
 
                                     <div className='orderDetail-transaction-content'>
@@ -541,6 +572,9 @@ class OrderDetailView extends React.Component {
                                     <div className='orderDetailList-header'>
                                         <h4 className='orderDetailList-title'>
                                             Item Yang Dibeli
+                                        </h4>
+                                        <h4 className='manual-orderdetail-itembox'>
+                                            {this.state.currentModal.food.length} Item
                                         </h4>
                                     </div>
 
@@ -588,7 +622,7 @@ class OrderDetailView extends React.Component {
                                             <div className='buttonPayment-orderDetail'>
                                                 <div className="submitPayment-orderDetail" onClick={() => this.setPaymentModal(true)}>
                                                     <div className="wordsButton-orderDetail">
-                                                        CARA PEMBAYARAN
+                                                        Cara Pembayaran
                                                     </div>
                                                 </div>
                                             </div>

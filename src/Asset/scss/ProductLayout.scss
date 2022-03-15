@@ -3,6 +3,33 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Regular.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+// Font-family Inter
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+$merchantdetail-link-icon-Height: 15px;
+
 body {
   background-color: white !important;
 }
@@ -24,7 +51,9 @@ body {
   .storeBanner {
     width: 100%;
     // height: 433px;
-    height: 184px;
+    // height: 16vw;
+    min-height: 170px;
+    max-height: 200px;
     display: block;
     position: relative;
   }
@@ -79,10 +108,10 @@ body {
     // width: 100vw;
     max-width: 480px !important;
     // min-height: 422px;
-    min-height: 70px;
+    min-height: 50px;
     height: auto;
     position: sticky;
-    top: 50px;
+    top: 50px; //PROMO VOUCHER WOULD CHANGE TO 140PX
     z-index: 3;
   }
 
@@ -98,7 +127,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     // min-height: 422px;
-    min-height: 70px;
+    min-height: 50px;
     height: auto;
   }
 
@@ -144,20 +173,19 @@ body {
     margin-left: 0px;
   }
 
-  .merchant-mainName {
-    font-family: "Montserrat", sans-serif;
+  .merchant-mainName-title {
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
-    // font-size: 40px;
+    font-weight: normal;
     font-size: 1rem;
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
-    margin-bottom: 5px;
+    font-size: 20px;
   }
 
   .merchant-allcateg {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 12px;
     font-weight: normal;
@@ -176,7 +204,7 @@ body {
   }
 
   .merchant-starInfo .merchant-star {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 25px;
     font-weight: 500;
     line-height: 20px;
@@ -185,7 +213,7 @@ body {
   }
 
   .merchant-starInfo .star-votes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 25px;
     font-weight: 500;
     line-height: 20px;
@@ -198,7 +226,7 @@ body {
     // height: 66px;
     width: 33.1px;
     height: 33.1px;
-    background-color: #4bb7ac;
+    // background-color: #4bb7ac;
     // border-radius: 25px;
     border-radius: 50px;
     position: relative;
@@ -230,6 +258,7 @@ body {
     // padding-right: 125px;
     padding-left: 16px;
     padding-right: 18px;
+    padding-bottom: 16px;
     // width: 100vw;
   }
 
@@ -277,7 +306,7 @@ body {
   }
 
   .top-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 25px;
     // font-weight: bold;
     // line-height: 25px;
@@ -290,7 +319,7 @@ body {
   }
 
   .bottom-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 20px;
     font-size: 10px;
     font-weight: normal;
@@ -306,7 +335,7 @@ body {
 
   .merchant-category {
     position: relative;
-    margin-top: 10px;
+    // margin-top: 10px;
     padding-left: 17px;
     padding-right: 19px;
     // margin-top: 110px;
@@ -354,7 +383,7 @@ body {
   }
 
   .custom-optionCloser {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 30px;
@@ -367,7 +396,7 @@ body {
   }
 
   .custom-option {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 30px;
@@ -384,7 +413,7 @@ body {
   }
 
   .categoryName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     // font-size: 30px;
     font-size: 12px;
     font-weight: 500;
@@ -444,7 +473,7 @@ body {
     // padding-left: 48px;
     // padding-right: 48px;
     // width: 100vw;
-    padding-top: 25px;
+    padding-top: 15px;
     padding-bottom: 23px;
     padding-left: 18px;
     padding-right: 18px;
@@ -466,15 +495,15 @@ body {
   .product-categ {
     position: relative;
     width: 100%;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    // font-weight: bold;
     // font-size: 40px;
-    font-size: 25px;
+    font-size: 20px;
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
-    padding-left: 10px;
+    padding-left: 8px;
   }
 
   .list-product {
@@ -484,6 +513,7 @@ body {
     // padding-left: 8px;
     // padding-top: 54px;
     margin-top: 23px;
+    width: 460px;
   }
 
   .product-merchant {
@@ -493,7 +523,7 @@ body {
     // height: 182px;
     // border-radius: 25px;
     // height: 128px;
-    height: 300px;
+    height: 340px;
     border-radius: 8px;
     background-color: #ffffff;
     // border: 0.5px solid #aaaaaa;
@@ -512,7 +542,7 @@ body {
     // height: 182px;
     // border-radius: 25px;
     width: 210px;
-    height: 167px;
+    height: 210px;
     // border-radius: 8px;
     border-radius: 8px 8px 0px 0px;
     overflow: hidden;
@@ -565,7 +595,7 @@ body {
   }
 
   .product-star-rating {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     font-style: normal;
@@ -577,11 +607,11 @@ body {
   .product-name {
     // width: 181px;
     width: 179px;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-weight: bold;
     // font-size: 18px;
-    font-size: 13px;
+    font-size: 15px;
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
@@ -601,7 +631,7 @@ body {
   .product-desc {
     // width: 181px;
     width: 179px;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     // font-size: 12px;
@@ -626,9 +656,9 @@ body {
   .product-price {
     // width: 177px;
     width: auto;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     // font-size: 22px;
     font-size: 15px;
     line-height: 20px;
@@ -652,7 +682,7 @@ body {
   }
 
   .pikappInfo {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -739,7 +769,7 @@ body {
 
   .merchantList-ratingScore,
   .merchantList-location {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 17px;
@@ -749,7 +779,7 @@ body {
   }
 
   .merchantList-distance {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 17px;
@@ -775,7 +805,7 @@ body {
   }
 
   .merchantList-storeCategory {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 17px;
@@ -830,11 +860,21 @@ body {
     animation-duration: 0.5s;
   }
 
-  .cartItem-total,
-  .cartItem-price {
-    font-family: "Montserrat", sans-serif;
+  .cartItem-total {
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
+    // font-size: 27px;
+    font-size: 16px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #ffffff;
+  }
+
+  .cartItem-price {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-weight: 100;
     // font-size: 27px;
     font-size: 16px;
     line-height: 20px;
@@ -879,7 +919,7 @@ body {
     width: 100%;
     padding: 10px;
     background-color: white;
-    border-bottom: 1px solid #CFCCCC;
+    // border-bottom: 1px solid #CFCCCC;
     position: sticky;
     top: 0;
     z-index: 3;
@@ -923,7 +963,7 @@ body {
   }
 
   .cartItem-merchantname {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-size: 27px;
     font-size: 15px;
@@ -1006,6 +1046,17 @@ body {
     display: none;
   }
 
+  .product-merchant-container {
+    width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchantdetail-link-icon {
+    height: $merchantdetail-link-icon-Height;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -1017,7 +1068,8 @@ body {
   //Banner Start
   .storeBanner {
     width: 100%;
-    height: 184px;
+    height: auto;
+    max-height: 200px;
     display: block;
     position: relative;
   }
@@ -1064,7 +1116,7 @@ body {
   .merchant-section {
     position: relative;
     width: 100vw;
-    min-height: 70px;
+    min-height: 50px;
     height: auto;
     position: sticky;
     top: 50px;
@@ -1079,7 +1131,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 70px;
+    min-height: 50px;
     height: auto;
   }
 
@@ -1117,7 +1169,7 @@ body {
   }
 
   .merchant-mainName {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 1ren;
@@ -1128,7 +1180,7 @@ body {
   }
 
   .merchant-allcateg {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
@@ -1146,7 +1198,7 @@ body {
   }
 
   .merchant-starInfo .merchant-star {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -1155,7 +1207,7 @@ body {
   }
 
   .merchant-starInfo .star-votes {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -1166,7 +1218,7 @@ body {
   .merchant-call-sec {
     width: 33.1px;
     height: 33.1px;
-    background-color: #4bb7ac;
+    // background-color: #4bb7ac;
     border-radius: 50px;
     position: relative;
     top: 5px;
@@ -1233,7 +1285,7 @@ body {
   }
 
   .top-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -1243,7 +1295,7 @@ body {
   }
 
   .bottom-detail-info {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 10px;
     font-weight: normal;
     line-height: 10px;
@@ -1256,7 +1308,7 @@ body {
 
   .merchant-category {
     position: relative;
-    margin-top: 10px;
+    // margin-top: 10px;
     padding-left: 17px;
     padding-right: 19px;
     width: 100vw;
@@ -1294,7 +1346,7 @@ body {
   }
 
   .custom-optionCloser {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 12px;
@@ -1307,7 +1359,7 @@ body {
   }
 
   .custom-option {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     display: flex;
     align-items: center;
     font-size: 12px;
@@ -1324,7 +1376,7 @@ body {
   }
 
   .categoryName {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 12px;
     font-weight: 500;
     font-style: normal;
@@ -1369,7 +1421,7 @@ body {
 
   .mainproduct-sec {
     position: relative;
-    padding-top: 25px;
+    padding-top: 15px;
     padding-bottom: 23px;
     padding-left: 18px;
     padding-right: 18px;
@@ -1389,10 +1441,10 @@ body {
   .product-categ {
     position: relative;
     width: 100%;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
-    font-size: 25px;
+    font-weight: normal;
+    font-size: 20px;
     line-height: 20px;
     text-transform: capitalize;
     color: #111111;
@@ -1403,6 +1455,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin-top: 23px;
+    width: 400px;
   }
 
   .product-merchant {
@@ -1410,7 +1463,7 @@ body {
     max-width: 184px;
     // width: 100%;
     // height: 128px;
-    height: 288px;
+    height: 318px;
     border-radius: 15px;
     background-color: #ffffff;
     // border: 0.5px solid #aaaaaa;
@@ -1424,7 +1477,7 @@ body {
 
   .product-img {
     width: 184px;
-    height: 148px;
+    height: 184px;
     // border-radius: 15px;
     border-radius: 8px 8px 0px 0px;
     overflow: hidden;
@@ -1475,7 +1528,7 @@ body {
   }
 
   .product-star-rating-mob {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-size: 10px;
     font-weight: 500;
     font-style: normal;
@@ -1486,10 +1539,10 @@ body {
 
   .product-name-mob {
     width: 160px;
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-weight: bold;
-    font-size: 13px;
+    font-size: 15px;
     text-transform: capitalize;
     color: #111111;
     line-height: 20px;
@@ -1506,7 +1559,7 @@ body {
   .product-desc-mob {
     white-space: pre-line;
     width: 179px;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1527,18 +1580,18 @@ body {
 
   .product-price-mob {
     width: auto;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 15px;
     line-height: 20px;
     text-transform: capitalize;
-    letter-spacing: 0.05em;
+    letter-spacing: normal;
     color: #111111;
     // padding-top: 32px;
     // padding-right: 10px;
     padding-top: 7px;
-    padding-bottom: 7px;
+    padding-bottom: 10px;
   }
 
   .merchantdetail-cart-button-mob {
@@ -1555,9 +1608,9 @@ body {
   }
   
   .merchantdetail-cart-text-mob {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
     // font-size: 22px;
     font-size: 15px;
     line-height: 20px;
@@ -1574,7 +1627,7 @@ body {
   }
 
   .pikappInfo {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -1655,7 +1708,7 @@ body {
 
   .merchantList-ratingScore,
   .merchantList-location {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
     font-weight: bold;
     font-size: 10px;
@@ -1665,7 +1718,7 @@ body {
   }
 
   .merchantList-distance {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1691,7 +1744,7 @@ body {
   }
 
   .merchantList-storeCategory {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -1733,11 +1786,20 @@ body {
     animation-duration: 0.4s;
   }
 
-  .cartItem-total,
-  .cartItem-price {
-    font-family: "Montserrat", sans-serif;
+  .cartItem-total {
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 100;
+    font-size: 17px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #ffffff;
+  }
+
+  .cartItem-price {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-weight: 100;
     font-size: 17px;
     line-height: 20px;
     text-transform: capitalize;
@@ -1781,7 +1843,7 @@ body {
     width: 100%;
     padding: 10px;
     background-color: white;
-    border-bottom: 1px solid #CFCCCC;
+    // border-bottom: 1px solid #CFCCCC;
     position: sticky;
     top: 0;
     z-index: 3;
@@ -1825,7 +1887,7 @@ body {
   }
 
   .cartItem-merchantname {
-    font-family: "Montserrat", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     // font-size: 27px;
     font-size: 15px;
@@ -1876,31 +1938,46 @@ body {
   .merchantdetail-cart-button-sec {
     display: none;
   }
+
+  .product-merchant-container {
+    width: 190px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchdetailprofile-shopSchedule-hours {
+    width: 110px;
+  }
+
+  .merchantdetail-link-icon {
+    height: $merchantdetail-link-icon-Height;
+  }
 }
 
 @media (max-width: 380px) {
   .merchant-name {
-    width: 250px;
+    width: 220px;
   }
 
   //Product Start
   .product-img {
-    width: 114px;
-    height: auto;
+    width: 164px;
+    height: 164px;
   }
 
   .product-detail-mob {
-    width: 200px;
+    width: 130px;
     margin-left: 20px;
   }
 
   .product-name-mob {
-    max-width: 140px;
+    max-width: 130px;
     width: auto;
   }
 
   .product-desc-mob {
-    max-width: 140px;
+    max-width: 130px;
     width: auto;
   }
   //Product End
@@ -1948,6 +2025,36 @@ body {
   .cartIcon-content {
     min-width: 336px;
     max-width: 336px;
+  }
+  
+  .product-merchant {
+    max-width: 164px;
+    height: 290px;
+  }
+
+  .merchantdetail-cart-button-mob {
+    width: 129px;
+  }
+
+  .mainLayout {
+    max-width: 480px !important;
+    width: 100vw;
+  }
+
+  .cartIcon-layout {
+    width: 100vw;
+  }
+
+  .product-merchant-container {
+    width: 170px;
+  }
+
+  .list-product {
+    width: 360px;
+  }
+
+  .merchantdetail-link-icon {
+    height: $merchantdetail-link-icon-Height;
   }
 }
 
@@ -2006,6 +2113,10 @@ body {
   .cartItem-price {
     font-size: 14px;
   }
+
+  .merchantdetail-link-icon {
+    height: $merchantdetail-link-icon-Height;
+  }
 }
 
 /* Add Animation */
@@ -2031,6 +2142,56 @@ body {
   }
 }
 
+// Promo Start
+.promo-voucherinfo {
+  display: flex;
+  cursor: pointer;
+  background-color: #ffffff;
+  position: sticky;
+  top: 59px;
+  z-index: 3;
+}
+
+.promo-detailContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  border: 0.5px solid #aaaaaa;
+  padding: 14px;
+  margin: 17px;
+}
+
+.promo-leftSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo-img-icon {
+  width: 25px;
+  height: 18px;
+}
+
+.promo-title {
+  font-family: $fontFamily-Inter-SemiBold;
+  font-style: normal;
+  font-weight: normal;
+  color: #111111;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.promo-arrowright {
+  display: flex;
+}
+
+.promo-arrowright-icon {
+  height: 23px;
+  width: 23px;
+}
+// Promo End
+
 .merchantdetail-link-section {
   display: flex;
   justify-content: flex-start;
@@ -2052,17 +2213,13 @@ body {
   cursor: pointer;
   border-radius: 5px;
   background-color: #ffffff;
-  padding: 4px;
-  margin-right: 10px;
-  // box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.05);
-  border: 1px solid #CFCCCC;
-  height: 40px;
-}
-
-.merchantdetail-link-icon {
-  // width: 100px;
-  height: 25px;
   padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #CFCCCC;
+  max-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .merchantdetail-cart-button {
@@ -2080,7 +2237,7 @@ body {
 }
 
 .merchantdetail-cart-text {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   // font-size: 22px;
@@ -2115,12 +2272,15 @@ body {
   cursor: pointer;
   border-radius: 5px;
   background-color: #ffffff;
-  padding: 4px;
+  padding: 0px 4px 0px 4px;
   margin-right: 10px;
   // box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.05);
   border: 1px solid #CFCCCC;
   height: 40px;
   z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .merchantdetail-category-itembox:active,
@@ -2131,15 +2291,15 @@ body {
 
 
 .merchantdetail-category-text {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   // font-size: 22px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
   white-space: nowrap;
-  padding: 7px;
+  padding: 8px;
 }
 
 .merchantdetail-category-text:active,
@@ -2157,10 +2317,10 @@ body {
 }
 
 .merchant-totalmenu-text {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   // font-size: 22px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   text-transform: capitalize;
   color: #111111;
@@ -2182,5 +2342,233 @@ body {
 }
 
 .merchant-carousel {
+  height: auto;
   z-index: -1;
 }
+
+.merchant-hour-status-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.merchant-hour-status-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.merchant-hour-status-text {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+// MERCHANT DETAIL PROFILE START
+.merchant-mainName {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.merchant-mainName-img {
+  width: 18px;
+  height: 18px;
+  filter: contrast(30%);
+}
+
+.merchant-divider-dot {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 0px;
+  color: #aaaaaa;
+  margin-left: 7px;
+  margin-right: 7px;
+  margin-top: 2px;
+}
+
+.merchant-openClose-status {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+$size14px: 14px;
+$size20px: 20px;
+.merchdetailprofile-Layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FFFFFF;
+}
+
+.merchdetailprofile-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 14px 14px 14px;
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid lightgrey;
+}
+
+.merchdetailprofile-back {
+  margin-right: 14px;
+}
+
+.merchdetailprofile-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.merchdetailprofile-logo {
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+}
+
+.merchdetailprofile-title {
+  font-family: $fontFamily-Inter-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 10px;
+}
+
+.merchdetailprofile-cart-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $size20px;
+  margin-left: $size14px;
+  margin-right: $size14px;
+  border: 1px solid #CFCCCC;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.merchdetailprofile-cart-startSide {
+  display: flex;
+  align-items: center;
+}
+
+.merchdetailprofile-cart-image {
+  width: 34px;
+  height: 34px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-cart-title, .merchdetailprofile-cart-detail {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 18px;
+  color: #111111;
+}
+
+.merchdetailprofile-cart-title {
+  margin-bottom: 10px;
+}
+
+.merchdetailprofile-cart-detail {
+  font-size: 16px;
+  line-height: 16px;
+  color: #767676;
+}
+
+.merchdetailprofile-cart-arrow {
+  width: 24px;
+  height: 24px;
+}
+
+.merchdetailprofile-shopTitle-layout, .merchdetailprofile-shopAddress-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: $size20px;
+  margin-left: $size14px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-shopAddress-layout {
+  align-items: flex-start;
+}
+
+.merchdetailprofile-shopTitle-image, .merchdetailprofile-shopAddress-image, .merchdetailprofile-shopSchedule-image {
+  width: 28px;
+  height: 28px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-shopTitle-title {
+  font-family: $fontFamily-Inter-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 18px;
+  color: #111111;
+}
+
+.merchdetailprofile-shopAddress-title {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  color: #111111;
+}
+
+.merchdetailprofile-shopSchedule-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: $size20px;
+  margin-left: $size14px;
+  margin-right: $size14px;
+}
+
+.merchdetailprofile-shopSchedule-contentLayout {
+  width: 100%;
+}
+
+.merchdetailprofile-shopSchedule-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.merchdetailprofile-shopSchedule-days {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  color: #111111;
+}
+
+.merchdetailprofile-shopSchedule-hours {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  color: #111111;
+  display: flex;
+  justify-content: flex-start;
+  width: 110px;
+  white-space: nowrap;
+}
+
+// MERCHANT DETAIL PROFILE END

@@ -6,39 +6,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import MapsComponent from "../../../Master/MapsLayout/MapsComponent";
 import CurrentLocationIcon from "../../../Asset/Icon/current-location.png";
-import { useMediaQuery } from 'react-responsive'
 
 const AddressMapsView = () => {
     let history = useHistory()
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
-    const isMobile = useMediaQuery({ maxWidth: 768 })
-    const [lat, setLat] = useState(0);
-    const [lng, setLng] = useState(0);
-    const [center, setCenter] = useState([]);
-    const [district, setDistrict] = useState("");
-    const [postalcode, setPostalCode] = useState("");
     const [formattedAddress, setFormattedAddress] = useState("");
-    const [isMarkerChange, setIsMarkerChange] = useState(false);
 
     useEffect(() => {
         if(CartRedu.formattedAddress !== "") {
             setFormattedAddress(CartRedu.formattedAddress);
         } 
-        // else if (CartRedu.formattedAddress !== formattedAddress) {
-        //     setFormattedAddress(CartRedu.formattedAddress);
-        // }
     }, [CartRedu.formattedAddress])
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
-            // history.push('./address')
             window.history.go(-1)
         }
     }
 
     const goBack = () => {
-        // dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
         window.history.go(-1)
     }
 
@@ -51,7 +38,9 @@ const AddressMapsView = () => {
             navigator.geolocation.getCurrentPosition((position) => {
                 dispatch({ type: 'CENTER', payload: [position.coords.latitude, position.coords.longitude] })
                 dispatch({ type: 'LAT', payload: position.coords.latitude })
+                localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                 dispatch({ type: 'LNG', payload: position.coords.longitude })
+                localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 dispatch({ type: 'ISMARKERCHANGE', payload: false })
             });
         }
@@ -64,26 +53,29 @@ const AddressMapsView = () => {
         const geocoder = new mapApi.Geocoder;
 
         geocoder.geocode({ 'location': { lat: CartRedu.lat, lng: CartRedu.lng } }, (results, status) => {
-            console.log(results);
-            console.log(status);
             if (status === 'OK') {
                 if (results[0]) {
                     results[0].address_components.map((res) => {
                         if(res.types[0] == "administrative_area_level_3") {
                             dispatch({ type: 'DISTRICT', payload: res.short_name })
+                            localStorage.setItem("DISTRICT", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "postal_code") {
                             dispatch({ type: 'POSTALCODE', payload: res.short_name })
+                            localStorage.setItem("POSTALCODE", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             dispatch({ type: 'CITY', payload: res.short_name })
+                            localStorage.setItem("CITY", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             dispatch({ type: 'PROVINCE', payload: res.short_name })
+                            localStorage.setItem("PROVINCE", JSON.stringify(res.short_name))
                         }
                     })
 
                     dispatch({ type: 'FORMATTEDADDRESS', payload: results[0].formatted_address })
+                    localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(results[0].formatted_address))
                     setFormattedAddress(results[0].formatted_address)
                 } else {
                     window.alert('No results found');
@@ -124,13 +116,11 @@ const AddressMapsView = () => {
                         <div className='addressmaps-title'>
                             <div className='addressmaps-titlename'>
                                 <div className='addressmaps-mainname'>
-                                    {/* {CartRedu.district} */}
                                     {CartRedu.formattedAddress}
                                 </div>
 
                                 <div className='addressmaps-detailinfo'>
                                     <div className='addressmaps-detailinfo-text'>
-                                        {/* {CartRedu.formattedAddress} */}
                                         {CartRedu.district}, {CartRedu.city}
                                     </div>
                                 </div>
@@ -146,7 +136,6 @@ const AddressMapsView = () => {
                     </div>
                 </div>
                 <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress ? '#4bb7ac' : '#aaaaaa'}}>Pilih Lokasi Saat Ini</div>
-                {/* <div onClick={goToAddress} className="addressInput-selectButton" style={{backgroundColor: '#4bb7ac'}}>Pilih Lokasi Saat Ini</div> */}
             </div>
         </>
     )

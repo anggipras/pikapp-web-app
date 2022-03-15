@@ -13,6 +13,31 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 body {
   background-color: #f0f1f2 !important;
   display: flex;
@@ -51,9 +76,9 @@ body {
 }
 
 .cartmanual-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: normal;
   font-size: 20px;
   color: #111111;
   margin-left: 16px;
@@ -96,9 +121,9 @@ body {
 }
 
 .cartmanual-List-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 100;
   // font-size: 17px;
   font-size: 15px;
   line-height: 20px;
@@ -144,11 +169,11 @@ body {
   flex-direction: column;
   justify-content: space-between;
   // width: 150px;
-  max-width: 150px;
+  // max-width: 150px;
 }
 
 .cartmanual-List-content-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   // font-weight: 600;
   // font-size: 17px;
@@ -157,30 +182,31 @@ body {
   text-transform: capitalize;
   color: #111111;
   max-width: 150px;
+  margin-bottom: 0px;
 }
 
 .cartmanual-List-content-choice,
 .cartmanual-List-content-notes {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
-  // font-size: 15px;
   font-size: 12px;
   line-height: 20px;
   text-transform: capitalize;
-  color: #767676;
+  color: #111111;
   max-width: 150px;
+  margin-bottom: 0px;
 }
 
 .cartmanual-List-content-price {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   // font-weight: bold;
   // font-size: 17px;
   font-size: 15px;
   line-height: 20px;
   text-transform: capitalize;
-  color: #494949;
+  color: #4056c6;
 }
 
 .cartmanual-List-content-detail-right {
@@ -206,7 +232,7 @@ body {
 }
 
 .cartmanual-List-editWord {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   // font-weight: 600;
   // font-size: 15px;
@@ -245,9 +271,9 @@ body {
 }
 
 .cartmanual-List-minusSym {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   // font-size: 17px;
   font-size: 25px;
   letter-spacing: 0.05em;
@@ -256,9 +282,9 @@ body {
 }
 
 .cartmanual-List-numberArea {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   letter-spacing: 0.05em;
   text-transform: capitalize;
@@ -277,16 +303,16 @@ body {
   // height: 29px;
   width: 25px;
   height: 25px;
-  border-radius: 5px;
+  border-radius: 15px;
   background-color: #ffffff;
   cursor: pointer;
   border: 1px solid #4bb7ac;
 }
 
 .cartmanual-List-plusSym {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   // font-size: 17px;
   font-size: 25px;
   letter-spacing: 0.05em;
@@ -337,9 +363,9 @@ body {
 }
 
 .cartmanual-storeBox-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   // font-size: 17px;
   font-size: 15px;
   line-height: 20px;
@@ -350,9 +376,9 @@ body {
 }
 
 .cartmanual-storeBox-distance {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: 600;
+  font-weight: normal;
   font-size: 12px;
   line-height: 20px;
   text-transform: capitalize;
@@ -369,7 +395,7 @@ body {
 }
 
 .cartmanual-storeBox-descTitle {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   font-weight: 500;
   // font-size: 17px;
@@ -381,7 +407,7 @@ body {
 }
 
 .cartmanual-storeBox-descAddress {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   // font-size: 15px;
@@ -419,9 +445,9 @@ body {
 }
 
 .cartmanual-customerinfo-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 100;
   // font-size: 17px;
   font-size: 15px;
   line-height: 20px;
@@ -469,7 +495,7 @@ body {
 }
 
 .cartmanual-customerinfo-words {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   font-weight: 500;
   // font-size: 17px;
@@ -510,9 +536,9 @@ body {
 }
 
 .cartmanual-paymentService-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   // font-size: 17px;
   font-size: 15px;
   line-height: 20px;
@@ -554,7 +580,7 @@ body {
 }
 
 .cartmanual-paymentService-ovo {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
@@ -571,7 +597,7 @@ body {
 }
 
 .cartmanual-paymentService-words {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   font-weight: 500;
   // font-size: 17px;
@@ -609,7 +635,7 @@ body {
 .cartmanual-TotalAmount-title {
   display: flex;
   justify-content: start;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -626,9 +652,9 @@ body {
 }
 
 .cartmanual-TotalAmount-price {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 17px;
   line-height: 20px;
   text-transform: capitalize;
@@ -691,9 +717,9 @@ body {
 }
 
 .cartmanual-OrderButton-word {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 20px;
   line-height: 20px;
   text-transform: capitalize;
@@ -739,9 +765,9 @@ body {
 
 .cartmanual-TotalAmount-title-mob {
   display: flex;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 100;
   font-size: 12px;
   text-transform: capitalize;
   color: #111111;
@@ -753,9 +779,9 @@ body {
 }
 
 .cartmanual-TotalAmount-price-mob {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 17px;
   text-transform: capitalize;
   color: #4bb7ac;
@@ -779,11 +805,14 @@ body {
   background-color: #4bb7ac;
   box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
   border-radius: 10px;
-  padding: 12px 12px 13px 19px;
+  padding: 12px 12px 12px 14px;
   max-width: 165px;
   min-width: 148px;
   width: auto;
   height: 51px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cartmanual-OrderButton-content-mob {
@@ -810,7 +839,7 @@ body {
 }
 
 .cartmanual-OrderButton-word-mob {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
   font-weight: bold;
   font-size: 15px;
@@ -839,9 +868,9 @@ body {
 }
 
 .cartmanual-infoname-title, .cartmanual-phonenumber-title {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: 500;
   color: #111111;
   font-size: 14px;
 }
@@ -860,7 +889,7 @@ body {
   border: 1px solid #4bb7ac;
   border-radius: 8px 0px 0px 8px;
 
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
@@ -940,11 +969,11 @@ body {
 }
 
 .cartmanual-radioTitle {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: bolder;
+  font-weight: 100;
   color: #111111;
-  font-size: 18px;
+  font-size: 16px;
   margin-left: 10px;
 }
 
@@ -966,18 +995,18 @@ body {
 }
 
 .cartmanual-deliverydetail-title {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-style: normal;
-  font-size: 18px;
-  font-weight: bolder;
+  font-size: 16px;
+  font-weight: 100;
   color: #111111;
 }
 
 .cartmanual-deliverydetail-address {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -992,7 +1021,7 @@ body {
 }
 
 .cartmanual-deliverydetail-shipperNotesTitle {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -1000,7 +1029,7 @@ body {
 }
 
 .cartmanual-deliverydetail-shipperNotes {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -1013,16 +1042,16 @@ body {
 }
 
 .cartmanual-deliverydetail-shipperLayout-shipperName {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 100;
   font-size: 15px;
   color: #111111;
   text-transform: capitalize;
 }
 
 .cartmanual-deliverydetail-shipperLayout-shipperPrice {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
@@ -1031,7 +1060,7 @@ body {
 }
 
 .cartmanual-deliverydetail-insurance-info {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
@@ -1121,7 +1150,7 @@ body {
 }
 
 .cartmanual-shippingdatedetail-desc {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1139,7 +1168,7 @@ body {
 }
 
 .cartmanual-paymentdetail-desc {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1152,7 +1181,7 @@ body {
   border-radius: 3px;
   margin-left: 10px;
   background-color: #E0EAFF;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   // font-size: 17px;
   font-size: 13px;
@@ -1179,7 +1208,7 @@ body {
 }
 
 .cartmanual-List-hidemenu-word {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   // font-weight: 600;
   // font-size: 15px;
@@ -1197,7 +1226,7 @@ body {
 }
 
 .cartmanual-List-showmenu-word {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   // font-weight: 600;
   // font-size: 15px;
@@ -1228,9 +1257,9 @@ body {
 }
 
 .cartmanual-detailprice-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-SemiBold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 100;
   // font-size: 17px;
   font-size: 15px;
   line-height: 20px;
@@ -1265,6 +1294,67 @@ body {
   // border-top: 1px solid #c4c4c4;
 }
 
+// Promo Cart Section Start
+.promoCart-voucherinfo {
+  display: flex;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.promoCart-detailContent {
+  border-radius: 8px;
+  border: 0.5px solid #aaaaaa;
+  padding: 14px;
+  margin: 14px;
+}
+
+.promoCart-leftSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promoCart-img-icon {
+  width: 23px;
+  height: 15px;
+}
+
+.promoCart-title {
+  font-family: $fontFamily-Inter-SemiBold;
+  font-style: normal;
+  font-weight: 100;
+  color: #111111;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.promoCart-arrowright {
+  display: flex;
+}
+
+.promoCart-arrowright-icon {
+  height: 23px;
+  width: 23px;
+}
+
+.promoCart-selectiondetail {
+  margin-top: 10px;
+}
+
+.promoCart-selectiondetail-border {
+  border-top : 1px solid #c4c4c4;
+}
+
+.promoCart-selectiondetail-desc {
+  font-family: $fontFamily-Inter-Regular;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #111111;
+  margin-top: 10px;
+}
+// Promo Cart Section End
+
 .cartmanual-summarypayment {
   // min-width: 480px;
   // max-width: 480px;
@@ -1282,7 +1372,7 @@ body {
 }
 
 .cartmanual-detailcontent-address {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   font-weight: 500;
   // font-size: 17px;
@@ -1295,14 +1385,14 @@ body {
 }
 
 .cartmanual-detailcontent-addressdesc {
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
   font-weight: normal;
   // font-size: 15px;
   font-size: 13px;
   line-height: 20px;
   text-transform: capitalize;
-  letter-spacing: 0.05em;
+  letter-spacing: normal;
   color: #767676;
   width: auto;
 }
@@ -1339,4 +1429,42 @@ body {
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { 
 	-webkit-appearance: none;
+}
+
+.cart-merchant-hour-status-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.cart-merchant-hour-status-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.cart-merchant-hour-status-text {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.cart-manual-content-choice,
+.cart-manual-content-notes {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 12px;
+  text-transform: capitalize;
+  color: #111111;
+}
+
+.cart-manual-content-choice {
+  margin-top: 5px;
 }

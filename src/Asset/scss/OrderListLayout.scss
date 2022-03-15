@@ -13,6 +13,32 @@
   src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+// Font-family Inter
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 .orderListLayout {
   width: 100vw;
   padding: 20px 117px 20px 107px;
@@ -102,19 +128,20 @@
   box-sizing: border-box;
   border-radius: 10px;
   padding: 5px 13px;
-  margin-bottom: 32px;
+  margin-left: 13px;
   cursor: pointer;
   width: fit-content;
+  background-color: #ffffff;
 }
 
 .orderList-filterName {
   font-size: 15px;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
   text-transform: capitalize;
-  letter-spacing: 0.05em;
+  letter-spacing: normal;
   color: #111111;
   margin-right: 20px;
 }
@@ -145,7 +172,7 @@
   width: auto;
   cursor: pointer;
   box-sizing: border-box;
-  border: 0.5px solid #c4c4c4;
+  // border: 0.5px solid #c4c4c4;
   border-radius: 8px;
 }
 
@@ -161,10 +188,10 @@
 }
 
 .orderList-transaction-title {
-  font-size: 17px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 15px;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   line-height: 20px;
   text-transform: capitalize;
   color: #ffffff;
@@ -172,9 +199,9 @@
 
 .orderList-transaction-counttimer {
   font-size: 15px;
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 20px;
   text-transform: capitalize;
   color: #ffffff;
@@ -182,6 +209,8 @@
 
 .orderList-transaction-content {
   padding: 15px 20px 15px 20px;
+  background-color: #ffffff;
+  border-radius: 0px 0px 8px 8px;
 }
 
 .orderList-transaction-topSide {
@@ -192,10 +221,10 @@
 }
 
 .orderList-transaction-merchName {
-  font-size: 17px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-family: $fontFamily-Inter-Medium;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   line-height: 20px;
   color: #111111;
   margin-bottom: 8px;
@@ -210,10 +239,10 @@
 }
 
 .orderList-transaction-timeTrans {
-  font-size: 15px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-size: 14px;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   line-height: 15px;
   color: #767676;
 }
@@ -222,10 +251,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
-  font-family: "SF-Compact-Rounded", sans-serif;
+  font-size: 16px;
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   line-height: 15px;
   color: #767676;
   margin-bottom: 15px;
@@ -233,6 +262,7 @@
 
 .orderList-transaction-bottomSide {
   display: flex;
+  margin-top: 10px;
 }
 
 .orderList-transaction-foodService {
@@ -245,14 +275,25 @@
   height: 20px;
 }
 
-.orderList-foodService-words,
-.orderList-paymentService-words {
-  font-family: "SF-Compact-Rounded", sans-serif;
+.orderList-foodService-words {
+  font-family: $fontFamily-Inter-Regular;
   font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
+  font-weight: 400;
+  font-size: 16px;
   line-height: 20px;
   text-transform: capitalize;
+  color: #111111;
+  padding-top: 3px;
+  margin-left: 7px;
+}
+
+.orderList-paymentService-words {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: uppercase;
   color: #111111;
   padding-top: 3px;
   margin-left: 7px;
@@ -284,9 +325,9 @@
 }
 
 .noTrans-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: $fontFamily-Inter-Bold;
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 15px;
   line-height: 25px;
   text-transform: capitalize;
@@ -295,10 +336,116 @@
 }
 
 $font768size: 13px;
+
+.status-cart-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 10px 14px 10px;
+  background-color: #FFFFFF !important;
+}
+
+.status-cart-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.status-cart-titletext {
+  font-family: $fontFamily-Inter-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 16px;
+}
+
+.status-cart-Wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f1f2;
+  padding-top: 14px;
+}
+
+.status-cart-Layout {
+  background-color: #f0f1f2;
+  height: 100vh;
+}
+
+.status-cart-Title {
+  // display: flex;
+  display: none;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 54px;
+  margin-bottom: 6px;
+}
+
+.logoCenter-status-cart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.LogoPikapp-status-cart {
+  width: 135px;
+  height: 54px;
+  cursor: pointer;
+}
+
+.modal-status-cart {
+  z-index: 3; /* Overlay effect: positioned over other containers */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  top: 0;
+  left: 0;
+}
+
+.modal-content-status-cart {
+  background-color: #f0f1f2;
+  position: relative;
+  // max-width: 588px; /* Max width where it stops expanding */
+  max-width: 480px; /* Max width where it stops expanding */
+  min-width: 480px; /* Width in proportion to its parent container*/
+  // min-height: auto;
+  margin: auto; /* Auto margin according to the element width */
+  border: none;
+  // border-radius: 20px; /* Optional. Rounds container corners */
+  // overflow: auto;
+  // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  // box-shadow: 7px 4px 4px -4px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 4px -4px rgba(0, 0, 0, 0.1), -4px 0 4px -4px rgba(0, 0, 0, 0.1);
+  padding: 0px 0px 32px 0px;
+  height: 100vh;
+}
+
+.status-cart-transactionid {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #111111;
+  padding-top: 3px;
+  word-break: break-word;
+}
+
+.status-cart-content-border {
+  border-top : 1px solid #c4c4c4;
+}
+
+.status-cart-filter {
+  width: 100%;
+  background-color: #ffffff;
+  padding-bottom: 13px;
+}
+
 @media (max-width: 768px) {
   .orderListLayout {
     width: 100vw;
     padding: 44px 15px 15px 19px;
+    background-color: #ffffff;
   }
 
   .orderListTitle {
@@ -315,8 +462,8 @@ $font768size: 13px;
 
   .orderList-filter {
     padding: 5px 10px;
-    margin-bottom: 22px;
     width: fit-content;
+    background-color: #ffffff;
   }
   
   .orderList-filterName {
@@ -345,6 +492,7 @@ $font768size: 13px;
 
   .orderList-transaction-content {
     padding: 15px 15px 15px 15px;
+    background-color: #ffffff;
   }
 
   .orderList-transaction-merchName {
@@ -366,6 +514,11 @@ $font768size: 13px;
   .orderList-paymentService-words {
     font-size: $font768size;
     padding-top: 4px;
+  }
+
+  .status-cart-Layout {
+    width: 100vw;
+    // padding: 34px 15px 15px 19px;
   }
 }
 

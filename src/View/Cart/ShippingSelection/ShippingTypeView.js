@@ -40,7 +40,6 @@ const ShippingTypeView = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        // setIsLoading(true);
         let allProduct = [];
         let currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"));
 
@@ -106,7 +105,6 @@ const ShippingTypeView = () => {
                 })
     
                 setShippingList(response);
-                console.log(response);
             } else {
                 setNoDataCourier(true);
             }
@@ -122,6 +120,7 @@ const ShippingTypeView = () => {
 
     const handleSave = (shippingtype, courier) => {
         dispatch({ type: 'SHIPPINGTYPE', payload: shippingtype })
+        localStorage.setItem("SHIPPINGTYPE", JSON.stringify(shippingtype))
         dispatch({ type: 'COURIERLIST', payload: courier })
         history.push('./detail')
     }
@@ -129,6 +128,7 @@ const ShippingTypeView = () => {
     const goBack = () => {
         if(CartRedu.shippingName === "") {
             dispatch({ type: 'SHIPPINGTYPE', payload: "" })
+            localStorage.setItem("SHIPPINGTYPE", JSON.stringify(""))
         }
         window.history.go(-1)
     }
@@ -163,12 +163,6 @@ const ShippingTypeView = () => {
 
     return (
         <>  
-            {/* {
-                !isLoading ?
-                <Loader loaded={isLoading} options={options} className="spinner"/>
-                :
-                <></>
-            } */}
             <Loader loaded={isLoading} options={options} className="spinner"/>
             <div className="shippingSelection-layout">
                 <div className="shippingSelection-topSide">
