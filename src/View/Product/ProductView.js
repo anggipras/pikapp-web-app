@@ -159,7 +159,8 @@ class ProductView extends React.Component {
     merchantHourOpenTime: null, // ex: 10:00
     merchantHourGracePeriod: null, // ex: 30
     merchantHourNextOpenDay: null, // ex: Sunday
-    merchantHourNextOpenTime: null // ex: 10:00
+    merchantHourNextOpenTime: null, // ex: 10:00
+    merchantHourAutoOnOff: null // ex: true or false
   };
 
   timeout = null
@@ -395,7 +396,8 @@ class ProductView extends React.Component {
             merchantHourOpenTime: merchantHourCheckingResult.open_time, 
             merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
             merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-            merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time
+            merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
+            merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
            })
           this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
           this.setState({ productCategpersizeOri : this.state.productCategpersize });
@@ -1042,13 +1044,16 @@ class ProductView extends React.Component {
                         className='product-imgContent' 
                         alt=''
                         style={{
-                          filter: !this.state.isManualTxn ?
-                              this.state.merchantHourStatus == "CLOSE" ?
-                              "grayscale(100%)"
+                          filter: this.state.merchantHourAutoOnOff ?
+                            !this.state.isManualTxn ?
+                                this.state.merchantHourStatus == "CLOSE" ?
+                                "grayscale(100%)"
+                                :
+                                "none"
                               :
                               "none"
-                            :
-                            "none"
+                              :
+                              "grayscale(100%)"
                         }} />
                     </div>
 
@@ -1099,9 +1104,16 @@ class ProductView extends React.Component {
                       </div>
                     </div> */}
                     {
-                      !this.state.isManualTxn ?
-                        this.state.merchantHourStatus == "CLOSE" ?
-                        null
+                      this.state.merchantHourAutoOnOff ?
+                        !this.state.isManualTxn ?
+                          this.state.merchantHourStatus == "CLOSE" ?
+                          null
+                          :
+                          <div className="merchantdetail-cart-button-sec">
+                            <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
+                              <span className="merchantdetail-cart-text">+ Keranjang</span>
+                            </div>
+                          </div>
                         :
                         <div className="merchantdetail-cart-button-sec">
                           <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
@@ -1109,11 +1121,7 @@ class ProductView extends React.Component {
                           </div>
                         </div>
                       :
-                      <div className="merchantdetail-cart-button-sec">
-                        <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
-                          <span className="merchantdetail-cart-text">+ Keranjang</span>
-                        </div>
-                      </div>
+                      null
                     }
 
                     {/* mobile view */}
@@ -1144,9 +1152,16 @@ class ProductView extends React.Component {
                     </div> */}
 
                     {
-                      !this.state.isManualTxn ?
-                        this.state.merchantHourStatus == "CLOSE" ?
-                        null
+                      this.state.merchantHourAutoOnOff ?
+                        !this.state.isManualTxn ?
+                          this.state.merchantHourStatus == "CLOSE" ?
+                          null
+                          :
+                          <div className='merchantdetail-cart-button-secmob'>
+                            <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
+                              <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
+                            </div>
+                          </div>
                         :
                         <div className='merchantdetail-cart-button-secmob'>
                           <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
@@ -1154,11 +1169,7 @@ class ProductView extends React.Component {
                           </div>
                         </div>
                       :
-                      <div className='merchantdetail-cart-button-secmob'>
-                        <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
-                          <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
-                        </div>
-                      </div>
+                      null
                     }
                   </div>
                 )
@@ -1412,46 +1423,55 @@ class ProductView extends React.Component {
   }
 
   merchantHourStatusWarning = () => {
-    if (this.state.merchantHourStatus == "CLOSE") {
-      const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-      const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-      let nowDate = new Date()
-      if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
-        return (
-          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-            <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
-          </div>
-        )
-      } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
-        return (
-          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-            <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
-          </div>
-        )
-      } else {
-        let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
-        let finalNextOpenDay = weekdayId[nextOpenDay]
-        return (
-          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-            <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
-          </div>
-        )
-      }
-    } else if (this.state.merchantHourStatus == "OPEN") {
-      if (this.state.merchantHourGracePeriod <= 30) {
-        return (
-          <div className="merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
-            <div className="merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
-          </div>
-        )
+    if (this.state.merchantHourAutoOnOff) {
+      if (this.state.merchantHourStatus == "CLOSE") {
+        const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+        let nowDate = new Date()
+        if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
+            </div>
+          )
+        } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+            </div>
+          )
+        } else {
+          let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
+          let finalNextOpenDay = weekdayId[nextOpenDay]
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+            </div>
+          )
+        }
+      } else if (this.state.merchantHourStatus == "OPEN") {
+        if (this.state.merchantHourGracePeriod <= 30) {
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+              <div className="merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+            </div>
+          )
+        } else {
+          return null
+        }
       } else {
         return null
       }
     } else {
-      return null
+      return (
+        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+          <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+        </div>
+      )
     }
   }
 
@@ -1578,13 +1598,16 @@ class ProductView extends React.Component {
                 src={this.state.data.image}
                 style={{ 
                   objectFit: 'cover', 
-                  filter: !this.state.isManualTxn ? 
-                    this.state.merchantHourStatus == "CLOSE" ?
-                    "grayscale(100%)" 
-                    :
+                  filter: this.state.merchantHourAutoOnOff?
+                    !this.state.isManualTxn ? 
+                      this.state.merchantHourStatus == "CLOSE" ?
+                      "grayscale(100%)" 
+                      :
+                      "none"
+                    : 
                     "none"
-                  : 
-                  "none"
+                    :
+                    "grayscale(100%)"
                 }}
               />
               {/* <div className='iconBanner'>
@@ -1644,7 +1667,7 @@ class ProductView extends React.Component {
                         <div className='star-votes'>(50+ Upvotes)</div>
                       </div> */}
                       {this.state.data.category != "" ? <div className="merchant-divider-dot">.</div> : null}
-                      <div className="merchant-openClose-status" style={{color: this.state.merchantHourStatus == "CLOSE" ? "#dc6a84" : "#4bb7ac"}}>{this.state.merchantHourStatus == "CLOSE" ? "Tutup" : "Buka"}</div>
+                      <div className="merchant-openClose-status" style={{color: this.state.merchantHourAutoOnOff? this.state.merchantHourStatus == "CLOSE" ? "#dc6a84" : "#4bb7ac" : "#dc6a84"}}>{this.state.merchantHourAutoOnOff? this.state.merchantHourStatus == "CLOSE" ? "Tutup" : "Buka" : "Tutup"}</div>
                     </div>
                   </div>
                 </Link>
