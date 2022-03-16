@@ -1120,12 +1120,16 @@ class CartManualView extends React.Component {
           return null
         }
       } else {
-        return (
-          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
-          </div>
-        )
+        if (this.state.merchantHourAutoOnOff != null) {
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+            </div>
+          )
+        } else {
+          return null
+        }
       }
     }
 
@@ -1271,6 +1275,7 @@ class CartManualView extends React.Component {
       });
   
       let totalPaymentShow = 0
+      let totalDiscountShow = 0
       let totalItem = 0
       let selectedMerch = storeList.filter(store => {
         return store.mid === currentCartMerchant.mid
@@ -1280,6 +1285,7 @@ class CartManualView extends React.Component {
       selectedMerch[0].food.forEach(thefood => {
         totalPaymentShow += thefood.foodTotalPrice
       })
+      totalDiscountShow = this.state.selectedPromo ? parseInt(this.state.selectedPromo.promo_max_discount) : 0
   
       finalProduct = [
         {
@@ -1289,7 +1295,7 @@ class CartManualView extends React.Component {
       ]
       Cookies.set("MANUAL_TOTALPAYMENT", totalPaymentShow)
 
-      let totalFinalProduct = totalPaymentShow + Number(this.state.cartReduData.shippingPrice) + this.state.insurancePrice;
+      let totalFinalProduct = totalPaymentShow + Number(this.state.cartReduData.shippingPrice) + this.state.insurancePrice - totalDiscountShow;
   
       let paymentImage;
       let eatImage;
@@ -1328,7 +1334,7 @@ class CartManualView extends React.Component {
             </div>
             {this.merchantHourStatusWarning()}
 
-            {/* {
+            {
               this.state.notMatchPromo ?
               <div className="promo-alert-paymentnotselected">
                   <span className="promo-alert-icon">
@@ -1339,7 +1345,7 @@ class CartManualView extends React.Component {
               </div>
               :
               null
-            } */}
+            }
   
             <div className='cartmanual-Content'>
               <div className='cartmanual-LeftSide'>
@@ -1538,7 +1544,7 @@ class CartManualView extends React.Component {
                     </div>
                   </div>
 
-                  {/* <div className='promoCart-voucherinfo'>
+                  <div className='promoCart-voucherinfo'>
                     <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.props.CartRedu.paymentType }, cartStatus : { totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                       <div className='promoCart-detailContent'>
                             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -1567,7 +1573,7 @@ class CartManualView extends React.Component {
                             }
                       </div>
                     </Link>
-                  </div> */}
+                  </div>
 
                   <div className='cartmanual-summarypayment'>
                     <div className='cartmanual-detailcontent-payment'>
@@ -1588,7 +1594,7 @@ class CartManualView extends React.Component {
                       <div className='cartmanual-detailprice-desc'>
                         <div className='orderDetail-detailprice-word'>
                           <div>Total Diskon Item</div>
-                          <div>Rp. 0</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
                         </div>
                       </div>
 

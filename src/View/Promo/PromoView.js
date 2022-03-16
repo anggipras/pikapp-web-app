@@ -8,6 +8,9 @@ import paymentColor from '../../Asset/Icon/CashierPayment.png'
 import moment from "moment";
 import Cookies from "js-cookie"
 import { useLocation } from "react-router-dom"
+import Axios from "axios";
+import { v4 as uuidV4 } from "uuid";
+import { address, clientId } from "../../Asset/Constant/APIConstant";
 
 const PromoView = () => {
     const dispatch = useDispatch()
@@ -20,67 +23,125 @@ const PromoView = () => {
     const [manualTxnVar, setManualTxnVar] = useState(0)
     const declaredShipment = ["PICKUP", "DELIVERY", "DINE_IN"]
     const declaredPayment = ["PAY_BY_CASHIER", "WALLET_OVO", "WALLET_DANA", "WALLET_SHOPEEPAY"]
-    const [promoListData, setPromoListData] = useState([
-        {
-            promo_title: "PIKAPPTAHUNBARU 5rb",
-            promo_period_start: "2021-01-03T19:00:00",
-            promo_period_end: "2021-01-07T19:00:00",
-            promo_min_order: "20000",
-            promo_max_discount: "5000",
-            promo_shipment_method: ["DELIVERY", "PICKUP", "DINE_IN"],
-            promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
-        },
-        {
-            promo_title: "SPESIALKIRIM 15rb",
-            promo_period_start: "2021-02-04T19:00:00",
-            promo_period_end: "2021-02-08T19:00:00",
-            promo_min_order: "40000",
-            promo_max_discount: "15000",
-            promo_shipment_method: ["DELIVERY", "DINE_IN"],
-            promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
-        },
-        {
-            promo_title: "SPESIALKIRIM 25rb",
-            promo_period_start: "2021-02-04T19:00:00",
-            promo_period_end: "2021-02-08T19:00:00",
-            promo_min_order: "50000",
-            promo_max_discount: "25000",
-            promo_shipment_method: ["DINE_IN"],
-            promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
-        },
-        {
-            promo_title: "AMBILSENDIRI 10rb",
-            promo_period_start: "2021-03-05T19:00:00",
-            promo_period_end: "2021-03-09T19:00:00",
-            promo_min_order: "30000",
-            promo_max_discount: "10000",
-            promo_shipment_method: ["PICKUP"],
-            promo_payment_method: ["PAY_BY_CASHIER"]
-        },
-        {
-            promo_title: "AMBILSENDIRI 15rb",
-            promo_period_start: "2021-03-05T19:00:00",
-            promo_period_end: "2021-03-09T19:00:00",
-            promo_min_order: "50000",
-            promo_max_discount: "15000",
-            promo_shipment_method: ["PICKUP"],
-            promo_payment_method: ["WALLET_OVO"]
-        },
-    ])
+    const [promoListData, setPromoListData] = useState([])
+    // const [promoListData, setPromoListData] = useState([
+    //     {
+    //         promo_title: "PIKAPPTAHUNBARU 5rb",
+    //         promo_period_start: "2021-01-03T19:00:00",
+    //         promo_period_end: "2021-01-07T19:00:00",
+    //         promo_min_order: "20000",
+    //         promo_max_discount: "5000",
+    //         promo_shipment_method: ["DELIVERY", "PICKUP", "DINE_IN"],
+    //         promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
+    //     },
+    //     {
+    //         promo_title: "SPESIALKIRIM 15rb",
+    //         promo_period_start: "2021-02-04T19:00:00",
+    //         promo_period_end: "2021-02-08T19:00:00",
+    //         promo_min_order: "40000",
+    //         promo_max_discount: "15000",
+    //         promo_shipment_method: ["DELIVERY", "DINE_IN"],
+    //         promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
+    //     },
+    //     {
+    //         promo_title: "SPESIALKIRIM 25rb",
+    //         promo_period_start: "2021-02-04T19:00:00",
+    //         promo_period_end: "2021-02-08T19:00:00",
+    //         promo_min_order: "50000",
+    //         promo_max_discount: "25000",
+    //         promo_shipment_method: ["DINE_IN"],
+    //         promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
+    //     },
+    //     {
+    //         promo_title: "AMBILSENDIRI 10rb",
+    //         promo_period_start: "2021-03-05T19:00:00",
+    //         promo_period_end: "2021-03-09T19:00:00",
+    //         promo_min_order: "30000",
+    //         promo_max_discount: "10000",
+    //         promo_shipment_method: ["PICKUP"],
+    //         promo_payment_method: ["PAY_BY_CASHIER"]
+    //     },
+    //     {
+    //         promo_title: "AMBILSENDIRI 15rb",
+    //         promo_period_start: "2021-03-05T19:00:00",
+    //         promo_period_end: "2021-03-09T19:00:00",
+    //         promo_min_order: "50000",
+    //         promo_max_discount: "15000",
+    //         promo_shipment_method: ["PICKUP"],
+    //         promo_payment_method: ["WALLET_OVO"]
+    //     },
+    // ])
     const [disabledPromoListData, setDisabledPromoListData] = useState([])
     const [selectedPromo, setSelectedPromo] = useState(-1)
     const [selectedPromoData, setSelectedPromoData] = useState(null)
 
     useEffect(() => {
+        promoList(0, 20, [])
+    }, [])
+
+    const promoList = async (page, size, arrayOfPromoList) => {
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        try {
+          let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
+            headers: {
+              "Content-Type": "application/json",
+              "x-request-id": uuid,
+              "x-request-timestamp": date,
+              "x-client-id": clientId,
+              "token": "PUBLIC",
+              "page": page,
+              "size": size
+            },
+            method: "GET"
+          })
+          let promoResult = promoResponse.data.results
+          if (promoResult == "") {
+            let allListOfPromo = []
+            arrayOfPromoList.forEach(val => {
+                allListOfPromo.push({
+                    promo_title: val.campaign_name,
+                    promo_period_start: val.campaign_start_date,
+                    promo_period_end: val.campaign_end_date,
+                    promo_min_order: val.min_order.toString(),
+                    promo_max_discount: val.max_limit.toString(),
+                    promo_shipment_method: val.campaign_type,
+                    promo_payment_method: val.payment_type
+                })
+            })
+            promoListSet(allListOfPromo)
+          } else {
+            let newArrayOfPromoList = []
+            if (arrayOfPromoList.length == 0) {
+                promoResult.forEach(val => {
+                    newArrayOfPromoList.push(val)
+                })
+            } else {
+                newArrayOfPromoList = arrayOfPromoList.concat(promoResult)
+            }
+            mediumPromoList(page, size, newArrayOfPromoList)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+    }
+
+    const mediumPromoList = (page, size, newArrayOfPromoList) => {  
+        let newPage = page + 1
+        promoList(newPage, size, newArrayOfPromoList)
+    }
+
+    const promoListSet = (allListOfPromo) => {
         var selectedPromoListContainer = []
         var disabledPromoListContainer = []
         let isManualTxn = Cookies.get("isManualTxn")
         setManualTxnVar(isManualTxn)
         if (isManualTxn == 0) {
             if (promoAlert == 0) {
-                selectedPromoListContainer = promoListData
+                selectedPromoListContainer = allListOfPromo
             } else {
-                promoListData.forEach(val => {
+                allListOfPromo.forEach(val => {
                     let promoMinPrice = parseInt(val.promo_min_order)
                     if (val.promo_payment_method.includes(cartStatus.paymentType) && val.promo_shipment_method.includes(cartStatus.bizType) && cartStatus.totalPayment >= promoMinPrice) {
                         selectedPromoListContainer.push(val)
@@ -91,11 +152,11 @@ const PromoView = () => {
             }
         } else {
             if (alertStatus.phoneNumber == "0" && alertStatus.paymentType == 0) {
-                selectedPromoListContainer = promoListData
+                selectedPromoListContainer = allListOfPromo
             } else if(alertStatus.phoneNumber == "" && alertStatus.paymentType == -1) {
-                selectedPromoListContainer = promoListData
+                selectedPromoListContainer = allListOfPromo
             } else {
-                promoListData.forEach(val => {
+                allListOfPromo.forEach(val => {
                     let promoMinPrice = parseInt(val.promo_min_order)
                     if (val.promo_shipment_method.includes(CartRedu.pickupTitleType) && val.promo_payment_method.includes(CartRedu.paymentTitleType) && cartStatus.totalPayment >= promoMinPrice) {
                         selectedPromoListContainer.push(val)
@@ -107,7 +168,7 @@ const PromoView = () => {
         }
         setPromoListData(selectedPromoListContainer)
         setDisabledPromoListData(disabledPromoListContainer)
-    }, [])
+    }
 
     const selectPromo = (val, ind) => {
         setSelectedPromoData(val)
@@ -120,7 +181,7 @@ const PromoView = () => {
             if (val[0] == "PICKUP") {
                 shipmentString = "Pick Up"
             } else if(val[0] == "TAKE_AWAY") {
-                shipmentString = "Pick Up"
+                shipmentString = "Take Away"
             } else if(val[0] == "DINE_IN") {
                 shipmentString = "Dine In"
             } else {
@@ -138,11 +199,11 @@ const PromoView = () => {
                     }
                 } else if(el == "TAKE_AWAY") {
                     if (ind == val.length-1) {
-                        shipmentString += `dan Pick Up`
+                        shipmentString += `dan Take Away`
                     } else if(ind == val.length-2) {
-                        shipmentString += `Pick Up `
+                        shipmentString += `Take Away `
                     } else {
-                        shipmentString += `Pick Up, `
+                        shipmentString += `Take Away, `
                     }
                 } else if(el == "DINE_IN") {
                     if (ind == val.length-1) {

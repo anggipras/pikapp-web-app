@@ -111,7 +111,7 @@ body {
     min-height: 50px;
     height: auto;
     position: sticky;
-    top: 50px; //PROMO VOUCHER WOULD CHANGE TO 140PX
+    top: 140px;
     z-index: 3;
   }
 
@@ -1119,7 +1119,7 @@ body {
     min-height: 50px;
     height: auto;
     position: sticky;
-    top: 50px;
+    top: 140px;
     z-index: 3;
   }
 
@@ -1243,6 +1243,7 @@ body {
   .bottom-merchantInfo {
     padding-left: 16px;
     padding-right: 18px;
+    padding-bottom: 16px;
     width: 100vw;
   }
 
