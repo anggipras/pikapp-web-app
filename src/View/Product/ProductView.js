@@ -160,7 +160,8 @@ class ProductView extends React.Component {
     merchantHourGracePeriod: null, // ex: 30
     merchantHourNextOpenDay: null, // ex: Sunday
     merchantHourNextOpenTime: null, // ex: 10:00
-    merchantHourAutoOnOff: null // ex: true or false
+    merchantHourAutoOnOff: null, // ex: true or false
+    promoListSize: 0
   };
 
   timeout = null
@@ -379,6 +380,8 @@ class ProductView extends React.Component {
 
         this.setState({ productAllPage : allProduct });
 
+        this.promoList(0, 20, 0)
+
         Axios(address + "merchant/v1/shop/status/", {
           headers: {
             "Content-Type": "application/json",
@@ -539,6 +542,40 @@ class ProductView extends React.Component {
           this.setState({ showFailed: true })
         }
       });
+  }
+
+  promoList = async (page, size, listLength) => {
+    let uuid = uuidV4();
+    uuid = uuid.replace(/-/g, "");
+    const date = new Date().toISOString();
+    try {
+      let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "token": "PUBLIC",
+          "page": page,
+          "size": size
+        },
+        method: "GET"
+      })
+      let promoResult = promoResponse.data.results
+      if (promoResult == "") {
+        this.setState({promoListSize: listLength})
+      } else {
+        let newListLength = listLength + promoResult.length
+        this.mediumPromoList(page, size, newListLength)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  mediumPromoList = (page, size, newListLength) => {  
+    let newPage = page + 1
+    this.promoList(newPage, size, newListLength)
   }
 
   componentDidUpdate() {
@@ -1466,12 +1503,16 @@ class ProductView extends React.Component {
         return null
       }
     } else {
-      return (
-        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-          <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
-        </div>
-      )
+      if (this.state.merchantHourAutoOnOff != null) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+          </div>
+        )
+      } else {
+        return null
+      }
     }
   }
 
@@ -1749,20 +1790,25 @@ class ProductView extends React.Component {
           </div>
         </div> */}
 
-        {/* <div className='promo-voucherinfo'>
-          <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
-            <div className='promo-detailContent'>
-                  <div className='promo-leftSide'>
-                    <img className='promo-img-icon' src={VoucherIcon} alt='' />
-                    <div className='promo-title'>3 Voucher Diskon Tersedia</div>
-                  </div>
+        {
+          this.state.promoListSize != 0 ?
+          <div className='promo-voucherinfo'>
+            <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
+              <div className='promo-detailContent'>
+                    <div className='promo-leftSide'>
+                      <img className='promo-img-icon' src={VoucherIcon} alt='' />
+                      <div className='promo-title'>{this.state.promoListSize} Voucher Diskon Tersedia</div>
+                    </div>
 
-                  <span className="promo-arrowright">
-                    <img className="promo-arrowright-icon" src={ArrowRight} />
-                  </span>
-            </div>
-          </Link>
-        </div> */}
+                    <span className="promo-arrowright">
+                      <img className="promo-arrowright-icon" src={ArrowRight} />
+                    </span>
+              </div>
+            </Link>
+          </div>
+          :
+          null
+        }
 
         <div className='merchant-section' style={{ backgroundColor: "white" }}>
           <div className='inside-merchantSection'>

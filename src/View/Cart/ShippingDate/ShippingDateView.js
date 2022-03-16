@@ -398,15 +398,19 @@ const ShippingDateView = () => {
                 return null
             }
         } else {
-            return (
-                <div className="shippingdate-alert-paymentnotselected">
-                    <span className="shippingdate-alert-icon">
-                        <img className="alert-icon" src={PromoAlert} alt='' />
-                    </span>
-    
-                    <div className="shippingdate-alert-title">Toko tutup sementara</div>
-                </div>
-            )
+            if (merchantHourStatus.auto_on_off != null) {
+                return (
+                    <div className="shippingdate-alert-paymentnotselected">
+                        <span className="shippingdate-alert-icon">
+                            <img className="alert-icon" src={PromoAlert} alt='' />
+                        </span>
+        
+                        <div className="shippingdate-alert-title">Toko tutup sementara</div>
+                    </div>
+                )
+            } else {
+                return null
+            }
         }
     }
 

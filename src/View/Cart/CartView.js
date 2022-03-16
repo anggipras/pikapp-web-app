@@ -907,12 +907,16 @@ class CartView extends React.Component {
         return null
       }
     } else {
-      return (
-        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-          <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
-        </div>
-      )
+      if (this.state.merchantHourAutoOnOff != null) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+          </div>
+        )
+      } else {
+        return null
+      }
     }
   }
 
@@ -1057,6 +1061,7 @@ class CartView extends React.Component {
     });
 
     let totalPaymentShow = 0
+    let totalDiscountShow = 0
     let totalItem = 0
     let selectedMerch = storeList.filter(store => {
       return store.mid === currentCartMerchant.mid
@@ -1066,6 +1071,7 @@ class CartView extends React.Component {
     selectedMerch[0].food.forEach(thefood => {
       totalPaymentShow += thefood.foodTotalPrice
     })
+    totalDiscountShow = this.state.selectedPromo ? parseInt(this.state.selectedPromo.promo_max_discount) : 0
 
     finalProduct = [
       {
@@ -1117,7 +1123,7 @@ class CartView extends React.Component {
           </div>
           {this.merchantHourStatusWarning()}
 
-          {/* {
+          {
             this.state.notMatchPromo ?
             <div className="promo-alert-paymentnotselected">
                 <span className="promo-alert-icon">
@@ -1128,7 +1134,7 @@ class CartView extends React.Component {
             </div>
             :
             null
-          } */}
+          }
 
           {
             tableNumberOfCart != "0" ?
@@ -1220,8 +1226,8 @@ class CartView extends React.Component {
                   </div>
                 </div>
 
-                {/* <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
-                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
+                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                     <div className='promoCart-detailContent'>
                           <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                             <div className='promoCart-leftSide'>
@@ -1249,7 +1255,7 @@ class CartView extends React.Component {
                           }
                     </div>
                   </Link>
-                </div> */}
+                </div>
 
                 <div className='cart-summarypayment'>
                     <div className='cart-detailcontent-payment'>
@@ -1270,7 +1276,7 @@ class CartView extends React.Component {
                       <div className='cart-detailprice-desc'>
                         <div className='orderDetail-detailprice-word'>
                           <div>Total Diskon Item</div>
-                          <div>Rp. 0</div>
+                          <div>Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
                         </div>
                       </div>
                       
@@ -1290,7 +1296,7 @@ class CartView extends React.Component {
               <h3 className='cart-TotalAmount-title'>Total Harga</h3>
 
               <div className='cart-TotalAmount-bottom'>
-                <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
+                <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow - totalDiscountShow)}</h2>
               </div>
             </div>
             
