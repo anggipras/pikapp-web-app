@@ -324,6 +324,8 @@ class CartView extends React.Component {
         }
       }
     }
+
+    this.checkingTotalPriceWithPromo()
   }
 
   handleIncrease(e, ind, mid) {
@@ -347,6 +349,37 @@ class CartView extends React.Component {
 
     localStorage.setItem('cart', JSON.stringify(allCart))
     this.setState({ updateData: 'updated' })
+
+    this.checkingTotalPriceWithPromo()
+  }
+
+  checkingTotalPriceWithPromo = () => {
+    if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+      const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+      let storageData = JSON.parse(localStorage.getItem('cart'))
+      let storeList = storageData.filter((store) => {
+        if (store.mid !== "") {
+          return store;
+        }
+      });
+      let selectedMerch = storeList.filter(store => {
+        return store.mid === currentCartMerchant.mid
+      });
+
+      let totalPaymentCart = 0
+      selectedMerch[0].food.forEach(thefood => {
+        totalPaymentCart += thefood.foodTotalPrice
+      })
+      let getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+      let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+      if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.biz_type) && totalPaymentCart >= promoMinPrice) {
+        Cookies.set("NOTMATCHPROMO", { theBool: false })
+        this.setState({ notMatchPromo: false })
+      } else {
+        Cookies.set("NOTMATCHPROMO", { theBool: true })
+        this.setState({ notMatchPromo: true })
+      }
+    }
   }
 
   handleOption = (data) => {
@@ -383,7 +416,7 @@ class CartView extends React.Component {
         if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
           getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
           let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
-          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && finalProduct[0].totalPrice >= promoMinPrice) {
+          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("TAKE_AWAY") && finalProduct[0].totalPrice >= promoMinPrice) {
             Cookies.set("NOTMATCHPROMO", { theBool: false })
             this.setState({ notMatchPromo: false })
           } else {
@@ -397,7 +430,7 @@ class CartView extends React.Component {
       let getSelectedPromo
       if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
         getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
-        let eatMethod = this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type
+        let eatMethod = this.state.biz_type
         let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
         let paymentTypeData = ""
         if (data === 0) {
