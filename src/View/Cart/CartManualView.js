@@ -399,7 +399,9 @@ class CartManualView extends React.Component {
         if (newAllCart.length < 2) {
           cart.splice(1)
           localStorage.setItem("cart", JSON.stringify(newAllCart))
-          window.location.href = '/' + selectedMerchant[0].username;
+          // TEMPORARY NAVIGATION TRIAL
+          window.history.go(-1)
+          // window.location.href = '/' + selectedMerchant[0].username;
           this.removeStorage()
         } else {
           let filterMerchantCart = newAllCart.filter(valueCart => {
@@ -409,7 +411,9 @@ class CartManualView extends React.Component {
           if (filterMerchantCart.length) {
             this.setState({ updateData: 'updated' })
           } else {
-            window.location.href = '/' + selectedMerchant[0].username;
+            // TEMPORARY NAVIGATION TRIAL
+            // window.location.href = '/' + selectedMerchant[0].username;
+            window.history.go(-1)
           }
         }
       }
@@ -418,6 +422,7 @@ class CartManualView extends React.Component {
       this.setState({ insuranceCheckbox: false });
       this.props.InsurancePrice(0);
       this.props.InsuranceCheckbox(false);
+      this.checkingTotalPriceWithPromo()
     }
   
     handleIncrease(e, ind, mid) {
@@ -446,6 +451,36 @@ class CartManualView extends React.Component {
       this.setState({ insuranceCheckbox: false });
       this.props.InsurancePrice(0);
       this.props.InsuranceCheckbox(false);
+      this.checkingTotalPriceWithPromo()
+    }
+
+    checkingTotalPriceWithPromo = () => {
+      if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+        const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+        let storageData = JSON.parse(localStorage.getItem('cart'))
+        let storeList = storageData.filter((store) => {
+          if (store.mid !== "") {
+            return store;
+          }
+        });
+        let selectedMerch = storeList.filter(store => {
+          return store.mid === currentCartMerchant.mid
+        });
+  
+        let totalPaymentCart = 0
+        selectedMerch[0].food.forEach(thefood => {
+          totalPaymentCart += thefood.foodTotalPrice
+        })
+        let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+        let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+        if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.biz_type) && totalPaymentCart >= promoMinPrice) {
+          Cookies.set("NOTMATCHPROMO", { theBool: false })
+          this.setState({ notMatchPromo: false })
+        } else {
+          Cookies.set("NOTMATCHPROMO", { theBool: true })
+          this.setState({ notMatchPromo: true })
+        }
+      }
     }
 
     handleOption = (data) => {
@@ -1144,7 +1179,6 @@ class CartManualView extends React.Component {
         return valCart.mid === currentCartMerchant.mid
       })
       if (filterCart.length === 0) {
-        // window.history.go(-1)
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
         window.location.href = '/' + selectedMerchant[0].username;
       } else {

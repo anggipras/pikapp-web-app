@@ -13,7 +13,6 @@ import { v4 as uuidV4 } from "uuid";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 
 const PromoView = () => {
-    const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
     const location = useLocation()
     const promoTitle = location.state.title
@@ -346,8 +345,8 @@ const PromoView = () => {
     const promoPageListDeliveryTxn = () => {
         return promoListData.map((val, ind) => {
             return (
-                <div key={ind} className={alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
-                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                <div key={ind} className={alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
+                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
                             <div className='promolist-circle-name'>{val.promo_title}</div>
@@ -457,7 +456,7 @@ const PromoView = () => {
                         promoAlert == 0 ?
                         null
                         :
-                            alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ?
+                            CartRedu.pickupType == -1 || alertStatus.paymentType == -1 ?
                             <div className="promo-alert-paymentnotselected">
                                 <span className="promo-alert-icon">
                                     <img className="alert-icon" src={PromoAlert} alt='' />
@@ -471,7 +470,7 @@ const PromoView = () => {
 
                     {
                         promoListData.length > 0 ?
-                        <div className="selectedPromo-title" style={{display: promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1? "none":"block"}} >
+                        <div className="selectedPromo-title" style={{display: promoAlert == 0 || alertStatus.paymentType == -1? "none":"block"}} >
                             Pilih 1
                         </div>
                         :
@@ -511,7 +510,7 @@ const PromoView = () => {
                         style={{ 
                             backgroundColor: promoAlert == 0? "#aaaaaa" 
                             : 
-                                alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ?
+                                alertStatus.paymentType == -1 ?
                                 "#aaaaaa"
                                 :
                                 selectedPromo == -1 ?

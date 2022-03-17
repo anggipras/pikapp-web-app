@@ -8,6 +8,7 @@ import DanaPayment from "../../../Asset/Icon/dana_icon.png";
 import ShopeePayment from "../../../Asset/Icon/shopee_icon.png";
 import Alertcircle from '../../../Asset/Icon/alertcircle.png'
 import ReactTooltip from 'react-tooltip';
+import Cookies from "js-cookie";
 import { useDispatch, useSelector } from 'react-redux'
 
 const PaymentMethodView = () => {
@@ -38,6 +39,20 @@ const PaymentMethodView = () => {
             dispatch({ type: 'PAYMENTMETHOD', payload: paymentMethod })
             localStorage.setItem("MANUAL_PAYMENT_TYPE", JSON.stringify({ paymentType: "WALLET_OVO", indexPayment: 0 }))
             localStorage.setItem("MANUAL_PHONE_NUMBER", JSON.stringify({ phoneNumber: phoneNum }))
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                let paymentTypeCookies = JSON.parse(localStorage.getItem("MANUAL_PAYMENT_TYPE"))
+                let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
+                let paymentType = paymentTypeCookies.paymentType
+                let shipmentType = shipmentTypeCookies.shipmentType
+                let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
+                let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+                if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes(shipmentType) && totalPaymentManualCart >= promoMinPrice) {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
+                } else {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
+                }
+            }
             window.history.go(-1)
         } else if(CartRedu.paymentType === -1) {
             console.log("CANNOT GO THROUGH")
@@ -46,6 +61,20 @@ const PaymentMethodView = () => {
             dispatch({ type: 'PAYMENTMETHOD', payload: paymentMethod })
             localStorage.setItem("MANUAL_PAYMENT_TYPE", JSON.stringify({ paymentType: `WALLET_${paymentMethod.toUpperCase()}`, indexPayment: CartRedu.paymentType }))
             localStorage.setItem("MANUAL_PHONE_NUMBER", JSON.stringify({ phoneNumber: "" }))
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                let paymentTypeCookies = JSON.parse(localStorage.getItem("MANUAL_PAYMENT_TYPE"))
+                let shipmentTypeCookies = JSON.parse(localStorage.getItem("SHIPMENT_TYPE"))
+                let paymentType = paymentTypeCookies.paymentType
+                let shipmentType = shipmentTypeCookies.shipmentType
+                let totalPaymentManualCart = JSON.parse(Cookies.get("MANUAL_TOTALPAYMENT"))
+                let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+                if (getSelectedPromo.promo_payment_method.includes(paymentType) && getSelectedPromo.promo_shipment_method.includes(shipmentType) && totalPaymentManualCart >= promoMinPrice) {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
+                } else {
+                    Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
+                }
+            }
             window.history.go(-1)
         }
     }
