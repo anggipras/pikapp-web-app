@@ -106,7 +106,9 @@ const PromoView = () => {
                     promo_min_order: val.min_order.toString(),
                     promo_max_discount: val.max_limit.toString(),
                     promo_shipment_method: val.campaign_type,
-                    promo_payment_method: val.payment_type
+                    promo_payment_method: val.payment_type,
+                    discount_amt_type: val.discount_amt_type,
+                    discount_amt: val.discount_amt
                 })
             })
             promoListSet(allListOfPromo)
@@ -137,7 +139,7 @@ const PromoView = () => {
         let isManualTxn = Cookies.get("isManualTxn")
         setManualTxnVar(isManualTxn)
         if (isManualTxn == 0) {
-            if (promoAlert == 0) {
+            if (promoAlert == 0 || alertStatus.paymentType == -1) {
                 selectedPromoListContainer = allListOfPromo
             } else {
                 allListOfPromo.forEach(val => {
@@ -267,12 +269,12 @@ const PromoView = () => {
                     <input disabled id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
-                            <div className='promolist-circle-name'>{val.promo_title}</div>
+                            <div className='promolist-circle-name'>{val.promo_title} {val.discount_amt_type == "PERCENTAGE" ? `${val.discount_amt}%` : null}</div>
     
                             <div className='promolist-detail'>
                                 <div className='promolist-detail-period'>Periode: {moment(new Date(val.promo_period_start)).format("DD MMMM YYYY")} - {moment(new Date(val.promo_period_end)).format("DD MMMM YYYY")}</div>
                                 <div className='promolist-detail-minOrder'>Minimal order Rp {Intl.NumberFormat("id-ID").format(val.promo_min_order)}</div>
-                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.promo_max_discount)}</div>
+                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.discount_amt_type == "PERCENTAGE" ? val.promo_max_discount : val.discount_amt)}</div>
                             </div>
                         </div>
     
@@ -308,12 +310,12 @@ const PromoView = () => {
                     <input disabled id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
-                            <div className='promolist-circle-name'>{val.promo_title}</div>
+                            <div className='promolist-circle-name'>{val.promo_title} {val.discount_amt_type == "PERCENTAGE" ? `${val.discount_amt}%` : null}</div>
     
                             <div className='promolist-detail'>
                                 <div className='promolist-detail-period'>Periode: {moment(new Date(val.promo_period_start)).format("DD MMMM YYYY")} - {moment(new Date(val.promo_period_end)).format("DD MMMM YYYY")}</div>
                                 <div className='promolist-detail-minOrder'>Minimal order Rp {Intl.NumberFormat("id-ID").format(val.promo_min_order)}</div>
-                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.promo_max_discount)}</div>
+                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.discount_amt_type == "PERCENTAGE" ? val.promo_max_discount : val.discount_amt)}</div>
                             </div>
                         </div>
     
@@ -349,12 +351,12 @@ const PromoView = () => {
                     <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
-                            <div className='promolist-circle-name'>{val.promo_title}</div>
+                            <div className='promolist-circle-name'>{val.promo_title} {val.discount_amt_type == "PERCENTAGE" ? `${val.discount_amt}%` : null}</div>
     
                             <div className='promolist-detail'>
                                 <div className='promolist-detail-period'>Periode: {moment(new Date(val.promo_period_start)).format("DD MMMM YYYY")} - {moment(new Date(val.promo_period_end)).format("DD MMMM YYYY")}</div>
                                 <div className='promolist-detail-minOrder'>Minimal order Rp {Intl.NumberFormat("id-ID").format(val.promo_min_order)}</div>
-                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.promo_max_discount)}</div>
+                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.discount_amt_type == "PERCENTAGE" ? val.promo_max_discount : val.discount_amt)}</div>
                             </div>
                         </div>
     
@@ -386,16 +388,16 @@ const PromoView = () => {
     const promoPageListDineinTxn = () => {
         return promoListData.map((val, ind) => {
             return (
-                <div key={ind} className={alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
-                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.phoneNumber == "" || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                <div key={ind} className={alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
+                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
-                            <div className='promolist-circle-name'>{val.promo_title}</div>
+                            <div className='promolist-circle-name'>{val.promo_title} {val.discount_amt_type == "PERCENTAGE" ? `${val.discount_amt}%` : null}</div>
     
                             <div className='promolist-detail'>
                                 <div className='promolist-detail-period'>Periode: {moment(new Date(val.promo_period_start)).format("DD MMMM YYYY")} - {moment(new Date(val.promo_period_end)).format("DD MMMM YYYY")}</div>
                                 <div className='promolist-detail-minOrder'>Minimal order Rp {Intl.NumberFormat("id-ID").format(val.promo_min_order)}</div>
-                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.promo_max_discount)}</div>
+                                <div className='promolist-detail-maxDiscount'>Maksimal diskon Rp {Intl.NumberFormat("id-ID").format(val.discount_amt_type == "PERCENTAGE" ? val.promo_max_discount : val.discount_amt)}</div>
                             </div>
                         </div>
     
@@ -456,16 +458,28 @@ const PromoView = () => {
                         promoAlert == 0 ?
                         null
                         :
-                            CartRedu.pickupType == -1 || alertStatus.paymentType == -1 ?
-                            <div className="promo-alert-paymentnotselected">
-                                <span className="promo-alert-icon">
-                                    <img className="alert-icon" src={PromoAlert} alt='' />
-                                </span>
+                            manualTxnVar == 1 ?
+                                CartRedu.pickupType == -1 || alertStatus.paymentType == -1 ?
+                                <div className="promo-alert-paymentnotselected">
+                                    <span className="promo-alert-icon">
+                                        <img className="alert-icon" src={PromoAlert} alt='' />
+                                    </span>
 
-                                <div className="promo-alert-title">Pilih metode pengiriman dan pembayaran terlebih dahulu!</div>
-                            </div>
+                                    <div className="promo-alert-title">Pilih metode pengiriman dan pembayaran terlebih dahulu!</div>
+                                </div>
+                                :
+                                null
                             :
-                            null
+                                alertStatus.paymentType == -1 ?
+                                <div className="promo-alert-paymentnotselected">
+                                    <span className="promo-alert-icon">
+                                        <img className="alert-icon" src={PromoAlert} alt='' />
+                                    </span>
+
+                                    <div className="promo-alert-title">Pilih metode pengiriman dan pembayaran terlebih dahulu!</div>
+                                </div>
+                                :
+                                null
                     }
 
                     {
