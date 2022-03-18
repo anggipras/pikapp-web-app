@@ -471,6 +471,7 @@ class CartManualView extends React.Component {
         selectedMerch[0].food.forEach(thefood => {
           totalPaymentCart += thefood.foodTotalPrice
         })
+
         let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
         let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
         if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.biz_type) && totalPaymentCart >= promoMinPrice) {
@@ -1319,7 +1320,24 @@ class CartManualView extends React.Component {
       selectedMerch[0].food.forEach(thefood => {
         totalPaymentShow += thefood.foodTotalPrice
       })
-      totalDiscountShow = this.state.selectedPromo ? parseInt(this.state.selectedPromo.promo_max_discount) : 0
+
+      // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE START
+      if (this.state.selectedPromo) {
+        if (this.state.selectedPromo.discount_amt_type == "PERCENTAGE") {
+          let totalTowardPercentage = (this.state.selectedPromo.discount_amt / 100) * totalPaymentShow
+          let mathRoundTotal = Math.round(totalTowardPercentage)
+          if (mathRoundTotal > this.state.selectedPromo.promo_max_discount) {
+            totalDiscountShow = parseInt(this.state.selectedPromo.promo_max_discount)
+          } else {
+            totalDiscountShow = mathRoundTotal
+          }
+        } else {
+          totalDiscountShow = this.state.selectedPromo.discount_amt
+        }
+      } else {
+        totalDiscountShow = 0
+      }
+      // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE END
   
       finalProduct = [
         {

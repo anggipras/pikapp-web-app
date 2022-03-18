@@ -1104,7 +1104,23 @@ class CartView extends React.Component {
     selectedMerch[0].food.forEach(thefood => {
       totalPaymentShow += thefood.foodTotalPrice
     })
-    totalDiscountShow = this.state.selectedPromo ? parseInt(this.state.selectedPromo.promo_max_discount) : 0
+    // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE START
+    if (this.state.selectedPromo) {
+      if (this.state.selectedPromo.discount_amt_type == "PERCENTAGE") {
+        let totalTowardPercentage = (this.state.selectedPromo.discount_amt / 100) * totalPaymentShow
+        let mathRoundTotal = Math.round(totalTowardPercentage)
+        if (mathRoundTotal > this.state.selectedPromo.promo_max_discount) {
+          totalDiscountShow = parseInt(this.state.selectedPromo.promo_max_discount)
+        } else {
+          totalDiscountShow = mathRoundTotal
+        }
+      } else {
+        totalDiscountShow = this.state.selectedPromo.discount_amt
+      }
+    } else {
+      totalDiscountShow = 0
+    }
+    // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE END
 
     finalProduct = [
       {
@@ -1260,7 +1276,7 @@ class CartView extends React.Component {
                 </div>
 
                 <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
-                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : this.state.indexOptionPay }, cartStatus : { bizType: this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                     <div className='promoCart-detailContent'>
                           <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                             <div className='promoCart-leftSide'>
