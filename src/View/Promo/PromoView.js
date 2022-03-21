@@ -20,8 +20,6 @@ const PromoView = () => {
     const alertStatus = location.state.alertStatus
     const cartStatus = location.state.cartStatus
     const [manualTxnVar, setManualTxnVar] = useState(0)
-    const declaredShipment = ["PICKUP", "DELIVERY", "DINE_IN"]
-    const declaredPayment = ["PAY_BY_CASHIER", "WALLET_OVO", "WALLET_DANA", "WALLET_SHOPEEPAY"]
     const [promoListData, setPromoListData] = useState([])
     // const [promoListData, setPromoListData] = useState([
     //     {
@@ -32,43 +30,7 @@ const PromoView = () => {
     //         promo_max_discount: "5000",
     //         promo_shipment_method: ["DELIVERY", "PICKUP", "DINE_IN"],
     //         promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
-    //     },
-    //     {
-    //         promo_title: "SPESIALKIRIM 15rb",
-    //         promo_period_start: "2021-02-04T19:00:00",
-    //         promo_period_end: "2021-02-08T19:00:00",
-    //         promo_min_order: "40000",
-    //         promo_max_discount: "15000",
-    //         promo_shipment_method: ["DELIVERY", "DINE_IN"],
-    //         promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
-    //     },
-    //     {
-    //         promo_title: "SPESIALKIRIM 25rb",
-    //         promo_period_start: "2021-02-04T19:00:00",
-    //         promo_period_end: "2021-02-08T19:00:00",
-    //         promo_min_order: "50000",
-    //         promo_max_discount: "25000",
-    //         promo_shipment_method: ["DINE_IN"],
-    //         promo_payment_method: ["PAY_BY_CASHIER", "WALLET_OVO"]
-    //     },
-    //     {
-    //         promo_title: "AMBILSENDIRI 10rb",
-    //         promo_period_start: "2021-03-05T19:00:00",
-    //         promo_period_end: "2021-03-09T19:00:00",
-    //         promo_min_order: "30000",
-    //         promo_max_discount: "10000",
-    //         promo_shipment_method: ["PICKUP"],
-    //         promo_payment_method: ["PAY_BY_CASHIER"]
-    //     },
-    //     {
-    //         promo_title: "AMBILSENDIRI 15rb",
-    //         promo_period_start: "2021-03-05T19:00:00",
-    //         promo_period_end: "2021-03-09T19:00:00",
-    //         promo_min_order: "50000",
-    //         promo_max_discount: "15000",
-    //         promo_shipment_method: ["PICKUP"],
-    //         promo_payment_method: ["WALLET_OVO"]
-    //     },
+    //     }
     // ])
     const [disabledPromoListData, setDisabledPromoListData] = useState([])
     const [selectedPromo, setSelectedPromo] = useState(-1)
@@ -100,6 +62,7 @@ const PromoView = () => {
             let allListOfPromo = []
             arrayOfPromoList.forEach(val => {
                 allListOfPromo.push({
+                    promo_campaign_id: val.id,
                     promo_title: val.campaign_name,
                     promo_period_start: val.campaign_start_date,
                     promo_period_end: val.campaign_end_date,
