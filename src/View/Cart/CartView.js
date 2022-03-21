@@ -535,12 +535,15 @@ class CartView extends React.Component {
             newDate += 600000
           }
           expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
+
+          let finalTotalPrices = finalProduct[0].totalPrice - finalProduct[0].discountPrice
       
           var requestData = {
+            campaign_id: this.props.selectedPromo ? this.props.selectedPromo.promo_campaign_id : 0,
             products: selectedProd,
             payment_with: this.state.paymentType,
             mid: currentCartMerchant.mid,
-            prices: finalProduct[0].totalPrice.toString(),
+            prices: finalTotalPrices.toString(),
             biz_type: this.state.biz_type,
             table_no: noTab.toString(),
             phone_number: phoneNumber,
@@ -1125,7 +1128,7 @@ class CartView extends React.Component {
     finalProduct = [
       {
         totalPrice: totalPaymentShow,
-        discountPrice: 0,
+        discountPrice: totalDiscountShow,
       },
     ]
 
@@ -1296,7 +1299,7 @@ class CartView extends React.Component {
 
                               <div className='promoCart-selectiondetail-desc'>
                                 { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
-                                <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
+                                <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title} {this.state.selectedPromo.discount_amt_type == "PERCENTAGE" ? `${this.state.selectedPromo.discount_amt}%` : null}</div>
                               </div>
                             </div>
                             :
