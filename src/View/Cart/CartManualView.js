@@ -665,7 +665,7 @@ class CartManualView extends React.Component {
         shipping_service_type_category: shipperCategoryType
       }
 
-      let totalPayment = finalProduct[0].totalPrice + Number(shipperPrice)
+      let totalPayment = finalProduct[0].totalPrice + Number(shipperPrice) + this.state.insurancePrice - finalProduct[0].discountPrice
   
       var requestData = {
         products: selectedProd,
@@ -678,16 +678,18 @@ class CartManualView extends React.Component {
         payment_method: this.state.paymentType,
         billing_phone_number: this.state.cartReduData.phoneNumber,
         order_status: "OPEN",
-        total_discount: 0,
-        total_payment: totalPayment + this.state.insurancePrice,
-        expiry_date: expiryDate
+        total_discount: finalProduct[0].discountPrice,
+        total_payment: totalPayment,
+        expiry_date: expiryDate,
+        campaign_id: this.props.selectedPromo ? this.props.selectedPromo.promo_campaign_id : 0,
       }
+      console.log({requestData});
     
       let uuid = uuidV4();
       uuid = uuid.replace(/-/g, "");
       const date = new Date().toISOString();
       
-      Axios(address + "pos/v2/web/transaction/add/", {
+      Axios(address + "pos/v3/web/transaction/add/", {
         headers: {
           "Content-Type": "application/json",
           "x-request-id": uuid,
@@ -1342,7 +1344,7 @@ class CartManualView extends React.Component {
       finalProduct = [
         {
           totalPrice: totalPaymentShow,
-          discountPrice: 0,
+          discountPrice: totalDiscountShow,
         },
       ]
       Cookies.set("MANUAL_TOTALPAYMENT", totalPaymentShow)
