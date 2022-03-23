@@ -558,6 +558,8 @@ class CartManualView extends React.Component {
         return filterCart.mid === currentCartMerchant.mid
       })
       let selectedProd = []
+
+      let extraMenus = [];
   
       allMenu[0].food.forEach(selectMenu => {
         let newlistArr = ''
@@ -571,6 +573,10 @@ class CartManualView extends React.Component {
   
         selectMenu.foodListRadio.forEach((val) => {
           val.forEach((val2) => {
+            extraMenus.push({
+              extra_menu_name : val2.name,
+              extra_menu_price : val2.price
+            })
             newlistArr += `${val2.name}, `
             extraprice += val2.price
           })
@@ -583,11 +589,11 @@ class CartManualView extends React.Component {
           product_id: selectMenu.productId,
           product_name: selectMenu.foodName,
           product_price: Number(selectMenu.foodPrice),
-          notes: newlistArr,
+          notes: selectMenu.foodNote,
           quantity: selectMenu.foodAmount,
           discount: 0,
           extra_price: Number(extraprice),
-          extra_menus: [],
+          extra_menus: extraMenus,
         })
       })
   
