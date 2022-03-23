@@ -524,7 +524,7 @@ class CartManualView extends React.Component {
         token : "PUBLIC",
         mid : selectedMerchant[0].mid
       }
-      ProductService.checkShopStatus(reqHeader)
+      MerchantService.checkShopStatus(reqHeader)
       .then((res) => {
         if (res.data.results.minutes_remaining < "2") {
           if (this.state.cartReduData.shippingDateType == 1) {
