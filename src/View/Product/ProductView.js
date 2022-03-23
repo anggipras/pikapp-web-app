@@ -40,6 +40,7 @@ import { withRouter } from 'react-router-dom';
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
+import * as GetShopStatus from '../../Component/AxiosAPI'
 
 var currentExt = {
   detailCategory: [
@@ -382,18 +383,7 @@ class ProductView extends React.Component {
 
         this.promoList(0, 20, 0)
 
-        Axios(address + "merchant/v1/shop/status/", {
-          headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token": "PUBLIC",
-            "mid": selectedMerchant[0].mid,
-          },
-          method: "GET"
-        }).then((shopStatusRes) => {
-          let merchantHourCheckingResult = shopStatusRes.data.results
+        GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
           this.setState({ 
             merchantHourStatus: merchantHourCheckingResult.merchant_status, 
             merchantHourOpenTime: merchantHourCheckingResult.open_time, 
@@ -402,63 +392,36 @@ class ProductView extends React.Component {
             merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
             merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
            })
-          this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-          this.setState({ productCategpersizeOri : this.state.productCategpersize });
-          document.addEventListener('scroll', this.loadMoreMerchant)
-          document.addEventListener('scroll', this.onScrollCart)
+        }).catch(err => console.log(err))
 
-          if (localStorage.getItem("productTour") == 1) {
-            if (this.props.AuthRedu.isMerchantQR === false) {
-              this.state.steptour.shift();
-            }
-            this.setState({ startTour: true });
-          }
-          else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-            this.setState({ startTour: true });
-          }
+        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        this.setState({ productCategpersizeOri : this.state.productCategpersize });
+        document.addEventListener('scroll', this.loadMoreMerchant)
+        document.addEventListener('scroll', this.onScrollCart)
 
-          if(value.mid) {
-            this.setState({ isManualTxn : false });
-            Cookies.set("isManualTxn", 0)
-            this.props.IsManualTxn(false);
-            localStorage.setItem("isManualTxn", false);
-          } else {
-            this.setState({ isManualTxn : true });
-            Cookies.set("isManualTxn", 1)
-            this.props.IsManualTxn(true);
-            localStorage.setItem("isManualTxn", true);
+        if (localStorage.getItem("productTour") == 1) {
+          if (this.props.AuthRedu.isMerchantQR === false) {
+            this.state.steptour.shift();
           }
+          this.setState({ startTour: true });
+        }
+        else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+          this.setState({ startTour: true });
+        }
 
-          this.setState({ totalProduct : res.data.results.products.length });
-        }).catch((err) => {
-          this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-          this.setState({ productCategpersizeOri : this.state.productCategpersize });
-          document.addEventListener('scroll', this.loadMoreMerchant)
+        if(value.mid) {
+          this.setState({ isManualTxn : false });
+          Cookies.set("isManualTxn", 0)
+          this.props.IsManualTxn(false);
+          localStorage.setItem("isManualTxn", false);
+        } else {
+          this.setState({ isManualTxn : true });
+          Cookies.set("isManualTxn", 1)
+          this.props.IsManualTxn(true);
+          localStorage.setItem("isManualTxn", true);
+        }
 
-          if (localStorage.getItem("productTour") == 1) {
-            if (this.props.AuthRedu.isMerchantQR === false) {
-              this.state.steptour.shift();
-            }
-            this.setState({ startTour: true });
-          }
-          else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-            this.setState({ startTour: true });
-          }
-
-          if(value.mid) {
-            this.setState({ isManualTxn : false });
-            Cookies.set("isManualTxn", 0)
-            this.props.IsManualTxn(false);
-            localStorage.setItem("isManualTxn", false);
-          } else {
-            this.setState({ isManualTxn : true });
-            Cookies.set("isManualTxn", 1)
-            this.props.IsManualTxn(true);
-            localStorage.setItem("isManualTxn", true);
-          }
-
-          this.setState({ totalProduct : res.data.results.products.length });
-        })
+        this.setState({ totalProduct : res.data.results.products.length });
 
         // let newImage = Storeimg
         // Axios.get(currentMerchant.storeImage)
@@ -479,31 +442,6 @@ class ProductView extends React.Component {
         //       document.addEventListener('scroll', this.loadMoreMerchant)
         //       document.addEventListener('scroll', this.onScrollCart)
         //     });
-
-        //     if (localStorage.getItem("productTour") == 1) {
-        //       if (this.props.AuthRedu.isMerchantQR === false) {
-        //         this.state.steptour.shift();
-        //       }
-        //       this.setState({ startTour: true });
-        //     }
-        //     else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-        //       this.setState({ startTour: true });
-        //     }
-
-        //     if(value.mid) {
-        //       this.setState({ isManualTxn : false });
-        //       Cookies.set("isManualTxn", 0)
-        //       this.props.IsManualTxn(false);
-        //       localStorage.setItem("isManualTxn", false);
-        //     } else {
-        //       this.setState({ isManualTxn : true });
-        //       Cookies.set("isManualTxn", 1)
-        //       this.props.IsManualTxn(true);
-        //       localStorage.setItem("isManualTxn", true);
-        //     }
-
-        //     this.setState({ totalProduct : res.data.results.products.length });
-        //     this.setState({ merchantHourStatus : "OPEN", merchantHourOpenTime : "10:00", merchantHourGracePeriod : "31" })
         //   }).catch(err => {
         //     console.log(err)
         //     newImage = Storeimg
@@ -523,21 +461,10 @@ class ProductView extends React.Component {
         //       this.setState({ productCategpersizeOri : this.state.productCategpersize });
         //       document.addEventListener('scroll', this.loadMoreMerchant)
         //     });
-
-        //     if (localStorage.getItem("productTour") == 1) {
-        //       if (this.props.AuthRedu.isMerchantQR === false) {
-        //         this.state.steptour.shift();
-        //       }
-        //       this.setState({ startTour: true });
-        //     }
-        //     else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-        //       this.setState({ startTour: true });
-        //     }
         //   })
       })
       .catch((err) => {
         console.log(err);
-        console.log(this.state);
         if(err.toJSON().message === 'Network Error'){
           this.setState({ showFailed: true })
         }

@@ -30,6 +30,7 @@ import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig'
 import moment from "moment";
+import * as GetShopStatus from '../../Component/AxiosAPI'
 
 var currentExt = {
   detailCategory: [
@@ -156,22 +157,7 @@ class CartView extends React.Component {
       this.setState({ startTour : true});
     }
 
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-    Axios(address + "merchant/v1/shop/status/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "mid": selectedMerchant[0].mid,
-      },
-      method: "GET"
-    }).then((shopStatusRes) => {
-      let merchantHourCheckingResult = shopStatusRes.data.results
+    GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
       this.setState({ 
         merchantHourStatus: merchantHourCheckingResult.merchant_status, 
         merchantHourOpenTime: merchantHourCheckingResult.open_time, 
@@ -180,7 +166,7 @@ class CartView extends React.Component {
         merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
         merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
         })
-    }).catch((err) => console.log(err))
+    }).catch(err => console.log(err))
   }
 
   componentDidUpdate() {
@@ -467,212 +453,190 @@ class CartView extends React.Component {
     }
   }
 
-  handlePayment = async () => {
-    let theUUID = uuidV4();
-    theUUID = theUUID.replace(/-/g, "");
-    const dateNow = new Date().toISOString();
-    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-    try {
-      let shopStatusRes = await Axios(address + "merchant/v1/shop/status/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": theUUID,
-          "x-request-timestamp": dateNow,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "mid": selectedMerchant[0].mid,
-        },
-        method: "GET"
-      })
-      let merchantHourCheckingResult = shopStatusRes.data.results
+  handlePayment = () => {
+    GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
       if (merchantHourCheckingResult.minutes_remaining < "2") {
         this.setState({ cancelCartModal: true })
       } else {
-        this.checkBeforePayment()
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  checkBeforePayment = () => {
-    this.props.LoadingButton()
-    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    let storageData = JSON.parse(localStorage.getItem('cart'))
-    let noTab = this.props.noTable ? this.props.noTable : 0
-    let allMenu = storageData.filter(filterCart => {
-      return filterCart.mid === currentCartMerchant.mid
-    })
-    let selectedProd = []
-
-    allMenu[0].food.forEach(selectMenu => {
-      let newlistArr = ''
-      let extraprice = 0
-      selectMenu.foodListCheckbox.forEach((val) => {
-        val.forEach((val2) => {
-          newlistArr += `${val2.name}, `
-          extraprice += val2.price
+        this.props.LoadingButton()
+        const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+        let storageData = JSON.parse(localStorage.getItem('cart'))
+        let noTab = this.props.noTable ? this.props.noTable : 0
+        let allMenu = storageData.filter(filterCart => {
+          return filterCart.mid === currentCartMerchant.mid
         })
-      })
+        let selectedProd = []
 
-      selectMenu.foodListRadio.forEach((val) => {
-        val.forEach((val2) => {
-          newlistArr += `${val2.name}, `
-          extraprice += val2.price
+        allMenu[0].food.forEach(selectMenu => {
+          let newlistArr = ''
+          let extraprice = 0
+          selectMenu.foodListCheckbox.forEach((val) => {
+            val.forEach((val2) => {
+              newlistArr += `${val2.name}, `
+              extraprice += val2.price
+            })
+          })
+
+          selectMenu.foodListRadio.forEach((val) => {
+            val.forEach((val2) => {
+              newlistArr += `${val2.name}, `
+              extraprice += val2.price
+            })
+          })
+
+          newlistArr += selectMenu.foodNote
+          extraprice = extraprice.toString()
+
+          selectedProd.push({
+            product_id: selectMenu.productId,
+            notes: newlistArr,
+            qty: selectMenu.foodAmount,
+            extra_price: extraprice
+          })
         })
-      })
 
-      newlistArr += selectMenu.foodNote
-      extraprice = extraprice.toString()
-
-      selectedProd.push({
-        product_id: selectMenu.productId,
-        notes: newlistArr,
-        qty: selectMenu.foodAmount,
-        extra_price: extraprice
-      })
-    })
-
-    let newDate = new Date().getTime()
-    let expiryDate = ''
-    if (this.state.paymentType === 'PAY_BY_CASHIER') {
-      newDate += 1800000
-      phoneNumber = ''
-    } else if (this.state.paymentType === 'WALLET_OVO') {
-      newDate += 60000
-    } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
-      newDate += 600000
-    }
-    expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
-
-    let finalTotalPrices = finalProduct[0].totalPrice - finalProduct[0].discountPrice
-
-    var requestData = {
-      campaign_id: this.props.selectedPromo ? this.props.selectedPromo.promo_campaign_id : 0,
-      products: selectedProd,
-      payment_with: this.state.paymentType,
-      mid: currentCartMerchant.mid,
-      prices: finalTotalPrices.toString(),
-      biz_type: this.state.biz_type,
-      table_no: noTab.toString(),
-      phone_number: phoneNumber,
-      expiry_date: expiryDate
-    }
-    console.log({requestData});
-
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    
-    Axios(address + "/txn/v4/txn-post/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-      },
-      method: "POST",
-      data: requestData,
-    })
-      .then((res) => {
+        let newDate = new Date().getTime()
+        let expiryDate = ''
         if (this.state.paymentType === 'PAY_BY_CASHIER') {
-          this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-          setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter => {
-              return valFilter.mid !== currentCartMerchant.mid
-            })
-            var dataOrder = {
-              transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.prices,
-              paymentType : this.state.paymentType,
-              transactionTime : newDate
-            };
-            this.props.DataOrder(dataOrder);
-            localStorage.setItem("payment", JSON.stringify(dataOrder));
-            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("lastTable")
-            localStorage.removeItem("fctable")
-            localStorage.removeItem("counterPayment");
-            this.setState({ loadButton: true })
-            this.props.DoneLoad()
-          }, 1000);
-        } 
-        else if(this.state.paymentType === 'WALLET_OVO') {
-          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-          setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter => {
-              return valFilter.mid !== currentCartMerchant.mid
-            })
-            var dataOrder = {
-              transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.prices,
-              paymentType : this.state.paymentType,
-              transactionTime : newDate
-            };
-            this.props.DataOrder(dataOrder);
-            localStorage.setItem("payment", JSON.stringify(dataOrder));
-            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("lastTable")
-            localStorage.removeItem("fctable")
-            localStorage.removeItem("counterPayment");
-            this.setState({ loadButton: true })
-            this.props.DoneLoad()
-          }, 1000);
+          newDate += 1800000
+          phoneNumber = ''
+        } else if (this.state.paymentType === 'WALLET_OVO') {
+          newDate += 60000
+        } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
+          newDate += 600000
         }
-        else if(this.state.paymentType === 'WALLET_DANA') {
-          this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
-          setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter => {
-              return valFilter.mid !== currentCartMerchant.mid
-            })
-            var dataOrder = {
-              transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.prices,
-              paymentType : this.state.paymentType,
-              transactionTime : newDate
-            };
-            this.props.DataOrder(dataOrder);
-            localStorage.setItem("payment", JSON.stringify(dataOrder));
-            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("lastTable")
-            localStorage.removeItem("fctable")
-            localStorage.removeItem("counterPayment");
-            window.location.href = res.data.results[0].checkout_url_mobile;
-          }, 1000);
+        expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
+
+        let finalTotalPrices = finalProduct[0].totalPrice - finalProduct[0].discountPrice
+
+        var requestData = {
+          campaign_id: this.props.selectedPromo ? this.props.selectedPromo.promo_campaign_id : 0,
+          products: selectedProd,
+          payment_with: this.state.paymentType,
+          mid: currentCartMerchant.mid,
+          prices: finalTotalPrices.toString(),
+          biz_type: this.state.biz_type,
+          table_no: noTab.toString(),
+          phone_number: phoneNumber,
+          expiry_date: expiryDate
         }
-        else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-          this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
-          setTimeout(() => {
-            let filterOtherCart = storageData.filter(valFilter => {
-              return valFilter.mid !== currentCartMerchant.mid
-            })
-            var dataOrder = {
-              transactionId : res.data.results[0].transaction_id,
-              totalPayment : requestData.prices,
-              paymentType : this.state.paymentType,
-              transactionTime : newDate
-            };
-            this.props.DataOrder(dataOrder);
-            localStorage.setItem("payment", JSON.stringify(dataOrder));
-            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-            localStorage.removeItem("lastTable")
-            localStorage.removeItem("fctable")
-            localStorage.removeItem("counterPayment");
-            window.location.assign(res.data.results[0].checkout_url_deeplink);
-          }, 1000);
-        }
-        localStorage.removeItem("PAYMENT_TYPE")
-        localStorage.removeItem("PHONE_NUMBER")
-        localStorage.removeItem("SELECTED_PROMO")
-        Cookies.remove("NOTMATCHPROMO")
-      })
-      .catch((err) => {
-        if (err.response.data !== undefined) {
-          alert(err.response.data.err_message)
-          this.props.DoneLoad()
-        }
-      });
-  };
+        console.log({requestData});
+
+        let uuid = uuidV4();
+        uuid = uuid.replace(/-/g, "");
+        const date = new Date().toISOString();
+        
+        Axios(address + "/txn/v4/txn-post/", {
+          headers: {
+            "Content-Type": "application/json",
+            "x-request-id": uuid,
+            "x-request-timestamp": date,
+            "x-client-id": clientId,
+          },
+          method: "POST",
+          data: requestData,
+        })
+          .then((res) => {
+            if (this.state.paymentType === 'PAY_BY_CASHIER') {
+              this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+              setTimeout(() => {
+                let filterOtherCart = storageData.filter(valFilter => {
+                  return valFilter.mid !== currentCartMerchant.mid
+                })
+                var dataOrder = {
+                  transactionId : res.data.results[0].transaction_id,
+                  totalPayment : requestData.prices,
+                  paymentType : this.state.paymentType,
+                  transactionTime : newDate
+                };
+                this.props.DataOrder(dataOrder);
+                localStorage.setItem("payment", JSON.stringify(dataOrder));
+                localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+                localStorage.removeItem("lastTable")
+                localStorage.removeItem("fctable")
+                localStorage.removeItem("counterPayment");
+                this.setState({ loadButton: true })
+                this.props.DoneLoad()
+              }, 1000);
+            } 
+            else if(this.state.paymentType === 'WALLET_OVO') {
+              this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+              setTimeout(() => {
+                let filterOtherCart = storageData.filter(valFilter => {
+                  return valFilter.mid !== currentCartMerchant.mid
+                })
+                var dataOrder = {
+                  transactionId : res.data.results[0].transaction_id,
+                  totalPayment : requestData.prices,
+                  paymentType : this.state.paymentType,
+                  transactionTime : newDate
+                };
+                this.props.DataOrder(dataOrder);
+                localStorage.setItem("payment", JSON.stringify(dataOrder));
+                localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+                localStorage.removeItem("lastTable")
+                localStorage.removeItem("fctable")
+                localStorage.removeItem("counterPayment");
+                this.setState({ loadButton: true })
+                this.props.DoneLoad()
+              }, 1000);
+            }
+            else if(this.state.paymentType === 'WALLET_DANA') {
+              this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+              setTimeout(() => {
+                let filterOtherCart = storageData.filter(valFilter => {
+                  return valFilter.mid !== currentCartMerchant.mid
+                })
+                var dataOrder = {
+                  transactionId : res.data.results[0].transaction_id,
+                  totalPayment : requestData.prices,
+                  paymentType : this.state.paymentType,
+                  transactionTime : newDate
+                };
+                this.props.DataOrder(dataOrder);
+                localStorage.setItem("payment", JSON.stringify(dataOrder));
+                localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+                localStorage.removeItem("lastTable")
+                localStorage.removeItem("fctable")
+                localStorage.removeItem("counterPayment");
+                window.location.href = res.data.results[0].checkout_url_mobile;
+              }, 1000);
+            }
+            else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+              this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+              setTimeout(() => {
+                let filterOtherCart = storageData.filter(valFilter => {
+                  return valFilter.mid !== currentCartMerchant.mid
+                })
+                var dataOrder = {
+                  transactionId : res.data.results[0].transaction_id,
+                  totalPayment : requestData.prices,
+                  paymentType : this.state.paymentType,
+                  transactionTime : newDate
+                };
+                this.props.DataOrder(dataOrder);
+                localStorage.setItem("payment", JSON.stringify(dataOrder));
+                localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+                localStorage.removeItem("lastTable")
+                localStorage.removeItem("fctable")
+                localStorage.removeItem("counterPayment");
+                window.location.assign(res.data.results[0].checkout_url_deeplink);
+              }, 1000);
+            }
+            localStorage.removeItem("PAYMENT_TYPE")
+            localStorage.removeItem("PHONE_NUMBER")
+            localStorage.removeItem("SELECTED_PROMO")
+            Cookies.remove("NOTMATCHPROMO")
+          })
+          .catch((err) => {
+            if (err.response.data !== undefined) {
+              alert(err.response.data.err_message)
+              this.props.DoneLoad()
+            }
+          });
+      }
+    }).catch(err => console.log(err))
+  }
 
   notifModal = () => {
     if (this.props.AllRedu.buttonLoad === false) {
