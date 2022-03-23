@@ -5,42 +5,28 @@ import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
-import Axios from "axios";
 import Cookies from "js-cookie"
-import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
-import Productimage from '../../Asset/Illustration/storeimg.jpg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
-import NotifIcon from '../../Asset/Icon/status.png'
-import ProfileIcon from '../../Asset/Icon/avatar.png'
-import OpenHourIcon from '../../Asset/Icon/hour.png'
-import CoinIcon from '../../Asset/Icon/coin.png'
-import LocationIcon from '../../Asset/Icon/location.png'
-import PhoneIcon from '../../Asset/Icon/phone.png';
 import WhatsAppIcon from '../../Asset/Icon/whatsapp-icon.png';
-import StarIcon from '../../Asset/Icon/star.png'
-import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import OrderStatusIcon from '../../Asset/Icon/order-icon-green.png'
-import HeaderLogo from '../../Asset/Icon/pikapp-logo.png'
 import ShoppingBagLogo from '../../Asset/Icon/shopping-bag.png'
-import ProductListIcon from '../../Asset/Icon/product-list.png'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect, LoadingButton, DoneLoad, IsManualTxn } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import FailedModal from "../../Component/Modal/FailedModal";
-import { Redirect } from "react-router-dom";
-import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
 import { withRouter } from 'react-router-dom';
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
-import * as GetShopStatus from '../../Component/AxiosAPI'
+import * as GetShopStatus from '../../Component/AxiosAPI';
+import ProductService from "../../Services/product.service";
+import MerchantService from "../../Services/merchant.service";
+import TransactionService from "../../Services/transaction.service";
+import AnalyticsService from "../../Services/analytics.service";
 
 var currentExt = {
   detailCategory: [
@@ -200,32 +186,27 @@ class ProductView extends React.Component {
       username = this.props.match.params.username;
     }
 
-    this.sendTracking(mid);
+    this.getAllProducts(mid, notab, username);
     this.getLinkTree(username);
+    this.sendTracking(mid);
+  }
 
+  getAllProducts(mid, notab, username) {
     let addressRoute
     let latitude = -6.28862
     let longitude = 106.71789
     let longlat = { lat: latitude, lon: longitude }
     localStorage.setItem("longlat", JSON.stringify(longlat))
-    addressRoute = address + "home/v3/detail/merchant/" + longitude + "/" + latitude + "/"
 
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
+    var reqHeader = {
+      token : "PUBLIC",
+      mid : mid,
+      domain : username,
+      latitude : latitude,
+      longitude : longitude
+    }
 
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "mid": mid,
-        "domain": username
-      },
-      method: "GET"
-    })
+    ProductService.getDetailMerchant(reqHeader)
       .then((res) => {
         res.data.results.username = username;
         var currentMerchant = {
@@ -381,19 +362,6 @@ class ProductView extends React.Component {
 
         this.setState({ productAllPage : allProduct });
 
-        this.promoList(0, 20, 0)
-
-        GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
-          this.setState({ 
-            merchantHourStatus: merchantHourCheckingResult.merchant_status, 
-            merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-            merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
-            merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-            merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
-            merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
-           })
-        }).catch(err => console.log(err))
-
         this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
         this.setState({ productCategpersizeOri : this.state.productCategpersize });
         document.addEventListener('scroll', this.loadMoreMerchant)
@@ -409,7 +377,7 @@ class ProductView extends React.Component {
           this.setState({ startTour: true });
         }
 
-        if(value.mid) {
+        if(mid) {
           this.setState({ isManualTxn : false });
           Cookies.set("isManualTxn", 0)
           this.props.IsManualTxn(false);
@@ -422,6 +390,10 @@ class ProductView extends React.Component {
         }
 
         this.setState({ totalProduct : res.data.results.products.length });
+
+        // get synchronous function
+        this.getPromoList(0, 20, 0);
+        this.getShopStatus(res.data.results.mid);
 
         // let newImage = Storeimg
         // Axios.get(currentMerchant.storeImage)
@@ -471,38 +443,76 @@ class ProductView extends React.Component {
       });
   }
 
-  promoList = async (page, size, listLength) => {
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    try {
-      let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "page": page,
-          "size": size
-        },
-        method: "GET"
+  getShopStatus(mid) {
+    var reqHeader = {
+      token : "PUBLIC",
+      mid : mid
+    }
+
+    MerchantService.checkShopStatus(reqHeader)
+    .then((res) => {
+      this.setState({ 
+        merchantHourStatus: res.data.results.merchant_status, 
+        merchantHourOpenTime: res.data.results.open_time, 
+        merchantHourGracePeriod: res.data.results.minutes_remaining,
+        merchantHourNextOpenDay: res.data.results.next_open_day,
+        merchantHourNextOpenTime: res.data.results.next_open_time,
+        merchantHourAutoOnOff: res.data.results.auto_on_off
       })
-      let promoResult = promoResponse.data.results
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  getPromoList = async (page, size, listLength) => {
+    var reqHeader = {
+      token : "PUBLIC",
+      page : page,
+      size : size
+    }
+
+    ProductService.getPromoList(reqHeader)
+    .then((res) => {
+      let promoResult = res.data.results
       if (promoResult == "") {
         this.setState({promoListSize: listLength})
       } else {
         let newListLength = listLength + promoResult.length
         this.mediumPromoList(page, size, newListLength)
       }
-    } catch (err) {
-      console.log(err)
-    }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    // try {
+    //   let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-request-id": uuid,
+    //       "x-request-timestamp": date,
+    //       "x-client-id": clientId,
+    //       "token": "PUBLIC",
+    //       "page": page,
+    //       "size": size
+    //     },
+    //     method: "GET"
+    //   })
+    //   let promoResult = promoResponse.data.results
+    //   if (promoResult == "") {
+    //     this.setState({promoListSize: listLength})
+    //   } else {
+    //     let newListLength = listLength + promoResult.length
+    //     this.mediumPromoList(page, size, newListLength)
+    //   }
+    // } catch (err) {
+    //   console.log(err)
+    // }
   }
 
   mediumPromoList = (page, size, newListLength) => {  
     let newPage = page + 1
-    this.promoList(newPage, size, newListLength)
+    this.getPromoList(newPage, size, newListLength)
   }
 
   componentDidUpdate() {
@@ -895,25 +905,17 @@ class ProductView extends React.Component {
       tableNumber = 0
     }
 
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
-    Axios(address + "txn/v2/cart-post/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "table-no": tableNumber.toString()
-      },
-      method: "POST",
-      data: {
-        mid: this.state.data.mid,
-        pid: this.state.currentData.productId,
-        notes: newNotes,
-        qty: currentExt.detailCategory[0].amount,
-      }
-    })
+    var reqHeader = {
+      tableNumber: tableNumber.toString()
+    }
+
+    var reqBody = {
+      mid: this.state.data.mid,
+      pid: this.state.currentData.productId,
+      notes: newNotes,
+      qty: currentExt.detailCategory[0].amount,
+    }
+    TransactionService.addProductCart(reqHeader, reqBody)
       .then(() => {
         console.log('addtocart succeed');
       })
@@ -1212,20 +1214,12 @@ class ProductView extends React.Component {
   }
 
   getLinkTree = (username) => {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC",
+      username : username
+    }
 
-    Axios(address + "home/v1/link-tree-list-by-domain/" + username, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "GET",  
-    })
+    ProductService.getLinkTreeByDomain(reqHeader)
     .then((res) => {
       var linkData = [];
 
@@ -1266,27 +1260,19 @@ class ProductView extends React.Component {
   goToExternalLink = (link) => {
     window.open(link, '_blank');
 
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC"
+    }
 
-    Axios(address + "home/v1/event/add", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "POST",  
-      data: {
-        merchant_id: this.state.data.mid,
-        event_type: "LINK_TREE_DETAIL",
-        page_name: window.location.pathname
-      }
-    })
+    var reqBody = {
+      merchant_id: this.state.data.mid,
+      event_type: "LINK_TREE_DETAIL",
+      page_name: window.location.pathname
+    }
+
+    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
     .then((res) => {
-      console.log(res.data.results);
+      console.log(res);
     })
     .catch((err) => {
       console.log(err);
@@ -1331,55 +1317,19 @@ class ProductView extends React.Component {
   }
 
   sendTracking(mid) {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC"
+    }
 
-    Axios(address + "home/v1/event/add", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "POST",  
-      data: {
-        merchant_id: mid,
-        event_type: "VIEW_DETAIL",
-        page_name: window.location.pathname
-      }
-    })
+    var reqBody = {
+      merchant_id: mid,
+      event_type: "VIEW_DETAIL",
+      page_name: window.location.pathname
+    }
+
+    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
     .then((res) => {
-      console.log(res.data.results);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
-  sendTracking(mid) {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
-
-    Axios(address + "home/v1/event/add", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "POST",  
-      data: {
-        merchant_id: mid,
-        event_type: "VIEW_DETAIL",
-        page_name: window.location.pathname
-      }
-    })
-    .then((res) => {
-      console.log("SUCCEED");
+      console.log(res);
     })
     .catch((err) => {
       console.log(err);
