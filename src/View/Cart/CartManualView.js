@@ -1,24 +1,16 @@
 import React from "react";
-import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
-import ArrowRightWhite from "../../Asset/Icon/ArrowRightWhite.png";
 import diningTableColor from "../../Asset/Icon/diningTableColor.png";
 import takeawayColor from "../../Asset/Icon/takeawayColor.png";
 import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import DanaPayment from "../../Asset/Icon/dana_icon.png";
 import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
-import checklistLogo from "../../Asset/Icon/checklist.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
-import InfoIcon from "../../Asset/Icon/info-icon.png";
 import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
 import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import CartModal from "../../Component/Modal/CartModal";
 import CartCancelModal from "../../Component/Modal/CartCancel";
 import { cart } from "../../App";
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
-import Axios from "axios";
 import Cookies from "js-cookie"
 import MenuDetail from '../../Component/Menu/MenuDetail'
 import NotifModal from '../../Component/Modal/NotifModal'
@@ -39,6 +31,10 @@ import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
 import * as GetShopStatus from '../../Component/AxiosAPI'
+import ProductService from "../../Services/product.service";
+import AnalyticsService from "../../Services/analytics.service";
+import TransactionService from "../../Services/transaction.service";
+import MerchantService from "../../Services/merchant.service";
 
 var currentExt = {
   detailCategory: [
@@ -249,19 +245,21 @@ class CartManualView extends React.Component {
         this.setState({ disabledSubmitButton : true})
       }
 
-      GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
-        this.setState({ 
-          merchantHourStatus: merchantHourCheckingResult.merchant_status, 
-          merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-          merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
-          merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-          merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
-          merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
-         })
-        if (!merchantHourCheckingResult.auto_on_off) {
-          this.setState({ disabledSubmitButton: true })
-        }
-      }).catch(err => console.log(err))
+      // GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
+      //   this.setState({ 
+      //     merchantHourStatus: merchantHourCheckingResult.merchant_status, 
+      //     merchantHourOpenTime: merchantHourCheckingResult.open_time, 
+      //     merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
+      //     merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
+      //     merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
+      //     merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
+      //    })
+      //   if (!merchantHourCheckingResult.auto_on_off) {
+      //     this.setState({ disabledSubmitButton: true })
+      //   }
+      // }).catch(err => console.log(err))
+
+      this.getShopStatus();
     }
 
     handleDetail(data) {
@@ -500,27 +498,56 @@ class CartManualView extends React.Component {
       }
     }
 
-    handlePayment = () => {
-      GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
-        if (merchantHourCheckingResult.minutes_remaining < "2") {
+    // handlePayment = () => {
+    //   GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
+    //     if (merchantHourCheckingResult.minutes_remaining < "2") {
+    //       if (this.state.cartReduData.shippingDateType == 1) {
+    //         this.paymentProcess()
+    //       } else {
+    //         this.setState({ cancelCartModal: true })
+    //       }
+    //     } else if(merchantHourCheckingResult.minutes_remaining < "31") {
+    //       if (this.state.cartReduData.shippingDateType == 1) {
+    //         this.paymentProcess()
+    //       } else {
+    //         this.setState({ cancelCartModal: true })
+    //       }
+    //     } else {
+    //       this.paymentProcess()
+    //     }
+    //   }).catch(err => console.log(err))
+    // };
+
+    handleCheckingShopStatus = () => {
+      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+      var reqHeader = {
+        token : "PUBLIC",
+        mid : selectedMerchant[0].mid
+      }
+      MerchantService.checkShopStatus(reqHeader)
+      .then((res) => {
+        if (res.data.results.minutes_remaining < "2") {
           if (this.state.cartReduData.shippingDateType == 1) {
-            this.paymentProcess()
+            this.handlePayment()
           } else {
             this.setState({ cancelCartModal: true })
           }
-        } else if(merchantHourCheckingResult.minutes_remaining < "31") {
+        } else if(res.data.results.minutes_remaining < "31") {
           if (this.state.cartReduData.shippingDateType == 1) {
-            this.paymentProcess()
+            this.handlePayment()
           } else {
             this.setState({ cancelCartModal: true })
           }
         } else {
-          this.paymentProcess()
+          this.handlePayment()
         }
-      }).catch(err => console.log(err))
-    };
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
 
-    paymentProcess = () => {
+    handlePayment = () => {
       this.props.LoadingButton()
       const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
       let storageData = JSON.parse(localStorage.getItem('cart'))
@@ -661,21 +688,8 @@ class CartManualView extends React.Component {
         campaign_id: this.props.selectedPromo ? this.props.selectedPromo.promo_campaign_id : 0,
       }
       console.log({requestData});
-    
-      let uuid = uuidV4();
-      uuid = uuid.replace(/-/g, "");
-      const date = new Date().toISOString();
       
-      Axios(address + "pos/v3/web/transaction/add/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-        },
-        method: "POST",
-        data: requestData,
-      })
+      TransactionService.addTransactionPos(requestData)
         .then((res) => {
           if(this.state.paymentType === 'WALLET_OVO') {
             this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
@@ -921,26 +935,18 @@ class CartManualView extends React.Component {
       } else {
         tableNumber = 0
       }
+
+      var reqHeader = {
+        tableNumber: tableNumber.toString()
+      }
   
-      let uuid = uuidV4();
-      const date = new Date().toISOString();
-      uuid = uuid.replace(/-/g, "");
-      Axios(address + "txn/v2/cart-post/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "table-no": tableNumber.toString()
-        },
-        method: "POST",
-        data: {
-          mid: this.state.themid,
-          pid: getProductId,
-          notes: newNotes,
-          qty: currentExt.detailCategory[0].amount,
-        }
-      })
+      var reqBody = {
+        mid: this.state.data.mid,
+        pid: this.state.currentData.productId,
+        notes: newNotes,
+        qty: currentExt.detailCategory[0].amount,
+      }
+      ProductService.addProductCart(reqHeader, reqBody)
       .then(() => {
         console.log('savetocart succeed');
         this.setState({ insurancePrice: 0});
@@ -1009,29 +1015,21 @@ class CartManualView extends React.Component {
     }
 
     sendTracking() {
-      let uuid = uuidV4();
-      const date = new Date().toISOString();
-      uuid = uuid.replace(/-/g, "");
-  
       const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+
+      var reqHeader = {
+        token : "PUBLIC"
+      }
   
-      Axios(address + "home/v1/event/add", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "token" : "PUBLIC"
-        },
-        method: "POST",  
-        data: { 
-          merchant_id: currentCartMerchant.mid,
-          event_type: "ORDER_DETAIL",
-          page_name: window.location.pathname
-        }
-      })
+      var reqBody = {
+        merchant_id: currentCartMerchant.mid,
+        event_type: "ORDER_DETAIL",
+        page_name: window.location.pathname
+      }
+  
+      AnalyticsService.sendTrackingPage(reqHeader, reqBody)
       .then((res) => {
-        console.log(res.data.results);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -1089,6 +1087,33 @@ class CartManualView extends React.Component {
           localStorage.setItem("SHIPPING_WITH_COURIER", JSON.stringify(shippingWithCourier))
         }
       }
+    }
+
+    getShopStatus() {
+      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+
+      var reqHeader = {
+        token : "PUBLIC",
+        mid : selectedMerchant[0].mid
+      }
+  
+      MerchantService.checkShopStatus(reqHeader)
+      .then((res) => {
+        this.setState({ 
+          merchantHourStatus: res.data.results.merchant_status, 
+          merchantHourOpenTime: res.data.results.open_time, 
+          merchantHourGracePeriod: res.data.results.minutes_remaining,
+          merchantHourNextOpenDay: res.data.results.next_open_day,
+          merchantHourNextOpenTime: res.data.results.next_open_time,
+          merchantHourAutoOnOff: res.data.results.auto_on_off
+         })
+        if (!res.data.results.auto_on_off) {
+          this.setState({ disabledSubmitButton: true })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
     }
 
     merchantHourStatusWarning = () => {
@@ -1179,7 +1204,7 @@ class CartManualView extends React.Component {
             indexOptionEat={this.state.indexOptionEat}
             indexOptionPay={this.state.indexOptionPay}
             setPhoneNumber={this.isPhoneNum}
-            confirmPay={this.handlePayment}
+            confirmPay={this.handleCheckingShopStatus}
           />
         );
       } else {

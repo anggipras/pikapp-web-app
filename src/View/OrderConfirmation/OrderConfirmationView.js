@@ -8,13 +8,12 @@ import DanaPayment from "../../Asset/Icon/dana_icon.png";
 import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import CopyIcon from "../../Asset/Icon/copy-icon.png";
 import PaymentModal from '../../Component/Modal/PaymentModal';
-import { address, secret, clientId } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
-import Axios from "axios";
 import { Link } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import copy from 'copy-to-clipboard';
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
+import AnalyticsService from "../../Services/analytics.service";
+import TransactionService from "../../Services/transaction.service";
 // import { w3cwebsocket as W3CWebSocket } from "websocket";
 // import { onMessageListener } from '../../firebase';
 // import { onBackgroundListener } from '../../../public/firebase-messaging-sw';
@@ -217,38 +216,31 @@ class OrderConfirmationView extends React.Component {
         // }
         // localStorage.setItem("responsePayment", JSON.stringify(res));
 
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
-            headers: {
-                "Content-Type": "application/json",
-                "x-request-id": uuid,
-                "x-request-timestamp": date,
-                "x-client-id": clientId
-            },
-            method: "GET",
-        })
-            .then((res) => {
-                var results = res.data.results;
-                var resultModal = { ...this.currentModal }
-                resultModal.transactionId = results.transaction_id
-                resultModal.status = results.status
+        var reqParam = {
+            transactionId : this.state.dataOrder.transactionId
+        }
 
-                if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
-                    this.setState({ isSubmit: true });
-                    this.setState({ showResponsePayment: true });
-                } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
-                    this.setState({ isSubmit: true });
-                    this.setState({ showResponsePayment: false });
-                }
+        TransactionService.getTransactionDetailDineIn(reqParam)
+        .then((res) => {
+            var results = res.data.results;
+            var resultModal = { ...this.currentModal }
+            resultModal.transactionId = results.transaction_id
+            resultModal.status = results.status
 
-                this.setState({
-                    currentModal: resultModal
-                })
+            if (resultModal.status === "CLOSE" || resultModal.status === "FINALIZE" || resultModal.status === "PAID") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: true });
+            } else if (resultModal.status === "FAILED" || resultModal.status === "ERROR") {
+                this.setState({ isSubmit: true });
+                this.setState({ showResponsePayment: false });
+            }
+
+            this.setState({
+                currentModal: resultModal
             })
-            .catch((err) => {
-            });
+        })
+        .catch((err) => {
+        });
     }
 
     countDown = () => {
@@ -286,29 +278,21 @@ class OrderConfirmationView extends React.Component {
     }
 
     sendTracking() {
-        let uuid = uuidV4();
-        const date = new Date().toISOString();
-        uuid = uuid.replace(/-/g, "");
-
         const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
+
+        var reqHeader = {
+            token : "PUBLIC"
+        }
     
-        Axios(address + "home/v1/event/add", {
-            headers: {
-                "Content-Type": "application/json",
-                "x-request-id": uuid,
-                "x-request-timestamp": date,
-                "x-client-id": clientId,
-                "token" : "PUBLIC"
-            },
-            method: "POST",  
-            data: { 
-                merchant_id: currentMerchant.mid,
-                event_type: "ORDER_DETAIL",
-                page_name: window.location.pathname
-            }
-        })
+        var reqBody = {
+            merchant_id: currentMerchant.mid,
+            event_type: "ORDER_DETAIL",
+            page_name: window.location.pathname
+        }
+    
+        AnalyticsService.sendTrackingPage(reqHeader, reqBody)
         .then((res) => {
-            console.log(res.data.results);
+            console.log(res);
         })
         .catch((err) => {
             console.log(err);
@@ -323,18 +307,10 @@ class OrderConfirmationView extends React.Component {
     }
 
     getStatusPaymentDineIn = () => {
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        Axios(address + "txn/v3/" + this.state.dataOrder.transactionId + "/txn-detail/", {
-            headers: {
-                "Content-Type": "application/json",
-                "x-request-id": uuid,
-                "x-request-timestamp": date,
-                "x-client-id": clientId
-            },
-            method: "GET",
-        })
+        var reqParam = {
+            transactionId : this.state.dataOrder.transactionId
+        }
+        TransactionService.getTransactionDetailDineIn(reqParam)
         .then((res) => {
             var results = res.data.results;
             var resultModal = { ...this.currentModal }
@@ -358,20 +334,11 @@ class OrderConfirmationView extends React.Component {
     }
 
     showResponsePaymentDelivery = () => {
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
-        Axios(historyTransAPI, {
-        headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "invoice" : this.state.dataOrder.transactionId
-        },
-        method: "GET",
-        })
+        var reqHeader = {
+            invoice : this.state.dataOrder.transactionId
+        }
+
+        TransactionService.getTransactionDetailDelivery(reqHeader)
         .then((res) => {
             var results = res.data.results;
             
@@ -397,20 +364,10 @@ class OrderConfirmationView extends React.Component {
     }
 
     getStatusPaymentDelivery = () => {
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
-        Axios(historyTransAPI, {
-        headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "invoice" : this.state.dataOrder.transactionId
-        },
-        method: "GET",
-        })
+        var reqHeader = {
+            invoice : this.state.dataOrder.transactionId
+        }
+        TransactionService.getTransactionDetailDelivery(reqHeader)
         .then((res) => {
             var results = res.data.results;
             
