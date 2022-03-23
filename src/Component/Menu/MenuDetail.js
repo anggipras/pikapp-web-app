@@ -112,24 +112,6 @@ const MenuDetail = (props) => {
         dispatch({ type: 'LOADING' })
         setmenuSelect(true)
         dispatch({ type: 'FOODCATEG', payload: findCateg })
-
-        // if (Cookies.get("auth") === undefined) {
-        //     // props.onHide();
-        //     setRegister(true);
-        //     // showRegisterDialog();
-        // } else {
-        //     auth = JSON.parse(Cookies.get("auth"));
-        //     if (auth.isLogged === false) {
-        //         openPinDialog();
-        //     } else {
-        //         setloadingButton(false)
-        //         dispatch({ type: 'LOADING' })
-        //         setmenuSelect(true)
-        //         dispatch({ type: 'FOODCATEG', payload: findCateg })
-        //     }
-        //     // openPinDialog();
-
-        // }
     }
 
     let findCateg
@@ -198,7 +180,6 @@ const MenuDetail = (props) => {
             return (
                 <PinDialog
                     isShowPin={pinDialog}
-                    // onHidePin={closeAuthDialog}
                     onHidePin={() => setPin(false)}
                 />
             )
@@ -213,117 +194,6 @@ const MenuDetail = (props) => {
     return (
         <div>
             {
-                // !isMobile ?
-                //     <div className='modalMenuDetail' style={{
-                //         display: props.isShow ? 'block' : 'none'
-                //     }} onClick={closeModal}
-                //     >
-                //         <div className='modal-content-menudetail' onClick={e => e.stopPropagation()}>
-                //             {
-                //                 menuSelect ?
-                //                     <span className='iconBack' onClick={backModal}>
-                //                         <img src={backLogo} className='backLogo' alt='' />
-                //                     </span>
-                //                     :
-                //                     <span className='iconClose' onClick={closeModal}>
-                //                         <img src={closeLogo} className='closeLogo' alt='' />
-                //                     </span>
-                //             }
-
-                //             <div className='menuDetail-layout'>
-                //                 <div className='menuContain-left'>
-                //                     <div className='menuBanner'>
-                //                         <img className='menuimg' src={props.datas.foodImage} alt='' />
-                //                     </div>
-
-                //                     <div className='menu-detail'>
-                //                         {/* <div className='menu-star'>
-                //                             <img className='menu-star-img' src={StarIcon} alt='' />
-                //                             <h6 className='menu-star-rating'>5.0</h6>
-                //                         </div> */}
-
-                //                         <div className='menu-name'>
-                //                             {props.datas.foodName}
-                //                         </div>
-
-                //                         <div className='menu-category'>
-                //                             {findCateg}
-                //                         </div>
-
-                //                         <div className='menu-price'>
-                //                             {Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}
-                //                         </div>
-                //                     </div>
-                //                 </div>
-
-                //                 <div className='menuContain-right'>
-                //                     {
-                //                         menuSelect ?
-                //                             <Scrollbars style={{ height: "calc(100% - 133px)" }}>
-                //                                 <MenuSelection handleData={props.handleData} datas={props.datas} handleClick={props.handleClick} loadingButton={() => setloadingButton(true)} />
-                //                             </Scrollbars>
-                //                             :
-                //                             <div className='menuDesc'>
-                //                                 <div className='menuDesc-title'>
-                //                                     Description
-                //                                 </div>
-                //                                 <div className='menuDesc-content'>
-                //                                     {props.datas.foodDesc}
-                //                                 </div>
-                //                             </div>
-                //                     }
-
-                //                     <div className='menuButton'>
-                //                         {
-                //                             menuSelect ?
-                //                                 <div className='openMenuSelection' style={{
-                //                                     backgroundColor:
-                //                                         AllRedu.mandatCheck && AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond ?
-                //                                             '#4bb7ac'
-                //                                             :
-                //                                             !AllRedu.mandatCheck && !AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond ?
-                //                                                 '#4bb7ac'
-                //                                                 :
-                //                                                 AllRedu.mandatCheck && AllRedu.mandatCheckCond && !AllRedu.mandatRadio && !AllRedu.mandatRadioCond ?
-                //                                                     '#4bb7ac'
-                //                                                     :
-                //                                                     !AllRedu.mandatCheck && !AllRedu.mandatCheckCond && AllRedu.mandatRadio && AllRedu.mandatRadioCond ?
-                //                                                         '#4bb7ac'
-                //                                                         :
-                //                                                         '#aaaaaa'
-                //                                 }} onClick={addtoCart}>
-                //                                     {
-                //                                         !loadingButton ?
-                //                                             <Loader
-                //                                                 type="ThreeDots"
-                //                                                 color="#ffffff"
-                //                                                 height={70}
-                //                                                 width={70}
-                //                                             />
-                //                                             :
-                //                                             <h2 className='add-words'>
-                //                                                 {
-                //                                                     AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
-                //                                                         `TAMBAH - ${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
-                //                                                         :
-                //                                                         `TAMBAH - ${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
-                //                                                 }
-                //                                             </h2>
-                //                                     }
-                //                                 </div>
-                //                                 :
-                //                                 <div onClick={openMenuSelect} className='openMenuSelection'>
-                //                                     <h2 className='add-words'>
-                //                                         PESAN
-                //                                     </h2>
-                //                                 </div>
-                //                         }
-                //                     </div>
-                //                 </div>
-                //             </div>
-                //         </div>
-                //     </div>
-                //     :
                     <div className='mob-modalMenuDetail' style={{
                         display: props.isShow ? 'block' : 'none'
                     }} onClick={closeModal}
@@ -407,21 +277,21 @@ const MenuDetail = (props) => {
                                                             width={70}
                                                         />
                                                         :
-                                                        <h2 className='mob-add-words'>
+                                                        <div className='mob-add-words'>
                                                             {
                                                                 AllRedu.checkboxes.length || AllRedu.radiobutton.length || AllRedu.validQTY ?
                                                                     `TAMBAH - ${Intl.NumberFormat("id-ID").format(countTotalPrice())}`
                                                                     :
                                                                     `TAMBAH - ${Intl.NumberFormat("id-ID").format(props.datas.foodPrice)}`
                                                             }
-                                                        </h2>
+                                                        </div>
                                                 }
                                             </div>
                                             :
                                             <div onClick={openMenuSelect} className='mob-openMenuSelection' style={{ backgroundColor: '#4bb7ac' }}>
-                                                <h2 className='mob-add-words'>
+                                                <div className='mob-add-words'>
                                                     PESAN
-                                                </h2>
+                                                </div>
                                             </div>
                                     }
                                 </div>

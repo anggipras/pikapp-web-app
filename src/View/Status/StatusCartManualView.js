@@ -226,7 +226,13 @@ export class StatusCartManualView extends React.Component {
                                 </div>
                                 <div className="status-cartmanual-section-item">
                                     <h3 className='status-cartmanual-content-item'>{product.product_name}</h3>
-                                    <h3 className='status-cartmanual-content-desc'>{product.notes}</h3>
+                                    <h3 className='status-cartmanual-content-desc'>{product.extra_menus}</h3>
+                                    {
+                                      product.notes ?
+                                      <h3 className='status-cartmanual-content-desc'><span className="status-cartmanual-content-notes">Catatan : </span>{product.notes}</h3>
+                                      :
+                                      <></>
+                                    }
                                 </div>
                               </div>
                               <div>

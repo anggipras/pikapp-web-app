@@ -89,7 +89,7 @@ const CartModal = (props) => {
                     imageOption = takeawayWhite;
                 }
             } else if (optionVal.image === "cashier") {
-                if (radioNumPay >= 1) {
+                if (radioNumPay >= 1 || radioNumPay == -1) {
                     imageOption = CashierPayment;
                 } else {
                     imageOption = CashierPaymentWhite;

@@ -13,6 +13,31 @@
     src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
 }
 
+@font-face {
+    font-family: "Inter-Regular";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+
+@font-face {
+    font-family: "Inter-SemiBold";
+    src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
 body {
     background-color: #f0f1f2 !important;
     display: flex;
@@ -48,13 +73,49 @@ body {
 }
 
 .shippingdate-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     font-size: 20px;
     color: #111111;
     margin-left: 16px;
 }
+
+// shipping date warning start
+.shippingdate-alert-paymentnotselected {
+    margin: 14px 14px 0px 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FBE5C6;
+    border: 1px solid #e88901;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 14px;
+}
+
+.shippingdate-alert-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-icon {
+    width: 18px;
+    height: 16px;
+}
+
+.shippingdate-alert-title {
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    color: #e88901;
+    margin-left: 14px;
+}
+// shipping date warning end
 
 .shippingdate-detailContent {
     display: flex;
@@ -108,9 +169,9 @@ body {
 }
 
 .shippingdate-radioTitle {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-SemiBold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: 100;
     color: #111111;
     font-size: 18px;
     margin-left: 10px;
@@ -126,9 +187,9 @@ body {
     margin-left: 14px;
     margin-right: 14px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: 700;
+    font-weight: normal;
     text-align: center;
     font-size: 18px;
     color: white;
@@ -174,17 +235,17 @@ body {
 }
 
 .shippingdate-addressTitle {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     color: #111111;
     font-size: 12px;
 }
 
 .shippingdate-addressInputted {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     color: gray;
     font-size: 12px;
 }
@@ -201,9 +262,9 @@ body {
 }
 
 .shippingdate-shipperName-title, .shippingdate-shipperPrice-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     color: #111111;
     font-size: 14px;
 }
@@ -222,7 +283,7 @@ body {
     border: 1px solid #4bb7ac;
     border-radius: 8px 0px 0px 8px;
 
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -252,9 +313,9 @@ body {
 }
 
 .addressInput-fullAddress-title, .addressInput-shipperNotes-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
+    font-weight: normal;
     color: #111111;
     font-size: 14px;
 }
@@ -262,7 +323,7 @@ body {
 .addressInput-fullAddress-inputArea, .addressInput-shipperNotes-inputArea {
     width: 100%;
     height: 80px;
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Regular;
     font-style: normal;
     font-weight: normal;
     text-transform: capitalize;
@@ -289,6 +350,16 @@ body {
 }
 
 .shippingdate-timepicker {
+    height: 55px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.shippingdate-timepicker-close {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 14px;
     height: 55px;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;

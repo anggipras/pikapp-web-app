@@ -63,7 +63,9 @@ class MapsComponent extends Component {
         });
 
         this.props.Lat(mouse.lat);
+        localStorage.setItem("LAT", JSON.stringify(mouse.lat))
         this.props.Lng(mouse.lng);
+        localStorage.setItem("LNG", JSON.stringify(mouse.lng))
         this.props.IsMarkerChange(true);
     }
     onMarkerInteractionMouseUp = (childKey, childProps, mouse) => {
@@ -96,7 +98,9 @@ class MapsComponent extends Component {
         });
         
         this.props.Lat(value.lat);
+        localStorage.setItem("LAT", JSON.stringify(value.lat))
         this.props.Lng(value.lng);
+        localStorage.setItem("LNG", JSON.stringify(value.lng))
         this.props.IsMarkerChange(true);
         // this._generateAddress();
     }
@@ -138,8 +142,6 @@ class MapsComponent extends Component {
         // }
 
         geocoder.geocode({ 'location': { lat: this.props.CartRedu.lat, lng: this.props.CartRedu.lng } }, (results, status) => {
-            console.log(results);
-            console.log(status);
             if (status === 'OK') {
                 if (results[0]) {
                     this.zoom = 12;
@@ -152,21 +154,25 @@ class MapsComponent extends Component {
                         }
                         if(res.types[0] == "administrative_area_level_3") {
                             this.props.District(res.short_name);
+                            localStorage.setItem("DISTRICT", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "postal_code") {
                             this.props.PostalCode(res.short_name);
+                            localStorage.setItem("POSTALCODE", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_2") {
                             this.props.City(res.short_name);
+                            localStorage.setItem("CITY", JSON.stringify(res.short_name))
                         }
                         if(res.types[0] == "administrative_area_level_1") {
                             this.props.Province(res.short_name);
+                            localStorage.setItem("PROVINCE", JSON.stringify(res.short_name))
                         }
                     })
                     this.setState({ center: [this.props.CartRedu.lat, this.props.CartRedu.lng] });
                     this.setState({ address: results[0].formatted_address });
                     this.props.FormattedAddress(results[0].formatted_address.split(",")[0]);
-                    // this.props.FormattedAddress(this.props.CartRedu.streetName + " " + this.props.CartRedu.streetNumber);
+                    localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(results[0].formatted_address.split(",")[0]))
                     this.props.Center([this.props.CartRedu.lat, this.props.CartRedu.lng]);
                 } else {
                     window.alert('No results found');
@@ -191,7 +197,9 @@ class MapsComponent extends Component {
                 if(this.props.CartRedu.lat === 0) {
                     this.props.Center([position.coords.latitude, position.coords.longitude]);
                     this.props.Lat(position.coords.latitude);
+                    localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                     this.props.Lng(position.coords.longitude);
+                    localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 }
             });
         }
@@ -203,7 +211,9 @@ class MapsComponent extends Component {
 
                 this.props.Center([position.coords.latitude, position.coords.longitude]);
                 this.props.Lat(position.coords.latitude);
+                localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                 this.props.Lng(position.coords.longitude);
+                localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
                 this.props.IsMarkerChange(false);
                 this.props.StreetNumber("");
                 this.props.StreetName("");

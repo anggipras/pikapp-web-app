@@ -18,7 +18,8 @@ import ProfileIcon from '../../Asset/Icon/avatar.png'
 import OpenHourIcon from '../../Asset/Icon/hour.png'
 import CoinIcon from '../../Asset/Icon/coin.png'
 import LocationIcon from '../../Asset/Icon/location.png'
-import PhoneIcon from '../../Asset/Icon/phone.png'
+import PhoneIcon from '../../Asset/Icon/phone.png';
+import WhatsAppIcon from '../../Asset/Icon/whatsapp-icon.png';
 import StarIcon from '../../Asset/Icon/star.png'
 import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import OrderStatusIcon from '../../Asset/Icon/order-icon-green.png'
@@ -36,6 +37,10 @@ import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
 import { withRouter } from 'react-router-dom';
+import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
+import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
+import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
+import * as GetShopStatus from '../../Component/AxiosAPI'
 
 var currentExt = {
   detailCategory: [
@@ -150,7 +155,14 @@ class ProductView extends React.Component {
     }],
     productCategpersizeOri: [{ category_id: "", category_name: "", order: null, category_products: [] }], //tobe shown in products area
     searchProduct : "",
-    hiddenBanner : false
+    hiddenBanner : false,
+    merchantHourStatus: null, // OPEN OR CLOSE
+    merchantHourOpenTime: null, // ex: 10:00
+    merchantHourGracePeriod: null, // ex: 30
+    merchantHourNextOpenDay: null, // ex: Sunday
+    merchantHourNextOpenTime: null, // ex: 10:00
+    merchantHourAutoOnOff: null, // ex: true or false
+    promoListSize: 0
   };
 
   timeout = null
@@ -182,30 +194,16 @@ class ProductView extends React.Component {
     var notab = "";
     var username = "";
     if(value.mid) {
-      // this.setState({ isManualTxn : false });
       mid = value.mid;
       notab = value.table || ""
     } else {
-      // this.setState({ isManualTxn : true });
-      // mid = value.username;
       username = this.props.match.params.username;
     }
 
     this.sendTracking(mid);
     this.getLinkTree(username);
 
-    // let longlatAddress
     let addressRoute
-    // if (JSON.parse(localStorage.getItem('longlat'))) {
-    //   longlatAddress = JSON.parse(localStorage.getItem('longlat'))
-    //   addressRoute = address + "home/v2/detail/merchant/" + longlatAddress.lon + "/" + longlatAddress.lat + "/"
-    // }
-    // if (navigator.geolocation) { //SHUTDOWN FOR A WHILE
-    //   navigator.geolocation.getCurrentPosition(position => {
-    //     let latitude = position.coords.latitude
-    //     let longitude = position.coords.longitude
-    //   })
-    // }
     let latitude = -6.28862
     let longitude = 106.71789
     let longlat = { lat: latitude, lon: longitude }
@@ -229,7 +227,6 @@ class ProductView extends React.Component {
       method: "GET"
     })
       .then((res) => {
-        // console.log(res.data.results);
         res.data.results.username = username;
         var currentMerchant = {
           mid: "",
@@ -383,89 +380,129 @@ class ProductView extends React.Component {
         })
 
         this.setState({ productAllPage : allProduct });
-        // this.setState({ productAllPage : res.data.results.products });
 
-        let newImage = Storeimg
-        Axios.get(currentMerchant.storeImage)
-          .then(() => {
-            newImage = currentMerchant.storeImage
-            prominent(newImage, { amount: 3 }).then((color) => {
-              // return RGB color for example [241, 221, 63]
-              if (color.length < 3) {
-                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-                var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
-              } else {
-                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-                var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-              }
-              this.brightenColor(merchantColor, 70, productColor, 60)
-              this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-              this.setState({ productCategpersizeOri : this.state.productCategpersize });
-              console.log(this.state);
-              document.addEventListener('scroll', this.loadMoreMerchant)
-              document.addEventListener('scroll', this.onScrollCart)
-            });
+        this.promoList(0, 20, 0)
 
-            if (localStorage.getItem("productTour") == 1) {
-              if (this.props.AuthRedu.isMerchantQR === false) {
-                this.state.steptour.shift();
-              }
-              this.setState({ startTour: true });
-            }
-            else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-              this.setState({ startTour: true });
-            }
+        GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
+          this.setState({ 
+            merchantHourStatus: merchantHourCheckingResult.merchant_status, 
+            merchantHourOpenTime: merchantHourCheckingResult.open_time, 
+            merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
+            merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
+            merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
+            merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
+           })
+        }).catch(err => console.log(err))
 
-            if(value.mid) {
-              this.setState({ isManualTxn : false });
-              this.props.IsManualTxn(false);
-              localStorage.setItem("isManualTxn", false);
-            } else {
-              this.setState({ isManualTxn : true });
-              this.props.IsManualTxn(true);
-              console.log("aaa" + this.props.AuthRedu.isManualTxn);
-              localStorage.setItem("isManualTxn", true);
-            }
+        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        this.setState({ productCategpersizeOri : this.state.productCategpersize });
+        document.addEventListener('scroll', this.loadMoreMerchant)
+        document.addEventListener('scroll', this.onScrollCart)
 
-            this.setState({ totalProduct : res.data.results.products.length });
-          }).catch(err => {
-            console.log(err)
-            newImage = Storeimg
-            prominent(newImage, { amount: 3 }).then((color) => {
-              // return RGB color for example [241, 221, 63]
-              // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-              // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-              if (color.length < 3) {
-                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-                var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
-              } else {
-                var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-                var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-              }
-              this.brightenColor(merchantColor, 70, productColor, 60)
-              this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-              this.setState({ productCategpersizeOri : this.state.productCategpersize });
-              document.addEventListener('scroll', this.loadMoreMerchant)
-            });
+        if (localStorage.getItem("productTour") == 1) {
+          if (this.props.AuthRedu.isMerchantQR === false) {
+            this.state.steptour.shift();
+          }
+          this.setState({ startTour: true });
+        }
+        else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+          this.setState({ startTour: true });
+        }
 
-            if (localStorage.getItem("productTour") == 1) {
-              if (this.props.AuthRedu.isMerchantQR === false) {
-                this.state.steptour.shift();
-              }
-              this.setState({ startTour: true });
-            }
-            else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-              this.setState({ startTour: true });
-            }
-          })
+        if(value.mid) {
+          this.setState({ isManualTxn : false });
+          Cookies.set("isManualTxn", 0)
+          this.props.IsManualTxn(false);
+          localStorage.setItem("isManualTxn", false);
+        } else {
+          this.setState({ isManualTxn : true });
+          Cookies.set("isManualTxn", 1)
+          this.props.IsManualTxn(true);
+          localStorage.setItem("isManualTxn", true);
+        }
+
+        this.setState({ totalProduct : res.data.results.products.length });
+
+        // let newImage = Storeimg
+        // Axios.get(currentMerchant.storeImage)
+        //   .then(() => {
+        //     newImage = currentMerchant.storeImage
+        //     prominent(newImage, { amount: 3 }).then((color) => {
+        //       // return RGB color for example [241, 221, 63]
+        //       if (color.length < 3) {
+        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        //         var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
+        //       } else {
+        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        //         var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+        //       }
+        //       this.brightenColor(merchantColor, 70, productColor, 60)
+        //       this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        //       this.setState({ productCategpersizeOri : this.state.productCategpersize });
+        //       document.addEventListener('scroll', this.loadMoreMerchant)
+        //       document.addEventListener('scroll', this.onScrollCart)
+        //     });
+        //   }).catch(err => {
+        //     console.log(err)
+        //     newImage = Storeimg
+        //     prominent(newImage, { amount: 3 }).then((color) => {
+        //       // return RGB color for example [241, 221, 63]
+        //       // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        //       // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+        //       if (color.length < 3) {
+        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        //         var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
+        //       } else {
+        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
+        //         var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
+        //       }
+        //       this.brightenColor(merchantColor, 70, productColor, 60)
+        //       this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        //       this.setState({ productCategpersizeOri : this.state.productCategpersize });
+        //       document.addEventListener('scroll', this.loadMoreMerchant)
+        //     });
+        //   })
       })
       .catch((err) => {
         console.log(err);
-        console.log(this.state);
         if(err.toJSON().message === 'Network Error'){
           this.setState({ showFailed: true })
         }
       });
+  }
+
+  promoList = async (page, size, listLength) => {
+    let uuid = uuidV4();
+    uuid = uuid.replace(/-/g, "");
+    const date = new Date().toISOString();
+    try {
+      let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-request-id": uuid,
+          "x-request-timestamp": date,
+          "x-client-id": clientId,
+          "token": "PUBLIC",
+          "page": page,
+          "size": size
+        },
+        method: "GET"
+      })
+      let promoResult = promoResponse.data.results
+      if (promoResult == "") {
+        this.setState({promoListSize: listLength})
+      } else {
+        let newListLength = listLength + promoResult.length
+        this.mediumPromoList(page, size, newListLength)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  mediumPromoList = (page, size, newListLength) => {  
+    let newPage = page + 1
+    this.promoList(newPage, size, newListLength)
   }
 
   componentDidUpdate() {
@@ -581,7 +618,6 @@ class ProductView extends React.Component {
   handleAddCart = () => {
     var currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
     const value = queryString.parse(window.location.search);
-    // const mid = value.mid;
     const mid = this.state.data.mid;
     this.setModal(false);
     var isStorePresent = false;
@@ -834,16 +870,6 @@ class ProductView extends React.Component {
       showConfirmButton: false,
       timer: 1500
     })
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"))
-    // }
 
     let newNotes = ''
     currentExt.listcheckbox.forEach(val => {
@@ -911,11 +937,7 @@ class ProductView extends React.Component {
   }
 
   stopAndLoadMore = (ind) => {
-    // console.log(ind);
-    // console.log(this.state.idCateg[ind]);
-    // console.log(this.state.productPage[ind]);
     if (this.state.productCategpersize[ind].category_products.length < this.state.allProductsandCategories[ind].category_products.length) {
-      // console.log('testloadmore');
       var openidCateg = [...this.state.idCateg]
       openidCateg[ind] += this.state.size
 
@@ -924,7 +946,6 @@ class ProductView extends React.Component {
 
       this.setState({ idCateg: openidCateg, productPage: openproductPage, boolpage: true, choosenIndCateg: ind })
     } else {
-      // console.log('nambah');
       var num = this.state.counterLoad
       num++
       this.setState({ counterLoad: num, choosenIndCateg: ind })
@@ -936,10 +957,7 @@ class ProductView extends React.Component {
     this.state.productCategpersize.forEach((val, ind) => {
       var wrappedElement = document.getElementById(ind)
       if (this.isBottom(wrappedElement)) {
-        // console.log(this.state.counterLoad, 'counterLoad');
-        // console.log(wrappedElement.id, 'wrap');
         if (wrappedElement.id == this.state.counterLoad) {
-          // console.log(ind, 'selected index');
           document.removeEventListener('scroll', this.loadMoreMerchant)
           this.stopAndLoadMore(ind)
         }
@@ -985,7 +1003,22 @@ class ProductView extends React.Component {
                 return (
                   <div key={indprod} className='product-merchant'>
                     <div className='product-img'>
-                      <img src={product.foodImage} className='product-imgContent' alt='' />
+                      <img 
+                        src={product.foodImage} 
+                        className='product-imgContent' 
+                        alt=''
+                        style={{
+                          filter: this.state.merchantHourAutoOnOff ?
+                            !this.state.isManualTxn ?
+                                this.state.merchantHourStatus == "CLOSE" ?
+                                "grayscale(100%)"
+                                :
+                                "none"
+                              :
+                              "none"
+                              :
+                              "grayscale(100%)"
+                        }} />
                     </div>
 
                     {/* desktop view */}
@@ -1034,11 +1067,26 @@ class ProductView extends React.Component {
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
                     </div> */}
-                    <div className="merchantdetail-cart-button-sec">
-                      <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
-                        <span className="merchantdetail-cart-text">+ Keranjang</span>
-                      </div>
-                    </div>
+                    {
+                      this.state.merchantHourAutoOnOff ?
+                        !this.state.isManualTxn ?
+                          this.state.merchantHourStatus == "CLOSE" ?
+                          null
+                          :
+                          <div className="merchantdetail-cart-button-sec">
+                            <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
+                              <span className="merchantdetail-cart-text">+ Keranjang</span>
+                            </div>
+                          </div>
+                        :
+                        <div className="merchantdetail-cart-button-sec">
+                          <div className='merchantdetail-cart-button' onClick={() => this.handleDetail(product)}>
+                            <span className="merchantdetail-cart-text">+ Keranjang</span>
+                          </div>
+                        </div>
+                      :
+                      null
+                    }
 
                     {/* mobile view */}
                     <div className='product-detail-mob'>
@@ -1066,11 +1114,27 @@ class ProductView extends React.Component {
                         Rp. {Intl.NumberFormat("id-ID").format(product.foodPrice)}
                       </div>
                     </div> */}
-                    <div className='merchantdetail-cart-button-secmob'>
-                      <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
-                        <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
-                      </div>
-                    </div>
+
+                    {
+                      this.state.merchantHourAutoOnOff ?
+                        !this.state.isManualTxn ?
+                          this.state.merchantHourStatus == "CLOSE" ?
+                          null
+                          :
+                          <div className='merchantdetail-cart-button-secmob'>
+                            <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
+                              <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
+                            </div>
+                          </div>
+                        :
+                        <div className='merchantdetail-cart-button-secmob'>
+                          <div className='merchantdetail-cart-button-mob' onClick={() => this.handleDetail(product)}>
+                            <span className="merchantdetail-cart-text-mob">+ Keranjang</span>
+                          </div>
+                        </div>
+                      :
+                      null
+                    }
                   </div>
                 )
               })
@@ -1127,10 +1191,8 @@ class ProductView extends React.Component {
     this.setState({ startTour: isShowTour });
     document.body.style.overflowY = 'auto';
     localStorage.setItem('productTour', 0);
-    // if(this.props.AuthRedu.isMerchantQR === true) {
     localStorage.setItem('merchantFlow', 0);
     localStorage.setItem('storeTour', 0);
-    // }
   }
 
   hideFailedModal(isShow){
@@ -1165,7 +1227,6 @@ class ProductView extends React.Component {
       method: "GET",  
     })
     .then((res) => {
-      console.log(res.data.results);
       var linkData = [];
 
       res.data.results.forEach((data, index) => {
@@ -1203,7 +1264,6 @@ class ProductView extends React.Component {
   }
 
   goToExternalLink = (link) => {
-    // window.location.href = link;
     window.open(link, '_blank');
 
     let uuid = uuidV4();
@@ -1257,7 +1317,6 @@ class ProductView extends React.Component {
         productSize.forEach((categProd) => {
           dataSearch.forEach((allprod) => {
             if (categProd.category_id == String(allprod.category)) { 
-              // productPerCateg.push(allprod)
               categProd.category_products.push(allprod);
             }
             categoryId.push(categProd.category_id);
@@ -1304,8 +1363,6 @@ class ProductView extends React.Component {
     const date = new Date().toISOString();
     uuid = uuid.replace(/-/g, "");
 
-    // const currentMerchant = JSON.parse(Cookies.get("currentMerchant"))
-
     Axios(address + "home/v1/event/add", {
       headers: {
         "Content-Type": "application/json",
@@ -1322,11 +1379,68 @@ class ProductView extends React.Component {
       }
     })
     .then((res) => {
-      console.log(res.data.results);
+      console.log("SUCCEED");
     })
     .catch((err) => {
       console.log(err);
     });
+  }
+
+  merchantHourStatusWarning = () => {
+    if (this.state.merchantHourAutoOnOff) {
+      if (this.state.merchantHourStatus == "CLOSE") {
+        const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const weekdayId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+        let nowDate = new Date()
+        if (weekday[nowDate.getDay()] == this.state.merchantHourNextOpenDay) {
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Hari ini Pukul {this.state.merchantHourOpenTime} WIB</div>
+            </div>
+          )
+        } else if(weekday[nowDate.getDay()+1] == this.state.merchantHourNextOpenDay) {   
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Besok Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+            </div>
+          )
+        } else {
+          let nextOpenDay = weekday.indexOf(this.state.merchantHourNextOpenDay)
+          let finalNextOpenDay = weekdayId[nextOpenDay]
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+              <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+              <div className="merchant-hour-status-text">Tutup, Buka Hari {finalNextOpenDay} Pukul {this.state.merchantHourNextOpenTime} WIB</div>
+            </div>
+          )
+        }
+      } else if (this.state.merchantHourStatus == "OPEN") {
+        if (this.state.merchantHourGracePeriod <= 30) {
+          return (
+            <div className="merchant-hour-status-layout" style={{backgroundColor: "#f4b55b"}}>
+              <div className="merchant-hour-status-text">Toko akan Tutup {this.state.merchantHourGracePeriod} Menit Lagi</div>
+            </div>
+          )
+        } else {
+          return null
+        }
+      } else {
+        return null
+      }
+    } else {
+      if (this.state.merchantHourAutoOnOff != null) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+          </div>
+        )
+      } else {
+        return null
+      }
+    }
   }
 
   render() {
@@ -1383,7 +1497,10 @@ class ProductView extends React.Component {
               <Link to={"/cart"}>
                 <div className='cartIcon-layout'>
                   <div className='cartIcon-content'>
-                    <div className='cartItem-total'>{filterMerchantCart[0].food.length} Items</div>
+                    <div>
+                      <div className='cartItem-total'>{filterMerchantCart[0].food.length} Items</div>
+                      <div className="cartItem-merchantname">Dari {this.state.data.title}</div>
+                    </div>
                     <div className='cartItem-price'>Rp. {Intl.NumberFormat("id-ID").format(totalCartIcon)} <img className="cartItem-icon" src={ShoppingBagLogo}></img></div>
                   </div>
                 </div>
@@ -1407,13 +1524,10 @@ class ProductView extends React.Component {
         el.scrollIntoView(true);
 
         var heightHeader = 140;
-        // const y = el.getBoundingClientRect().top - 800;
-        // el.scrollIntoView({ top :y, block: "start", inline: "nearest", behavior: "smooth" })
 
         var scrollY = window.scrollY;
 
         if(scrollY) {
-          // window.scroll(0, scrollY - heightHeader);
           window.scroll({top: scrollY - heightHeader, left: 0, behavior: 'smooth' });
         }
 
@@ -1442,14 +1556,28 @@ class ProductView extends React.Component {
               </div>
             </Link>
           }
-        </div>     
+        </div>
+        {this.merchantHourStatusWarning()}     
         <div className="merchant-carousel" style={{ opacity: this.state.hiddenBanner ? "0.5" : "1", transition: this.state.hiddenBanner ? "opacity 0.5s" : "opacity 1s" }}>
           <Carousel className="merchant-carousel">
             <Carousel.Item className="merchant-carousel">
               <img
                 className="storeBanner"
                 src={this.state.data.image}
-                style={{ objectFit: 'cover' }}
+                style={{ 
+                  maxHeight: "100%",
+                  maxHeight: "100%",
+                  filter: this.state.merchantHourAutoOnOff?
+                    !this.state.isManualTxn ? 
+                      this.state.merchantHourStatus == "CLOSE" ?
+                      "grayscale(100%)" 
+                      :
+                      "none"
+                    : 
+                    "none"
+                    :
+                    "grayscale(100%)"
+                }}
               />
               {/* <div className='iconBanner'>
                 {
@@ -1483,35 +1611,42 @@ class ProductView extends React.Component {
                   }
                 </div> */}
                 <img className='merchant-storeimg-logo' src={this.state.data.logo} alt='' />
-                <div className='merchant-name'>
-                  <div className='merchant-mainName'>
-                    {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}
-                  </div>
+                <Link to={{ pathname: "/merchant-profile", state: { merchantLogo: this.state.data.logo, merchantName: this.state.data.title, merchantAddress: this.state.data.address} }} style={{ textDecoration: "none" }}>
+                  <div className='merchant-name'>
+                    <div className='merchant-mainName'>
+                      <div className="merchant-mainName-title">
+                        {this.state.data.title || <Skeleton style={{ paddingTop: 30, width: 200 }} />}
+                      </div>
 
-                  <div className='merchant-categName'>
-                    <div className='merchant-allcateg'>{this.state.data.category}</div>
-                    <div className='merchant-starInfo'>
-                      {
-                        // this.state.data.rating ?
-                        //   <>
-                        //     <img className='star-img' src={StarIcon} alt='' />
-                        //     <div className='merchant-star'>{this.state.data.rating}</div>
-                        //   </>
-                        //   :
-                        //   null
-                        // <Skeleton width={50} />
-                      }
-                      {/* <div className='star-votes'>(50+ Upvotes)</div> */}
+                      <img src={ArrowRight} className="merchant-mainName-img" />
+                    </div>
+
+                    <div className='merchant-categName'>
+                      <div className='merchant-allcateg'>{this.state.data.category}</div>
+                      {/* <div className='merchant-starInfo'>
+                        {
+                          this.state.data.rating ?
+                            <>
+                              <img className='star-img' src={StarIcon} alt='' />
+                              <div className='merchant-star'>{this.state.data.rating}</div>
+                            </>
+                            :
+                            null
+                        }
+                        <div className='star-votes'>(50+ Upvotes)</div>
+                      </div> */}
+                      {this.state.data.category != "" ? <div className="merchant-divider-dot">.</div> : null}
+                      <div className="merchant-openClose-status" style={{color: this.state.merchantHourAutoOnOff? this.state.merchantHourStatus == "CLOSE" ? "#dc6a84" : "#4bb7ac" : "#dc6a84"}}>{this.state.merchantHourAutoOnOff? this.state.merchantHourStatus == "CLOSE" ? "Tutup" : "Buka" : "Tutup"}</div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
-              <div className='merchant-call-sec' onClick={() => this.handlePhone(this.state.data.phone)}>
-                <div className='merchant-call'>
-                  <span className='merchantCall-icon'>
-                    <img className='merchantCall-img' src={PhoneIcon} alt='' />
-                  </span>
-                </div>
+              <div onClick={() => this.handlePhone(this.state.data.phone)}>
+                {/* <div className='merchant-call'> */}
+                  {/* <span className='merchantCall-icon'> */}
+                    <img className='merchant-call-sec' src={WhatsAppIcon} alt='' />
+                  {/* </span> */}
+                {/* </div> */}
               </div>
             </div>
           </div>
@@ -1581,37 +1716,35 @@ class ProductView extends React.Component {
             }
           </div>
         </div> */}
-        <div className='merchant-section' style={{ backgroundColor: "white" }}>
+
+        {
+          this.state.promoListSize != 0 ?
+          <div className='promo-voucherinfo'>
+            <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
+              <div className='promo-detailContent'>
+                    <div className='promo-leftSide'>
+                      <img className='promo-img-icon' src={VoucherIcon} alt='' />
+                      <div className='promo-title'>{this.state.promoListSize} Voucher Diskon Tersedia</div>
+                    </div>
+
+                    <span className="promo-arrowright">
+                      <img className="promo-arrowright-icon" src={ArrowRight} />
+                    </span>
+              </div>
+            </Link>
+          </div>
+          :
+          null
+        }
+
+        <div className='merchant-section' style={{ backgroundColor: "white", top: this.state.promoListSize == 0 ? "50px" : "140px"}}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>
-              {/* <div className='select-category'>
-                <div className='listCategory'>
-                  <h2 className='categoryName'>{this.state.categName}</h2>
-
-                  <div className='arrow-based' onClick={() => this.changeMenu()} >
-                    <img className='arrowicon' src={ArrowIcon} alt='' />
-                  </div>
-                </div>
-
-                {
-                  this.props.AllRedu.openSelect ?
-                    <div className='custom-options'>
-                      <span className='custom-optionCloser' defaultValue='Rice Box'>Closer</span>
-                      {
-                        this.state.productCategpersize.map((menuCategory, index) => (
-                          <span key={index} className='custom-option' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>{menuCategory.category_name.toLocaleLowerCase()}</span>
-                        ))
-                      }
-                    </div>
-                    :
-                    null
-                }
-              </div> */}
               <div className='merchantdetail-category-section'>
                 {
                   this.state.productCategpersize.map((menuCategory, index) => (
                       <div key={index} className='merchantdetail-category-itembox' onClick={() => this.changeHeader(menuCategory.category_name.toLocaleLowerCase())}>
-                        <span className="merchantdetail-category-text">{menuCategory.category_name.toLocaleLowerCase()}</span>
+                        <div className="merchantdetail-category-text">{menuCategory.category_name.toLocaleLowerCase()}</div>
                       </div>
                   ))
                 }

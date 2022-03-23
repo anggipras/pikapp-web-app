@@ -185,6 +185,13 @@ export const StreetNumber = (data) => {
     }
 }
 
+export const FullAddress = (data) => {
+    return {
+        type: 'FULLADDRESS',
+        payload: data
+    }
+}
+
 export const StreetName = (data) => {
     return {
         type: 'STREETNAME',
@@ -224,5 +231,70 @@ export const InsurancePrice = (data) => {
     return {
         type: 'INSURANCEPRICE',
         payload: data
+    }
+}
+
+export const ReMapPickupType = (indexShipment, shipmentType) => {
+    return {
+        type: 'REMAPPICKUPTYPE',
+        indexShipment: indexShipment,
+        shipmentType: shipmentType
+    }
+}
+
+export const ReMapPaymentType = (indexPayment, paymentType) => {
+    return {
+        type: 'REMAPPAYMENTTYPE',
+        indexPayment: indexPayment,
+        paymentType: paymentType
+    }
+}
+
+export const OvoPhoneNumber = (data) => {
+    return {
+        type: 'PHONENUMBER',
+        payload: data
+    }
+}
+
+export const ShippingDateType = (data) => {
+    return {
+        type: 'SHIPPINGDATETYPE',
+        payload: data
+    }
+}
+
+export const ShippingDate = (data) => {
+    return {
+        type: 'SHIPPINGDATE',
+        payload: data
+    }
+}
+
+// Delivery Option Selected
+export const ShipmentTypeDelivery = (data) => {
+    return {
+        type: 'SHIPPINGTYPE',
+        payload: data
+    }
+}
+
+export const ShipmentNotesDelivery = (data) => {
+    return {
+        type: 'SHIPPERNOTES',
+        payload: data
+    }
+}
+
+export const ShipmentWithCourier = (shippingName, shippingPrice, shippingDesc, courierServiceType, shippingCode, insuranceCheckbox, insurancePrice) => {
+    return {
+        type: 'SHIPPINGWITHCOURIER',
+        shippingName, 
+        shippingPrice, 
+        shippingDesc, 
+        courierServiceType, 
+        shippingCode, 
+        insuranceCheckbox, 
+        insurancePrice
     }
 }
