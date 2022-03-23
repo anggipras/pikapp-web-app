@@ -1810,7 +1810,7 @@ class ProductView extends React.Component {
           null
         }
 
-        <div className='merchant-section' style={{ backgroundColor: "white" }}>
+        <div className='merchant-section' style={{ backgroundColor: "white", top: this.state.promoListSize == 0 ? "50px" : "140px"}}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>
               <div className='merchantdetail-category-section'>
