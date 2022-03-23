@@ -15,6 +15,32 @@ import Cookies from "js-cookie";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import { address, clientId } from "../../../Asset/Constant/APIConstant";
+import { createTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import * as GetShopStatus from '../../../Component/AxiosAPI'
+
+const lightGreenCustom = {
+    50: '#4bb7ac',
+    100: '#4bb7ac',
+    200: '#4bb7ac',
+    300: '#4bb7ac',
+    400: '#4bb7ac',
+    500: '#4bb7ac',
+    600: '#4bb7ac',
+    700: '#4bb7ac',
+    800: '#4bb7ac',
+    900: '#4bb7ac',
+    A100: '#4bb7ac',
+    A200: '#4bb7ac',
+    A400: '#4bb7ac',
+    A700: '#4bb7ac',
+  };
+
+const defaultMaterialTheme = createTheme({
+    palette: {
+      primary: lightGreenCustom,
+    },
+  });
 
 const ShippingDateView = () => {
     const ref = useRef();
@@ -52,22 +78,7 @@ const ShippingDateView = () => {
     const [autoOnOff, setautoOnOff] = useState(true);
 
     useEffect(() => {
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-        Axios(address + "merchant/v1/shop/status/", {
-            headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token": "PUBLIC",
-            "mid": selectedMerchant[0].mid,
-            },
-            method: "GET"
-        }).then((shopStatusRes) => {
-            let merchantHourCheckingResult = shopStatusRes.data.results
+        GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
             setMerchantHourStatus({
                 minutes_remaining: merchantHourCheckingResult.minutes_remaining,
                 open_time: merchantHourCheckingResult.open_time,
@@ -78,7 +89,7 @@ const ShippingDateView = () => {
                 next_close_time: merchantHourCheckingResult.next_close_time,
                 auto_on_off: merchantHourCheckingResult.auto_on_off
             })
-        })
+        }).catch(err => console.log(err))
     }, [])
 
     const onChangeRadio = (ind) => {
@@ -271,22 +282,24 @@ const ShippingDateView = () => {
     const shippingDateCustom = () => {
         return (
             <div className="shippingdate-selection-layout">
-                <div>    
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        autoOk
-                        id="registerDate"
-                        onChange={handleShippingDate}
-                        inputVariant="outlined" 
-                        className={"shippingdate-datetimepicker"}
-                        format={"d MMMM yyyy"}
-                        minDate={currentDate}
-                        disabled={merchantHourStatus.auto_on_off ? false : true}
-                        value={selectedDate}
-                        ampm={false}
-                        disablePast={true}
-                    />
-                    </MuiPickersUtilsProvider>
+                <div>
+                    <ThemeProvider theme={defaultMaterialTheme}>    
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                autoOk
+                                id="registerDate"
+                                onChange={handleShippingDate}
+                                inputVariant="outlined" 
+                                className={"shippingdate-datetimepicker"}
+                                format={"d MMMM yyyy"}
+                                minDate={currentDate}
+                                disabled={merchantHourStatus.auto_on_off ? false : true}
+                                value={selectedDate}
+                                ampm={false}
+                                disablePast={true}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </ThemeProvider>    
                 </div>
                 <div>
                 {

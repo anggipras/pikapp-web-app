@@ -38,6 +38,7 @@ import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
+import * as GetShopStatus from '../../Component/AxiosAPI'
 
 var currentExt = {
   detailCategory: [
@@ -248,22 +249,7 @@ class CartManualView extends React.Component {
         this.setState({ disabledSubmitButton : true})
       }
 
-      let uuid = uuidV4();
-      uuid = uuid.replace(/-/g, "");
-      const date = new Date().toISOString();
-      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-      Axios(address + "merchant/v1/shop/status/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "mid": selectedMerchant[0].mid,
-        },
-        method: "GET"
-      }).then((shopStatusRes) => {
-        let merchantHourCheckingResult = shopStatusRes.data.results
+      GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
         this.setState({ 
           merchantHourStatus: merchantHourCheckingResult.merchant_status, 
           merchantHourOpenTime: merchantHourCheckingResult.open_time, 
@@ -272,10 +258,10 @@ class CartManualView extends React.Component {
           merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
           merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
          })
-         if (!merchantHourCheckingResult.auto_on_off) {
-           this.setState({ disabledSubmitButton: true })
-         } 
-      }).catch((err) => console.log(err))
+        if (!merchantHourCheckingResult.auto_on_off) {
+          this.setState({ disabledSubmitButton: true })
+        }
+      }).catch(err => console.log(err))
     }
 
     handleDetail(data) {
@@ -515,22 +501,7 @@ class CartManualView extends React.Component {
     }
 
     handlePayment = () => {
-      let theUUID = uuidV4();
-      theUUID = theUUID.replace(/-/g, "");
-      const dateNow = new Date().toISOString();
-      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-      Axios(address + "merchant/v1/shop/status/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": theUUID,
-          "x-request-timestamp": dateNow,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "mid": selectedMerchant[0].mid,
-        },
-        method: "GET"
-      }).then((shopStatusRes) => {
-        let merchantHourCheckingResult = shopStatusRes.data.results
+      GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
         if (merchantHourCheckingResult.minutes_remaining < "2") {
           if (this.state.cartReduData.shippingDateType == 1) {
             this.paymentProcess()
@@ -546,7 +517,7 @@ class CartManualView extends React.Component {
         } else {
           this.paymentProcess()
         }
-      }).catch((err) => console.log(err))
+      }).catch(err => console.log(err))
     };
 
     paymentProcess = () => {
