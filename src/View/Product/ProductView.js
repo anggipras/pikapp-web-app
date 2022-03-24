@@ -466,10 +466,12 @@ class ProductView extends React.Component {
   }
 
   getPromoList = async (page, size, listLength) => {
+    let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
     var reqHeader = {
       token : "PUBLIC",
-      page : page,
-      size : size
+      page  : page,
+      size  : size,
+      mid   : selectedMerchant[0].mid
     }
 
     ProductService.getPromoList(reqHeader)
