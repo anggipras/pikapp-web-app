@@ -459,10 +459,10 @@ class CartManualView extends React.Component {
         let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
         let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
         if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.biz_type) && totalPaymentCart >= promoMinPrice) {
-          Cookies.set("NOTMATCHPROMO", { theBool: false })
+          Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
           this.setState({ notMatchPromo: false })
         } else {
-          Cookies.set("NOTMATCHPROMO", { theBool: true })
+          Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: true })
           Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
           Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
           this.setState({ notMatchPromo: true })

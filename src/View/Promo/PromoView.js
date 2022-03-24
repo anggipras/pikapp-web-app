@@ -40,6 +40,19 @@ const PromoView = () => {
 
     useEffect(() => {
         promoList(0, 20, [])
+
+        let isManualTxn = Cookies.get("isManualTxn")
+        if (isManualTxn == 0) {
+            if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+                setSelectedPromoData(getSelectedPromo)
+            }
+        } else {
+            if (JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))) {
+                let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
+                setSelectedPromoData(getSelectedPromo)
+            }
+        }
     }, [])
 
     const promoList = async (page, size, arrayOfPromoList) => {
@@ -74,6 +87,11 @@ const PromoView = () => {
                         discount_amt: val.discount_amt
                     })
                 })
+                if (allListOfPromo.length == 0) {
+                    setPromoZeroList(true)
+                } else {
+                    setPromoZeroList(false)
+                }
                 promoListSet(allListOfPromo)
             } else {
                 let newArrayOfPromoList = []
@@ -145,13 +163,8 @@ const PromoView = () => {
                 })
             }
         }
-        if (selectedPromoListContainer.length == 0) {
-            setPromoZeroList(true)
-        } else {
-            setPromoZeroList(false)
-            setPromoListData(selectedPromoListContainer)
-            setDisabledPromoListData(disabledPromoListContainer)
-        }
+        setPromoListData(selectedPromoListContainer)
+        setDisabledPromoListData(disabledPromoListContainer)
     }
 
     const selectPromo = (val, ind) => {
