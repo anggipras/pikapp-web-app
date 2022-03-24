@@ -463,6 +463,8 @@ class CartManualView extends React.Component {
           this.setState({ notMatchPromo: false })
         } else {
           Cookies.set("NOTMATCHPROMO", { theBool: true })
+          Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+          Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
           this.setState({ notMatchPromo: true })
         }
       }
@@ -789,6 +791,8 @@ class CartManualView extends React.Component {
       Cookies.remove("SHIPMENTDATE")
       Cookies.remove("MANUAL_CUSTOMER_NAME")
       Cookies.remove("MANUAL_CUSTOMER_PHONENUM")
+      Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+      Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
     }
   
     notifModal = () => {

@@ -63,6 +63,8 @@ body {
 
 .promoPage-header {
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
     flex-direction: row;
     border-bottom: 1px solid lightgrey;
     padding: 14px 14px 14px 14px;
@@ -74,14 +76,37 @@ body {
 }
 
 .promoPage-title {
-    font-family: "SF-Compact-Rounded", sans-serif;
+    font-family: $fontFamily-Inter-Bold;
     font-style: normal;
-    font-weight: bolder;
     font-size: 20px;
     color: #111111;
     margin-left: 16px;
 }
 // Promo Apply Button End
+
+// Promo Zero List Start
+.promoPage-noPromo-layout {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.promoPage-noPromo-img {
+    width: 300px;
+    height: 300px;
+}
+
+.promoPage-detail {
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-size: 20px;
+    color: #111111;
+    margin-top: 40px;
+}
+// Promo Zero List End
 
 // Promo List Start
 .promoPage-section {
@@ -316,7 +341,11 @@ body {
     }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 450px) {
+    .promoPage-title {
+        font-size: 18px;
+    }
+
     .promo-alert-title {
         font-size: 10px;
     }
@@ -324,5 +353,11 @@ body {
     .promolist-shipment-text, .promolist-payment-text {
         font-size: 11px;
         max-width: 80px;
+    }
+}
+
+@media (max-width: 380px) {
+    .promoPage-title {
+        font-size: 16px;
     }
 }

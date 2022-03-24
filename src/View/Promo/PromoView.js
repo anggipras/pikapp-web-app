@@ -5,15 +5,15 @@ import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
 import takeawayColor from '../../Asset/Icon/takeawayColor.png'
 import paymentColor from '../../Asset/Icon/CashierPayment.png'
+import NoPromo from '../../Asset/Icon/ic_no_promo.png'
 import moment from "moment";
 import Cookies from "js-cookie"
 import { useLocation } from "react-router-dom"
-import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
-import { address, clientId } from "../../Asset/Constant/APIConstant";
 import ProductService from "../../Services/product.service";
 
 const PromoView = () => {
+    const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
     const location = useLocation()
     const promoTitle = location.state.title
@@ -22,6 +22,7 @@ const PromoView = () => {
     const cartStatus = location.state.cartStatus
     const [manualTxnVar, setManualTxnVar] = useState(0)
     const [promoListData, setPromoListData] = useState([])
+    const [promoZeroList, setPromoZeroList] = useState(false)
     // const [promoListData, setPromoListData] = useState([
     //     {
     //         promo_title: "PIKAPPTAHUNBARU 5rb",
@@ -102,6 +103,13 @@ const PromoView = () => {
         let isManualTxn = Cookies.get("isManualTxn")
         setManualTxnVar(isManualTxn)
         if (isManualTxn == 0) {
+            let indSelectedPromoDineIn = -1
+            if (Cookies.get("INDEX_SELECTED_PROMO_DINEIN")) {
+                let getIndSelectedPromo = JSON.parse(Cookies.get("INDEX_SELECTED_PROMO_DINEIN"))
+                indSelectedPromoDineIn = getIndSelectedPromo.indPromo
+            }
+            setSelectedPromo(indSelectedPromoDineIn)
+
             if (promoAlert == 0 || alertStatus.paymentType == -1) {
                 selectedPromoListContainer = allListOfPromo
             } else {
@@ -115,6 +123,13 @@ const PromoView = () => {
                 })
             }
         } else {
+            let indSelectedPromoManual = -1
+            if(Cookies.get("INDEX_SELECTED_PROMO_MANUAL")) {
+                let getIndSelectedPromo = JSON.parse(Cookies.get("INDEX_SELECTED_PROMO_MANUAL"))
+                indSelectedPromoManual = getIndSelectedPromo.indPromo
+            }
+            setSelectedPromo(indSelectedPromoManual)
+
             if (alertStatus.phoneNumber == "0" && alertStatus.paymentType == 0) {
                 selectedPromoListContainer = allListOfPromo
             } else if(alertStatus.phoneNumber == "" && alertStatus.paymentType == -1) {
@@ -130,8 +145,13 @@ const PromoView = () => {
                 })
             }
         }
-        setPromoListData(selectedPromoListContainer)
-        setDisabledPromoListData(disabledPromoListContainer)
+        if (selectedPromoListContainer.length == 0) {
+            setPromoZeroList(true)
+        } else {
+            setPromoZeroList(false)
+            setPromoListData(selectedPromoListContainer)
+            setDisabledPromoListData(disabledPromoListContainer)
+        }
     }
 
     const selectPromo = (val, ind) => {
@@ -311,7 +331,7 @@ const PromoView = () => {
         return promoListData.map((val, ind) => {
             return (
                 <div key={ind} className={alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
-                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" defaultChecked={ selectedPromo == ind ? true : false } />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
                             <div className='promolist-circle-name'>{val.promo_title} {val.discount_amt_type == "PERCENTAGE" ? `${val.discount_amt}%` : null}</div>
@@ -352,7 +372,7 @@ const PromoView = () => {
         return promoListData.map((val, ind) => {
             return (
                 <div key={ind} className={alertStatus.paymentType == -1 ? 'promolistbox-section-disabled':'promolistbox-section'} >
-                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" />
+                    <input onClick={() => selectPromo(val, ind)} disabled={ promoAlert == 0 || alertStatus.paymentType == -1 } id={val.promo_title} type='radio' value={val.promo_title} name="promoVoucher" defaultChecked={ selectedPromo == ind ? true : false } />
                     <label htmlFor={val.promo_title}>
                         <div className='promolist-side'>
                             <div className='promolist-circle-name'>{val.promo_title} {val.discount_amt_type == "PERCENTAGE" ? `${val.discount_amt}%` : null}</div>
@@ -396,9 +416,11 @@ const PromoView = () => {
     const onSubmitPromo = () => {
         if (selectedPromo != -1) {
             if (manualTxnVar == 0) {
+                Cookies.set("INDEX_SELECTED_PROMO_DINEIN", { indPromo: selectedPromo })
                 Cookies.set("NOTMATCHPROMO", { theBool: false })
                 localStorage.setItem("SELECTED_PROMO", JSON.stringify(selectedPromoData))
             } else {
+                Cookies.set("INDEX_SELECTED_PROMO_MANUAL", { indPromo: selectedPromo })
                 Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
                 localStorage.setItem("MANUAL_SELECTED_PROMO", JSON.stringify(selectedPromoData))
             }
@@ -479,26 +501,39 @@ const PromoView = () => {
                             {disabledPromoListDineinTxn()}
                         </div>
                     }
-                    
 
-                    <div className='promoPage-button-layout' style={{display: promoAlert == 0? "none":"flex"}}>
-                        <div 
-                        className='promoPage-button' 
-                        style={{ 
-                            backgroundColor: promoAlert == 0? "#aaaaaa" 
-                            : 
-                                alertStatus.paymentType == -1 ?
-                                "#aaaaaa"
-                                :
-                                selectedPromo == -1 ?
-                                "#aaaaaa"
-                                :
-                                "#4bb7ac" 
-                            }}
-                        onClick={() => onSubmitPromo()}>
-                            Simpan
+                    {
+                        promoZeroList ?
+                        <div className="promoPage-noPromo-layout">
+                            <div className="promoPage-noPromo-imgLayout">
+                                <img src={NoPromo} className="promoPage-noPromo-img" />
+                            </div>
+    
+                            <div className="promoPage-detail">
+                                Belum ada promo yang tersedia
+                            </div>
                         </div>
-                    </div>
+                        :
+                        <div className='promoPage-button-layout' style={{display: promoAlert == 0? "none":"flex"}}>
+                            <div 
+                            className='promoPage-button' 
+                            style={{ 
+                                backgroundColor: promoAlert == 0? "#aaaaaa" 
+                                : 
+                                    alertStatus.paymentType == -1 ?
+                                    "#aaaaaa"
+                                    :
+                                    selectedPromo == -1 ?
+                                    "#aaaaaa"
+                                    :
+                                    "#4bb7ac" 
+                                }}
+                            onClick={() => onSubmitPromo()}>
+                                Simpan
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div>
         </>
