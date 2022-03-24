@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom"
 import Axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
+import ProductService from "../../Services/product.service";
 
 const PromoView = () => {
     const CartRedu = useSelector(state => state.CartRedu)
@@ -44,51 +45,50 @@ const PromoView = () => {
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
         const date = new Date().toISOString();
-        try {
-          let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
-            headers: {
-              "Content-Type": "application/json",
-              "x-request-id": uuid,
-              "x-request-timestamp": date,
-              "x-client-id": clientId,
-              "token": "PUBLIC",
-              "page": page,
-              "size": size
-            },
-            method: "GET"
-          })
-          let promoResult = promoResponse.data.results
-          if (promoResult == "") {
-            let allListOfPromo = []
-            arrayOfPromoList.forEach(val => {
-                allListOfPromo.push({
-                    promo_campaign_id: val.id,
-                    promo_title: val.campaign_name,
-                    promo_period_start: val.campaign_start_date,
-                    promo_period_end: val.campaign_end_date,
-                    promo_min_order: val.min_order.toString(),
-                    promo_max_discount: val.max_limit.toString(),
-                    promo_shipment_method: val.campaign_type,
-                    promo_payment_method: val.payment_type,
-                    discount_amt_type: val.discount_amt_type,
-                    discount_amt: val.discount_amt
-                })
-            })
-            promoListSet(allListOfPromo)
-          } else {
-            let newArrayOfPromoList = []
-            if (arrayOfPromoList.length == 0) {
-                promoResult.forEach(val => {
-                    newArrayOfPromoList.push(val)
-                })
-            } else {
-                newArrayOfPromoList = arrayOfPromoList.concat(promoResult)
-            }
-            mediumPromoList(page, size, newArrayOfPromoList)
-          }
-        } catch (err) {
-          console.log(err)
+        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+
+        var reqHeader = {
+            token : "PUBLIC",
+            page  : page,
+            size  : size,
+            mid   : selectedMerchant[0].mid
         }
+      
+        ProductService.getPromoList(reqHeader)
+        .then((res) => {
+            let promoResult = res.data.results
+            if (promoResult == "") {
+                let allListOfPromo = []
+                arrayOfPromoList.forEach(val => {
+                    allListOfPromo.push({
+                        promo_campaign_id: val.id,
+                        promo_title: val.campaign_name,
+                        promo_period_start: val.campaign_start_date,
+                        promo_period_end: val.campaign_end_date,
+                        promo_min_order: val.min_order.toString(),
+                        promo_max_discount: val.max_limit.toString(),
+                        promo_shipment_method: val.campaign_type,
+                        promo_payment_method: val.payment_type,
+                        discount_amt_type: val.discount_amt_type,
+                        discount_amt: val.discount_amt
+                    })
+                })
+                promoListSet(allListOfPromo)
+            } else {
+                let newArrayOfPromoList = []
+                if (arrayOfPromoList.length == 0) {
+                    promoResult.forEach(val => {
+                        newArrayOfPromoList.push(val)
+                    })
+                } else {
+                    newArrayOfPromoList = arrayOfPromoList.concat(promoResult)
+                }
+                mediumPromoList(page, size, newArrayOfPromoList)
+            }
+        })
+          .catch((err) => {
+            console.log(err);
+        })
     }
 
     const mediumPromoList = (page, size, newArrayOfPromoList) => {  

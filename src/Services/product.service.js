@@ -16,7 +16,7 @@ class ProductService {
     }
 
     getPromoList(header) {
-        return http.get(`promotion/customer/campaign/v1/list`, { headers : {
+        return http.get(`promotion/customer/campaign/v1/list/${header.mid}`, { headers : {
             "token" : header.token,
             "page" : header.page,
             "size" : header.size
