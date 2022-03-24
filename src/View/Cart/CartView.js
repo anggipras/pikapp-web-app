@@ -298,10 +298,7 @@ class CartView extends React.Component {
         cart.splice(1)
         localStorage.setItem("cart", JSON.stringify(newAllCart))
         window.history.back()
-        localStorage.removeItem("PAYMENT_TYPE")
-        localStorage.removeItem("PHONE_NUMBER")
-        localStorage.removeItem("SELECTED_PROMO")
-        Cookies.remove("NOTMATCHPROMO")
+        this.removeStorage()
       } else {
         let filterMerchantCart = newAllCart.filter(valueCart => {
           return valueCart.mid === mid
@@ -368,6 +365,8 @@ class CartView extends React.Component {
         this.setState({ notMatchPromo: false })
       } else {
         Cookies.set("NOTMATCHPROMO", { theBool: true })
+        Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+        Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
         this.setState({ notMatchPromo: true })
       }
       this.setPromoLoading(false)
@@ -411,6 +410,8 @@ class CartView extends React.Component {
             this.setState({ notMatchPromo: false })
           } else {
             Cookies.set("NOTMATCHPROMO", { theBool: true })
+            Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+            Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
             this.setState({ notMatchPromo: true })
           }
           this.setPromoLoading(false)
@@ -425,7 +426,9 @@ class CartView extends React.Component {
             Cookies.set("NOTMATCHPROMO", { theBool: false })
             this.setState({ notMatchPromo: false })
           } else {
-            Cookies.set("NOTMATCHPROMO", { theBool: true }) 
+            Cookies.set("NOTMATCHPROMO", { theBool: true })
+            Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+            Cookies.remove("INDEX_SELECTED_PROMO_MANUAL") 
             this.setState({ notMatchPromo: true })
           }
           this.setPromoLoading(false)
@@ -455,6 +458,8 @@ class CartView extends React.Component {
           this.setState({ notMatchPromo: false })
         } else {
           Cookies.set("NOTMATCHPROMO", { theBool: true })
+          Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+          Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
           this.setState({ notMatchPromo: true })
         }
         this.setPromoLoading(false)
@@ -542,7 +547,6 @@ class CartView extends React.Component {
           phone_number: phoneNumber,
           expiry_date: expiryDate
         }
-        console.log({requestData});
 
         let uuid = uuidV4();
         uuid = uuid.replace(/-/g, "");
@@ -645,10 +649,7 @@ class CartView extends React.Component {
                 window.location.assign(res.data.results[0].checkout_url_deeplink);
               }, 1000);
             }
-            localStorage.removeItem("PAYMENT_TYPE")
-            localStorage.removeItem("PHONE_NUMBER")
-            localStorage.removeItem("SELECTED_PROMO")
-            Cookies.remove("NOTMATCHPROMO")
+            this.removeStorage()
           })
           .catch((err) => {
             if (err.response.data !== undefined) {
@@ -658,6 +659,15 @@ class CartView extends React.Component {
           });
       }
     }).catch(err => console.log(err))
+  }
+
+  removeStorage = () => {
+    localStorage.removeItem("PAYMENT_TYPE")
+    localStorage.removeItem("PHONE_NUMBER")
+    localStorage.removeItem("SELECTED_PROMO")
+    Cookies.remove("NOTMATCHPROMO")
+    Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+    Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
   }
 
   notifModal = () => {
