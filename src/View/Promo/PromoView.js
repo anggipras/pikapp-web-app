@@ -107,6 +107,7 @@ const PromoView = () => {
         })
           .catch((err) => {
             console.log(err);
+            setPromoZeroList(true)
         })
     }
 
@@ -453,7 +454,7 @@ const PromoView = () => {
                     </div>
 
                     {
-                        promoAlert == 0 ?
+                        promoAlert == 0 || promoZeroList ?
                         null
                         :
                             manualTxnVar == 1 ?

@@ -30,7 +30,6 @@ import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
-import * as GetShopStatus from '../../Component/AxiosAPI'
 import ProductService from "../../Services/product.service";
 import AnalyticsService from "../../Services/analytics.service";
 import TransactionService from "../../Services/transaction.service";
@@ -66,6 +65,7 @@ class CartManualView extends React.Component {
       notMatchPromo: this.props.notMatchPromo !== undefined ? this.props.notMatchPromo : false,
       changeUI: true,
       showModal: false,
+      showModalCheckPromo: false,
       cancelCartModal: false,
       currentModalTitle: "",
       paymentOption: "Pembayaran Di Kasir",
@@ -241,24 +241,6 @@ class CartManualView extends React.Component {
         this.setState({ disabledSubmitButton : false})
       }
 
-      if (this.state.notMatchPromo) {
-        this.setState({ disabledSubmitButton : true})
-      }
-
-      // GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
-      //   this.setState({ 
-      //     merchantHourStatus: merchantHourCheckingResult.merchant_status, 
-      //     merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-      //     merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
-      //     merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-      //     merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
-      //     merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
-      //    })
-      //   if (!merchantHourCheckingResult.auto_on_off) {
-      //     this.setState({ disabledSubmitButton: true })
-      //   }
-      // }).catch(err => console.log(err))
-
       this.getShopStatus();
     }
 
@@ -313,8 +295,13 @@ class CartManualView extends React.Component {
         });
       } else if (data === "payment-checking") {
         if (!this.state.disabledSubmitButton) {
-          this.setState({ showModal: true });
-          this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" }); 
+          if (this.state.notMatchPromo) {
+            this.setState({ showModalCheckPromo: true });
+            this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+          } else {
+            this.setState({ showModal: true });
+            this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+          }
         }
       }
     }
@@ -500,26 +487,6 @@ class CartManualView extends React.Component {
       }
     }
 
-    // handlePayment = () => {
-    //   GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
-    //     if (merchantHourCheckingResult.minutes_remaining < "2") {
-    //       if (this.state.cartReduData.shippingDateType == 1) {
-    //         this.paymentProcess()
-    //       } else {
-    //         this.setState({ cancelCartModal: true })
-    //       }
-    //     } else if(merchantHourCheckingResult.minutes_remaining < "31") {
-    //       if (this.state.cartReduData.shippingDateType == 1) {
-    //         this.paymentProcess()
-    //       } else {
-    //         this.setState({ cancelCartModal: true })
-    //       }
-    //     } else {
-    //       this.paymentProcess()
-    //     }
-    //   }).catch(err => console.log(err))
-    // };
-
     handleCheckingShopStatus = () => {
       let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
       var reqHeader = {
@@ -687,9 +654,8 @@ class CartManualView extends React.Component {
         total_discount: finalProduct[0].discountPrice,
         total_payment: totalPayment,
         expiry_date: expiryDate,
-        campaign_id: this.props.selectedPromo ? this.props.selectedPromo.promo_campaign_id : 0,
+        campaign_id: this.props.selectedPromo ? !this.state.notMatchPromo ? this.props.selectedPromo.promo_campaign_id : 0 : 0,
       }
-      console.log({requestData});
       
       TransactionService.addTransactionPos(requestData)
         .then((res) => {
@@ -1177,6 +1143,14 @@ class CartManualView extends React.Component {
       }
     }
 
+    handleCheckingPromo = () => {
+      this.setState({ showModalCheckPromo: false, showModal: true })
+    }
+  
+    setModalPromo = () => {
+      this.setState({ showModalCheckPromo: false })
+    }
+
     render() {
       if (this.state.loadButton) {
         return <Redirect to='/orderconfirmation' />
@@ -1213,6 +1187,21 @@ class CartManualView extends React.Component {
         );
       } else {
         modal = <></>
+      }
+
+      let promoModal
+      if (this.state.showModalCheckPromo) {
+        promoModal = (
+          <CartModal
+            isShow={this.state.showModalCheckPromo}
+            onHide={() => this.setModalPromo()}
+            title="Pesanan yang Anda buat tidak dapat dibatalkan"
+            titlePromo="Promo tidak dapat diterapkan. Lanjut Pembayaran?"
+            confirmPromo={this.handleCheckingPromo}
+          />
+        )
+      } else {
+        promoModal = <></>
       }
 
       // Cart Cancel Modal
@@ -1331,16 +1320,20 @@ class CartManualView extends React.Component {
 
       // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE START
       if (this.state.selectedPromo) {
-        if (this.state.selectedPromo.discount_amt_type == "PERCENTAGE") {
-          let totalTowardPercentage = (this.state.selectedPromo.discount_amt / 100) * totalPaymentShow
-          let mathRoundTotal = Math.round(totalTowardPercentage)
-          if (mathRoundTotal > this.state.selectedPromo.promo_max_discount) {
-            totalDiscountShow = parseInt(this.state.selectedPromo.promo_max_discount)
-          } else {
-            totalDiscountShow = mathRoundTotal
-          }
+        if (this.state.notMatchPromo) {
+          totalDiscountShow = 0
         } else {
-          totalDiscountShow = this.state.selectedPromo.discount_amt
+          if (this.state.selectedPromo.discount_amt_type == "PERCENTAGE") {
+            let totalTowardPercentage = (this.state.selectedPromo.discount_amt / 100) * totalPaymentShow
+            let mathRoundTotal = Math.round(totalTowardPercentage)
+            if (mathRoundTotal > this.state.selectedPromo.promo_max_discount) {
+              totalDiscountShow = parseInt(this.state.selectedPromo.promo_max_discount)
+            } else {
+              totalDiscountShow = mathRoundTotal
+            }
+          } else {
+            totalDiscountShow = this.state.selectedPromo.discount_amt
+          }
         }
       } else {
         totalDiscountShow = 0
@@ -1711,6 +1704,7 @@ class CartManualView extends React.Component {
             </div>
           </div>
           {modal}
+          {promoModal}
           {cartCancelModal}
           {this.menuDetail()}
           {this.notifModal()}

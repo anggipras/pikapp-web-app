@@ -17,7 +17,7 @@ import Axios from "axios";
 import { address, clientId } from "../../../Asset/Constant/APIConstant";
 import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import * as GetShopStatus from '../../../Component/AxiosAPI'
+import MerchantService from "../../../Services/merchant.service";
 
 const lightGreenCustom = {
     50: '#4bb7ac',
@@ -78,19 +78,34 @@ const ShippingDateView = () => {
     const [autoOnOff, setautoOnOff] = useState(true);
 
     useEffect(() => {
-        GetShopStatus.checkShopStatus().then(merchantHourCheckingResult => {
-            setMerchantHourStatus({
-                minutes_remaining: merchantHourCheckingResult.minutes_remaining,
-                open_time: merchantHourCheckingResult.open_time,
-                merchant_status: merchantHourCheckingResult.merchant_status,
-                close_time: merchantHourCheckingResult.close_time,
-                next_open_day: merchantHourCheckingResult.next_open_day,
-                next_open_time: merchantHourCheckingResult.next_open_time,
-                next_close_time: merchantHourCheckingResult.next_close_time,
-                auto_on_off: merchantHourCheckingResult.auto_on_off
-            })
-        }).catch(err => console.log(err))
+        getShopStatus()
     }, [])
+
+    const getShopStatus = () => {
+        let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+  
+        var reqHeader = {
+          token : "PUBLIC",
+          mid : selectedMerchant[0].mid
+        }
+    
+        MerchantService.checkShopStatus(reqHeader)
+        .then((res) => {
+            setMerchantHourStatus({
+                minutes_remaining: res.data.results.minutes_remaining,
+                open_time: res.data.results.open_time,
+                merchant_status: res.data.results.merchant_status,
+                close_time: res.data.results.close_time,
+                next_open_day: res.data.results.next_open_day,
+                next_open_time: res.data.results.next_open_time,
+                next_close_time: res.data.results.next_close_time,
+                auto_on_off: res.data.results.auto_on_off
+            })
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
 
     const onChangeRadio = (ind) => {
         dispatch({ type: 'SHIPPINGDATETYPE', payload: ind })

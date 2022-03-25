@@ -22,7 +22,6 @@ import { withRouter } from 'react-router-dom';
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
-import * as GetShopStatus from '../../Component/AxiosAPI';
 import ProductService from "../../Services/product.service";
 import MerchantService from "../../Services/merchant.service";
 import TransactionService from "../../Services/transaction.service";
@@ -487,29 +486,6 @@ class ProductView extends React.Component {
     .catch((err) => {
       console.log(err);
     })
-    // try {
-    //   let promoResponse = await Axios(address + "promotion/customer/campaign/v1/list", {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "x-request-id": uuid,
-    //       "x-request-timestamp": date,
-    //       "x-client-id": clientId,
-    //       "token": "PUBLIC",
-    //       "page": page,
-    //       "size": size
-    //     },
-    //     method: "GET"
-    //   })
-    //   let promoResult = promoResponse.data.results
-    //   if (promoResult == "") {
-    //     this.setState({promoListSize: listLength})
-    //   } else {
-    //     let newListLength = listLength + promoResult.length
-    //     this.mediumPromoList(page, size, newListLength)
-    //   }
-    // } catch (err) {
-    //   console.log(err)
-    // }
   }
 
   mediumPromoList = (page, size, newListLength) => {  
