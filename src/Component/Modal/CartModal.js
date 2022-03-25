@@ -32,6 +32,10 @@ const CartModal = (props) => {
         props.onHide()
     }
 
+    const confirmPromo = () => {
+        props.confirmPromo()
+    }
+
     const selectButton = () => {
         if (modalTitle === 'Pilih Cara Makan Anda') {
             props.handleData(radioNumEat)
@@ -206,14 +210,14 @@ const CartModal = (props) => {
                             </div>
                             :
                             <div className='modalCart-paymentLayout'>
-                                <h1 className='modalCart-paymentTitle'>{props.title}</h1>
+                                <h1 className='modalCart-paymentTitle'> { props.titlePromo == "Promo tidak dapat diterapkan. Lanjut Pembayaran?" ? props.titlePromo : props.title }</h1>
 
                                 <div className='modalCart-paymentCheck'>
                                     <div className='modalCart-cancelPay' onClick={closeModal}>
                                         Cek Ulang
                                     </div>
-
-                                    <div className='modalCart-confirmPay' onClick={confirmPay}>
+                                    
+                                    <div className='modalCart-confirmPay' onClick={ props.titlePromo == "Promo tidak dapat diterapkan. Lanjut Pembayaran?" ? confirmPromo : confirmPay }>
                                         Setuju
                                     </div>
                                 </div>
