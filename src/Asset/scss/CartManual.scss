@@ -1280,18 +1280,18 @@ body {
   padding: 0px 12px 0px 12px;
 }
 
-.orderDetail-detailprice-word {
+.orderDetail-detailprice-word, .orderDetail-detailDisountPrice-word {
   display: flex;
-  // position: relative;
   align-items: center;
   justify-content: space-between;
   align-items: center;
   color: #111111;
   font-size: 14px;
-  // margin-top: 10px;
   height: 32px;
-  // padding: 0px 0px 0px 12px;
-  // border-top: 1px solid #c4c4c4;
+}
+
+.orderDetail-detailDisountPrice-word {
+  color: #DC6A84;
 }
 
 // Promo Cart Section Start
