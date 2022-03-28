@@ -608,8 +608,8 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   align-items: center;
   justify-content: space-between;
   background-color: #ffffff;
-  height: 32px;
   padding: 0px 0px 0px 12px;
+  margin-bottom: 10px;
 }
 
 .cart-detailprice-title {
@@ -636,11 +636,6 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #111111;
-  height: 32px;
-}
-
-.orderDetail-detailDisountPrice-word {
-  color: #DC6A84;
 }
 // Summary Order end
 
