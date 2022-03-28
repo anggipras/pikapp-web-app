@@ -30,6 +30,7 @@ import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
+import CheckListIcon from '../../Asset/Icon/ic_check_list.png'
 import ProductService from "../../Services/product.service";
 import AnalyticsService from "../../Services/analytics.service";
 import TransactionService from "../../Services/transaction.service";
@@ -658,7 +659,6 @@ class CartManualView extends React.Component {
         expiry_date: expiryDate,
         campaign_id: this.props.selectedPromo ? !this.state.notMatchPromo ? this.props.selectedPromo.promo_campaign_id : 0 : 0,
       }
-      console.log({requestData});
       
       TransactionService.addTransactionPos(requestData)
         .then((res) => {
@@ -1620,8 +1620,8 @@ class CartManualView extends React.Component {
                                 <div className="promoCart-selectiondetail-border"></div>
 
                                 <div className='promoCart-selectiondetail-desc'>
-                                  { this.state.notMatchPromo ? <img src={PromoAlert} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
-                                  <div style={{color: this.state.notMatchPromo ? "#e88901" : "#111111"}}>{this.state.selectedPromo.promo_title} {this.state.selectedPromo.discount_amt_type == "PERCENTAGE" ? `${this.state.selectedPromo.discount_amt}%` : null}</div>
+                                  <img src={ this.state.notMatchPromo ? NoMatchPromo : CheckListIcon } style={{width: "18px", height: "16px", marginRight: "10px"}} />
+                                  <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title} {this.state.selectedPromo.discount_amt_type == "PERCENTAGE" ? `${this.state.selectedPromo.discount_amt}%` : null}</div>
                                 </div>
                               </div>
                               :
@@ -1648,9 +1648,9 @@ class CartManualView extends React.Component {
                       </div>
 
                       <div className='cartmanual-detailprice-desc'>
-                        <div className='orderDetail-detailDisountPrice-word'>
+                        <div className='orderDetail-detailDisountPrice-word' style={{color: totalDiscountShow > 0 ? "#4BB7AC" : "#DC6A84"}}>
                           <div>Total Diskon Item</div>
-                          <div>- Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
+                          <div>{totalDiscountShow > 0 ? "-" : null}Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
                         </div>
                       </div>
 
