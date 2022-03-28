@@ -32,6 +32,7 @@ import { firebaseAnalytics } from '../../firebaseConfig'
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import MerchantService from "../../Services/merchant.service";
+import TransactionService from "../../Services/transaction.service";
 
 var currentExt = {
   detailCategory: [
@@ -553,6 +554,8 @@ class CartView extends React.Component {
       products: selectedProd,
       payment_with: this.state.paymentType,
       mid: currentCartMerchant.mid,
+      subtotal: finalProduct[0].totalPrice.toString(),
+      total_discount: finalProduct[0].discountPrice.toString(),
       prices: finalTotalPrices.toString(),
       biz_type: this.state.biz_type,
       table_no: noTab.toString(),
@@ -560,20 +563,7 @@ class CartView extends React.Component {
       expiry_date: expiryDate
     }
 
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    
-    Axios(address + "/txn/v4/txn-post/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-      },
-      method: "POST",
-      data: requestData,
-    })
+    TransactionService.addTransactionTxn(requestData)
       .then((res) => {
         if (this.state.paymentType === 'PAY_BY_CASHIER') {
           this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
@@ -662,13 +652,122 @@ class CartView extends React.Component {
           }, 1000);
         }
         this.removeStorage()
-      })
-      .catch((err) => {
+      }).catch((err) => {
         if (err.response.data !== undefined) {
           alert(err.response.data.err_message)
           this.props.DoneLoad()
         }
-      });
+      })
+
+    // let uuid = uuidV4();
+    // uuid = uuid.replace(/-/g, "");
+    // const date = new Date().toISOString();
+    
+    // Axios(address + "/txn/v5/txn-post/", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-request-id": uuid,
+    //     "x-request-timestamp": date,
+    //     "x-client-id": clientId,
+    //   },
+    //   method: "POST",
+    //   data: requestData,
+    // })
+    //   .then((res) => {
+    //     if (this.state.paymentType === 'PAY_BY_CASHIER') {
+    //       this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+    //       setTimeout(() => {
+    //         let filterOtherCart = storageData.filter(valFilter => {
+    //           return valFilter.mid !== currentCartMerchant.mid
+    //         })
+    //         var dataOrder = {
+    //           transactionId : res.data.results[0].transaction_id,
+    //           totalPayment : requestData.prices,
+    //           paymentType : this.state.paymentType,
+    //           transactionTime : newDate
+    //         };
+    //         this.props.DataOrder(dataOrder);
+    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
+    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+    //         localStorage.removeItem("lastTable")
+    //         localStorage.removeItem("fctable")
+    //         localStorage.removeItem("counterPayment");
+    //         this.setState({ loadButton: true })
+    //         this.props.DoneLoad()
+    //       }, 1000);
+    //     } 
+    //     else if(this.state.paymentType === 'WALLET_OVO') {
+    //       this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+    //       setTimeout(() => {
+    //         let filterOtherCart = storageData.filter(valFilter => {
+    //           return valFilter.mid !== currentCartMerchant.mid
+    //         })
+    //         var dataOrder = {
+    //           transactionId : res.data.results[0].transaction_id,
+    //           totalPayment : requestData.prices,
+    //           paymentType : this.state.paymentType,
+    //           transactionTime : newDate
+    //         };
+    //         this.props.DataOrder(dataOrder);
+    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
+    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+    //         localStorage.removeItem("lastTable")
+    //         localStorage.removeItem("fctable")
+    //         localStorage.removeItem("counterPayment");
+    //         this.setState({ loadButton: true })
+    //         this.props.DoneLoad()
+    //       }, 1000);
+    //     }
+    //     else if(this.state.paymentType === 'WALLET_DANA') {
+    //       this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+    //       setTimeout(() => {
+    //         let filterOtherCart = storageData.filter(valFilter => {
+    //           return valFilter.mid !== currentCartMerchant.mid
+    //         })
+    //         var dataOrder = {
+    //           transactionId : res.data.results[0].transaction_id,
+    //           totalPayment : requestData.prices,
+    //           paymentType : this.state.paymentType,
+    //           transactionTime : newDate
+    //         };
+    //         this.props.DataOrder(dataOrder);
+    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
+    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+    //         localStorage.removeItem("lastTable")
+    //         localStorage.removeItem("fctable")
+    //         localStorage.removeItem("counterPayment");
+    //         window.location.href = res.data.results[0].checkout_url_mobile;
+    //       }, 1000);
+    //     }
+    //     else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+    //       this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+    //       setTimeout(() => {
+    //         let filterOtherCart = storageData.filter(valFilter => {
+    //           return valFilter.mid !== currentCartMerchant.mid
+    //         })
+    //         var dataOrder = {
+    //           transactionId : res.data.results[0].transaction_id,
+    //           totalPayment : requestData.prices,
+    //           paymentType : this.state.paymentType,
+    //           transactionTime : newDate
+    //         };
+    //         this.props.DataOrder(dataOrder);
+    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
+    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+    //         localStorage.removeItem("lastTable")
+    //         localStorage.removeItem("fctable")
+    //         localStorage.removeItem("counterPayment");
+    //         window.location.assign(res.data.results[0].checkout_url_deeplink);
+    //       }, 1000);
+    //     }
+    //     this.removeStorage()
+    //   })
+    //   .catch((err) => {
+    //     if (err.response.data !== undefined) {
+    //       alert(err.response.data.err_message)
+    //       this.props.DoneLoad()
+    //     }
+    //   });
   }
 
   getShopStatus() {
@@ -1367,8 +1466,8 @@ class CartView extends React.Component {
                                   <Skeleton style={{ paddingTop: 10, width: 150}} />
                                   :
                                   <>
-                                    { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
-                                    <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title} {this.state.selectedPromo.discount_amt_type == "PERCENTAGE" ? `${this.state.selectedPromo.discount_amt}%` : null}</div>
+                                    { this.state.notMatchPromo ? <img src={PromoAlert} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
+                                    <div style={{color: this.state.notMatchPromo ? "#e88901" : "#111111"}}>{this.state.selectedPromo.promo_title} {this.state.selectedPromo.discount_amt_type == "PERCENTAGE" ? `${this.state.selectedPromo.discount_amt}%` : null}</div>
                                   </>
                                 }
                               </div>
@@ -1397,9 +1496,9 @@ class CartView extends React.Component {
                       </div>
 
                       <div className='cart-detailprice-desc'>
-                        <div className='orderDetail-detailprice-word'>
+                        <div className='orderDetail-detailDisountPrice-word'>
                           <div>Total Diskon Item</div>
-                          <div>Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
+                          <div>- Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
                         </div>
                       </div>
                       

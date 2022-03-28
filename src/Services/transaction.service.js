@@ -5,6 +5,10 @@ class TransactionService {
         return http.post("pos/v3/web/transaction/add/", body);
     }
 
+    addTransactionTxn(body) {
+        return http.post("/txn/v5/txn-post/", body);
+    }
+
     addProductCart(header, body) {
         return http.post("txn/v2/cart-post/", body, { headers : {
             "table-no" : header.tableNumber,
