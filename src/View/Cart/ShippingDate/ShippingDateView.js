@@ -115,6 +115,7 @@ const ShippingDateView = () => {
             setChoiceDate(true);
             var today = new Date();
             var todayEnd = new Date();
+            var convertTimeOpenFormat = "HH"
 
             if (merchantHourStatus.auto_on_off) {
                 if (merchantHourStatus.merchant_status == "CLOSE") {
@@ -163,8 +164,13 @@ const ShippingDateView = () => {
                         todayEnd.setMinutes(parseInt(closeHour[1]))
                     } else {
                         var closeHour = merchantHourStatus.close_time.split(":")
-                        today.setHours(today.getHours());
-                        today.setMinutes(30)
+                        if (today.getMinutes() > 29) {
+                            today.setHours(today.getHours() + 1)
+                        } else {
+                            today.setHours(today.getHours());
+                            today.setMinutes(30)
+                            convertTimeOpenFormat = "HH:mm"
+                        }
                         todayEnd.setHours(parseInt(closeHour[0]))
                         todayEnd.setMinutes(parseInt(closeHour[1]))
                     }
@@ -174,7 +180,7 @@ const ShippingDateView = () => {
                 setautoOnOff(false)
             }
             var convertDate = moment(new Date(today)).format("yyyy-MM-DD");
-            var convertTime = moment(new Date(today)).format("HH");
+            var convertTime = moment(new Date(today)).format(convertTimeOpenFormat);
             var convertCloseTime = moment(new Date(todayEnd)).format("HH");
             setCurrentDate(convertDate);
             setCurrentTime(convertTime);
