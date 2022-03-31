@@ -24,6 +24,10 @@ class TransactionService {
     getTransactionDetailDineIn(param) {
         return http.get(`/pos/v1/transaction/get/detail/${param.transactionId}`);
     }
+
+    getPromoLimitStatus(param) {
+        return http.get(`/promotion/customer/campaign/v1/validate/${param.campaign_id}`);
+    }
 }
 
 export default new TransactionService();

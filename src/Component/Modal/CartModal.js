@@ -210,15 +210,15 @@ const CartModal = (props) => {
                             </div>
                             :
                             <div className='modalCart-paymentLayout'>
-                                <h1 className='modalCart-paymentTitle'> { props.titlePromo == "Promo tidak dapat diterapkan. Lanjut Pembayaran?" ? props.titlePromo : props.title }</h1>
+                                <h1 className='modalCart-paymentTitle'> { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? props.titlePromo : props.title }</h1>
 
                                 <div className='modalCart-paymentCheck'>
                                     <div className='modalCart-cancelPay' onClick={closeModal}>
-                                        Cek Ulang
+                                        { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "Kembali" : "Cek Ulang" }
                                     </div>
                                     
-                                    <div className='modalCart-confirmPay' onClick={ props.titlePromo == "Promo tidak dapat diterapkan. Lanjut Pembayaran?" ? confirmPromo : confirmPay }>
-                                        Setuju
+                                    <div className='modalCart-confirmPay' onClick={ props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? confirmPromo : confirmPay }>
+                                        { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "Ya" : "Setuju" }
                                     </div>
                                 </div>
                             </div>

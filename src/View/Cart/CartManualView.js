@@ -9,6 +9,7 @@ import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
 import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import CartModal from "../../Component/Modal/CartModal";
+import CartPromoLimitModal from "../../Component/Modal/CartPromoLimitModal";
 import CartCancelModal from "../../Component/Modal/CartCancel";
 import { cart } from "../../App";
 import Cookies from "js-cookie"
@@ -67,6 +68,7 @@ class CartManualView extends React.Component {
       changeUI: true,
       showModal: false,
       showModalCheckPromo: false,
+      showModalPromoLimit: false,
       cancelCartModal: false,
       currentModalTitle: "",
       paymentOption: "Pembayaran Di Kasir",
@@ -498,18 +500,47 @@ class CartManualView extends React.Component {
       .then((res) => {
         if (res.data.results.minutes_remaining < "2") {
           if (this.state.cartReduData.shippingDateType == 1) {
-            this.handlePayment()
+            this.checkingPromoLimitCase()
           } else {
             this.setState({ cancelCartModal: true })
           }
         } else if(res.data.results.minutes_remaining < "31") {
           if (this.state.cartReduData.shippingDateType == 1) {
-            this.handlePayment()
+            this.checkingPromoLimitCase()
           } else {
             this.setState({ cancelCartModal: true })
           }
         } else {
+          this.checkingPromoLimitCase()
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+
+    checkingPromoLimitCase = () => {
+      if (this.props.selectedPromo) {
+        if (!this.state.notMatchPromo) {
+          this.handleCheckingPromoLimit()
+        } else {
           this.handlePayment()
+        }
+      } else {
+        this.handlePayment()
+      }
+    }
+
+    handleCheckingPromoLimit = () => {
+      var reqParam = {
+        campaign_id : this.props.selectedPromo.promo_campaign_id,
+      }
+      TransactionService.getPromoLimitStatus(reqParam)
+      .then((res) => {
+        if (res.status == 200) {
+          this.handlePayment()
+        } else {
+          this.setState({ showModalPromoLimit: true })
         }
       })
       .catch((err) => {
@@ -1154,6 +1185,14 @@ class CartManualView extends React.Component {
       this.setState({ showModalCheckPromo: false })
     }
 
+    detachPromo = () => {
+      localStorage.removeItem("MANUAL_SELECTED_PROMO")
+      Cookies.remove("MANUAL_NOTMATCHPROMO")
+      Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+      Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
+      this.setState({ showModalPromoLimit: false, notMatchPromo: false, selectedPromo: null })
+    }
+
     render() {
       if (this.state.loadButton) {
         return <Redirect to='/orderconfirmation' />
@@ -1199,12 +1238,25 @@ class CartManualView extends React.Component {
             isShow={this.state.showModalCheckPromo}
             onHide={() => this.setModalPromo()}
             title="Pesanan yang Anda buat tidak dapat dibatalkan"
-            titlePromo="Promo tidak dapat diterapkan. Lanjut Pembayaran?"
+            titlePromo="Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?"
             confirmPromo={this.handleCheckingPromo}
           />
         )
       } else {
         promoModal = <></>
+      }
+
+      // Promo Modal Limit
+      let promoLimitModal;
+      if (this.state.showModalPromoLimit === true) {
+        promoLimitModal = (
+          <CartPromoLimitModal
+            isShow={this.state.showModalPromoLimit}
+            onHide={() => this.detachPromo()}
+          />
+        );
+      } else {
+        promoLimitModal = <></>
       }
 
       // Cart Cancel Modal
@@ -1708,6 +1760,7 @@ class CartManualView extends React.Component {
           </div>
           {modal}
           {promoModal}
+          {promoLimitModal}
           {cartCancelModal}
           {this.menuDetail()}
           {this.notifModal()}

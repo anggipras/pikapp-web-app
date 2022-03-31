@@ -15,6 +15,7 @@ import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
 import CheckListIcon from '../../Asset/Icon/ic_check_list.png'
 import CartModal from "../../Component/Modal/CartModal";
+import CartPromoLimitModal from "../../Component/Modal/CartPromoLimitModal";
 import CartCancelModal from "../../Component/Modal/CartCancel";
 import { cart } from "../../App";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
@@ -68,6 +69,7 @@ class CartView extends React.Component {
     changeUI: true,
     showModal: false,
     showModalCheckPromo: false,
+    showModalPromoLimit: false,
     cancelCartModal: false,
     currentModalTitle: "",
     paymentOption: this.props.paymentOption ? this.props.paymentOption : "Pembayaran Di Kasir",
@@ -490,7 +492,32 @@ class CartView extends React.Component {
       if (res.data.results.minutes_remaining < "2") {
         this.setState({ cancelCartModal: true })
       } else {
+        if (this.props.selectedPromo) {
+          if (!this.state.notMatchPromo) {
+            this.handleCheckingPromoLimit()
+          } else {
+            this.handlePayment()
+          }
+        } else {
+          this.handlePayment()
+        }
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  handleCheckingPromoLimit = () => {
+    var reqParam = {
+      campaign_id : this.props.selectedPromo.promo_campaign_id,
+    }
+    TransactionService.getPromoLimitStatus(reqParam)
+    .then((res) => {
+      if (res.status == 200) {
         this.handlePayment()
+      } else {
+        this.setState({ showModalPromoLimit: true })
       }
     })
     .catch((err) => {
@@ -659,116 +686,6 @@ class CartView extends React.Component {
           this.props.DoneLoad()
         }
       })
-
-    // let uuid = uuidV4();
-    // uuid = uuid.replace(/-/g, "");
-    // const date = new Date().toISOString();
-    
-    // Axios(address + "/txn/v5/txn-post/", {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-request-id": uuid,
-    //     "x-request-timestamp": date,
-    //     "x-client-id": clientId,
-    //   },
-    //   method: "POST",
-    //   data: requestData,
-    // })
-    //   .then((res) => {
-    //     if (this.state.paymentType === 'PAY_BY_CASHIER') {
-    //       this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-    //       setTimeout(() => {
-    //         let filterOtherCart = storageData.filter(valFilter => {
-    //           return valFilter.mid !== currentCartMerchant.mid
-    //         })
-    //         var dataOrder = {
-    //           transactionId : res.data.results[0].transaction_id,
-    //           totalPayment : requestData.prices,
-    //           paymentType : this.state.paymentType,
-    //           transactionTime : newDate
-    //         };
-    //         this.props.DataOrder(dataOrder);
-    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
-    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-    //         localStorage.removeItem("lastTable")
-    //         localStorage.removeItem("fctable")
-    //         localStorage.removeItem("counterPayment");
-    //         this.setState({ loadButton: true })
-    //         this.props.DoneLoad()
-    //       }, 1000);
-    //     } 
-    //     else if(this.state.paymentType === 'WALLET_OVO') {
-    //       this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-    //       setTimeout(() => {
-    //         let filterOtherCart = storageData.filter(valFilter => {
-    //           return valFilter.mid !== currentCartMerchant.mid
-    //         })
-    //         var dataOrder = {
-    //           transactionId : res.data.results[0].transaction_id,
-    //           totalPayment : requestData.prices,
-    //           paymentType : this.state.paymentType,
-    //           transactionTime : newDate
-    //         };
-    //         this.props.DataOrder(dataOrder);
-    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
-    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-    //         localStorage.removeItem("lastTable")
-    //         localStorage.removeItem("fctable")
-    //         localStorage.removeItem("counterPayment");
-    //         this.setState({ loadButton: true })
-    //         this.props.DoneLoad()
-    //       }, 1000);
-    //     }
-    //     else if(this.state.paymentType === 'WALLET_DANA') {
-    //       this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
-    //       setTimeout(() => {
-    //         let filterOtherCart = storageData.filter(valFilter => {
-    //           return valFilter.mid !== currentCartMerchant.mid
-    //         })
-    //         var dataOrder = {
-    //           transactionId : res.data.results[0].transaction_id,
-    //           totalPayment : requestData.prices,
-    //           paymentType : this.state.paymentType,
-    //           transactionTime : newDate
-    //         };
-    //         this.props.DataOrder(dataOrder);
-    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
-    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-    //         localStorage.removeItem("lastTable")
-    //         localStorage.removeItem("fctable")
-    //         localStorage.removeItem("counterPayment");
-    //         window.location.href = res.data.results[0].checkout_url_mobile;
-    //       }, 1000);
-    //     }
-    //     else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-    //       this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
-    //       setTimeout(() => {
-    //         let filterOtherCart = storageData.filter(valFilter => {
-    //           return valFilter.mid !== currentCartMerchant.mid
-    //         })
-    //         var dataOrder = {
-    //           transactionId : res.data.results[0].transaction_id,
-    //           totalPayment : requestData.prices,
-    //           paymentType : this.state.paymentType,
-    //           transactionTime : newDate
-    //         };
-    //         this.props.DataOrder(dataOrder);
-    //         localStorage.setItem("payment", JSON.stringify(dataOrder));
-    //         localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-    //         localStorage.removeItem("lastTable")
-    //         localStorage.removeItem("fctable")
-    //         localStorage.removeItem("counterPayment");
-    //         window.location.assign(res.data.results[0].checkout_url_deeplink);
-    //       }, 1000);
-    //     }
-    //     this.removeStorage()
-    //   })
-    //   .catch((err) => {
-    //     if (err.response.data !== undefined) {
-    //       alert(err.response.data.err_message)
-    //       this.props.DoneLoad()
-    //     }
-    //   });
   }
 
   getShopStatus() {
@@ -1101,6 +1018,14 @@ class CartView extends React.Component {
     this.setState({ showModalCheckPromo: false })
   }
 
+  detachPromo = () => {
+    localStorage.removeItem("SELECTED_PROMO")
+    Cookies.remove("NOTMATCHPROMO")
+    Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+    Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
+    this.setState({ showModalPromoLimit: false, notMatchPromo: false, selectedPromo: null })
+  }
+
   render() {
     if (this.state.loadButton) {
       return <Redirect to='/orderconfirmation' />
@@ -1145,12 +1070,25 @@ class CartView extends React.Component {
           isShow={this.state.showModalCheckPromo}
           onHide={() => this.setModalPromo()}
           title="Pesanan yang Anda buat tidak dapat dibatalkan"
-          titlePromo="Promo tidak dapat diterapkan. Lanjut Pembayaran?"
+          titlePromo="Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?"
           confirmPromo={this.handleCheckingPromo}
         />
       )
     } else {
       promoModal = <></>
+    }
+
+    // Promo Modal Limit
+    let promoLimitModal;
+    if (this.state.showModalPromoLimit === true) {
+      promoLimitModal = (
+        <CartPromoLimitModal
+          isShow={this.state.showModalPromoLimit}
+          onHide={() => this.detachPromo()}
+        />
+      );
+    } else {
+      promoLimitModal = <></>
     }
 
     // Cart Cancel Modal
@@ -1545,6 +1483,7 @@ class CartView extends React.Component {
         </div>
         {modal}
         {promoModal}
+        {promoLimitModal}
         {cartCancelModal}
         {this.menuDetail()}
         {this.notifModal()}
