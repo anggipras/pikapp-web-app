@@ -71,7 +71,7 @@ const PromoView = () => {
         ProductService.getPromoList(reqHeader)
         .then((res) => {
             let promoResult = res.data.results
-            if (promoResult == "") {
+            if (promoResult == "" || promoResult.length == 0) {
                 let allListOfPromo = []
                 arrayOfPromoList.forEach(val => {
                     allListOfPromo.push({

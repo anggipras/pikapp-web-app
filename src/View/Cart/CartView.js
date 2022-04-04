@@ -225,10 +225,10 @@ class CartView extends React.Component {
           if (this.state.indexOptionPay != -1) {
             if (this.state.notMatchPromo) {
               this.setState({ showModalCheckPromo: true });
-              this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+              this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?" });
             } else {
               this.setState({ showModal: true });
-              this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+              this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?" });
             }
           }
         }
@@ -1070,7 +1070,7 @@ class CartView extends React.Component {
         <CartModal
           isShow={this.state.showModalCheckPromo}
           onHide={() => this.setModalPromo()}
-          title="Pesanan yang Anda buat tidak dapat dibatalkan"
+          title="Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?"
           titlePromo="Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?"
           confirmPromo={this.handleCheckingPromo}
         />
