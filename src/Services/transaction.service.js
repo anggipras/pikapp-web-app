@@ -22,7 +22,7 @@ class TransactionService {
     }
 
     getTransactionDetailDineIn(param) {
-        return http.get(`/pos/v1/transaction/get/detail/${param.transactionId}`);
+        return http.get(`txn/v3/${param.transactionId}/txn-detail/`);
     }
 
     getPromoLimitStatus(param) {
