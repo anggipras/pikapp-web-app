@@ -173,7 +173,7 @@ const CartModal = (props) => {
 
                     {
                         props.title == "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?"?
-                        <span className='iconWarningLayout' onClick={closeModal}>
+                        <span className='iconWarningLayout' style={{backgroundColor: props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "#E6FBF9" : "#FFF3E0" }} onClick={closeModal}>
                             <img src={ props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? GreenWarningImage : OrangeWarningImage } className='iconWarningImage' alt='' />
                         </span>
                         :

@@ -19,7 +19,7 @@ const CartPromoLimitModal = (props) => {
                         <img src={closeNarrow} className='closeLogoNarrow' alt='' />
                     </span>
 
-                    <span className='iconWarningLayout' onClick={closeModal}>
+                    <span className='iconWarningLayout' style={{backgroundColor: "#E6FBF9" }} onClick={closeModal}>
                         <img src={GreenWarningImage} className='iconWarningImage' alt='' />
                     </span>
 
