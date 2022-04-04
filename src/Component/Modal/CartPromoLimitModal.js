@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import closeNarrow from '../../Asset/Icon/closeNarrow.png'
+import GreenWarningImage from '../../Asset/Icon/ic_txn_green_modal.png'
 import '../../Asset/scss/CartModal.scss'
 
 const CartPromoLimitModal = (props) => {
@@ -18,7 +19,12 @@ const CartPromoLimitModal = (props) => {
                         <img src={closeNarrow} className='closeLogoNarrow' alt='' />
                     </span>
 
+                    <span className='iconWarningLayout' onClick={closeModal}>
+                        <img src={GreenWarningImage} className='iconWarningImage' alt='' />
+                    </span>
+
                     <div className='modalCart-paymentLayout'>
+                        <div className='modalCart-paymentBigTitle'>Oops</div>
                         <h1 className='modalCart-paymentTitle'>Voucher yang Anda gunakan sudah habis. Silakan gunakan voucher lain</h1>
 
                         <div className='modalCart-paymentCheck'>

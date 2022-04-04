@@ -476,7 +476,7 @@ class ProductView extends React.Component {
     ProductService.getPromoList(reqHeader)
     .then((res) => {
       let promoResult = res.data.results
-      if (promoResult == "") {
+      if (promoResult == "" || promoResult.length == 0) {
         this.setState({promoListSize: listLength})
       } else {
         let newListLength = listLength + promoResult.length

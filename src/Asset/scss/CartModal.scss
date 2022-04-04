@@ -84,6 +84,19 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     width: 22px;
 }
 
+.iconWarningLayout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF3E0;
+}
+
+.iconWarningImage {
+    height: 170px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
 .modalCart-detail {
     padding: 40.5px 27px 35px 28px;
 }
@@ -92,7 +105,17 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 73px 27px 60px 28px;
+    padding: 24px 27px 40px 28px;
+}
+
+.modalCart-paymentBigTitle {
+    font-family: $fontFamily-Inter-Bold;
+    font-style: normal;
+    font-size: 24px;
+    color: #111111;
+    mix-blend-mode: normal;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 .modalCart-paymentTitle {
@@ -100,8 +123,8 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 20px;
-    line-height: 20px;
-    color: #111111;
+    line-height: 25px;
+    color: #767676;
     mix-blend-mode: normal;
     text-align: center;
 }
@@ -331,10 +354,6 @@ $fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
     .closeLogoNarrow {
         height: 12px;
         width: 12px;
-    }
-
-    .modalCart-paymentLayout {
-        padding: 50px 43px 35px 36px;
     }
     
     .modalCart-paymentTitle {
