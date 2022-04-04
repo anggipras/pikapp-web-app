@@ -5,41 +5,27 @@ import MenuDetail from "../../Component/Menu/MenuDetail";
 import queryString from "query-string";
 import cartIcon from "../../Asset/Icon/cart_icon.png";
 import { Link } from "react-router-dom";
-import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
-import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
-import Axios from "axios";
 import Cookies from "js-cookie"
-import Storeimg from '../../Asset/Illustration/storeimg2.jpg'
-import Productimage from '../../Asset/Illustration/storeimg.jpg'
 import Logopikapp from '../../Asset/Logo/logo4x.png'
-import NotifIcon from '../../Asset/Icon/status.png'
-import ProfileIcon from '../../Asset/Icon/avatar.png'
-import OpenHourIcon from '../../Asset/Icon/hour.png'
-import CoinIcon from '../../Asset/Icon/coin.png'
-import LocationIcon from '../../Asset/Icon/location.png'
-import PhoneIcon from '../../Asset/Icon/phone.png';
 import WhatsAppIcon from '../../Asset/Icon/whatsapp-icon.png';
-import StarIcon from '../../Asset/Icon/star.png'
-import ArrowIcon from '../../Asset/Icon/arrowselect.png'
 import OrderStatusIcon from '../../Asset/Icon/order-icon-green.png'
-import HeaderLogo from '../../Asset/Icon/pikapp-logo.png'
 import ShoppingBagLogo from '../../Asset/Icon/shopping-bag.png'
-import ProductListIcon from '../../Asset/Icon/product-list.png'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { ValidQty, OpenSelect, LoadingButton, DoneLoad, IsManualTxn } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import FailedModal from "../../Component/Modal/FailedModal";
-import { Redirect } from "react-router-dom";
-import { useHistory } from "react-router-dom";
 import { firebaseAnalytics } from '../../firebaseConfig';
 import Carousel from 'react-bootstrap/Carousel';
 import { withRouter } from 'react-router-dom';
 import VoucherIcon from "../../Asset/Icon/ic_voucher.png";
 import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
+import ProductService from "../../Services/product.service";
+import MerchantService from "../../Services/merchant.service";
+import TransactionService from "../../Services/transaction.service";
+import AnalyticsService from "../../Services/analytics.service";
 
 var currentExt = {
   detailCategory: [
@@ -160,7 +146,8 @@ class ProductView extends React.Component {
     merchantHourGracePeriod: null, // ex: 30
     merchantHourNextOpenDay: null, // ex: Sunday
     merchantHourNextOpenTime: null, // ex: 10:00
-    merchantHourAutoOnOff: null // ex: true or false
+    merchantHourAutoOnOff: null, // ex: true or false
+    promoListSize: 0
   };
 
   timeout = null
@@ -198,32 +185,27 @@ class ProductView extends React.Component {
       username = this.props.match.params.username;
     }
 
-    this.sendTracking(mid);
+    this.getAllProducts(mid, notab, username);
     this.getLinkTree(username);
+    this.sendTracking(mid);
+  }
 
+  getAllProducts(mid, notab, username) {
     let addressRoute
     let latitude = -6.28862
     let longitude = 106.71789
     let longlat = { lat: latitude, lon: longitude }
     localStorage.setItem("longlat", JSON.stringify(longlat))
-    addressRoute = address + "home/v3/detail/merchant/" + longitude + "/" + latitude + "/"
 
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
+    var reqHeader = {
+      token : "PUBLIC",
+      mid : mid,
+      domain : username,
+      latitude : latitude,
+      longitude : longitude
+    }
 
-    Axios(addressRoute, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "mid": mid,
-        "domain": username
-      },
-      method: "GET"
-    })
+    ProductService.getDetailMerchant(reqHeader)
       .then((res) => {
         res.data.results.username = username;
         var currentMerchant = {
@@ -379,83 +361,38 @@ class ProductView extends React.Component {
 
         this.setState({ productAllPage : allProduct });
 
-        Axios(address + "merchant/v1/shop/status/", {
-          headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token": "PUBLIC",
-            "mid": selectedMerchant[0].mid,
-          },
-          method: "GET"
-        }).then((shopStatusRes) => {
-          let merchantHourCheckingResult = shopStatusRes.data.results
-          this.setState({ 
-            merchantHourStatus: merchantHourCheckingResult.merchant_status, 
-            merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-            merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
-            merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-            merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
-            merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
-           })
-          this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-          this.setState({ productCategpersizeOri : this.state.productCategpersize });
-          document.addEventListener('scroll', this.loadMoreMerchant)
-          document.addEventListener('scroll', this.onScrollCart)
+        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+        this.setState({ productCategpersizeOri : this.state.productCategpersize });
+        document.addEventListener('scroll', this.loadMoreMerchant)
+        document.addEventListener('scroll', this.onScrollCart)
 
-          if (localStorage.getItem("productTour") == 1) {
-            if (this.props.AuthRedu.isMerchantQR === false) {
-              this.state.steptour.shift();
-            }
-            this.setState({ startTour: true });
+        if (localStorage.getItem("productTour") == 1) {
+          if (this.props.AuthRedu.isMerchantQR === false) {
+            this.state.steptour.shift();
           }
-          else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-            this.setState({ startTour: true });
-          }
+          this.setState({ startTour: true });
+        }
+        else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+          this.setState({ startTour: true });
+        }
 
-          if(value.mid) {
-            this.setState({ isManualTxn : false });
-            Cookies.set("isManualTxn", 0)
-            this.props.IsManualTxn(false);
-            localStorage.setItem("isManualTxn", false);
-          } else {
-            this.setState({ isManualTxn : true });
-            Cookies.set("isManualTxn", 1)
-            this.props.IsManualTxn(true);
-            localStorage.setItem("isManualTxn", true);
-          }
+        if(mid) {
+          this.setState({ isManualTxn : false });
+          Cookies.set("isManualTxn", 0)
+          this.props.IsManualTxn(false);
+          localStorage.setItem("isManualTxn", false);
+        } else {
+          this.setState({ isManualTxn : true });
+          Cookies.set("isManualTxn", 1)
+          this.props.IsManualTxn(true);
+          localStorage.setItem("isManualTxn", true);
+        }
 
-          this.setState({ totalProduct : res.data.results.products.length });
-        }).catch((err) => {
-          this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-          this.setState({ productCategpersizeOri : this.state.productCategpersize });
-          document.addEventListener('scroll', this.loadMoreMerchant)
+        this.setState({ totalProduct : res.data.results.products.length });
 
-          if (localStorage.getItem("productTour") == 1) {
-            if (this.props.AuthRedu.isMerchantQR === false) {
-              this.state.steptour.shift();
-            }
-            this.setState({ startTour: true });
-          }
-          else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-            this.setState({ startTour: true });
-          }
-
-          if(value.mid) {
-            this.setState({ isManualTxn : false });
-            Cookies.set("isManualTxn", 0)
-            this.props.IsManualTxn(false);
-            localStorage.setItem("isManualTxn", false);
-          } else {
-            this.setState({ isManualTxn : true });
-            Cookies.set("isManualTxn", 1)
-            this.props.IsManualTxn(true);
-            localStorage.setItem("isManualTxn", true);
-          }
-
-          this.setState({ totalProduct : res.data.results.products.length });
-        })
+        // get synchronous function
+        this.getPromoList(0, 20, 0);
+        this.getShopStatus(res.data.results.mid);
 
         // let newImage = Storeimg
         // Axios.get(currentMerchant.storeImage)
@@ -476,31 +413,6 @@ class ProductView extends React.Component {
         //       document.addEventListener('scroll', this.loadMoreMerchant)
         //       document.addEventListener('scroll', this.onScrollCart)
         //     });
-
-        //     if (localStorage.getItem("productTour") == 1) {
-        //       if (this.props.AuthRedu.isMerchantQR === false) {
-        //         this.state.steptour.shift();
-        //       }
-        //       this.setState({ startTour: true });
-        //     }
-        //     else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-        //       this.setState({ startTour: true });
-        //     }
-
-        //     if(value.mid) {
-        //       this.setState({ isManualTxn : false });
-        //       Cookies.set("isManualTxn", 0)
-        //       this.props.IsManualTxn(false);
-        //       localStorage.setItem("isManualTxn", false);
-        //     } else {
-        //       this.setState({ isManualTxn : true });
-        //       Cookies.set("isManualTxn", 1)
-        //       this.props.IsManualTxn(true);
-        //       localStorage.setItem("isManualTxn", true);
-        //     }
-
-        //     this.setState({ totalProduct : res.data.results.products.length });
-        //     this.setState({ merchantHourStatus : "OPEN", merchantHourOpenTime : "10:00", merchantHourGracePeriod : "31" })
         //   }).catch(err => {
         //     console.log(err)
         //     newImage = Storeimg
@@ -520,25 +432,65 @@ class ProductView extends React.Component {
         //       this.setState({ productCategpersizeOri : this.state.productCategpersize });
         //       document.addEventListener('scroll', this.loadMoreMerchant)
         //     });
-
-        //     if (localStorage.getItem("productTour") == 1) {
-        //       if (this.props.AuthRedu.isMerchantQR === false) {
-        //         this.state.steptour.shift();
-        //       }
-        //       this.setState({ startTour: true });
-        //     }
-        //     else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-        //       this.setState({ startTour: true });
-        //     }
         //   })
       })
       .catch((err) => {
         console.log(err);
-        console.log(this.state);
         if(err.toJSON().message === 'Network Error'){
           this.setState({ showFailed: true })
         }
       });
+  }
+
+  getShopStatus(mid) {
+    var reqHeader = {
+      token : "PUBLIC",
+      mid : mid
+    }
+
+    MerchantService.checkShopStatus(reqHeader)
+    .then((res) => {
+      this.setState({ 
+        merchantHourStatus: res.data.results.merchant_status, 
+        merchantHourOpenTime: res.data.results.open_time, 
+        merchantHourGracePeriod: res.data.results.minutes_remaining,
+        merchantHourNextOpenDay: res.data.results.next_open_day,
+        merchantHourNextOpenTime: res.data.results.next_open_time,
+        merchantHourAutoOnOff: res.data.results.auto_on_off
+      })
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  getPromoList = async (page, size, listLength) => {
+    let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+    var reqHeader = {
+      token : "PUBLIC",
+      page  : page,
+      size  : size,
+      mid   : selectedMerchant[0].mid
+    }
+
+    ProductService.getPromoList(reqHeader)
+    .then((res) => {
+      let promoResult = res.data.results
+      if (promoResult == "" || promoResult.length == 0) {
+        this.setState({promoListSize: listLength})
+      } else {
+        let newListLength = listLength + promoResult.length
+        this.mediumPromoList(page, size, newListLength)
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  mediumPromoList = (page, size, newListLength) => {  
+    let newPage = page + 1
+    this.getPromoList(newPage, size, newListLength)
   }
 
   componentDidUpdate() {
@@ -931,25 +883,17 @@ class ProductView extends React.Component {
       tableNumber = 0
     }
 
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
-    Axios(address + "txn/v2/cart-post/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "table-no": tableNumber.toString()
-      },
-      method: "POST",
-      data: {
-        mid: this.state.data.mid,
-        pid: this.state.currentData.productId,
-        notes: newNotes,
-        qty: currentExt.detailCategory[0].amount,
-      }
-    })
+    var reqHeader = {
+      tableNumber: tableNumber.toString()
+    }
+
+    var reqBody = {
+      mid: this.state.data.mid,
+      pid: this.state.currentData.productId,
+      notes: newNotes,
+      qty: currentExt.detailCategory[0].amount,
+    }
+    TransactionService.addProductCart(reqHeader, reqBody)
       .then(() => {
         console.log('addtocart succeed');
       })
@@ -1248,20 +1192,12 @@ class ProductView extends React.Component {
   }
 
   getLinkTree = (username) => {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC",
+      username : username
+    }
 
-    Axios(address + "home/v1/link-tree-list-by-domain/" + username, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "GET",  
-    })
+    ProductService.getLinkTreeByDomain(reqHeader)
     .then((res) => {
       var linkData = [];
 
@@ -1302,27 +1238,19 @@ class ProductView extends React.Component {
   goToExternalLink = (link) => {
     window.open(link, '_blank');
 
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC"
+    }
 
-    Axios(address + "home/v1/event/add", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "POST",  
-      data: {
-        merchant_id: this.state.data.mid,
-        event_type: "LINK_TREE_DETAIL",
-        page_name: window.location.pathname
-      }
-    })
+    var reqBody = {
+      merchant_id: this.state.data.mid,
+      event_type: "LINK_TREE_DETAIL",
+      page_name: window.location.pathname
+    }
+
+    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
     .then((res) => {
-      console.log(res.data.results);
+      console.log(res);
     })
     .catch((err) => {
       console.log(err);
@@ -1367,55 +1295,19 @@ class ProductView extends React.Component {
   }
 
   sendTracking(mid) {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC"
+    }
 
-    Axios(address + "home/v1/event/add", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "POST",  
-      data: {
-        merchant_id: mid,
-        event_type: "VIEW_DETAIL",
-        page_name: window.location.pathname
-      }
-    })
+    var reqBody = {
+      merchant_id: mid,
+      event_type: "VIEW_DETAIL",
+      page_name: window.location.pathname
+    }
+
+    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
     .then((res) => {
-      console.log(res.data.results);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
-  sendTracking(mid) {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
-
-    Axios(address + "home/v1/event/add", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token" : "PUBLIC"
-      },
-      method: "POST",  
-      data: {
-        merchant_id: mid,
-        event_type: "VIEW_DETAIL",
-        page_name: window.location.pathname
-      }
-    })
-    .then((res) => {
-      console.log("SUCCEED");
+      console.log(res);
     })
     .catch((err) => {
       console.log(err);
@@ -1466,12 +1358,16 @@ class ProductView extends React.Component {
         return null
       }
     } else {
-      return (
-        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-          <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
-        </div>
-      )
+      if (this.state.merchantHourAutoOnOff != null) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+          </div>
+        )
+      } else {
+        return null
+      }
     }
   }
 
@@ -1749,22 +1645,27 @@ class ProductView extends React.Component {
           </div>
         </div> */}
 
-        {/* <div className='promo-voucherinfo'>
-          <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
-            <div className='promo-detailContent'>
-                  <div className='promo-leftSide'>
-                    <img className='promo-img-icon' src={VoucherIcon} alt='' />
-                    <div className='promo-title'>3 Voucher Diskon Tersedia</div>
-                  </div>
+        {
+          this.state.promoListSize != 0 ?
+          <div className='promo-voucherinfo'>
+            <Link to={{ pathname: "/promo", state: { title : "Daftar Diskon Yang Tersedia di Toko", alert: 0, alertStatus : { phoneNumber: "0", paymentType : 0 } }}} style={{ textDecoration: "none", width: "100%" }}>
+              <div className='promo-detailContent'>
+                    <div className='promo-leftSide'>
+                      <img className='promo-img-icon' src={VoucherIcon} alt='' />
+                      <div className='promo-title'>{this.state.promoListSize} Voucher Diskon Tersedia</div>
+                    </div>
 
-                  <span className="promo-arrowright">
-                    <img className="promo-arrowright-icon" src={ArrowRight} />
-                  </span>
-            </div>
-          </Link>
-        </div> */}
+                    <span className="promo-arrowright">
+                      <img className="promo-arrowright-icon" src={ArrowRight} />
+                    </span>
+              </div>
+            </Link>
+          </div>
+          :
+          null
+        }
 
-        <div className='merchant-section' style={{ backgroundColor: "white" }}>
+        <div className='merchant-section' style={{ backgroundColor: "white", top: this.state.promoListSize == 0 ? "50px" : "140px"}}>
           <div className='inside-merchantSection'>
             <div className='merchant-category'>
               <div className='merchantdetail-category-section'>

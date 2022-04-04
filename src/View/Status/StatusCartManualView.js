@@ -1,27 +1,17 @@
 import React, { createRef } from "react";
-import RegisterDialog from "../../Component/Authentication/RegisterDialog";
 import { firebaseAnalytics } from "../../firebaseConfig";
-import Axios from "axios";
-import { v4 as uuidV4 } from "uuid";
-import sha256 from "crypto-js/hmac-sha256";
-import { address, clientId, secret } from "../../Asset/Constant/APIConstant";
-import Cookies from "js-cookie";
 import pikappLogo from "../../Asset/Logo/logo4x.png";
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
-import ArrowDownColor from "../../Asset/Icon/ArrowDownColor.png";
-import diningTableColor from "../../Asset/Icon/diningTableColor.png";
-import takeawayColor from "../../Asset/Icon/takeawayColor.png";
-import CashierPayment from "../../Asset/Icon/CashierPayment.png";
 import OvoPayment from "../../Asset/Icon/ovo_icon.png";
 import DanaPayment from "../../Asset/Icon/dana_icon.png";
 import ShopeePayment from "../../Asset/Icon/shopee_icon.png";
 import NoTransaction from "../../Asset/Icon/notrans.png";
-import ManualIcon from "../../Asset/Icon/call.png";
-import OrderListStatus from "../../Component/Modal/OrderListStatusModal";
 import moment from "moment";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { DataDetail, DataDetailTxn } from "../../Redux/Actions";
+import TransactionService from "../../Services/transaction.service";
+import AnalyticsService from "../../Services/analytics.service";
 
 let interval = createRef();
 
@@ -117,50 +107,24 @@ export class StatusCartManualView extends React.Component {
   }
 
   getTransactionDetail() {
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    let historyTransAPI = address + '/pos/v1/transaction/get/detail/'
-    Axios(historyTransAPI, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "invoice" : this.state.transactionId
-      },
-      method: "GET",
+    var reqHeader = {
+      invoice : this.state.transactionId
+    }
+    
+    TransactionService.getTransactionDetailDelivery(reqHeader)
+    .then((res) => {
+      var results = res.data.results;
+      var stateData = { ...this.state };
+      stateData.data.pop();
+      
+      stateData.data.push(results);
+      this.setState({ data: stateData.data, staticCountDown: true });
+      this.props.DataDetailTxn(results);
+      localStorage.setItem("deliveryData", JSON.stringify(results));
     })
-      .then((res) => {
-        var results = res.data.results;
-        var stateData = { ...this.state };
-        stateData.data.pop();
-        // results.forEach((result) => {
-        //   stateData.data.push({
-        //     title: result.merchant_name,
-        //     distance: "",
-        //     quantity: result.total_product,
-        //     status: result.status,
-        //     biz_type: result.biz_type,
-        //     payment: result.payment_with,
-        //     transactionId: result.transaction_id,
-        //     transactionTime: result.transaction_time,
-        //     transactionCountDown: result.expiry_date,
-        //     totalPrice: result.total_price,
-        //     timerMinutes: 0,
-        //     timerSeconds: 0,
-        //     stopInterval: true,
-        //   });
-        // });
-        stateData.data.push(results);
-        // console.log(stateData.data);
-        this.setState({ data: stateData.data, staticCountDown: true });
-        this.props.DataDetailTxn(results);
-        localStorage.setItem("deliveryData", JSON.stringify(results));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .catch((err) => {
+      console.log(err);
+    })
   }
 
   contentStatus = (value, bimg, blab, pimg, plab, pmethod, plogo) => {
@@ -219,14 +183,20 @@ export class StatusCartManualView extends React.Component {
               {
                   value.productList.map((product, indprod) => {
                       return (
-                          <div className="status-cartmanual-transaction-centerSide">
+                          <div key={indprod} className="status-cartmanual-transaction-centerSide">
                               <div className="status-cartmanual-transaction-item">
                                 <div className="status-cartmanual-section-quantity">
                                     <h3  className='status-cartmanual-content-quantity'>{product.quantity}x</h3>
                                 </div>
                                 <div className="status-cartmanual-section-item">
                                     <h3 className='status-cartmanual-content-item'>{product.product_name}</h3>
-                                    <h3 className='status-cartmanual-content-desc'>{product.notes}</h3>
+                                    <h3 className='status-cartmanual-content-desc'>{product.extra_menus}</h3>
+                                    {
+                                      product.notes ?
+                                      <h3 className='status-cartmanual-content-desc'><span className="status-cartmanual-content-notes">Catatan : </span>{product.notes}</h3>
+                                      :
+                                      <></>
+                                    }
                                 </div>
                               </div>
                               <div>
@@ -312,86 +282,86 @@ export class StatusCartManualView extends React.Component {
     );
   };
 
-  countDownTimer = () => {
-    this.state.data.forEach((valTime, indTime) => {
-      if (valTime.status === "OPEN") {
-        // get future time
+  // countDownTimer = () => {
+  //   this.state.data.forEach((valTime, indTime) => {
+  //     if (valTime.status === "OPEN") {
+  //       // get future time
 
-        valTime.transactionCountDown = valTime.transactionCountDown.replace(/ /g, "T");
-        let eventTime = new Date(valTime.transactionCountDown).getTime();
+  //       valTime.transactionCountDown = valTime.transactionCountDown.replace(/ /g, "T");
+  //       let eventTime = new Date(valTime.transactionCountDown).getTime();
 
-        interval = setInterval(() => {
-          // based on time set in user's computer time / OS
-          const currentTime = new Date().getTime();
-          const distance = eventTime - currentTime;
+  //       interval = setInterval(() => {
+  //         // based on time set in user's computer time / OS
+  //         const currentTime = new Date().getTime();
+  //         const distance = eventTime - currentTime;
 
-          const minutes = Math.floor(
-            (distance % (1000 * 60 * 60)) / (1000 * 60)
-          );
-          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  //         const minutes = Math.floor(
+  //           (distance % (1000 * 60 * 60)) / (1000 * 60)
+  //         );
+  //         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-          let newMinutes = valTime.timerMinutes;
-          newMinutes = minutes;
+  //         let newMinutes = valTime.timerMinutes;
+  //         newMinutes = minutes;
 
-          let newSeconds = valTime.timerSeconds;
-          newSeconds = seconds;
+  //         let newSeconds = valTime.timerSeconds;
+  //         newSeconds = seconds;
 
-          let changeData = [...this.state.data];
-          if (distance < 0) {
-            console.log(changeData[indTime].stopInterval, indTime);
-            if (changeData[indTime].stopInterval) {
-              clearInterval(interval.current);
-              let lastMinutes = valTime.timerMinutes;
-              lastMinutes = "0";
-              changeData[indTime].timerMinutes = lastMinutes;
+  //         let changeData = [...this.state.data];
+  //         if (distance < 0) {
+  //           console.log(changeData[indTime].stopInterval, indTime);
+  //           if (changeData[indTime].stopInterval) {
+  //             clearInterval(interval.current);
+  //             let lastMinutes = valTime.timerMinutes;
+  //             lastMinutes = "0";
+  //             changeData[indTime].timerMinutes = lastMinutes;
 
-              let lastSeconds = valTime.timerSeconds;
-              lastSeconds = "0";
-              changeData[indTime].timerSeconds = lastSeconds;
-              changeData[indTime].stopInterval = false;
+  //             let lastSeconds = valTime.timerSeconds;
+  //             lastSeconds = "0";
+  //             changeData[indTime].timerSeconds = lastSeconds;
+  //             changeData[indTime].stopInterval = false;
 
-              let uuid = uuidV4();
-              uuid = uuid.replace(/-/g, "");
-              const date = new Date().toISOString();
+  //             let uuid = uuidV4();
+  //             uuid = uuid.replace(/-/g, "");
+  //             const date = new Date().toISOString();
 
-              var bodyFormData = new FormData();
-              bodyFormData.append("transaction_id", valTime.transactionId);
-              bodyFormData.append("status", "FAILED");
+  //             var bodyFormData = new FormData();
+  //             bodyFormData.append("transaction_id", valTime.transactionId);
+  //             bodyFormData.append("status", "FAILED");
 
-              var options = {
-                method: "post",
-                url: address + "txn/v2/txn-update/",
-                headers: {
-                  "x-client-id": clientId,
-                  "x-request-id": uuid,
-                  "x-request-timestamp": date,
-                },
-                data: bodyFormData,
-              };
+  //             var options = {
+  //               method: "post",
+  //               url: address + "txn/v2/txn-update/",
+  //               headers: {
+  //                 "x-client-id": clientId,
+  //                 "x-request-id": uuid,
+  //                 "x-request-timestamp": date,
+  //               },
+  //               data: bodyFormData,
+  //             };
 
-              Axios(options)
-                .then(() => {
-                  this.setState({ data: changeData, updateStatus: true });
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }
-          } else {
-            if (valTime.payment === "WALLET_OVO") {
-              if (newSeconds < 10) {
-                clearInterval(interval.current);
-                window.location.reload();
-              }
-            }
-            changeData[indTime].timerMinutes = newMinutes;
-            changeData[indTime].timerSeconds = newSeconds;
-            this.setState({ data: changeData, staticCountDown: false });
-          }
-        }, 1000);
-      }
-    });
-  };
+  //             Axios(options)
+  //               .then(() => {
+  //                 this.setState({ data: changeData, updateStatus: true });
+  //               })
+  //               .catch((err) => {
+  //                 console.log(err);
+  //               });
+  //           }
+  //         } else {
+  //           if (valTime.payment === "WALLET_OVO") {
+  //             if (newSeconds < 10) {
+  //               clearInterval(interval.current);
+  //               window.location.reload();
+  //             }
+  //           }
+  //           changeData[indTime].timerMinutes = newMinutes;
+  //           changeData[indTime].timerSeconds = newSeconds;
+  //           this.setState({ data: changeData, staticCountDown: false });
+  //         }
+  //       }, 1000);
+  //     }
+  //   });
+  // };
 
   contentMainView = () => {
     let bizImage;
@@ -596,31 +566,23 @@ export class StatusCartManualView extends React.Component {
   }
 
   sendTracking() {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
+    var reqHeader = {
+      token : "PUBLIC"
+    }
 
-    Axios(address + "home/v1/event/add", {
-        headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token" : "PUBLIC"
-        },
-        method: "POST",  
-        data: { 
-            merchant_id: "-",
-            event_type: "VIEW_DETAIL",
-            page_name: window.location.pathname
-        }
-    })
+    var reqBody = {
+      merchant_id: "-",
+      event_type: "VIEW_DETAIL",
+      page_name: window.location.pathname
+    }
+    
+    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
     .then((res) => {
-        console.log(res.data.results);
+      console.log(res);
     })
     .catch((err) => {
-        console.log(err);
-    });
+      console.log(err);
+    })
   }
 
   render() {

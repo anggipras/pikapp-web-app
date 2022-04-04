@@ -13,7 +13,9 @@ import ArrowRight from "../../Asset/Icon/arrowright-icon.png";
 import PromoAlert from "../../Asset/Icon/ic_promo_alert.png";
 import NoMatchPromo from "../../Asset/Icon/ic_promo_match.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
+import CheckListIcon from '../../Asset/Icon/ic_check_list.png'
 import CartModal from "../../Component/Modal/CartModal";
+import CartPromoLimitModal from "../../Component/Modal/CartPromoLimitModal";
 import CartCancelModal from "../../Component/Modal/CartCancel";
 import { cart } from "../../App";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
@@ -30,6 +32,9 @@ import { LoadingButton, DoneLoad } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig'
 import moment from "moment";
+import Skeleton from "react-loading-skeleton";
+import MerchantService from "../../Services/merchant.service";
+import TransactionService from "../../Services/transaction.service";
 
 var currentExt = {
   detailCategory: [
@@ -57,11 +62,14 @@ var phoneNumber = ''
 
 class CartView extends React.Component {
   state = {
+    promoLoading: false,
     phoneNumberState: this.props.phoneNum ? this.props.phoneNum : '',
     selectedPromo: this.props.selectedPromo ? this.props.selectedPromo : null,
     notMatchPromo: this.props.notMatchPromo !== undefined ? this.props.notMatchPromo : false,
     changeUI: true,
     showModal: false,
+    showModalCheckPromo: false,
+    showModalPromoLimit: false,
     cancelCartModal: false,
     currentModalTitle: "",
     paymentOption: this.props.paymentOption ? this.props.paymentOption : "Pembayaran Di Kasir",
@@ -156,31 +164,7 @@ class CartView extends React.Component {
       this.setState({ startTour : true});
     }
 
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-    Axios(address + "merchant/v1/shop/status/", {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-        "token": "PUBLIC",
-        "mid": selectedMerchant[0].mid,
-      },
-      method: "GET"
-    }).then((shopStatusRes) => {
-      let merchantHourCheckingResult = shopStatusRes.data.results
-      this.setState({ 
-        merchantHourStatus: merchantHourCheckingResult.merchant_status, 
-        merchantHourOpenTime: merchantHourCheckingResult.open_time, 
-        merchantHourGracePeriod: merchantHourCheckingResult.minutes_remaining,
-        merchantHourNextOpenDay: merchantHourCheckingResult.next_open_day,
-        merchantHourNextOpenTime: merchantHourCheckingResult.next_open_time,
-        merchantHourAutoOnOff: merchantHourCheckingResult.auto_on_off
-        })
-    }).catch((err) => console.log(err))
+    this.getShopStatus();
   }
 
   componentDidUpdate() {
@@ -237,9 +221,16 @@ class CartView extends React.Component {
       });
     } else if (data === "payment-checking") {
       if (this.state.merchantHourAutoOnOff) {
-        if (this.state.indexOptionPay != -1 && !this.state.notMatchPromo) {
-          this.setState({ showModal: true });
-          this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan" });
+        if (!this.state.promoLoading) {
+          if (this.state.indexOptionPay != -1) {
+            if (this.state.notMatchPromo) {
+              this.setState({ showModalCheckPromo: true });
+              this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?" });
+            } else {
+              this.setState({ showModal: true });
+              this.setState({ currentModalTitle: "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?" });
+            }
+          }
         }
       }
     }
@@ -308,10 +299,7 @@ class CartView extends React.Component {
         cart.splice(1)
         localStorage.setItem("cart", JSON.stringify(newAllCart))
         window.history.back()
-        localStorage.removeItem("PAYMENT_TYPE")
-        localStorage.removeItem("PHONE_NUMBER")
-        localStorage.removeItem("SELECTED_PROMO")
-        Cookies.remove("NOTMATCHPROMO")
+        this.removeStorage()
       } else {
         let filterMerchantCart = newAllCart.filter(valueCart => {
           return valueCart.mid === mid
@@ -324,6 +312,8 @@ class CartView extends React.Component {
         }
       }
     }
+
+    this.checkingTotalPriceWithPromo()
   }
 
   handleIncrease(e, ind, mid) {
@@ -347,6 +337,51 @@ class CartView extends React.Component {
 
     localStorage.setItem('cart', JSON.stringify(allCart))
     this.setState({ updateData: 'updated' })
+
+    this.checkingTotalPriceWithPromo()
+  }
+
+  checkingTotalPriceWithPromo = () => {
+    if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+      this.setPromoLoading(true)
+      const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+      let storageData = JSON.parse(localStorage.getItem('cart'))
+      let storeList = storageData.filter((store) => {
+        if (store.mid !== "") {
+          return store;
+        }
+      });
+      let selectedMerch = storeList.filter(store => {
+        return store.mid === currentCartMerchant.mid
+      });
+
+      let totalPaymentCart = 0
+      selectedMerch[0].food.forEach(thefood => {
+        totalPaymentCart += thefood.foodTotalPrice
+      })
+      let getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
+      let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
+      if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.biz_type) && totalPaymentCart >= promoMinPrice) {
+        Cookies.set("NOTMATCHPROMO", { theBool: false })
+        this.setState({ notMatchPromo: false })
+      } else {
+        Cookies.set("NOTMATCHPROMO", { theBool: true })
+        Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+        Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
+        this.setState({ notMatchPromo: true })
+      }
+      this.setPromoLoading(false)
+    }
+  }
+
+  setPromoLoading = (bool) => {
+    if (bool) {
+      this.setState({ promoLoading: bool })
+    } else {
+      setTimeout(() => {
+        this.setState({ promoLoading: bool })
+      }, 1000);
+    }
   }
 
   handleOption = (data) => {
@@ -368,6 +403,7 @@ class CartView extends React.Component {
       let getSelectedPromo
       if (data == 0) {
         if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+          this.setPromoLoading(true)
           getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
           let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
           if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("DINE_IN") && finalProduct[0].totalPrice >= promoMinPrice) {
@@ -375,29 +411,37 @@ class CartView extends React.Component {
             this.setState({ notMatchPromo: false })
           } else {
             Cookies.set("NOTMATCHPROMO", { theBool: true })
+            Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+            Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
             this.setState({ notMatchPromo: true })
           }
+          this.setPromoLoading(false)
         }
         this.setState({ biz_type: "DINE_IN", eat_type: "Makan Di Tempat", indexOptionEat: 0 })
       } else {
         if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+          this.setPromoLoading(true)
           getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
           let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
-          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("PICKUP") && finalProduct[0].totalPrice >= promoMinPrice) {
+          if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes("TAKE_AWAY") && finalProduct[0].totalPrice >= promoMinPrice) {
             Cookies.set("NOTMATCHPROMO", { theBool: false })
             this.setState({ notMatchPromo: false })
           } else {
-            Cookies.set("NOTMATCHPROMO", { theBool: true }) 
+            Cookies.set("NOTMATCHPROMO", { theBool: true })
+            Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+            Cookies.remove("INDEX_SELECTED_PROMO_MANUAL") 
             this.setState({ notMatchPromo: true })
           }
+          this.setPromoLoading(false)
         }
         this.setState({ biz_type: "TAKE_AWAY", eat_type: "Bungkus / Takeaway", indexOptionEat: data })
       }
     } else if (this.state.currentModalTitle === "Bayar Pakai Apa") {
       let getSelectedPromo
       if (JSON.parse(localStorage.getItem("SELECTED_PROMO"))) {
+        this.setPromoLoading(true)
         getSelectedPromo = JSON.parse(localStorage.getItem("SELECTED_PROMO"))
-        let eatMethod = this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type
+        let eatMethod = this.state.biz_type
         let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
         let paymentTypeData = ""
         if (data === 0) {
@@ -415,8 +459,11 @@ class CartView extends React.Component {
           this.setState({ notMatchPromo: false })
         } else {
           Cookies.set("NOTMATCHPROMO", { theBool: true })
+          Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+          Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
           this.setState({ notMatchPromo: true })
         }
+        this.setPromoLoading(false)
       }
       if (data === 0) {
         localStorage.setItem("PAYMENT_TYPE", JSON.stringify({ paymentType: "PAY_BY_CASHIER", paymentOption: "Pembayaran Di Kasir", indexOptionPay: 0 }))
@@ -434,202 +481,246 @@ class CartView extends React.Component {
     }
   }
 
-  handlePayment = () => {
-    let theUUID = uuidV4();
-      theUUID = theUUID.replace(/-/g, "");
-      const dateNow = new Date().toISOString();
-      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-      Axios(address + "merchant/v1/shop/status/", {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": theUUID,
-          "x-request-timestamp": dateNow,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "mid": selectedMerchant[0].mid,
-        },
-        method: "GET"
-      }).then((shopStatusRes) => {
-        let merchantHourCheckingResult = shopStatusRes.data.results
-        if (merchantHourCheckingResult.minutes_remaining < "2") {
-          this.setState({ cancelCartModal: true })
+  handleCheckingShopStatus = () => {
+    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+    var reqHeader = {
+      token : "PUBLIC",
+      mid : selectedMerchant[0].mid
+    }
+    MerchantService.checkShopStatus(reqHeader)
+    .then((res) => {
+      if (res.data.results.minutes_remaining < "2") {
+        this.setState({ cancelCartModal: true })
+      } else {
+        if (this.props.selectedPromo) {
+          if (!this.state.notMatchPromo) {
+            this.handleCheckingPromoLimit()
+          } else {
+            this.handlePayment()
+          }
         } else {
-          this.props.LoadingButton()
-          const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-          let storageData = JSON.parse(localStorage.getItem('cart'))
-          let noTab = this.props.noTable ? this.props.noTable : 0
-          let allMenu = storageData.filter(filterCart => {
-            return filterCart.mid === currentCartMerchant.mid
-          })
-          let selectedProd = []
-      
-          allMenu[0].food.forEach(selectMenu => {
-            let newlistArr = ''
-            let extraprice = 0
-            selectMenu.foodListCheckbox.forEach((val) => {
-              val.forEach((val2) => {
-                newlistArr += `${val2.name}, `
-                extraprice += val2.price
-              })
-            })
-      
-            selectMenu.foodListRadio.forEach((val) => {
-              val.forEach((val2) => {
-                newlistArr += `${val2.name}, `
-                extraprice += val2.price
-              })
-            })
-      
-            newlistArr += selectMenu.foodNote
-            extraprice = extraprice.toString()
-      
-            selectedProd.push({
-              product_id: selectMenu.productId,
-              notes: newlistArr,
-              qty: selectMenu.foodAmount,
-              extra_price: extraprice
-            })
-          })
-      
-          let newDate = new Date().getTime()
-          let expiryDate = ''
-          if (this.state.paymentType === 'PAY_BY_CASHIER') {
-            newDate += 1800000
-            phoneNumber = ''
-          } else if (this.state.paymentType === 'WALLET_OVO') {
-            newDate += 60000
-          } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
-            newDate += 600000
-          }
-          expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
-      
-          var requestData = {
-            products: selectedProd,
-            payment_with: this.state.paymentType,
-            mid: currentCartMerchant.mid,
-            prices: finalProduct[0].totalPrice.toString(),
-            biz_type: this.state.biz_type,
-            table_no: noTab.toString(),
-            phone_number: phoneNumber,
-            expiry_date: expiryDate
-          }
-          console.log({requestData});
-      
-          let uuid = uuidV4();
-          uuid = uuid.replace(/-/g, "");
-          const date = new Date().toISOString();
-          
-          Axios(address + "/txn/v4/txn-post/", {
-            headers: {
-              "Content-Type": "application/json",
-              "x-request-id": uuid,
-              "x-request-timestamp": date,
-              "x-client-id": clientId,
-            },
-            method: "POST",
-            data: requestData,
-          })
-            .then((res) => {
-              if (this.state.paymentType === 'PAY_BY_CASHIER') {
-                this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.prices,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  this.setState({ loadButton: true })
-                  this.props.DoneLoad()
-                }, 1000);
-              } 
-              else if(this.state.paymentType === 'WALLET_OVO') {
-                this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.prices,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  this.setState({ loadButton: true })
-                  this.props.DoneLoad()
-                }, 1000);
-              }
-              else if(this.state.paymentType === 'WALLET_DANA') {
-                this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.prices,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  window.location.href = res.data.results[0].checkout_url_mobile;
-                }, 1000);
-              }
-              else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-                this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
-                setTimeout(() => {
-                  let filterOtherCart = storageData.filter(valFilter => {
-                    return valFilter.mid !== currentCartMerchant.mid
-                  })
-                  var dataOrder = {
-                    transactionId : res.data.results[0].transaction_id,
-                    totalPayment : requestData.prices,
-                    paymentType : this.state.paymentType,
-                    transactionTime : newDate
-                  };
-                  this.props.DataOrder(dataOrder);
-                  localStorage.setItem("payment", JSON.stringify(dataOrder));
-                  localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-                  localStorage.removeItem("lastTable")
-                  localStorage.removeItem("fctable")
-                  localStorage.removeItem("counterPayment");
-                  window.location.assign(res.data.results[0].checkout_url_deeplink);
-                }, 1000);
-              }
-              localStorage.removeItem("PAYMENT_TYPE")
-              localStorage.removeItem("PHONE_NUMBER")
-              localStorage.removeItem("SELECTED_PROMO")
-              Cookies.remove("NOTMATCHPROMO")
-            })
-            .catch((err) => {
-              if (err.response.data !== undefined) {
-                alert(err.response.data.err_message)
-                this.props.DoneLoad()
-              }
-            });
+          this.handlePayment()
         }
-      }).catch((err) => console.log(err))
-  };
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  handleCheckingPromoLimit = () => {
+    var reqParam = {
+      campaign_id : this.props.selectedPromo.promo_campaign_id,
+    }
+    TransactionService.getPromoLimitStatus(reqParam)
+    .then((res) => {
+      if (res.status == 200) {
+        this.handlePayment()
+      } else {
+        this.setState({ showModalPromoLimit: true })
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState({ showModalPromoLimit: true })
+    })
+  }
+
+  handlePayment() {
+    this.props.LoadingButton()
+    const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
+    let storageData = JSON.parse(localStorage.getItem('cart'))
+    let noTab = this.props.noTable ? this.props.noTable : 0
+    let allMenu = storageData.filter(filterCart => {
+      return filterCart.mid === currentCartMerchant.mid
+    })
+    let selectedProd = []
+
+    allMenu[0].food.forEach(selectMenu => {
+      let newlistArr = ''
+      let extraprice = 0
+      selectMenu.foodListCheckbox.forEach((val) => {
+        val.forEach((val2) => {
+          newlistArr += `${val2.name}, `
+          extraprice += val2.price
+        })
+      })
+
+      selectMenu.foodListRadio.forEach((val) => {
+        val.forEach((val2) => {
+          newlistArr += `${val2.name}, `
+          extraprice += val2.price
+        })
+      })
+
+      newlistArr += selectMenu.foodNote
+      extraprice = extraprice.toString()
+
+      selectedProd.push({
+        product_id: selectMenu.productId,
+        notes: newlistArr,
+        qty: selectMenu.foodAmount,
+        extra_price: extraprice
+      })
+    })
+
+    let newDate = new Date().getTime()
+    let expiryDate = ''
+    if (this.state.paymentType === 'PAY_BY_CASHIER') {
+      newDate += 1800000
+      phoneNumber = ''
+    } else if (this.state.paymentType === 'WALLET_OVO') {
+      newDate += 60000
+    } else if (this.state.paymentType === 'WALLET_DANA' || this.state.paymentType === 'WALLET_SHOPEEPAY') {
+      newDate += 600000
+    }
+    expiryDate = moment(new Date(newDate)).format("DD-MM-yyyy HH:mm:ss")
+
+    let finalTotalPrices = finalProduct[0].totalPrice - finalProduct[0].discountPrice
+
+    var requestData = {
+      campaign_id: this.props.selectedPromo ? !this.state.notMatchPromo ? this.props.selectedPromo.promo_campaign_id : 0 : 0,
+      products: selectedProd,
+      payment_with: this.state.paymentType,
+      mid: currentCartMerchant.mid,
+      subtotal: finalProduct[0].totalPrice.toString(),
+      total_discount: finalProduct[0].discountPrice.toString(),
+      prices: finalTotalPrices.toString(),
+      biz_type: this.state.biz_type,
+      table_no: noTab.toString(),
+      phone_number: phoneNumber,
+      expiry_date: expiryDate
+    }
+
+    TransactionService.addTransactionTxn(requestData)
+      .then((res) => {
+        if (this.state.paymentType === 'PAY_BY_CASHIER') {
+          this.setState({ successMessage: 'Silahkan Bayar ke Kasir/Penjual' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            this.setState({ loadButton: true })
+            this.props.DoneLoad()
+          }, 1000);
+        } 
+        else if(this.state.paymentType === 'WALLET_OVO') {
+          this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            this.setState({ loadButton: true })
+            this.props.DoneLoad()
+          }, 1000);
+        }
+        else if(this.state.paymentType === 'WALLET_DANA') {
+          this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            window.location.href = res.data.results[0].checkout_url_mobile;
+          }, 1000);
+        }
+        else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+          this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+          setTimeout(() => {
+            let filterOtherCart = storageData.filter(valFilter => {
+              return valFilter.mid !== currentCartMerchant.mid
+            })
+            var dataOrder = {
+              transactionId : res.data.results[0].transaction_id,
+              totalPayment : requestData.prices,
+              paymentType : this.state.paymentType,
+              transactionTime : newDate
+            };
+            this.props.DataOrder(dataOrder);
+            localStorage.setItem("payment", JSON.stringify(dataOrder));
+            localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+            localStorage.removeItem("lastTable")
+            localStorage.removeItem("fctable")
+            localStorage.removeItem("counterPayment");
+            window.location.assign(res.data.results[0].checkout_url_deeplink);
+          }, 1000);
+        }
+        this.removeStorage()
+      }).catch((err) => {
+        if (err.response.data !== undefined) {
+          alert(err.response.data.err_message)
+          this.props.DoneLoad()
+        }
+      })
+  }
+
+  getShopStatus() {
+    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+
+    var reqHeader = {
+      token : "PUBLIC",
+      mid : selectedMerchant[0].mid
+    }
+
+    MerchantService.checkShopStatus(reqHeader)
+    .then((res) => {
+      this.setState({ 
+        merchantHourStatus: res.data.results.merchant_status, 
+        merchantHourOpenTime: res.data.results.open_time, 
+        merchantHourGracePeriod: res.data.results.minutes_remaining,
+        merchantHourNextOpenDay: res.data.results.next_open_day,
+        merchantHourNextOpenTime: res.data.results.next_open_time,
+        merchantHourAutoOnOff: res.data.results.auto_on_off
+      })
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  removeStorage = () => {
+    localStorage.removeItem("PAYMENT_TYPE")
+    localStorage.removeItem("PHONE_NUMBER")
+    localStorage.removeItem("SELECTED_PROMO")
+    Cookies.remove("NOTMATCHPROMO")
+    Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+    Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
+  }
 
   notifModal = () => {
     if (this.props.AllRedu.buttonLoad === false) {
@@ -907,13 +998,33 @@ class CartView extends React.Component {
         return null
       }
     } else {
-      return (
-        <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
-          <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
-          <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
-        </div>
-      )
+      if (this.state.merchantHourAutoOnOff != null) {
+        return (
+          <div className="merchant-hour-status-layout" style={{backgroundColor: "#dc6a84"}}>
+            <img className="merchant-hour-status-icon" src={MerchantHourStatusIcon} />
+            <div className="merchant-hour-status-text">Toko Tutup Sementara</div>
+          </div>
+        )
+      } else {
+        return null
+      }
     }
+  }
+
+  handleCheckingPromo = () => {
+    this.setState({ showModalCheckPromo: false, showModal: true })
+  }
+
+  setModalPromo = () => {
+    this.setState({ showModalCheckPromo: false })
+  }
+
+  detachPromo = () => {
+    localStorage.removeItem("SELECTED_PROMO")
+    Cookies.remove("NOTMATCHPROMO")
+    Cookies.remove("INDEX_SELECTED_PROMO_DINEIN")
+    Cookies.remove("INDEX_SELECTED_PROMO_MANUAL")
+    this.setState({ showModalPromoLimit: false, notMatchPromo: false, selectedPromo: null })
   }
 
   render() {
@@ -946,11 +1057,39 @@ class CartView extends React.Component {
           indexOptionEat={this.state.indexOptionEat}
           indexOptionPay={this.state.indexOptionPay}
           setPhoneNumber={this.isPhoneNum}
-          confirmPay={this.handlePayment}
+          confirmPay={this.handleCheckingShopStatus}
         />
       );
     } else {
       modal = <></>
+    }
+
+    let promoModal
+    if (this.state.showModalCheckPromo) {
+      promoModal = (
+        <CartModal
+          isShow={this.state.showModalCheckPromo}
+          onHide={() => this.setModalPromo()}
+          title="Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?"
+          titlePromo="Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?"
+          confirmPromo={this.handleCheckingPromo}
+        />
+      )
+    } else {
+      promoModal = <></>
+    }
+
+    // Promo Modal Limit
+    let promoLimitModal;
+    if (this.state.showModalPromoLimit === true) {
+      promoLimitModal = (
+        <CartPromoLimitModal
+          isShow={this.state.showModalPromoLimit}
+          onHide={() => this.detachPromo()}
+        />
+      );
+    } else {
+      promoLimitModal = <></>
     }
 
     // Cart Cancel Modal
@@ -1057,6 +1196,7 @@ class CartView extends React.Component {
     });
 
     let totalPaymentShow = 0
+    let totalDiscountShow = 0
     let totalItem = 0
     let selectedMerch = storeList.filter(store => {
       return store.mid === currentCartMerchant.mid
@@ -1066,11 +1206,32 @@ class CartView extends React.Component {
     selectedMerch[0].food.forEach(thefood => {
       totalPaymentShow += thefood.foodTotalPrice
     })
+    // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE START
+    if (this.state.selectedPromo) {
+      if (this.state.notMatchPromo) {
+        totalDiscountShow = 0
+      } else {
+        if (this.state.selectedPromo.discount_amt_type == "PERCENTAGE") {
+          let totalTowardPercentage = (this.state.selectedPromo.discount_amt / 100) * totalPaymentShow
+          let mathRoundTotal = Math.round(totalTowardPercentage)
+          if (mathRoundTotal > this.state.selectedPromo.promo_max_discount) {
+            totalDiscountShow = parseInt(this.state.selectedPromo.promo_max_discount)
+          } else {
+            totalDiscountShow = mathRoundTotal
+          }
+        } else {
+          totalDiscountShow = this.state.selectedPromo.discount_amt
+        }
+      }
+    } else {
+      totalDiscountShow = 0
+    }
+    // CALCULATION OF PERCENTAGE/NOMINAL TOWARDS TOTAL PRICE END
 
     finalProduct = [
       {
         totalPrice: totalPaymentShow,
-        discountPrice: 0,
+        discountPrice: totalDiscountShow,
       },
     ]
 
@@ -1117,7 +1278,7 @@ class CartView extends React.Component {
           </div>
           {this.merchantHourStatusWarning()}
 
-          {/* {
+          {
             this.state.notMatchPromo ?
             <div className="promo-alert-paymentnotselected">
                 <span className="promo-alert-icon">
@@ -1128,7 +1289,7 @@ class CartView extends React.Component {
             </div>
             :
             null
-          } */}
+          }
 
           {
             tableNumberOfCart != "0" ?
@@ -1220,8 +1381,8 @@ class CartView extends React.Component {
                   </div>
                 </div>
 
-                {/* <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
-                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : 0 }, cartStatus : { bizType: this.state.biz_type == "TAKE_AWAY" ? "PICKUP" : this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                <div className='promoCart-voucherinfo'style={{marginTop: "10px"}} >
+                  <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: "0", paymentType : this.state.indexOptionPay }, cartStatus : { bizType: this.state.biz_type, paymentType: this.state.paymentType, totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                     <div className='promoCart-detailContent'>
                           <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                             <div className='promoCart-leftSide'>
@@ -1240,8 +1401,15 @@ class CartView extends React.Component {
                               <div className="promoCart-selectiondetail-border"></div>
 
                               <div className='promoCart-selectiondetail-desc'>
-                                { this.state.notMatchPromo ? <img src={NoMatchPromo} style={{width: "18px", height: "16px", marginRight: "10px"}} /> : null }
-                                <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title}</div>
+                                {
+                                  this.state.promoLoading ?
+                                  <Skeleton style={{ paddingTop: 10, width: 150}} />
+                                  :
+                                  <>
+                                    <img src={ this.state.notMatchPromo ? NoMatchPromo : CheckListIcon } style={{width: "18px", height: "16px", marginRight: "10px"}} />
+                                    <div style={{color: this.state.notMatchPromo ? "#DC6A84" : "#111111"}}>{this.state.selectedPromo.promo_title} {this.state.selectedPromo.discount_amt_type == "PERCENTAGE" ? `${this.state.selectedPromo.discount_amt}%` : null}</div>
+                                  </>
+                                }
                               </div>
                             </div>
                             :
@@ -1249,7 +1417,7 @@ class CartView extends React.Component {
                           }
                     </div>
                   </Link>
-                </div> */}
+                </div>
 
                 <div className='cart-summarypayment'>
                     <div className='cart-detailcontent-payment'>
@@ -1268,9 +1436,9 @@ class CartView extends React.Component {
                       </div>
 
                       <div className='cart-detailprice-desc'>
-                        <div className='orderDetail-detailprice-word'>
+                        <div className='orderDetail-detailDisountPrice-word' style={{color: totalDiscountShow > 0 ? "#4BB7AC" : "#DC6A84"}}>
                           <div>Total Diskon Item</div>
-                          <div>Rp. 0</div>
+                          <div>{totalDiscountShow > 0 ? "-" : null}Rp. {Intl.NumberFormat("id-ID").format(totalDiscountShow)}</div>
                         </div>
                       </div>
                       
@@ -1290,7 +1458,7 @@ class CartView extends React.Component {
               <h3 className='cart-TotalAmount-title'>Total Harga</h3>
 
               <div className='cart-TotalAmount-bottom'>
-                <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow)}</h2>
+                <h2 className='cart-TotalAmount-price'>Rp. {Intl.NumberFormat("id-ID").format(totalPaymentShow - totalDiscountShow)}</h2>
               </div>
             </div>
             
@@ -1298,10 +1466,10 @@ class CartView extends React.Component {
             onClick={() => this.handleDetail("payment-checking")} 
             style={{ backgroundColor: 
               this.state.merchantHourAutoOnOff ?
-                this.state.indexOptionPay == -1 ? 
+                this.state.promoLoading ?
                 '#aaaaaa'
                 :
-                  this.state.notMatchPromo ?
+                  this.state.indexOptionPay == -1 ? 
                   '#aaaaaa'
                   :
                   '#4bb7ac'
@@ -1315,6 +1483,8 @@ class CartView extends React.Component {
           </div>
         </div>
         {modal}
+        {promoModal}
+        {promoLimitModal}
         {cartCancelModal}
         {this.menuDetail()}
         {this.notifModal()}

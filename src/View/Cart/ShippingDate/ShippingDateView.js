@@ -15,6 +15,32 @@ import Cookies from "js-cookie";
 import { v4 as uuidV4 } from "uuid";
 import Axios from "axios";
 import { address, clientId } from "../../../Asset/Constant/APIConstant";
+import { createTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import MerchantService from "../../../Services/merchant.service";
+
+const lightGreenCustom = {
+    50: '#4bb7ac',
+    100: '#4bb7ac',
+    200: '#4bb7ac',
+    300: '#4bb7ac',
+    400: '#4bb7ac',
+    500: '#4bb7ac',
+    600: '#4bb7ac',
+    700: '#4bb7ac',
+    800: '#4bb7ac',
+    900: '#4bb7ac',
+    A100: '#4bb7ac',
+    A200: '#4bb7ac',
+    A400: '#4bb7ac',
+    A700: '#4bb7ac',
+  };
+
+const defaultMaterialTheme = createTheme({
+    palette: {
+      primary: lightGreenCustom,
+    },
+  });
 
 const ShippingDateView = () => {
     const ref = useRef();
@@ -52,34 +78,34 @@ const ShippingDateView = () => {
     const [autoOnOff, setautoOnOff] = useState(true);
 
     useEffect(() => {
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
+        getShopStatus()
+    }, [])
+
+    const getShopStatus = () => {
         let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-        Axios(address + "merchant/v1/shop/status/", {
-            headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token": "PUBLIC",
-            "mid": selectedMerchant[0].mid,
-            },
-            method: "GET"
-        }).then((shopStatusRes) => {
-            let merchantHourCheckingResult = shopStatusRes.data.results
+  
+        var reqHeader = {
+          token : "PUBLIC",
+          mid : selectedMerchant[0].mid
+        }
+    
+        MerchantService.checkShopStatus(reqHeader)
+        .then((res) => {
             setMerchantHourStatus({
-                minutes_remaining: merchantHourCheckingResult.minutes_remaining,
-                open_time: merchantHourCheckingResult.open_time,
-                merchant_status: merchantHourCheckingResult.merchant_status,
-                close_time: merchantHourCheckingResult.close_time,
-                next_open_day: merchantHourCheckingResult.next_open_day,
-                next_open_time: merchantHourCheckingResult.next_open_time,
-                next_close_time: merchantHourCheckingResult.next_close_time,
-                auto_on_off: merchantHourCheckingResult.auto_on_off
+                minutes_remaining: res.data.results.minutes_remaining,
+                open_time: res.data.results.open_time,
+                merchant_status: res.data.results.merchant_status,
+                close_time: res.data.results.close_time,
+                next_open_day: res.data.results.next_open_day,
+                next_open_time: res.data.results.next_open_time,
+                next_close_time: res.data.results.next_close_time,
+                auto_on_off: res.data.results.auto_on_off
             })
         })
-    }, [])
+        .catch((err) => {
+          console.log(err);
+        })
+    }
 
     const onChangeRadio = (ind) => {
         dispatch({ type: 'SHIPPINGDATETYPE', payload: ind })
@@ -89,6 +115,7 @@ const ShippingDateView = () => {
             setChoiceDate(true);
             var today = new Date();
             var todayEnd = new Date();
+            var convertTimeOpenFormat = "HH"
 
             if (merchantHourStatus.auto_on_off) {
                 if (merchantHourStatus.merchant_status == "CLOSE") {
@@ -137,8 +164,13 @@ const ShippingDateView = () => {
                         todayEnd.setMinutes(parseInt(closeHour[1]))
                     } else {
                         var closeHour = merchantHourStatus.close_time.split(":")
-                        today.setHours(today.getHours());
-                        today.setMinutes(30)
+                        if (today.getMinutes() > 29) {
+                            today.setHours(today.getHours() + 1)
+                        } else {
+                            today.setHours(today.getHours());
+                            today.setMinutes(30)
+                            convertTimeOpenFormat = "HH:mm"
+                        }
                         todayEnd.setHours(parseInt(closeHour[0]))
                         todayEnd.setMinutes(parseInt(closeHour[1]))
                     }
@@ -148,7 +180,7 @@ const ShippingDateView = () => {
                 setautoOnOff(false)
             }
             var convertDate = moment(new Date(today)).format("yyyy-MM-DD");
-            var convertTime = moment(new Date(today)).format("HH");
+            var convertTime = moment(new Date(today)).format(convertTimeOpenFormat);
             var convertCloseTime = moment(new Date(todayEnd)).format("HH");
             setCurrentDate(convertDate);
             setCurrentTime(convertTime);
@@ -271,22 +303,24 @@ const ShippingDateView = () => {
     const shippingDateCustom = () => {
         return (
             <div className="shippingdate-selection-layout">
-                <div>    
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        autoOk
-                        id="registerDate"
-                        onChange={handleShippingDate}
-                        inputVariant="outlined" 
-                        className={"shippingdate-datetimepicker"}
-                        format={"d MMMM yyyy"}
-                        minDate={currentDate}
-                        disabled={merchantHourStatus.auto_on_off ? false : true}
-                        value={selectedDate}
-                        ampm={false}
-                        disablePast={true}
-                    />
-                    </MuiPickersUtilsProvider>
+                <div>
+                    <ThemeProvider theme={defaultMaterialTheme}>    
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                autoOk
+                                id="registerDate"
+                                onChange={handleShippingDate}
+                                inputVariant="outlined" 
+                                className={"shippingdate-datetimepicker"}
+                                format={"d MMMM yyyy"}
+                                minDate={currentDate}
+                                disabled={merchantHourStatus.auto_on_off ? false : true}
+                                value={selectedDate}
+                                ampm={false}
+                                disablePast={true}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </ThemeProvider>    
                 </div>
                 <div>
                 {
@@ -398,15 +432,19 @@ const ShippingDateView = () => {
                 return null
             }
         } else {
-            return (
-                <div className="shippingdate-alert-paymentnotselected">
-                    <span className="shippingdate-alert-icon">
-                        <img className="alert-icon" src={PromoAlert} alt='' />
-                    </span>
-    
-                    <div className="shippingdate-alert-title">Toko tutup sementara</div>
-                </div>
-            )
+            if (merchantHourStatus.auto_on_off != null) {
+                return (
+                    <div className="shippingdate-alert-paymentnotselected">
+                        <span className="shippingdate-alert-icon">
+                            <img className="alert-icon" src={PromoAlert} alt='' />
+                        </span>
+        
+                        <div className="shippingdate-alert-title">Toko tutup sementara</div>
+                    </div>
+                )
+            } else {
+                return null
+            }
         }
     }
 

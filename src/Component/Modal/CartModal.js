@@ -10,6 +10,8 @@ import OvoPayment from '../../Asset/Icon/ovo_icon.png'
 import DanaPayment from '../../Asset/Icon/dana_icon.png'
 import ShopeePayment from '../../Asset/Icon/shopee_icon.png'
 import Alertcircle from '../../Asset/Icon/alertcircle.png'
+import GreenWarningImage from '../../Asset/Icon/ic_txn_green_modal.png'
+import OrangeWarningImage from '../../Asset/Icon/ic_txn_orange_modal.png'
 import ReactTooltip from 'react-tooltip';
 import '../../Asset/scss/CartModal.scss'
 
@@ -30,6 +32,10 @@ const CartModal = (props) => {
     const confirmPay = () => {
         props.confirmPay()
         props.onHide()
+    }
+
+    const confirmPromo = () => {
+        props.confirmPromo()
     }
 
     const selectButton = () => {
@@ -166,7 +172,16 @@ const CartModal = (props) => {
                     </span>
 
                     {
-                        props.title !== "Pesanan yang Anda buat tidak dapat dibatalkan" ?
+                        props.title == "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?"?
+                        <span className='iconWarningLayout' style={{backgroundColor: props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "#E6FBF9" : "#FFF3E0" }} onClick={closeModal}>
+                            <img src={ props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? GreenWarningImage : OrangeWarningImage } className='iconWarningImage' alt='' />
+                        </span>
+                        :
+                        null
+                    }
+
+                    {
+                        props.title !== "Pesanan yang Anda buat tidak dapat dibatalkan. Anda yakin ingin melakukan pembayaran?" ?
                             <div className='modalCart-detail'>
                                 <h1 className='modalCart-title'>{props.title}</h1>
 
@@ -206,15 +221,16 @@ const CartModal = (props) => {
                             </div>
                             :
                             <div className='modalCart-paymentLayout'>
-                                <h1 className='modalCart-paymentTitle'>{props.title}</h1>
+                                <div className='modalCart-paymentBigTitle'> { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "Oops" : "Info Pesanan" } </div>
+                                <h1 className='modalCart-paymentTitle'> { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? props.titlePromo : props.title }</h1>
 
                                 <div className='modalCart-paymentCheck'>
                                     <div className='modalCart-cancelPay' onClick={closeModal}>
-                                        Cek Ulang
+                                        { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "Kembali" : "Cek Ulang" }
                                     </div>
-
-                                    <div className='modalCart-confirmPay' onClick={confirmPay}>
-                                        Setuju
+                                    
+                                    <div className='modalCart-confirmPay' onClick={ props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? confirmPromo : confirmPay }>
+                                        { props.titlePromo == "Promo tidak dapat digunakan. Anda yakin ingin melanjutkan pembayaran?" ? "Lanjutkan" : "Setuju" }
                                     </div>
                                 </div>
                             </div>

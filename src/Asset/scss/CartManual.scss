@@ -1248,12 +1248,9 @@ body {
   position: relative;
   align-items: center;
   justify-content: space-between;
-  // box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.05);
   background-color: #ffffff;
-  // height: 40px;
-  // padding: 0px 0px 0px 15px;
-  height: 32px;
   padding: 0px 0px 0px 12px;
+  margin-bottom: 10px;
 }
 
 .cartmanual-detailprice-title {
@@ -1268,30 +1265,19 @@ body {
 }
 
 .cartmanual-detailprice-desc {
-  // display: flex;
   position: relative;
-  // align-items: center;
-  // justify-content: space-between;
-  // // box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.05);
   background-color: #ffffff;
-  // // height: 40px;
-  // // padding: 0px 0px 0px 15px;
-  // height: 32px;
   padding: 0px 12px 0px 12px;
+  margin-bottom: 1px;
 }
 
-.orderDetail-detailprice-word {
+.orderDetail-detailprice-word, .orderDetail-detailDisountPrice-word {
   display: flex;
-  // position: relative;
   align-items: center;
   justify-content: space-between;
   align-items: center;
   color: #111111;
   font-size: 14px;
-  // margin-top: 10px;
-  height: 32px;
-  // padding: 0px 0px 0px 12px;
-  // border-top: 1px solid #c4c4c4;
 }
 
 // Promo Cart Section Start
