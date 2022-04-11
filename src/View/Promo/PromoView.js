@@ -458,7 +458,7 @@ const PromoView = () => {
                         null
                         :
                             manualTxnVar == 1 ?
-                                CartRedu.pickupType == -1 || alertStatus.paymentType == -1 ?
+                                alertStatus.pickupType == -1 || alertStatus.paymentType == -1 ?
                                 <div className="promo-alert-paymentnotselected">
                                     <span className="promo-alert-icon">
                                         <img className="alert-icon" src={PromoAlert} alt='' />
