@@ -32,7 +32,6 @@ import ArrowUp from "../../Asset/Icon/item-arrowup.png";
 import ArrowDown from "../../Asset/Icon/item-arrowdown.png";
 import MerchantHourStatusIcon from '../../Asset/Icon/ic_clock.png'
 import CheckListIcon from '../../Asset/Icon/ic_check_list.png'
-import ProductService from "../../Services/product.service";
 import AnalyticsService from "../../Services/analytics.service";
 import TransactionService from "../../Services/transaction.service";
 import MerchantService from "../../Services/merchant.service";
@@ -166,6 +165,7 @@ class CartManualView extends React.Component {
       insurancePrice : 0,
       cartReduData : {
         pickupType: -1, //PICKUP PAGE
+        pickupTitleType: "",
         fullAddress: "",
         postalCode : "",
         shipperNotes: "",
@@ -448,7 +448,7 @@ class CartManualView extends React.Component {
 
         let getSelectedPromo = JSON.parse(localStorage.getItem("MANUAL_SELECTED_PROMO"))
         let promoMinPrice = parseInt(getSelectedPromo.promo_min_order)
-        if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.biz_type) && totalPaymentCart >= promoMinPrice) {
+        if (getSelectedPromo.promo_payment_method.includes(this.state.paymentType) && getSelectedPromo.promo_shipment_method.includes(this.state.cartReduData.pickupTitleType) && totalPaymentCart >= promoMinPrice) {
           Cookies.set("MANUAL_NOTMATCHPROMO", { theBool: false })
           this.setState({ notMatchPromo: false })
         } else {
@@ -691,7 +691,7 @@ class CartManualView extends React.Component {
         expiry_date: expiryDate,
         campaign_id: this.props.selectedPromo ? !this.state.notMatchPromo ? this.props.selectedPromo.promo_campaign_id : 0 : 0,
       }
-      
+
       TransactionService.addTransactionPos(requestData)
         .then((res) => {
           if(this.state.paymentType === 'WALLET_OVO') {
@@ -897,6 +897,7 @@ class CartManualView extends React.Component {
       let filteredStore = []
       let allCart = JSON.parse(localStorage.getItem('cart'))
       let getProductId
+      this.setMenuDetail(false)
       allCart.forEach((store) => {
         if (store.mid === this.state.themid) {
           filteredStore = store.food.filter((data, index) => {
@@ -946,12 +947,12 @@ class CartManualView extends React.Component {
       }
   
       var reqBody = {
-        mid: this.state.data.mid,
+        mid: this.state.themid,
         pid: this.state.currentData.productId,
         notes: newNotes,
         qty: currentExt.detailCategory[0].amount,
       }
-      ProductService.addProductCart(reqHeader, reqBody)
+      TransactionService.addProductCart(reqHeader, reqBody)
       .then(() => {
         console.log('savetocart succeed');
         this.setState({ insurancePrice: 0});
@@ -1629,7 +1630,7 @@ class CartManualView extends React.Component {
                         </Link>
                         </div>
                         {
-                          this.props.CartRedu.paymentType != -1 ?
+                          this.state.cartReduData.paymentType != -1 ?
                           <div className='cartmanual-paymentdetail'>
                             <div className="cartmanual-paymentdetail-border"></div>
 
@@ -1654,7 +1655,7 @@ class CartManualView extends React.Component {
                   </div>
 
                   <div className='promoCart-voucherinfo'>
-                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.props.CartRedu.paymentType }, cartStatus : { totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
+                    <Link to={{ pathname: "/promo", state: { title : "Pilih Voucher Diskon", alertStatus : { phoneNumber: this.props.CartRedu.phoneNumber, paymentType : this.state.cartReduData.paymentType, pickupType : this.state.cartReduData.pickupType }, cartStatus : { totalPayment: totalPaymentShow }}}} style={{ textDecoration: "none", width: "100%" }}>
                       <div className='promoCart-detailContent'>
                             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                               <div className='promoCart-leftSide'>
