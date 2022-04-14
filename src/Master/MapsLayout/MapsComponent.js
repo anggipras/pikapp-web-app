@@ -41,7 +41,7 @@ class MapsComponent extends Component {
         lat: null,
         lng: null,
         oldLat: null,
-        permissionLocation : false
+        permissionLocation : null
     };
 
     componentWillMount() {
@@ -191,6 +191,7 @@ class MapsComponent extends Component {
     // Get Current Location Coordinates
     setCurrentLocation = () => {
         if ('geolocation' in navigator) {
+            this.setState({ isLoading : true });
             var options = {
                 enableHighAccuracy: true,
                 timeout: 5000,
@@ -199,8 +200,7 @@ class MapsComponent extends Component {
             
             const success = (position) => {
                 this.setState({ permissionLocation : true });
-                // this.props.PermissionLocation(true);
-                localStorage.setItem("permissionLocation", true);
+                this.props.PermissionLocation(true);
                 if(this.props.CartRedu.lat === 0) {
                     this.props.Center([position.coords.latitude, position.coords.longitude]);
                     this.props.Lat(position.coords.latitude);
@@ -213,8 +213,7 @@ class MapsComponent extends Component {
             const error = (err) => {
                 this.setState({ permissionLocation : false });
                 localStorage.setItem("permissionLocation", false);
-                // this.props.PermissionLocation(false);
-                console.log(err);
+                this.props.PermissionLocation(false);
             }
             
             navigator.geolocation.getCurrentPosition(success, error, options);
@@ -291,6 +290,7 @@ class MapsComponent extends Component {
                 
             </Wrapper >
             :
+            this.state.permissionLocation === false ?
             <div className="addressmaps-location-error">
                 <img src={NoLocationIcon} className="addressmaps-location-error-img"></img>
                 <div className='addressmaps-buttonretry-section' onClick={() => window.location.reload()} >
@@ -300,6 +300,8 @@ class MapsComponent extends Component {
                     </div>
                 </div>
             </div>
+            :
+            <></>
         );
     }
 }
@@ -312,6 +314,6 @@ const Mapstatetoprops = (state) => {
     }
 }
 
-export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, StreetNumber, StreetName, City, Province, IsMarkerChange })(MapsComponent)
+export default connect(Mapstatetoprops, { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, StreetNumber, StreetName, City, Province, IsMarkerChange, PermissionLocation })(MapsComponent)
 
 // export default MapsComponent;
