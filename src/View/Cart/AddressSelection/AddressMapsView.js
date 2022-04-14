@@ -5,22 +5,47 @@ import SearchIcon from "../../../Asset/Icon/search.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import MapsComponent from "../../../Master/MapsLayout/MapsComponent";
+import Loader from 'react-loader';
+
+const options = {
+    lines: 13,
+    length: 20,
+    width: 10,
+    radius: 30,
+    scale: 0.25,
+    corners: 1,
+    color: '#000',
+    opacity: 0.25,
+    rotate: 0,
+    direction: 1,
+    speed: 1,
+    trail: 60,
+    fps: 20,
+    shadow: false,
+    hwaccel: false,
+};
 
 const AddressMapsView = () => {
     let history = useHistory()
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
     const [formattedAddress, setFormattedAddress] = useState("");
-    const [permissionLocation, setPermissionLocation] = useState(false);
+    const [permissionLocation, setPermissionLocation] = useState(undefined);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if(CartRedu.formattedAddress !== "") {
             setFormattedAddress(CartRedu.formattedAddress);
         }
-        setTimeout(() => {
-            setPermissionLocation(JSON.parse(localStorage.getItem("permissionLocation")));
-        }, 500);
-    }, [CartRedu.formattedAddress, localStorage.getItem("permissionLocation")])
+        // setTimeout(() => {
+        //     setPermissionLocation(JSON.parse(localStorage.getItem("permissionLocation")));
+        //     dispatch({ type: 'ISLOADINGMAPS', payload: false })
+        // }, 1000);
+        setPermissionLocation(CartRedu.permissionLocation);
+        if(permissionLocation !== undefined) {
+            setIsLoading(true);
+        }
+    }, [CartRedu.formattedAddress, CartRedu.permissionLocation, permissionLocation])
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
@@ -92,6 +117,7 @@ const AddressMapsView = () => {
 
     return (
         <>
+        <Loader loaded={isLoading} options={options} className="spinner"/>
             <div className="pickupSelection-layout">
                 <div className="pickupSelection-topSide">
                     <div className="pickupSelection-header">
