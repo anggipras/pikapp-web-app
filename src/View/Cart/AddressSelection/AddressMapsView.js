@@ -5,19 +5,22 @@ import SearchIcon from "../../../Asset/Icon/search.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import MapsComponent from "../../../Master/MapsLayout/MapsComponent";
-import CurrentLocationIcon from "../../../Asset/Icon/current-location.png";
 
 const AddressMapsView = () => {
     let history = useHistory()
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
     const [formattedAddress, setFormattedAddress] = useState("");
+    const [permissionLocation, setPermissionLocation] = useState(false);
 
     useEffect(() => {
         if(CartRedu.formattedAddress !== "") {
             setFormattedAddress(CartRedu.formattedAddress);
-        } 
-    }, [CartRedu.formattedAddress])
+        }
+        setTimeout(() => {
+            setPermissionLocation(JSON.parse(localStorage.getItem("permissionLocation")));
+        }, 500);
+    }, [CartRedu.formattedAddress, localStorage.getItem("permissionLocation")])
 
     const handleSave = () => {
         if (CartRedu.formattedAddress) {
@@ -98,44 +101,45 @@ const AddressMapsView = () => {
                         <div className="pickupSelection-title">Lokasi Pengiriman</div>
                     </div>
                 </div>
-
+                    
                 <div style={{marginTop: CartRedu.isMarkerChange ? '0px' : null}} className="main-wrapper-maps">
                     <MapsComponent />
                 </div>
 
-                {/* <div style={{display: CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => setCurrentLocation()}>
-                    <div className='addressmaps-location-title'>
-                        <img className='addressmaps-location-logo' src={CurrentLocationIcon} alt='' />
-                        <div className='addressmaps-location-mainName'>
-                            Gunakan Lokasi Saat Ini
-                        </div>
-                    </div>
-                </div> */}
-                <div style={{marginTop: CartRedu.isMarkerChange ? '30px' : '0px'}} className='addressmaps-locationinfo' onClick={goToAddress}>
-                    <div className='addressmaps-section'>
-                        <div className='addressmaps-title'>
-                            <div className='addressmaps-titlename'>
-                                <div className='addressmaps-mainname'>
-                                    {CartRedu.formattedAddress}
-                                </div>
+                {
+                    permissionLocation ?
+                    <div>
+                        <div style={{marginTop: CartRedu.isMarkerChange ? '30px' : '0px'}} className='addressmaps-locationinfo' onClick={goToAddress}>
+                            <div className='addressmaps-section'>
+                                <div className='addressmaps-title'>
+                                    <div className='addressmaps-titlename'>
+                                        <div className='addressmaps-mainname'>
+                                            {CartRedu.formattedAddress}
+                                        </div>
 
-                                <div className='addressmaps-detailinfo'>
-                                    <div className='addressmaps-detailinfo-text'>
-                                        {CartRedu.district}, {CartRedu.city}
+                                        <div className='addressmaps-detailinfo'>
+                                            <div className='addressmaps-detailinfo-text'>
+                                                {CartRedu.district}, {CartRedu.city}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='addressmaps-icon-sec'>
+                                    <div className='addressmaps-icon'>
+                                    <span className='addressmaps-search'>
+                                        <img className='addressmaps-search-img' src={SearchIcon} alt='' />
+                                    </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className='addressmaps-icon-sec'>
-                            <div className='addressmaps-icon'>
-                            <span className='addressmaps-search'>
-                                <img className='addressmaps-search-img' src={SearchIcon} alt='' />
-                            </span>
-                            </div>
-                        </div>
+
+                        <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress ? '#4bb7ac' : '#aaaaaa'}}>Pilih Lokasi Saat Ini</div>
                     </div>
-                </div>
-                <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress ? '#4bb7ac' : '#aaaaaa'}}>Pilih Lokasi Saat Ini</div>
+                    :
+                    <></>
+                }
+
             </div>
         </>
     )

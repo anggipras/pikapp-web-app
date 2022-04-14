@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import AutoComplete from './AutoCompleteComponent';
 import Marker from './MarkerComponent';
 
-import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, StreetNumber, StreetName, City, Province, IsMarkerChange } from '../../Redux/Actions'
+import { MapInstance, MapApi, District, FormattedAddress, Places, Lat, Lng, Center, PostalCode, StreetNumber, StreetName, City, Province, IsMarkerChange, PermissionLocation } from '../../Redux/Actions'
 import { connect } from "react-redux";
 
 import Button from "react-bootstrap/Button";
@@ -16,6 +16,9 @@ import Button from "react-bootstrap/Button";
 import CurrentLocationIcon from  "../../Asset/Icon/current-location.png";
 
 import { mapsApiKey } from '../../Asset/Constant/APIConstant';
+
+import NoLocationIcon from "../../Asset/Icon/no-location.png";
+import ReloadIcon from "../../Asset/Icon/reload-icon.png";
 
 const Wrapper = styled.main`
   width: 100%;
@@ -37,7 +40,8 @@ class MapsComponent extends Component {
         draggable: true,
         lat: null,
         lng: null,
-        oldLat: null
+        oldLat: null,
+        permissionLocation : false
     };
 
     componentWillMount() {
@@ -185,23 +189,35 @@ class MapsComponent extends Component {
     }
 
     // Get Current Location Coordinates
-    setCurrentLocation() {
+    setCurrentLocation = () => {
         if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                // this.setState({
-                //     center: [position.coords.latitude, position.coords.longitude],
-                //     lat: position.coords.latitude,
-                //     lng: position.coords.longitude
-                // });
-
+            var options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+            
+            const success = (position) => {
+                this.setState({ permissionLocation : true });
+                // this.props.PermissionLocation(true);
+                localStorage.setItem("permissionLocation", true);
                 if(this.props.CartRedu.lat === 0) {
                     this.props.Center([position.coords.latitude, position.coords.longitude]);
                     this.props.Lat(position.coords.latitude);
                     localStorage.setItem("LAT", JSON.stringify(position.coords.latitude))
                     this.props.Lng(position.coords.longitude);
-                    localStorage.setItem("LNG", JSON.stringify(position.coords.longitude))
+                    localStorage.setItem("LNG", JSON.stringify(position.coords.longitude));
                 }
-            });
+            }
+            
+            const error = (err) => {
+                this.setState({ permissionLocation : false });
+                localStorage.setItem("permissionLocation", false);
+                // this.props.PermissionLocation(false);
+                console.log(err);
+            }
+            
+            navigator.geolocation.getCurrentPosition(success, error, options);
         }
     }
 
@@ -236,6 +252,7 @@ class MapsComponent extends Component {
 
 
         return (
+            this.state.permissionLocation ?
             <Wrapper>
                 <GoogleMapReact
                     center={this.props.CartRedu.center}
@@ -262,44 +279,27 @@ class MapsComponent extends Component {
                         lat={this.props.CartRedu.lat}
                         lng={this.props.CartRedu.lng}
                     />
-
-                    {/* <Button className="addressmaps-currentlocation" variant="outline-secondary" onPress={()=>this.setCurrentLocation()} title="Get Location"/> */}
-
-                    {/* <div className='addressmaps-location-sec' onClick={() => this.setCurrentLocation()}>
-                        <div className='addressmaps-location-current'>
-                        <span className='addressmaps-location-icon'>
-                            <img className='addressmaps-location-img' src={CurrentLocationIcon} alt='' />
-                        </span>
-                        </div>
-                    </div> */}
-
-
                 </GoogleMapReact>
-                {/* <div className="info-wrapper"> */}
-                    <div style={{display: this.props.CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => this.getCurrentLocation()}>
-                        <div className='addressmaps-location-title'>
-                            <img className='addressmaps-location-logo' src={CurrentLocationIcon} alt='' />
-                            <div className='addressmaps-location-mainName'>
-                                Gunakan Lokasi Saat Ini
-                            </div>
+                <div style={{display: this.props.CartRedu.isMarkerChange ? 'block' : 'none'}} className='addressmaps-currentlocation-sec' onClick={() => this.getCurrentLocation()}>
+                    <div className='addressmaps-location-title'>
+                        <img className='addressmaps-location-logo' src={CurrentLocationIcon} alt='' />
+                        <div className='addressmaps-location-mainName'>
+                            Gunakan Lokasi Saat Ini
                         </div>
                     </div>
-                {/* </div> */}
-
-                {/* {mapApiLoaded && (
-                    <div>
-                        <AutoComplete map={mapInstance} mapApi={mapApi} addplace={this.addPlace} />
-                    </div>
-                )} */}
-
-                {/* <div className="info-wrapper">
-                    <div className="map-details">Latitude: <span>{this.state.lat}</span>, Longitude: <span>{this.state.lng}</span></div>
-                    <div className="map-details">Zoom: <span>{this.state.zoom}</span></div>
-                    <div className="map-details">Address: <span>{this.state.address}</span></div>
-                </div> */}
-
-
+                </div>
+                
             </Wrapper >
+            :
+            <div className="addressmaps-location-error">
+                <img src={NoLocationIcon} className="addressmaps-location-error-img"></img>
+                <div className='addressmaps-buttonretry-section' onClick={() => window.location.reload()} >
+                    <div className='addressmaps-buttonretry'>
+                        <h1 className='addressmaps-buttonretry-word'>Coba Lagi</h1>
+                        <img className="addressmaps-buttonretry-img" src={ReloadIcon}></img>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

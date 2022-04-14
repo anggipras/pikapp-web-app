@@ -36,7 +36,8 @@ const INITIAL_STATE = {
     searchInput : "",
     courierServiceType : "",
     insuranceCheckbox : false,
-    insurancePrice : 0
+    insurancePrice : 0,
+    permissionLocation : false
     // dataDetailTxn : {}
 }
 
@@ -127,6 +128,8 @@ export default (state = INITIAL_STATE, action) => {
                 shippingCode: action.shippingCode,
                 insuranceCheckbox: action.insuranceCheckbox,
                 insurancePrice: action.insurancePrice }
+        case "PERMISSIONLOCATION":
+            return { ...state, permissionLocation: action.payload }
         case "DEFAULTSTATE":
             return INITIAL_STATE
         default:
