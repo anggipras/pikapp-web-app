@@ -166,14 +166,68 @@ const PickupSelectionView = () => {
                 }
             }
             dispatch({ type: 'PICKUPTYPE', payload: 1 })
+            dispatch({ type: 'SELECTEDDELIVERY', payload: true })
             localStorage.setItem("SHIPMENT_TYPE", JSON.stringify({ shipmentType: "DELIVERY", indexShipment: 1 }))
             window.history.go(-1)
         }
     }
 
     const goBack = () => {
-        if(CartRedu.formattedAddress === "" && CartRedu.shippingName === "" && CartRedu.shippingPrice === 0) {
+        if(CartRedu.formattedAddress === "" && CartRedu.fullAddress === "" && CartRedu.shippingName === "" && CartRedu.shippingPrice === 0) {
             dispatch({ type: 'PICKUPTYPE', payload: -1 })
+        }
+        if(CartRedu.shippingType === "" && CartRedu.shippingType === "" && CartRedu.shippingPrice === 0) {
+            dispatch({ type: 'PICKUPTYPE', payload: -1 })
+            dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
+            dispatch({ type: 'FULLADDRESS', payload: "" })
+            dispatch({ type: 'POSTALCODE', payload: "" })
+            dispatch({ type: 'SHIPPERNOTES', payload: "" })
+            dispatch({ type: 'LAT', payload: 0 })
+            dispatch({ type: 'LNG', payload: 0 })
+            dispatch({ type: 'PROVINCE', payload: "" })
+            dispatch({ type: 'CITY', payload: "" })
+            dispatch({ type: 'DISTRICT', payload: "" })
+
+            localStorage.removeItem("SHIPPERNOTES")
+            localStorage.removeItem("FULLADDRESS")
+            localStorage.removeItem("FORMATTEDADDRESS")
+            localStorage.removeItem("LAT")
+            localStorage.removeItem("LNG")
+            localStorage.removeItem("DISTRICT")
+            localStorage.removeItem("CITY")
+            localStorage.removeItem("POSTALCODE")
+            localStorage.removeItem("PROVINCE")
+        }
+        if(!CartRedu.selectedDelivery) {
+            dispatch({ type: 'PICKUPTYPE', payload: -1 })
+            dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
+            dispatch({ type: 'FULLADDRESS', payload: "" })
+            dispatch({ type: 'POSTALCODE', payload: "" })
+            dispatch({ type: 'SHIPPERNOTES', payload: "" })
+            dispatch({ type: 'LAT', payload: 0 })
+            dispatch({ type: 'LNG', payload: 0 })
+            dispatch({ type: 'PROVINCE', payload: "" })
+            dispatch({ type: 'CITY', payload: "" })
+            dispatch({ type: 'DISTRICT', payload: "" })
+            dispatch({ type: 'SHIPPINGNAME', payload: "" });
+            dispatch({ type: 'SHIPPINGPRICE', payload: 0 });
+            dispatch({ type: 'SHIPPINGDESC', payload: "" });
+            dispatch({ type: 'COURIERSERVICETYPE', payload: "" });
+            dispatch({ type: 'COURIERNAMETYPE', payload: "" });
+            dispatch({ type: 'SHIPPINGCODE', payload: "" });
+            dispatch({ type: 'INSURANCEPRICE', payload: 0 });
+
+            localStorage.removeItem("SHIPPERNOTES")
+            localStorage.removeItem("FULLADDRESS")
+            localStorage.removeItem("FORMATTEDADDRESS")
+            localStorage.removeItem("LAT")
+            localStorage.removeItem("LNG")
+            localStorage.removeItem("DISTRICT")
+            localStorage.removeItem("CITY")
+            localStorage.removeItem("POSTALCODE")
+            localStorage.removeItem("PROVINCE")
+            localStorage.removeItem("SHIPPINGTYPE")
+            localStorage.removeItem("SHIPPING_WITH_COURIER")
         }
         window.history.go(-1)
     }

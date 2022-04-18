@@ -540,7 +540,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -567,7 +567,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -711,7 +711,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -737,7 +737,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/statuscartmanual"} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN

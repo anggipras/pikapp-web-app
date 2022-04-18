@@ -86,6 +86,7 @@ const ShippingTypeView = () => {
                         courierList.push({
                             courier_code: cour.courier_code,
                             courier_image: cour.courier_image,
+                            courier_name: cour.courier_name,
                             description: cour.description,
                             name: cour.name,
                             price: cour.price,
