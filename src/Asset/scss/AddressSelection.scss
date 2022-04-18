@@ -747,6 +747,59 @@ body {
     margin-left: 5px;
 }
 
+.addressmaps-location-error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.addressmaps-location-error-img {
+    width: 50%;
+}
+
+.addressmaps-buttonretry-section {
+    display: flex;
+    justify-content: space-between;
+    background-color: #4bb7ac;
+    box-shadow: 0px 4px 20px rgba(17, 17, 17, 0.1);
+    border-radius: 10px;
+    padding: 12px 12px 12px 14px;
+    max-width: 165px;
+    min-width: 148px;
+    width: auto;
+    height: 47px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.addressmaps-buttonretry {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.addressmaps-buttonretry-word {
+    font-family: $fontFamily-Inter-Bold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #ffffff;
+    padding-top: 9px;
+    // margin-left: 14px;
+}
+
+.addressmaps-buttonretry-img {
+    width: 15px;
+    margin-left: 10px;
+}
+
 .addresssearch-currentlocation-sec {
     // padding-left: 125px;
     // padding-right: 125px;

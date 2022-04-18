@@ -298,3 +298,10 @@ export const ShipmentWithCourier = (shippingName, shippingPrice, shippingDesc, c
         insurancePrice
     }
 }
+
+export const PermissionLocation = (bool) => {
+    return {
+        type: 'PERMISSIONLOCATION',
+        payload: bool
+    }
+}

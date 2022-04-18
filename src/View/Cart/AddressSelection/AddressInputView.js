@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import '../../../Asset/scss/AddressSelection.scss'
 import ArrowBack from "../../../Asset/Icon/arrow-left.png";
 import LocationPoint from "../../../Asset/Icon/location-point.png";
@@ -9,37 +9,67 @@ const AddressInputView = () => {
     let history = useHistory()
     const dispatch = useDispatch()
     const CartRedu = useSelector(state => state.CartRedu)
+    const [fullAddress, setFullAddress] = useState("");
+    const [postalCode, setPostalCode] = useState("");
+    const [shipperNotes, setShipperNotes] = useState("");
+
+    useEffect(() => {
+        if(CartRedu.postalCode) {
+            setPostalCode(CartRedu.postalCode);
+        }
+
+        if(CartRedu.formattedAddress) {
+            setFullAddress(CartRedu.formattedAddress);
+        }
+    }, [CartRedu.formattedAddress, CartRedu.postalCode])
 
     const handleFullAddress = (e) => {
-        dispatch({ type: 'FULLADDRESS', payload: e.target.value })
-        localStorage.setItem("FULLADDRESS", JSON.stringify(e.target.value))
+        setFullAddress(e.target.value);
     }
 
     const handlePostalCode = (e) => {
-        dispatch({ type: 'POSTALCODE', payload: e.target.value })
-        localStorage.setItem("POSTALCODE", JSON.stringify(e.target.value))
+        setPostalCode(e.target.value);
     }
 
     const handleShipperNotes = (e) => {
-        dispatch({ type: 'SHIPPERNOTES', payload: e.target.value })
-        localStorage.setItem("SHIPPERNOTES", JSON.stringify(e.target.value))
+        setShipperNotes(e.target.value);
     }
 
     const handleSave = () => {
-        if (CartRedu.fullAddress) {
+        if (fullAddress) {
+            dispatch({ type: 'FULLADDRESS', payload: fullAddress });
+            dispatch({ type: 'POSTALCODE', payload: postalCode });
+            dispatch({ type: 'SHIPPERNOTES', payload: shipperNotes });
+            localStorage.setItem("FULLADDRESS", JSON.stringify(fullAddress));
+            localStorage.setItem("POSTALCODE", JSON.stringify(postalCode));
+            localStorage.setItem("SHIPPERNOTES", JSON.stringify(shipperNotes));
+
+            dispatch({ type: 'SHIPPINGTYPE', payload: "" })
+            dispatch({ type: 'SHIPPINGNAME', payload: "" });
+            dispatch({ type: 'SHIPPINGPRICE', payload: 0 });
+            dispatch({ type: 'SHIPPINGDESC', payload: "" });
+            dispatch({ type: 'COURIERSERVICETYPE', payload: "" });
+            dispatch({ type: 'SHIPPINGCODE', payload: "" });
+            dispatch({ type: 'INSURANCECHECKBOX', payload: false });
+            dispatch({ type: 'INSURANCEPRICE', payload: 0 });
+
+            localStorage.removeItem("SHIPPING_WITH_COURIER");
+            localStorage.setItem("SHIPPINGTYPE", JSON.stringify(""))
             window.history.go('-1')
         }
     }
 
     const goBack = () => {
-        dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
-        localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(""))
-        dispatch({ type: 'FULLADDRESS', payload: "" })
-        localStorage.setItem("FULLADDRESS", JSON.stringify(""))
-        dispatch({ type: 'POSTALCODE', payload: "" })
-        localStorage.setItem("POSTALCODE", JSON.stringify(""))
-        dispatch({ type: 'SHIPPERNOTES', payload: "" })
-        localStorage.setItem("SHIPPERNOTES", JSON.stringify(""))
+        if(fullAddress === "" && postalCode === "") {
+            dispatch({ type: 'FORMATTEDADDRESS', payload: "" })
+            localStorage.setItem("FORMATTEDADDRESS", JSON.stringify(""))
+            dispatch({ type: 'FULLADDRESS', payload: "" })
+            localStorage.setItem("FULLADDRESS", JSON.stringify(""))
+            dispatch({ type: 'POSTALCODE', payload: "" })
+            localStorage.setItem("POSTALCODE", JSON.stringify(""))
+            dispatch({ type: 'SHIPPERNOTES', payload: "" })
+            localStorage.setItem("SHIPPERNOTES", JSON.stringify(""))
+        }
         window.history.go(-1)
     }
 
@@ -78,21 +108,21 @@ const AddressInputView = () => {
 
                     <div className="addressInput-fullAddress">
                         <div className="addressInput-fullAddress-title">Alamat Lengkap <span style={{color: "red"}}>*</span></div>
-                        <textarea id="note" className="addressInput-fullAddress-inputArea" placeholder="Masukkan Alamat Lengkap" onChange={handleFullAddress} defaultValue={CartRedu.fullAddress} />
+                        <textarea id="note" className="addressInput-fullAddress-inputArea" placeholder="Masukkan Alamat Lengkap" onChange={handleFullAddress} defaultValue={fullAddress} />
                     </div>
 
                     <div className="addressInput-fullAddress">
                         <div className="addressInput-fullAddress-title">Kode Pos <span style={{color: "red"}}>*</span></div>
-                        <input className="deliverySelection-shipperName-inputArea" placeholder="Masukkan Kode Pos" onChange={handlePostalCode} defaultValue={CartRedu.postalCode} />
+                        <input className="deliverySelection-shipperName-inputArea" placeholder="Masukkan Kode Pos" onChange={handlePostalCode} defaultValue={postalCode} />
                     </div>
 
                     <div className="addressInput-shipperNotes">
                         <div className="addressInput-shipperNotes-title">Catatan untuk Kurir</div>
-                        <textarea id="note" className="addressInput-shipperNotes-inputArea" placeholder="Masukkan catatan untuk kurir" onChange={handleShipperNotes} defaultValue={CartRedu.shipperNotes}/>
+                        <textarea id="note" className="addressInput-shipperNotes-inputArea" placeholder="Masukkan catatan untuk kurir" onChange={handleShipperNotes} defaultValue={shipperNotes}/>
                     </div>
                 </div>
 
-                <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress && CartRedu.fullAddress &&  CartRedu.postalCode ? '#4bb7ac' : '#aaaaaa'}}>Simpan</div>
+                <div onClick={handleSave} className="addressInput-selectButton" style={{backgroundColor: CartRedu.formattedAddress && fullAddress && postalCode ? '#4bb7ac' : '#aaaaaa'}}>Simpan</div>
             </div>
         </>
     )
