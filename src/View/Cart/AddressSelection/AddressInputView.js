@@ -69,6 +69,10 @@ const AddressInputView = () => {
             localStorage.setItem("POSTALCODE", JSON.stringify(""))
             dispatch({ type: 'SHIPPERNOTES', payload: "" })
             localStorage.setItem("SHIPPERNOTES", JSON.stringify(""))
+            dispatch({ type: 'LAT', payload: 0 })
+            localStorage.removeItem("LAT")
+            dispatch({ type: 'LNG', payload: 0 })
+            localStorage.removeItem("LNG")
         }
         window.history.go(-1)
     }

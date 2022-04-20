@@ -17,12 +17,13 @@ const ShippingDetailView = () => {
     const [courierDesc, setCourierDesc] = useState(0)
     const [courierService, setCourierService] = useState("")
     const [courierCode, setCourierCode] = useState("")
+    const [courierNameType, setCourierNameType] = useState("")
     const [courierList, setCourierList] = useState([])
 
     useEffect(() => {
         CartRedu.courierList.map((ship, ind) => {
             if(CartRedu.shippingName !== "") {
-                if(ship.name === CartRedu.shippingName) {
+                if(ship.courier_name === CartRedu.courierNameType) {
                     setDataIndex(ind);
                     ship.imagestatus = true;
                     setCourierName(ship.name);
@@ -30,6 +31,7 @@ const ShippingDetailView = () => {
                     setCourierDesc(ship.description);
                     setCourierService(ship.service_type);
                     setCourierCode(ship.courier_code);
+                    setCourierNameType(ship.courier_name);
                 }
             }
         })
@@ -42,6 +44,7 @@ const ShippingDetailView = () => {
             shippingPrice: courierPrice,
             shippingDesc: courierDesc,
             courierServiceType: courierService,
+            courierNameType: courierNameType,
             shippingCode: courierCode,
             insuranceCheckbox: false,
             insurancePrice: 0
@@ -51,6 +54,7 @@ const ShippingDetailView = () => {
         dispatch({ type: 'SHIPPINGPRICE', payload: courierPrice });
         dispatch({ type: 'SHIPPINGDESC', payload: courierDesc });
         dispatch({ type: 'COURIERSERVICETYPE', payload: courierService });
+        dispatch({ type: 'COURIERNAMETYPE', payload: courierNameType });
         dispatch({ type: 'SHIPPINGCODE', payload: courierCode });
         dispatch({ type: 'INSURANCECHECKBOX', payload: false });
         dispatch({ type: 'INSURANCEPRICE', payload: 0 });
@@ -77,6 +81,7 @@ const ShippingDetailView = () => {
         setCourierDesc(courier.description);
         setCourierService(courier.service_type);
         setCourierCode(courier.courier_code);
+        setCourierNameType(courier.courier_name);
     }
 
     const goBack = () => {
