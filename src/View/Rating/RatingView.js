@@ -10,12 +10,16 @@ import ic_score_portion from "../../Asset/Icon/ic_score_portion.png";
 import ic_score_package from "../../Asset/Icon/ic_score_package.png";
 import ic_score_quality from "../../Asset/Icon/ic_score_quality.png";
 import ic_score_clean from "../../Asset/Icon/ic_score_clean.png";
+import LoadingModal from '../../Component/Modal/GeneralLoadingModal'
+import RatingModal from "../../Component/Modal/RatingModal";
 import Cookies from "js-cookie"
 import { useLocation } from "react-router-dom"
 import { v4 as uuidV4 } from "uuid";
-import Rating from "react-rating"
+import ReactStars from "react-rating-stars-component";
 
 const RatingView = () => {
+    const dispatch = useDispatch()
+    const AllRedu = useSelector(state => state.AllRedu)
     const [merchantLogo, setMerchantLogo] = useState(null) //URL string var
     const [merchantName, setMerchantName] = useState(null) //string var
     const [checkboxScoreData, setCheckboxScoreData] = useState([
@@ -28,6 +32,7 @@ const RatingView = () => {
     ]) //array of object var
     const [ratingNotes, setRatingNotes] = useState(null) //string var
     const [ratingStar, setRatingStar] = useState(null) //integer var
+    const [showRatingModal, setShowRatingModal] = useState(false) //boolean var
 
     useEffect(() => {
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
@@ -65,7 +70,36 @@ const RatingView = () => {
     }
 
     const onSubmitRating = () => {
-        console.log("Submit");
+        dispatch({ type: 'LOADING' })
+        setTimeout(() => {
+            dispatch({ type: 'DONELOAD' })
+            setShowRatingModal(true)
+        }, 2000);
+    }
+
+    const loadingModal = () => {
+        if (AllRedu.buttonLoad === false) {
+          return <LoadingModal isShowLoading={AllRedu.buttonLoad} />
+        }
+    }
+
+    const ratingModal = () => {
+        if (showRatingModal) {
+            return (
+                <RatingModal
+                    isShow={showRatingModal}
+                    onHide={() => setShowRatingModal(false)}
+                    confirmModal={() => backToPaymentReceipt()}
+                />
+            )
+        } else {
+            return <></>
+        }
+    }
+
+    const backToPaymentReceipt = () => {
+        setShowRatingModal(false)
+        // Go to Payment Receipt Page
     }
 
     return (
@@ -86,18 +120,36 @@ const RatingView = () => {
                         <div className="ratingPage-merchantDetail-name">{merchantName}</div>
                     </div>
 
-                    <Rating
-                        onClick={(e) => setStarValue(e)}
-                        className="ratingPage-starArea-star"
-                        emptySymbol={<img src={StarGrey} className="icon-star" />}
-                        fullSymbol={<img src={StarYellow} className="icon-star" />}
-                        />
+                    <ReactStars
+                        classNames={"ratingPage-starArea-star"}
+                        count={5}
+                        onChange={(e) => setStarValue(e)}
+                        emptyIcon={<img src={StarGrey} className="icon-star" />}
+                        filledIcon={<img src={StarYellow} className="icon-star" />}
+                    />
+                    <div className="ratingPage-starArea-starDetail"
+                        style={{ color: ratingStar > 3 ? "#4bb7ac" : ratingStar < 3 ? "#DC6A84" : "black" }}
+                    >
+                        {
+                            ratingStar == 5 ?
+                            "Sempurna!"
+                            :ratingStar == 4 ?
+                            "Memuaskan!"
+                            :ratingStar == 3 ?
+                            "Biasa Saja"
+                            :ratingStar == 2 ?
+                            "Cukup Mengecewakan"
+                            :ratingStar == 1 ?
+                            "Mengecewakan"
+                            :null
+                        }
+                    </div>
                 </div>
 
                 <div className="ratingPage-divider" />
 
                 <div className="ratingPage-scoreArea">
-                    <div className="ratingPage-scoreTitle">Apa yang Anda sukai dari restoran ini?</div>
+                    <div className="ratingPage-scoreTitle">{ ratingStar > 2 || ratingStar == null ? "Apa yang Anda sukai dari restoran ini?" : "Apa yang perlu ditingkatkan?" }</div>
 
                     <div className="ratingPage-scoreLayout">
                         {checkboxArrScore()}
@@ -110,12 +162,12 @@ const RatingView = () => {
                     <div className="ratingPage-expTitle">Ceritakan pengalaman Anda!</div>
 
                     <div className='ratingPage-note-box'>
-                        <textarea id="note" placeholder={"Penjualnya ramah banget!"} className='ratingPage-note-area' onChange={handleNote} />
+                        <textarea maxLength={500} id="note" placeholder={"Penjualnya ramah banget!"} className='ratingPage-note-area' onChange={handleNote} />
                     </div>
-                    <div className="ratingPage-note-char" style={{ color: ratingNotes == null || ratingNotes.length < 501 ? "#aaaaaa" : "#DC6A84" }}>{ ratingNotes == null ? "0" : ratingNotes.length }/500</div>
+                    <div className="ratingPage-note-char">{ ratingNotes == null ? "0" : ratingNotes.length }/500</div>
                 </div>
 
-                <div className="ratingPage-divider" />
+                <div className="ratingPage-divider2" />
 
                 <div className="ratingPage-hideName-layout">
                     <input id="hideName" type='checkbox' name="hideTheName" defaultChecked={false} />
@@ -129,6 +181,8 @@ const RatingView = () => {
                         Simpan
                 </div>
             </div>
+            {loadingModal()}
+            {ratingModal()}
         </>
     )
 }

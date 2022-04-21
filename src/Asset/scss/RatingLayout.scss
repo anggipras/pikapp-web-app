@@ -52,6 +52,15 @@ body {
     margin-bottom: 38px;
 }
 
+.ratingPage-divider2 {
+    height: 1.5px;
+    background-color: #CFCCCC;
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-top: 38px;
+    margin-bottom: 20px;
+}
+
 // Rating Header Start
 .ratingPage-header {
     display: flex;
@@ -62,8 +71,8 @@ body {
 }
 
 .backArrow-icon {
-    width: 23px;
-    height: 23px;
+    width: 30px;
+    height: 30px;
 }
 
 .ratingPage-title {
@@ -107,6 +116,14 @@ body {
 }
 
 .ratingPage-starArea-star {
+    margin-top: 20px;
+}
+
+.ratingPage-starArea-starDetail {
+    font-family: $fontFamily-Inter-Bold;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 20px;
     margin-top: 20px;
 }
 
@@ -267,6 +284,7 @@ body {
     font-style: normal;
     font-size: 14px;
     line-height: 14px;
+    color: #aaaaaa;
 }
 
 .ratingPage-hideName-layout {
@@ -284,6 +302,14 @@ body {
     line-height: 15px;
     color: #111111;
     margin-left: 12px;
+}
+
+.ratingPage-hideName-layout input[type="checkbox"] {
+    transform: scale(1.2);
+}
+
+.ratingPage-hideName-layout input[type="checkbox"]:checked {
+    filter: invert(0%) sepia(93%) saturate(425%) hue-rotate(125deg) brightness(108%) contrast(116%);
 }
 
 .ratingPage-submitButton {

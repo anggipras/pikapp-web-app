@@ -93,3 +93,76 @@
         opacity: 1;
     }
 }
+
+// General Loading Dialog
+.modalGeneralLoading {
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay effect: translucent background: black w/ partial opacity */
+    z-index: 3; /* Overlay effect: positioned over other containers */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    position: fixed; /* Fix position on the top-left corner*/
+    top: 0;
+    left: 0;
+    overflow: hidden; /* Enable scroll if needed */
+}
+
+.modal-content-generalLoading {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 14px;
+    position: relative;
+    width: 380px;
+    min-height: 213px;
+    height: auto; 
+    margin: auto;
+    margin-top: 181px;
+    border: none;
+    border-radius: 20px;
+    -webkit-animation-name: animatetoploading;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetoploading;
+    animation-duration: 0.4s;
+    overflow: auto;
+}
+
+.loadingMessage {
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-size: 20px;
+    margin-top: 14px;
+}
+
+@media (max-width: 768px) {
+    .modal-content-generalLoading {
+        width: 300px;
+        min-height: 128px;
+        height: auto;
+        margin-top: 40vh;
+    }
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetoploading {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes animatetoploading {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
