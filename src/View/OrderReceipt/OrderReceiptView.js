@@ -551,7 +551,9 @@ export class OrderReceiptView extends React.Component {
             :
             this.state.data[0].order_status === "CLOSE" ?
             <div className="order-receipt-footer-sec">
-              <div className="order-receipt-buttonfooter" style={{backgroundColor: '#4bb7ac'}}>Beri Penilaian</div>
+              <Link to={{ pathname: "/merchant/rating", state: { txnId : this.props.match.params.txnid }}} style={{ textDecoration: "none" }}>
+                <div className="order-receipt-buttonfooter" style={{backgroundColor: '#4bb7ac'}}>Beri Penilaian</div>
+              </Link>
             </div>
             :
             <></>

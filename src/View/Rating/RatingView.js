@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from "react-router-dom"
 import '../../Asset/scss/RatingLayout.scss'
 import ArrowBack from "../../Asset/Icon/arrow-left.png";
 import StarGrey from "../../Asset/Icon/star_grey.png";
@@ -12,14 +13,14 @@ import ic_score_quality from "../../Asset/Icon/ic_score_quality.png";
 import ic_score_clean from "../../Asset/Icon/ic_score_clean.png";
 import LoadingModal from '../../Component/Modal/GeneralLoadingModal'
 import RatingModal from "../../Component/Modal/RatingModal";
-import Cookies from "js-cookie"
-import { useLocation } from "react-router-dom"
-import { v4 as uuidV4 } from "uuid";
 import ReactStars from "react-rating-stars-component";
+import Cookies from "js-cookie"
+import { v4 as uuidV4 } from "uuid";
 
 const RatingView = () => {
     const dispatch = useDispatch()
     const AllRedu = useSelector(state => state.AllRedu)
+    const location = useLocation()
     const [merchantLogo, setMerchantLogo] = useState(null) //URL string var
     const [merchantName, setMerchantName] = useState(null) //string var
     const [checkboxScoreData, setCheckboxScoreData] = useState([
@@ -41,7 +42,8 @@ const RatingView = () => {
     }, [])
 
     const goBack = () => {
-        window.history.go(-1)
+        // Go to Payment Receipt Page
+        window.location.href = `/transaction/${location.state.txnId}`
     }
 
     const setStarValue = (e) => {
@@ -70,11 +72,13 @@ const RatingView = () => {
     }
 
     const onSubmitRating = () => {
-        dispatch({ type: 'LOADING' })
-        setTimeout(() => {
-            dispatch({ type: 'DONELOAD' })
-            setShowRatingModal(true)
-        }, 2000);
+        if (ratingStar != null) {
+            dispatch({ type: 'LOADING' })
+            setTimeout(() => {
+                dispatch({ type: 'DONELOAD' })
+                setShowRatingModal(true)
+            }, 3000);
+        }
     }
 
     const loadingModal = () => {
@@ -98,8 +102,10 @@ const RatingView = () => {
     }
 
     const backToPaymentReceipt = () => {
-        setShowRatingModal(false)
+        setShowRatingModal(false) // close rating dialog
+
         // Go to Payment Receipt Page
+        window.location.href = `/transaction/${location.state.txnId}`
     }
 
     return (
