@@ -31,6 +31,8 @@ import TrackingDeliveryLayout from "./Master/TrackingDeliveryLayout";
 import PromoView from "./View/Promo/PromoView";
 import MerchantDetailProfile from "./View/Product/MerchantDetailProfile";
 import OrderReceiptLayout from "./Master/OrderReceiptLayout";
+import RatingView from "./View/Rating/RatingView";
+
 export var cart = [
     {
         mid: "",
@@ -121,6 +123,7 @@ function App() {
                 <Route path="/cartmanual/payment" component={PaymentMethodView} />
                 <Route path="/cartmanual" component={() => <CartManualLayout />} />
                 <Route path="/tracking" component={() => <TrackingDeliveryLayout />} />
+                <Route exact path="/merchant/rating" component={RatingView} />
                 <Route exact path="/:username" component={(props) => <ProductLayout {...props}/>} />
                 <Route exact path="/transaction/:txnid" component={(props) => <OrderReceiptLayout {...props}/>} />
                 <Route path="/" component={() => <StoreLayout />} />

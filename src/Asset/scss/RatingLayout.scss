@@ -1,0 +1,350 @@
+@font-face {
+    font-family: "SF-Compact-Rounded-Semibold";
+    src: url(../Font/FontSFCompact/SF-Compact-Rounded-Semibold.otf);
+}
+
+@font-face {
+    font-family: "Inter-Regular";
+    src: url(../Font/FontInter/Inter-Regular.ttf);
+}
+  
+@font-face {
+    font-family: "Inter-Medium";
+    src: url(../Font/FontInter/Inter-Medium.ttf);
+}
+  
+@font-face {
+    font-family: "Inter-SemiBold";
+    src: url(../Font/FontInter/Inter-SemiBold.ttf);
+}
+  
+@font-face {
+    font-family: "Inter-Bold";
+    src: url(../Font/FontInter/Inter-Bold.ttf);
+}
+  
+$fontFamily-Inter-Regular: "Inter-Regular", sans-serif;
+$fontFamily-Inter-Medium: "Inter-Medium", sans-serif;
+$fontFamily-Inter-SemiBold: "Inter-SemiBold", sans-serif;
+$fontFamily-Inter-Bold: "Inter-Bold", sans-serif;
+
+body {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+}
+
+.ratingPage-layout {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+.ratingPage-divider {
+    height: 1.5px;
+    background-color: #CFCCCC;
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-top: 38px;
+    margin-bottom: 38px;
+}
+
+.ratingPage-divider2 {
+    height: 1.5px;
+    background-color: #CFCCCC;
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-top: 38px;
+    margin-bottom: 20px;
+}
+
+// Rating Header Start
+.ratingPage-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    padding: 14px 14px 14px 14px;
+}
+
+.backArrow-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.ratingPage-title {
+    font-family: $fontFamily-Inter-Bold;
+    font-style: normal;
+    font-size: 20px;
+    color: #111111;
+    margin-left: 16px;
+}
+// Rating Header End
+
+// Rating Star Top Area Start
+.ratingPage-starArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 32px;
+}
+
+.ratingPage-starArea-merchantDetail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ratingPage-merchantDetail-img {
+    border-radius: 38px;
+    width: 76px;
+    height: 76px;
+}
+
+.ratingPage-merchantDetail-name {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 20px;
+    color: #111111;
+    margin-top: 14px;
+}
+
+.ratingPage-starArea-star {
+    margin-top: 20px;
+}
+
+.ratingPage-starArea-starDetail {
+    font-family: $fontFamily-Inter-Bold;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 20px;
+    margin-top: 20px;
+}
+
+.icon-star {
+    height: 40px;
+    width: 40px;
+    margin-left: 14px;
+    margin-right: 14px;
+}
+// Rating Star Top Area End
+
+// Rating Score Middle Area Start
+.ratingPage-scoreArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ratingPage-scoreLayout {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 28px;
+    margin-left: 32px;
+    margin-right: 32px;
+}
+
+.ratingPage-scoreTitle {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 18px;
+    color: #111111;
+}
+
+.scorebox-section {
+    margin: 0;
+    padding: 0;
+    width: fit-content;
+}
+
+.scoreBox-sectionAlign0 {
+    justify-self: end;
+}
+.scoreBox-sectionAlign2 {
+    justify-self: start;
+}
+.scoreBox-sectionAlign3 {
+    justify-self: end;
+}
+.scoreBox-sectionAlign6 {
+    justify-self: start;
+}
+
+.scorebox-section input[type="checkbox"] {
+    display: none;
+}
+
+.scorebox-section label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #CFCCCC;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 44px;
+    width: fit-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #FAFAFA;
+}
+
+.scorebox-section input[type="checkbox"]:checked + label {
+    border-color: #4bb7ac;
+    background-color: #4bb7ac;
+}
+
+.scorebox-section input[type="checkbox"]:checked + label .scorecheckBox-box {
+    border-color: #ffffff;
+    background-color: #ffffff;
+}
+
+.scorebox-section input[type="checkbox"]:checked + label .scorecheckbox-name,
+.scorebox-section input[type="checkbox"]:checked + label {
+    color: #ffffff;
+}
+
+.scorecheckbox-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scorecheckbox-name {
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 16px;
+    color: #111111;
+}
+
+.scoreIcon {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+// Rating Score Middle Area End
+
+// Rating Exp Bottom Area Start
+.ratingPage-expArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 14px;
+    margin-right: 14px;
+}
+
+.ratingPage-expTitle {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 18px;
+    color: #111111;
+}
+
+.ratingPage-note-box {
+    width: 100%;
+    border: 1px solid #cfcccc;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background-color: #fafafa;
+    margin-top: 28px;
+}
+
+.ratingPage-note-area {
+    width: 100%;
+    height: 112px;
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-size: 14px;
+    color: #aaaaaa;
+    background-color: transparent;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 12px;
+    border: none;
+    outline: none;
+}
+
+.ratingPage-note-char{
+    display: flex;
+    align-self: flex-end;
+    margin-top: 12px;
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 14px;
+    color: #aaaaaa;
+}
+
+.ratingPage-hideName-layout {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-left: 14px;
+    margin-right: 14px;
+}
+
+.ratingPage-hideNameTitle {
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 15px;
+    color: #111111;
+    margin-left: 12px;
+}
+
+.ratingPage-hideName-layout input[type="checkbox"] {
+    transform: scale(1.2);
+}
+
+.ratingPage-hideName-layout input[type="checkbox"]:checked {
+    filter: invert(0%) sepia(93%) saturate(425%) hue-rotate(125deg) brightness(108%) contrast(116%);
+}
+
+.ratingPage-submitButton {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 52px;
+    border-radius: 4px;
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-bottom: 14px;
+    margin-top: 82px;
+
+    font-family: $fontFamily-Inter-SemiBold;
+    font-style: normal;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+}
+// Rating Exp Bottom Area End
+
+@media (max-width: 380px) {
+    .ratingPage-scoreTitle {
+        font-size: 16px;
+        line-height: 16px;
+    }
+
+    .scorecheckbox-name {
+        font-size: 12px;
+        line-height: 12px;
+    }
+
+    .ratingPage-expTitle {
+        font-size: 16px;
+        line-height: 16px;
+    }
+}
