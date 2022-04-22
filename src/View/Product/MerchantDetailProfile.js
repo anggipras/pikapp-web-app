@@ -10,6 +10,14 @@ import CartIcon from "../../Asset/Icon/ic_shopping_cart.png";
 import { v4 as uuidV4 } from "uuid";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { Link } from "react-router-dom";
+import UserReview from "../../Asset/Icon/user_review.png";
+import StarGrey from "../../Asset/Icon/star_grey.png";
+import StarYellow from "../../Asset/Icon/star_yellow.png";
+import StarIcon from '../../Asset/Icon/star.png'
+import ArrowWhite from '../../Asset/Icon/ArrowRightWhite.png'
+import OrderedMenu from '../../Asset/Icon/ic_ordered_menu.png'
+import ReactStars from "react-rating-stars-component";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const MerchantDetailProfile = () => {
     const location = useLocation()
@@ -140,6 +148,101 @@ const MerchantDetailProfile = () => {
                     <img className="merchdetailprofile-shopSchedule-image" src={ClockIcon} alt='' />
                     <div className="merchdetailprofile-shopSchedule-contentLayout">
                         {shopSchedule()}
+                    </div>
+                </div>
+
+                <div className="merchdetailprofile-divider" />
+                <div className="merchdetailprofile-ratingTitle-layout">
+                    <img className="merchdetailprofile-ratingTitle-image" src={UserReview} alt='' />
+                    <div className="merchdetailprofile-ratingTitle-title">Ulasan Pelanggan</div>
+                </div>
+
+                <div className="merchdetailrating-summary-mainlayout">
+                    <div className="merchdetailrating-summary-ratinglayout">
+                        <div className="merchdetailrating-summary-ratescore">
+                            <div className="merchdetailrating-summary-ratescore-result">4.7</div>
+                            <div className="merchdetailrating-summary-ratescore-max">/ 5</div>
+                        </div>
+
+                        <div className="merchdetailrating-summary-review">Berdasarkan 40 ulasan</div>
+
+                        <ReactStars
+                            classNames={"merchdetailrating-summary-ratestar"}
+                            count={5}
+                            value={5}
+                            emptyIcon={<img src={StarGrey} className="icon-ratestar" />}
+                            filledIcon={<img src={StarYellow} className="icon-ratestar" />}
+                        />
+                    </div>
+
+                    <div className="merchdetailrating-summary-progresslayout">
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">5</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={80} maxCompleted={100} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">4</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={60} maxCompleted={100} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">3</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={0} maxCompleted={100} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">2</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={0} maxCompleted={100} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">1</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={0} maxCompleted={100} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="merchdetailrating-customer-reviewTitleLayout">
+                    <div className="merchdetailrating-customer-reviewtitle">Apa Kata Pelanggan Lainnya?</div>
+                    <div className="merchdetailrating-customer-review-iconlayout">
+                        <img className="merchdetailrating-customer-review-icon" src={ArrowWhite} />
+                    </div>
+                </div>
+
+                <div className="merchdetailrating-customer-reviewlayout">
+                    <div className="merchdetailrating-customer-reviewcard">
+                        <div className="merchdetailrating-customerreview-topside">
+                            <div className="merchdetailrating-customerreview-nameside">
+                                <div className="merchdetailrating-customerreview-nameinitalimg">
+                                    K
+                                </div>
+
+                                <div className="merchdetailrating-customerreview-namecontent">
+                                    <div className="merchdetailrating-customerreview-fullname">
+                                        Khansa Khairunisa
+                                    </div>
+
+                                    <div className="merchdetailrating-customerreview-rateddate">
+                                        30 Januari 2022
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="merchdetailrating-customerreview-rateside">
+                                <img src={StarIcon} className="merchdetailrating-customerreview-rateside-img" />
+                                <div className="merchdetailrating-customerreview-rateside-score">5</div>
+                            </div>
+                        </div>
+
+                        <div className="merchdetailrating-customerreview-content">
+                            Saya sangat suka dengan restoran ini, selalu enak makanannya, harganya juga terjangkau, mantaapp
+                        </div>
+
+                        <div className="merchdetailrating-customerreview-orderedmenu">
+                            <img src={OrderedMenu} className="merchdetailrating-customerreview-orderedmenu-img" />
+                            <div className="merchdetailrating-customerreview-orderedmenu-text">Mie Ayam Daun Jeruk</div>
+                        </div>
                     </div>
                 </div>
             </div>
