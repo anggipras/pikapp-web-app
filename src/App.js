@@ -32,6 +32,7 @@ import PromoView from "./View/Promo/PromoView";
 import MerchantDetailProfile from "./View/Product/MerchantDetailProfile";
 import OrderReceiptLayout from "./Master/OrderReceiptLayout";
 import RatingView from "./View/Rating/RatingView";
+import CustomerRatingView from "./View/Rating/CustomerRatingView";
 
 export var cart = [
     {
@@ -105,6 +106,7 @@ function App() {
                 <Route path="/statuscartmanual" component={() => <StatusCartManualLayout />} />
                 <Route path="/store" component={() => <ProductLayout />} />
                 <Route exact path="/merchant-profile" component={MerchantDetailProfile} />
+                <Route exact path="/merchant-profile/rating" component={CustomerRatingView} />
                 <Route exact path="/merchant/:mid/:notab" component={MerchantResto} />
                 <Route exact path="/merchant/list/:address/:notab" component={FoodCourt} />
                 <Route exact path="/promo" component={PromoView} />
