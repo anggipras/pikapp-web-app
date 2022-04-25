@@ -384,3 +384,300 @@ body {
         line-height: 16px;
     }
 }
+
+// Customer Rating Start
+$size14px: 14px;
+$size20px: 20px;
+.customerratingall-Layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  width: 100vw;
+  background-color: #FFFFFF;
+}
+
+.customerratingall-header {
+  display: flex;
+  flex-direction: row;
+  padding: 14px 14px 14px 14px;
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid lightgrey;
+}
+
+.customerratingall-back {
+  margin-right: 14px;
+}
+
+.customerratingall-backicon {
+  width: 23px;
+  height: 23px;
+}
+
+.customerratingall-logo {
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+}
+
+.customerratingall-title {
+  font-family: $fontFamily-Inter-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  color: #111111;
+  margin-left: 10px;
+}
+// Customer Rating End
+
+// MERCHANT ALL RATING START
+.customerratingall-summary-mainlayout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    margin: 14px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+  }
+  
+  .customerratingall-summary-ratinglayout, .customerratingall-summary-progresslayout {
+    width: 50%;
+  }
+  
+  .customerratingall-summary-ratescore {
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  
+  @mixin RateScoreFont {
+    font-style: normal;
+    color: #111111;
+  }
+  .customerratingall-summary-ratescore-result {
+    @include RateScoreFont();
+    font-family: $fontFamily-Inter-Bold;
+    font-size: 36px;
+  }
+  
+  .customerratingall-summary-ratescore-max {
+    @include RateScoreFont();
+    font-family: $fontFamily-Inter-Medium;
+    font-size: 20px;
+  }
+  
+  .customerratingall-summary-review {
+    font-family: $fontFamily-Inter-Medium;
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-top: 10px;
+  }
+  
+  .customerratingall-summary-ratestar {
+    margin-top: 10px;
+  }
+  
+  .icon-ratestar {
+    height: 25px;
+    width: 25px;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+  
+  .customerratingall-summary-eachprogress {
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .progressname-5-star {
+    font-family: $fontFamily-Inter-Medium;
+    font-size: 16px;
+    color: #767676;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .progressbar-5-star {
+    margin-left: 10px;
+    width: 100%;
+  }
+  
+  @media (max-width: 420px) {
+    .icon-ratestar {
+      height: 20px;
+      width: 20px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .customerratingall-summary-ratescore-result {
+      font-size: 25px;
+    }
+    
+    .customerratingall-summary-ratescore-max {
+      font-size: 15px;
+    }
+  
+    .customerratingall-summary-review {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  
+    .customerratingall-summary-ratestar {
+      margin-top: 5px;
+    }
+  
+    .icon-ratestar {
+      height: 15px;
+      width: 15px;
+    }
+  
+    .progressname-5-star {
+      font-size: 12px;
+      margin-top: 3px;
+      margin-bottom: 3px;
+    }
+  }
+  
+  // MERCHANT ALL RATING END
+  
+  // MERCHANT CUSTOMER ALL RATING START
+  .customerratingall-customer-reviewTitleLayout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+  
+  .customerratingall-customer-reviewtitle {
+    font-family: $fontFamily-Inter-Bold;
+    font-size: 18px;
+    color: #000000;
+  }
+  
+  .customerratingall-customer-review-iconlayout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4bb7ac;
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+  }
+  
+  .customerratingall-customer-review-icon {
+    width: 6px;
+    height: 11px;
+  }
+  
+  .customerratingall-customer-reviewlayout {
+    margin-top: 20px;
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+  
+  .customerratingall-customer-reviewcard {
+    padding: 16px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .customerratingall-customerreview-topside {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .customerratingall-customerreview-nameside {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .customerratingall-customerreview-nameinitalimg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #F4B55B;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+  
+    font-family: $fontFamily-Inter-Bold;
+    font-size: 20px;
+    color: #ffffff;
+  }
+  
+  .customerratingall-customerreview-namecontent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-left: 12px;
+  }
+  
+  .customerratingall-customerreview-fullname {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-size: 14px;
+    color: #000000;
+  }
+  
+  .customerratingall-customerreview-rateddate {
+    font-family: $fontFamily-Inter-Regular;
+    font-size: 12px;
+    color: #767676;
+  }
+  
+  .customerratingall-customerreview-rateside {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    background-color: #ececec;
+    border-radius: 18px;
+    padding: 8px 10px 8px 10px;
+  }
+  
+  .customerratingall-customerreview-rateside-img {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .customerratingall-customerreview-rateside-score {
+    font-family: $fontFamily-Inter-SemiBold;
+    font-size: 17px;
+    line-height: 0px;
+    color: #000000;
+    text-align: center;
+    margin-left: 7px;
+  }
+  
+  .customerratingall-customerreview-content {
+    font-family: $fontFamily-Inter-Regular;
+    font-size: 14px;
+    color: #000000;
+    margin-top: 14px;
+  }
+  
+  .customerratingall-customerreview-orderedmenu {
+    display: flex;
+    margin-top: 14px;
+  }
+  
+  .customerratingall-customerreview-orderedmenu-img {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .customerratingall-customerreview-orderedmenu-text {
+    font-family: $fontFamily-Inter-Regular;
+    font-size: 12px;
+    color: #767676;
+    margin-left: 7px;
+  }
+  // MERCHANT CUSTOMER ALL RATING END

@@ -33,6 +33,7 @@
     "react-geolocated": "^3.1.0",
     "react-google-recaptcha": "^2.1.0",
     "react-icons": "^4.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-lazyload": "^3.2.0",
     "react-loader": "^2.4.7",
     "react-loader-spinner": "^4.0.0",
