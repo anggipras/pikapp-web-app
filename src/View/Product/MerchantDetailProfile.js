@@ -10,6 +10,16 @@ import CartIcon from "../../Asset/Icon/ic_shopping_cart.png";
 import { v4 as uuidV4 } from "uuid";
 import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { Link } from "react-router-dom";
+import UserReview from "../../Asset/Icon/user_review.png";
+import StarGrey from "../../Asset/Icon/star_grey.png";
+import StarYellow from "../../Asset/Icon/star_yellow.png";
+import StarHalf from "../../Asset/Icon/star_half.png";
+import StarIcon from '../../Asset/Icon/star.png'
+import ArrowWhite from '../../Asset/Icon/ArrowRightWhite.png'
+import OrderedMenu from '../../Asset/Icon/ic_ordered_menu.png'
+import ReactStars from "react-rating-stars-component";
+import ProgressBar from "@ramonak/react-progress-bar";
+import moment from "moment";
 
 const MerchantDetailProfile = () => {
     const location = useLocation()
@@ -22,6 +32,65 @@ const MerchantDetailProfile = () => {
             open_time: "",
             close_time: "",
         }
+    ]);
+    const [merchantSummaryRating, setMerchantSummaryRating] = useState({
+        merchant_total_rating: 4.7, //double var
+        merchant_total_review: 500, //long var
+        merchant_total_five_star: 380,//long var
+        merchant_total_four_star: 110,//long var
+        merchant_total_three_star: 10,//long var
+        merchant_total_two_star: 0,//long var
+        merchant_total_one_star: 0,//long var
+    })
+    const [customerRatingList, setCustomerRatingList] = useState([
+        {
+            customer_name: "Anggi Prastianto",// strings var
+            customer_name_hidden: true,// boolean var
+            customer_rating_date: "2021-01-03T19:00:00",// strings date var
+            customer_rating_value: 5,// integer var
+            customer_exp: "Saya sangat suka dengan makanan nya",//strings var
+            customer_menu_order: ["Mie ayam tetelan"]
+        },
+        {
+            customer_name: "Putri",// strings var
+            customer_name_hidden: false,// boolean var
+            customer_rating_date: "2021-01-04T19:00:00",// strings date var
+            customer_rating_value: 4,// integer var
+            customer_exp: "Saya sangat suka dengan minuman nya",//strings var
+            customer_menu_order: ["Mie ayam pangsit", "bakso jumbo"]
+        },
+        {
+            customer_name: "Karenza",// strings var
+            customer_name_hidden: false,// boolean var
+            customer_rating_date: "2021-01-05T19:00:00",// strings date var
+            customer_rating_value: 4.5,// integer var
+            customer_exp: "Saya sangat suka semua menu nya",//strings var
+            customer_menu_order: ["Mie ayam pangsit", "bakso jumbo", "es teh"]
+        },
+        {
+            customer_name: "Dimas",// strings var
+            customer_name_hidden: false,// boolean var
+            customer_rating_date: "2021-01-06T19:00:00",// strings date var
+            customer_rating_value: 4.5,// integer var
+            customer_exp: "Saya sangat suka semua menu nya",//strings var
+            customer_menu_order: ["Mie ayam", "bakso jumbo"]
+        },
+        {
+            customer_name: "Andrew Budiman",// strings var
+            customer_name_hidden: false,// boolean var
+            customer_rating_date: "2021-01-07T19:00:00",// strings date var
+            customer_rating_value: 4.5,// integer var
+            customer_exp: "Saya sangat suka semua menu nya",//strings var
+            customer_menu_order: ["Mie ayam", "bakso jumbo"]
+        },
+        {
+            customer_name: "Johannes Budiman",// strings var
+            customer_name_hidden: false,// boolean var
+            customer_rating_date: "2021-01-08T19:00:00",// strings date var
+            customer_rating_value: 4.5,// integer var
+            customer_exp: "Saya sangat suka semua menu nya",//strings var
+            customer_menu_order: ["Mie ayam", "bakso jumbo"]
+        },
     ]);
 
     useEffect(() => {
@@ -114,6 +183,90 @@ const MerchantDetailProfile = () => {
         }
     }
 
+    const ratingValue = (e) => {
+        if (e < 5 && e > 4) {
+            return 4.5
+        } else if(e < 4 && e > 3) {
+            return 3.5
+        } else if(e < 3 && e > 2) {
+            return 2.5
+        } else if(e < 2 && e > 1) {
+            return 1.5
+        } else {
+            return e
+        }
+    }
+
+    const customerRatingCardList = () => {
+        return customerRatingList.map((value, index) => {
+            if (index < 3) {
+                return (
+                    <div key={index} className="merchdetailrating-customer-reviewcard">
+                        <div className="merchdetailrating-customerreview-topside">
+                            <div className="merchdetailrating-customerreview-nameside">
+                                <div className="merchdetailrating-customerreview-nameinitalimg">
+                                    {value.customer_name.substring(0, 1)}
+                                </div>
+    
+                                <div className="merchdetailrating-customerreview-namecontent">
+                                    <div className="merchdetailrating-customerreview-fullname">
+                                        {customerNameRating(value.customer_name, value.customer_name_hidden)}
+                                    </div>
+    
+                                    <div className="merchdetailrating-customerreview-rateddate">
+                                        {moment(new Date(value.customer_rating_date)).format("DD MMMM YYYY, HH:mm")}
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div className="merchdetailrating-customerreview-rateside">
+                                <img src={StarIcon} className="merchdetailrating-customerreview-rateside-img" />
+                                <div className="merchdetailrating-customerreview-rateside-score">{value.customer_rating_value}</div>
+                            </div>
+                        </div>
+    
+                        <div className="merchdetailrating-customerreview-content">
+                            {value.customer_exp}
+                        </div>
+    
+                        <div className="merchdetailrating-customerreview-orderedmenu">
+                            <img src={OrderedMenu} className="merchdetailrating-customerreview-orderedmenu-img" />
+                            <div className="merchdetailrating-customerreview-orderedmenu-text">{orderedMenuList(value.customer_menu_order)}</div>
+                        </div>
+                    </div>
+                )
+            }
+        })
+    }
+
+    const customerNameRating = (custName, custStat) => {
+        if (custStat) {
+            let arrayOfCustName = custName.split(' ') // array of splitted customer name
+            let arrayOfFixedName = []
+            arrayOfCustName.forEach((val, ind) => {
+                let hiddenChar = "*".repeat(val.length - 1)
+                let firstNameChar = val.substring(0, 1)
+                let fixedName = firstNameChar + hiddenChar
+                arrayOfFixedName.push(fixedName)
+            })
+            return arrayOfFixedName.join(' ')
+        } else {
+            return custName
+        }
+    }
+
+    const orderedMenuList = (ordered_menu) => {
+        let stringOfMenu = ""
+        ordered_menu.forEach((e, i) => {
+            if (i == ordered_menu.length - 1) {
+                stringOfMenu += `${e}`
+            } else {
+                stringOfMenu += `${e}, `
+            }
+        });
+        return stringOfMenu
+    }
+
     return (
         <>
             <div className="merchdetailprofile-Layout">
@@ -141,6 +294,74 @@ const MerchantDetailProfile = () => {
                     <div className="merchdetailprofile-shopSchedule-contentLayout">
                         {shopSchedule()}
                     </div>
+                </div>
+
+                <div className="merchdetailprofile-divider" />
+                <div className="merchdetailprofile-ratingTitle-layout">
+                    <img className="merchdetailprofile-ratingTitle-image" src={UserReview} alt='' />
+                    <div className="merchdetailprofile-ratingTitle-title">Ulasan Pelanggan</div>
+                </div>
+
+                <div className="merchdetailrating-summary-mainlayout">
+                    <div className="merchdetailrating-summary-ratinglayout">
+                        <div className="merchdetailrating-summary-ratescore">
+                            <div className="merchdetailrating-summary-ratescore-result">{merchantSummaryRating.merchant_total_rating}</div>
+                            <div className="merchdetailrating-summary-ratescore-max">/ 5</div>
+                        </div>
+
+                        <div className="merchdetailrating-summary-review">Berdasarkan {merchantSummaryRating.merchant_total_review} ulasan</div>
+
+                        <ReactStars
+                            classNames={"merchdetailrating-summary-ratestar"}
+                            count={5}
+                            value={ratingValue(merchantSummaryRating.merchant_total_rating)}
+                            isHalf={true}
+                            edit={false}
+                            emptyIcon={<img src={StarGrey} className="icon-ratestar" />}
+                            filledIcon={<img src={StarYellow} className="icon-ratestar" />}
+                            halfIcon={<img src={StarHalf} className="icon-ratestar" />}
+                        />
+                    </div>
+
+                    <div className="merchdetailrating-summary-progresslayout">
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">5</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={merchantSummaryRating.merchant_total_five_star != 0 ? merchantSummaryRating.merchant_total_five_star : 0} maxCompleted={merchantSummaryRating.merchant_total_review} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">4</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={merchantSummaryRating.merchant_total_four_star != 0 ? merchantSummaryRating.merchant_total_four_star : 0} maxCompleted={merchantSummaryRating.merchant_total_review} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">3</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={merchantSummaryRating.merchant_total_three_star != 0 ? merchantSummaryRating.merchant_total_three_star : 0} maxCompleted={merchantSummaryRating.merchant_total_review} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">2</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={merchantSummaryRating.merchant_total_two_star != 0 ? merchantSummaryRating.merchant_total_two_star : 0} maxCompleted={merchantSummaryRating.merchant_total_review} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+
+                        <div className="merchdetailrating-summary-eachprogress">
+                            <div className="progressname-5-star">1</div>
+                            <ProgressBar className="progressbar-5-star" height="10px" completed={merchantSummaryRating.merchant_total_one_star != 0 ? merchantSummaryRating.merchant_total_five_star : 0} maxCompleted={merchantSummaryRating.merchant_total_review} isLabelVisible={false} bgColor="#F4B55B"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="merchdetailrating-customer-reviewTitleLayout">
+                    <div className="merchdetailrating-customer-reviewtitle">Apa Kata Pelanggan Lainnya?</div>
+                    <Link to={"/merchant-profile/rating"} style={{ textDecoration: "none" }}>
+                        <div className="merchdetailrating-customer-review-iconlayout">
+                            <img className="merchdetailrating-customer-review-icon" src={ArrowWhite} />
+                        </div>
+                    </Link>
+                </div>
+
+                <div className="merchdetailrating-customer-reviewlayout">
+                    {customerRatingCardList()}
                 </div>
             </div>
         </>

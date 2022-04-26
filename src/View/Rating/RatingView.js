@@ -34,11 +34,35 @@ const RatingView = () => {
     const [ratingNotes, setRatingNotes] = useState(null) //string var
     const [ratingStar, setRatingStar] = useState(null) //integer var
     const [showRatingModal, setShowRatingModal] = useState(false) //boolean var
+    const [filledRating, setFilledRating] = useState(null) //boolean var
+    const [checkedHiddenName, setCheckedHiddenName] = useState(false) //boolean var
+    const dummyRatedData = {
+        user_rated_star: 5,
+        user_selected_score: ["Rasa", "Harga", "Porsi", "Kemasan"],
+        user_exp: "minnasa konnijiwaaa",
+        user_hidden_name: true
+    } // object of dummy data
 
     useEffect(() => {
         let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
         setMerchantLogo(selectedMerchant[0].merchant_logo)
         setMerchantName(selectedMerchant[0].merchant_name)
+        setFilledRating(location.state.rated)
+
+        // HIT API - CAN BE COMMENTED
+        setRatingStar(dummyRatedData.user_rated_star)
+        setRatingNotes(dummyRatedData.user_exp)
+        setCheckedHiddenName(dummyRatedData.user_hidden_name)
+        let scoreResponse
+        if (dummyRatedData.user_selected_score != null) {
+            scoreResponse = checkboxScoreData.filter(scoreValue => {
+                return dummyRatedData.user_selected_score.includes(scoreValue.scoreName)
+            })
+        } else {
+            scoreResponse = []
+        }
+        
+        setCheckboxScoreData(scoreResponse)
     }, [])
 
     const goBack = () => {
@@ -66,6 +90,21 @@ const RatingView = () => {
             )
         })
     }
+
+    const filledCheckboxArrScore = () => {
+        return checkboxScoreData.map((listScore, ind) => {
+            return (
+                <div key={ind} className={`filled-scorebox-section`}>
+                    <div className='scorecheckbox-side'>
+                        <div className='scorecheckbox-name'>{listScore.scoreName}</div>
+                    </div>
+
+                    <img className="scoreIcon" src={listScore.scoreIcon}/>
+                </div>
+            )
+        })
+    }
+
 
     const handleNote = (e) => {
         setRatingNotes(e.target.value)
@@ -126,13 +165,28 @@ const RatingView = () => {
                         <div className="ratingPage-merchantDetail-name">{merchantName}</div>
                     </div>
 
-                    <ReactStars
-                        classNames={"ratingPage-starArea-star"}
-                        count={5}
-                        onChange={(e) => setStarValue(e)}
-                        emptyIcon={<img src={StarGrey} className="icon-star" />}
-                        filledIcon={<img src={StarYellow} className="icon-star" />}
-                    />
+                    {
+                        filledRating != null ?
+                            filledRating?
+                            <ReactStars
+                                classNames={"ratingPage-starArea-star"}
+                                count={5}
+                                value={ratingStar}
+                                edit={false}
+                                emptyIcon={<img src={StarGrey} className="icon-star" />}
+                                filledIcon={<img src={StarYellow} className="icon-star" />}
+                            />
+                            :
+                            <ReactStars
+                                classNames={"ratingPage-starArea-star"}
+                                count={5}
+                                onChange={(e) => setStarValue(e)}
+                                emptyIcon={<img src={StarGrey} className="icon-star" />}
+                                filledIcon={<img src={StarYellow} className="icon-star" />}
+                            />
+                        :
+                        null
+                    }
                     <div className="ratingPage-starArea-starDetail"
                         style={{ color: ratingStar > 3 ? "#4bb7ac" : ratingStar < 3 ? "#DC6A84" : "black" }}
                     >
@@ -154,38 +208,100 @@ const RatingView = () => {
 
                 <div className="ratingPage-divider" />
 
-                <div className="ratingPage-scoreArea">
-                    <div className="ratingPage-scoreTitle">{ ratingStar > 2 || ratingStar == null ? "Apa yang Anda sukai dari restoran ini?" : "Apa yang perlu ditingkatkan?" }</div>
+                {
+                    filledRating != null ?
+                        filledRating?
+                            checkboxScoreData.length != 0 ?
+                            <div className="ratingPage-scoreArea">
+                                <div className="ratingPage-scoreTitle">{ ratingStar > 2 || ratingStar == null ? "Apa yang Anda sukai dari restoran ini?" : "Apa yang perlu ditingkatkan?" }</div>
 
-                    <div className="ratingPage-scoreLayout">
-                        {checkboxArrScore()}
+                                <div className="ratingPage-scoreLayout">
+                                    {filledCheckboxArrScore()}
+                                </div>
+                            </div>
+                            :null
+                        :
+                        <div className="ratingPage-scoreArea">
+                            <div className="ratingPage-scoreTitle">{ ratingStar > 2 || ratingStar == null ? "Apa yang Anda sukai dari restoran ini?" : "Apa yang perlu ditingkatkan?" }</div>
+
+                            <div className="ratingPage-scoreLayout">
+                                {checkboxArrScore()}
+                            </div>
+                        </div>
+                    :null
+                }
+
+                {
+                    filledRating != null ?
+                        filledRating?
+                            checkboxScoreData.length != 0 ?
+                            <div className="ratingPage-divider" />
+                            :null
+                        :
+                        <div className="ratingPage-divider" />
+                    :null
+                }
+
+                {
+                    filledRating != null ?
+                        filledRating?
+                            dummyRatedData.user_exp != null ?
+                            <div className="ratingPage-expArea">
+                                <div className="ratingPage-expTitle">Ceritakan pengalaman Anda!</div>
+
+                                <div className="ratingPage-expDetail">{`"${ratingNotes}"`}</div>
+                            </div>
+                            :null
+                        :
+                        <div className="ratingPage-expArea">
+                            <div className="ratingPage-expTitle">Ceritakan pengalaman Anda!</div>
+
+                            <div className='ratingPage-note-box'>
+                                <textarea maxLength={500} id="note" placeholder={"Penjualnya ramah banget!"} className='ratingPage-note-area' onChange={handleNote} />
+                            </div>
+                            <div className="ratingPage-note-char">{ ratingNotes == null ? "0" : ratingNotes.length }/500</div>
+                        </div>
+                    :null
+                }
+
+                {
+                    filledRating != null ?
+                        filledRating?
+                            dummyRatedData.user_exp != null ?
+                            <div className="ratingPage-divider2" />
+                            :null
+                        :
+                        <div className="ratingPage-divider2" />
+                    :null
+                }
+
+                {
+                    filledRating != null ?
+                        filledRating?
+                        <div className="ratingPage-hideName-layout-filled">
+                            <input disabled id="hideName" type='checkbox' name="hideTheName" defaultChecked={checkedHiddenName} />
+                            <div className="ratingPage-hideNameTitle">Sembunyikan nama Anda</div>
+                        </div>
+                        :
+                        <div className="ratingPage-hideName-layout">
+                            <input id="hideName" type='checkbox' name="hideTheName" defaultChecked={false} />
+                            <div className="ratingPage-hideNameTitle">Sembunyikan nama Anda</div>
+                        </div>
+                    :
+                    null
+                }
+
+                {
+                    filledRating ?
+                    null
+                    :
+                    <div 
+                        className='ratingPage-submitButton'
+                        style={{ backgroundColor: ratingStar == null ? "#aaaaaa":"#4bb7ac" }}
+                        onClick={() => onSubmitRating()}>
+                            Simpan
                     </div>
-                </div>
-
-                <div className="ratingPage-divider" />
-
-                <div className="ratingPage-expArea">
-                    <div className="ratingPage-expTitle">Ceritakan pengalaman Anda!</div>
-
-                    <div className='ratingPage-note-box'>
-                        <textarea maxLength={500} id="note" placeholder={"Penjualnya ramah banget!"} className='ratingPage-note-area' onChange={handleNote} />
-                    </div>
-                    <div className="ratingPage-note-char">{ ratingNotes == null ? "0" : ratingNotes.length }/500</div>
-                </div>
-
-                <div className="ratingPage-divider2" />
-
-                <div className="ratingPage-hideName-layout">
-                    <input id="hideName" type='checkbox' name="hideTheName" defaultChecked={false} />
-                    <div className="ratingPage-hideNameTitle">Sembunyikan nama Anda</div>
-                </div>
-
-                <div 
-                    className='ratingPage-submitButton'
-                    style={{ backgroundColor: ratingStar == null ? "#aaaaaa":"#4bb7ac" }}
-                    onClick={() => onSubmitRating()}>
-                        Simpan
-                </div>
+                }
             </div>
             {loadingModal()}
             {ratingModal()}
