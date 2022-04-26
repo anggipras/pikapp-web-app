@@ -881,6 +881,57 @@
   width: 115px;
 }
 
+// Rating Payment Receipt Start
+.order-receipt-rating-layout {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.order-receipt-rating-left, .order-receipt-rating-right {
+  width: 50%;
+}
+
+.order-receipt-rating-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.order-receipt-rating-title {
+  font-family: $fontFamily-Inter-SemiBold;
+  font-style: normal;
+  font-size: 18px;
+  color: #111111;
+}
+
+.order-receipt-rating-star {
+  margin-top: 10px;
+}
+
+.order-receipt-ratingicon-ratestar {
+  height: 15px;
+  width: 15px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.order-receipt-rating-arrowlayout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #4bb7ac;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+}
+
+.order-receipt-rating-arrowimg {
+  width: 6px;
+  height: 11px;
+}
+// Rating Payment Receipt End
 .order-receipt-transaction-notfound {
   display: flex;
   align-items: center;

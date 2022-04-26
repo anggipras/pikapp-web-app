@@ -656,6 +656,50 @@ $size20px: 20px;
     text-align: center;
     margin-left: 7px;
   }
+
+  .filledcustomerrating-scorebox-section {
+    width: fit-content;
+    background-color: #ececec;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ececec;
+    box-sizing: border-box;
+    border-radius: 25px;
+    height: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 14px 12px 0px 0px;
+  }
+  
+  .filledcustomerrating-scorecheckbox-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .filledcustomerrating-scorecheckbox-name {
+    font-family: $fontFamily-Inter-Regular;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 14px;
+    color: #111111;
+  }
+  
+  .filledcustomerrating-scoreIcon {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+  }
+  
+  .customerratingall-customerreview-score {
+    display: flex;
+    overflow-x: scroll;
+  }
+
+  .customerratingall-customerreview-score::-webkit-scrollbar {
+    display: none;
+  }
   
   .customerratingall-customerreview-content {
     font-family: $fontFamily-Inter-Regular;
