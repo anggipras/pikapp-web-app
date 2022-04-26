@@ -5,11 +5,6 @@ import RatingImage from '../../Asset/Icon/ic_rating_succeed.png'
 const RatingModal = (props) => {
     const closeModal = (e) => {
         e.stopPropagation()
-        props.onHide()
-    }
-
-    const selectButton = (e) => {
-        e.stopPropagation()
         props.confirmModal()
     }
 
@@ -31,7 +26,7 @@ const RatingModal = (props) => {
                     </div>
                 </div>
 
-                <div className='modalRating-selectButton' onClick={selectButton}>
+                <div className='modalRating-selectButton' onClick={closeModal}>
                     Lihat Payment Receipt
                 </div>
             </div>

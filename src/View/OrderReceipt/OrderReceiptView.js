@@ -17,8 +17,14 @@ import DeliveryIcon from "../../Asset/Icon/shipping-icon.png";
 import PikappLogo from "../../Asset/Logo/logo-blue.png";
 import copy from 'copy-to-clipboard';
 import CopyIcon from "../../Asset/Icon/copy-icon.png";
+import StarGrey from "../../Asset/Icon/star_grey.png";
+import StarYellow from "../../Asset/Icon/star_yellow.png";
+import ArrowWhite from '../../Asset/Icon/ArrowRightWhite.png'
+import ReactStars from "react-rating-stars-component";
 
 let interval = createRef();
+let merchantName = ""
+let merchantLogo = ""
 
 export class OrderReceiptView extends React.Component {
   _isMounted = false;
@@ -66,6 +72,7 @@ export class OrderReceiptView extends React.Component {
         order_id: 0,
         mid: "",
         merchant_name : "",
+        merchant_logo : "",
         order_type: "",
         order_status: "",
         payment_status: "",
@@ -74,6 +81,12 @@ export class OrderReceiptView extends React.Component {
         total_product_price: 0,
         total_discount: 0,
         total_payment: 0,
+        rated_data: {
+          user_rated_star: 5,
+          user_selected_score: ["Rasa", "Harga", "Porsi", "Kemasan"],
+          user_exp: "minnasa konnijiwaaa",
+          user_hidden_name: true
+        } // object of rated data
     }],
     staticCountDown: false,
     updateStatus: false,
@@ -139,6 +152,14 @@ export class OrderReceiptView extends React.Component {
 
   contentStatus = (value, status, backColor, pimg, plab, pmethod, plogo) => {
     let formatDate = value.transactionTime;
+    merchantName = value.merchant_name
+    merchantLogo = value.merchant_logo
+    let rated_data = { //would be replace with rated_data response API
+      user_rated_star: 5,
+      user_selected_score: ["Rasa", "Harga", "Porsi", "Kemasan"],
+      user_exp: "minnasa konnijiwaaa",
+      user_hidden_name: true
+    } // object of rated data
     return (
       <div
         className="order-receipt-transaction-content"
@@ -166,6 +187,32 @@ export class OrderReceiptView extends React.Component {
               </div>
           </div>
           <div className="order-receipt-content-border"></div>
+
+          {/* Rating Area at Transaction Detail Start */}
+          <div className="order-receipt-rating-layout">
+            <div className="order-receipt-rating-left">
+              <div className="order-receipt-rating-title">Penilaian</div>
+
+              <ReactStars
+                  classNames={"order-receipt-rating-star"}
+                  count={5}
+                  value={5}
+                  edit={false}
+                  emptyIcon={<img src={StarGrey} className="order-receipt-ratingicon-ratestar" />}
+                  filledIcon={<img src={StarYellow} className="order-receipt-ratingicon-ratestar" />}
+              />
+            </div>
+
+            <div className="order-receipt-rating-right">
+              <Link to={{ pathname: "/merchant/rating", state: { txnId : this.props.match.params.txnid, rated : true, merchant : { merchantName, merchantLogo }, ratedData: rated_data }}} style={{ textDecoration: "none" }}>
+                <div className="order-receipt-rating-arrowlayout">
+                  <img src={ArrowWhite} className="order-receipt-rating-arrowimg" />
+                </div>
+              </Link>
+            </div>
+          </div>
+          <div className="order-receipt-content-border"></div>
+          {/* Rating Area at Transaction Detail End */}
 
           <div className="order-receipt-transaction-topSide">
               <h3 className="order-receipt-transaction-merchName">
@@ -550,7 +597,7 @@ export class OrderReceiptView extends React.Component {
           :
           this.state.data[0].order_status === "CLOSE" ?
           <div className="order-receipt-footer-sec">
-            <Link to={{ pathname: "/merchant/rating", state: { txnId : this.props.match.params.txnid, rated : true }}} style={{ textDecoration: "none" }}>
+            <Link to={{ pathname: "/merchant/rating", state: { txnId : this.props.match.params.txnid, rated : false, merchant : { merchantName, merchantLogo } }}} style={{ textDecoration: "none" }}>
               <div className="order-receipt-buttonfooter" style={{backgroundColor: '#4bb7ac'}}>Beri Penilaian</div>
             </Link>
           </div>

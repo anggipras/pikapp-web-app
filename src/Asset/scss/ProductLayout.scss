@@ -2803,6 +2803,50 @@ $size20px: 20px;
   margin-left: 7px;
 }
 
+.filledrating-scorebox-section {
+  width: fit-content;
+  background-color: #ececec;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ececec;
+  box-sizing: border-box;
+  border-radius: 25px;
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 14px 12px 0px 0px;
+}
+
+.filledrating-scorecheckbox-side {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filledrating-scorecheckbox-name {
+  font-family: $fontFamily-Inter-Regular;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 14px;
+  color: #111111;
+}
+
+.filledrating-scoreIcon {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+}
+
+.merchdetailrating-customerreview-score {
+  display: flex;
+  overflow-x: scroll;
+}
+
+.merchdetailrating-customerreview-score::-webkit-scrollbar {
+  display: none;
+}
+
 .merchdetailrating-customerreview-content {
   font-family: $fontFamily-Inter-Regular;
   font-size: 14px;

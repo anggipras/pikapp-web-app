@@ -36,33 +36,35 @@ const RatingView = () => {
     const [showRatingModal, setShowRatingModal] = useState(false) //boolean var
     const [filledRating, setFilledRating] = useState(null) //boolean var
     const [checkedHiddenName, setCheckedHiddenName] = useState(false) //boolean var
-    const dummyRatedData = {
-        user_rated_star: 5,
-        user_selected_score: ["Rasa", "Harga", "Porsi", "Kemasan"],
-        user_exp: "minnasa konnijiwaaa",
-        user_hidden_name: true
-    } // object of dummy data
+    const [ratedData, setRatedData] = useState({
+        user_rated_star: null,
+        user_selected_score: [],
+        user_exp: "",
+        user_hidden_name: null
+    }) // object of dummy data
 
     useEffect(() => {
-        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
-        setMerchantLogo(selectedMerchant[0].merchant_logo)
-        setMerchantName(selectedMerchant[0].merchant_name)
+        // let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
+        setMerchantLogo(location.state.merchant.merchantLogo)
+        setMerchantName(location.state.merchant.merchantName)
         setFilledRating(location.state.rated)
 
-        // HIT API - CAN BE COMMENTED
-        setRatingStar(dummyRatedData.user_rated_star)
-        setRatingNotes(dummyRatedData.user_exp)
-        setCheckedHiddenName(dummyRatedData.user_hidden_name)
-        let scoreResponse
-        if (dummyRatedData.user_selected_score != null) {
-            scoreResponse = checkboxScoreData.filter(scoreValue => {
-                return dummyRatedData.user_selected_score.includes(scoreValue.scoreName)
-            })
-        } else {
-            scoreResponse = []
+        if (location.state.rated) {
+            setRatedData(location.state.ratedData)
+            setRatingStar(location.state.ratedData.user_rated_star)
+            setRatingNotes(location.state.ratedData.user_exp)
+            setCheckedHiddenName(location.state.ratedData.user_hidden_name)
+            let scoreResponse
+            if (location.state.ratedData.user_selected_score != null) {
+                scoreResponse = checkboxScoreData.filter(scoreValue => {
+                    return location.state.ratedData.user_selected_score.includes(scoreValue.scoreName)
+                })
+            } else {
+                scoreResponse = []
+            }
+            
+            setCheckboxScoreData(scoreResponse)
         }
-        
-        setCheckboxScoreData(scoreResponse)
     }, [])
 
     const goBack = () => {
@@ -131,7 +133,6 @@ const RatingView = () => {
             return (
                 <RatingModal
                     isShow={showRatingModal}
-                    onHide={() => setShowRatingModal(false)}
                     confirmModal={() => backToPaymentReceipt()}
                 />
             )
@@ -245,7 +246,7 @@ const RatingView = () => {
                 {
                     filledRating != null ?
                         filledRating?
-                            dummyRatedData.user_exp != null ?
+                            ratedData.user_exp != null ?
                             <div className="ratingPage-expArea">
                                 <div className="ratingPage-expTitle">Ceritakan pengalaman Anda!</div>
 
@@ -267,7 +268,7 @@ const RatingView = () => {
                 {
                     filledRating != null ?
                         filledRating?
-                            dummyRatedData.user_exp != null ?
+                            ratedData.user_exp != null ?
                             <div className="ratingPage-divider2" />
                             :null
                         :
