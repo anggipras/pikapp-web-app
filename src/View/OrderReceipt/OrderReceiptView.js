@@ -21,6 +21,7 @@ import StarGrey from "../../Asset/Icon/star_grey.png";
 import StarYellow from "../../Asset/Icon/star_yellow.png";
 import ArrowWhite from '../../Asset/Icon/ArrowRightWhite.png'
 import ReactStars from "react-rating-stars-component";
+import TransactionNotFoundIcon from "../../Asset/Icon/transaction-notfound.png";
 
 let interval = createRef();
 let merchantName = ""
@@ -90,7 +91,8 @@ export class OrderReceiptView extends React.Component {
     }],
     staticCountDown: false,
     updateStatus: false,
-    transactionId : ""
+    transactionId : "",
+    transactionNotFound : false,
     // continueDetail : false,
   };
 
@@ -141,12 +143,17 @@ export class OrderReceiptView extends React.Component {
       stateData.data.pop();
       
       stateData.data.push(results);
+
+      this.setState({ transactionNotFound: false });
       this.setState({ data: stateData.data, staticCountDown: true });
       this.props.DataDetailTxn(results);
       localStorage.setItem("deliveryData", JSON.stringify(results));
     })
     .catch((err) => {
       console.log(err);
+      if(err.response.data.status === 500) {
+        this.setState({ transactionNotFound: true });
+      }
     })
   }
 
@@ -585,7 +592,14 @@ export class OrderReceiptView extends React.Component {
         </div>
 
         <div className="order-receipt-Wrapper">
-            {this.contentMainView()}
+            {
+            this.state.transactionNotFound ?
+            <div className="order-receipt-transaction-notfound">
+              <img src={TransactionNotFoundIcon} className="order-receipt-transaction-notfoundimg"></img>
+            </div>
+            :
+            this.contentMainView()
+            }
         </div>
         {
           this.state.data[0].order_status === "DELIVER" && this.state.data[0].order_type === "DELIVERY" ?
