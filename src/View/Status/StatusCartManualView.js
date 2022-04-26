@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import { DataDetail, DataDetailTxn } from "../../Redux/Actions";
 import TransactionService from "../../Services/transaction.service";
 import AnalyticsService from "../../Services/analytics.service";
+import TransactionNotFoundIcon from "../../Asset/Icon/transaction-notfound.png";
 
 let interval = createRef();
 
@@ -72,7 +73,8 @@ export class StatusCartManualView extends React.Component {
     }],
     staticCountDown: false,
     updateStatus: false,
-    transactionId : ""
+    transactionId : "",
+    transactionNotFound : false,
     // continueDetail : false,
   };
 
@@ -118,12 +120,17 @@ export class StatusCartManualView extends React.Component {
       stateData.data.pop();
       
       stateData.data.push(results);
+
+      this.setState({ transactionNotFound: false });
       this.setState({ data: stateData.data, staticCountDown: true });
       this.props.DataDetailTxn(results);
       localStorage.setItem("deliveryData", JSON.stringify(results));
     })
     .catch((err) => {
       console.log(err);
+      if(err.response.data.status === 500) {
+        this.setState({ transactionNotFound: true });
+      }
     })
   }
 
@@ -612,7 +619,13 @@ export class StatusCartManualView extends React.Component {
         </div>
 
         <div className="status-cartmanual-Wrapper">
-            {this.contentMainView()}
+            { this.state.transactionNotFound ?
+            <div className="status-cartmanual-transaction-notfound">
+              <img src={TransactionNotFoundIcon} className="status-cartmanual-transaction-notfoundimg"></img>
+            </div>
+            :
+            this.contentMainView()}
+            
         </div>
       </>
     );

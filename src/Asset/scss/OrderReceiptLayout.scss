@@ -880,3 +880,15 @@
 .order-receipt-logo {
   width: 115px;
 }
+
+.order-receipt-transaction-notfound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 78vh;
+}
+
+.order-receipt-transaction-notfoundimg {
+  width: 40%;
+}
