@@ -1,0 +1,14 @@
+{
+    "err_code": "EC0000",
+    "err_message": "APPROVED/OK",
+    "results": {
+        "auto_on_off": true,
+        "open_time": "09:00",
+        "close_time": "21:00",
+        "merchant_status": "OPEN",
+        "minutes_remaining": 700,
+        "next_open_day": "Thursday",
+        "next_open_time": "09:00",
+        "next_close_time": "21:00"
+    }
+}

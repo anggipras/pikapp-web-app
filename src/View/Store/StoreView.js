@@ -14,6 +14,9 @@ import { DoneLoad, IsMerchantQR } from '../../Redux/Actions'
 import TourPage from '../../Component/Tour/TourPage';
 import { firebaseAnalytics } from '../../firebaseConfig'
 
+//json data
+import getMerchantList from './MerchantList.json'
+
 class StoreView extends React.Component {
   state = {
     page: 0,
@@ -70,7 +73,6 @@ class StoreView extends React.Component {
   };
 
   async componentDidMount() {
-    firebaseAnalytics.logEvent("merchant_list_visited")
     this.props.DoneLoad()
     this.props.IsMerchantQR(false);
     this.sendTracking();
@@ -222,62 +224,42 @@ class StoreView extends React.Component {
           + "/"
       }
       var stateData;
-      let uuid = uuidV4();
-      uuid = uuid.replace(/-/g, "");
-      const date = new Date().toISOString();
-      return await Axios(addressRoute, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-request-id": uuid,
-          "x-request-timestamp": date,
-          "x-client-id": clientId,
-          "token": "PUBLIC",
-          "category": "1",
-        },
-        method: "GET",
-        params: {
-          page: this.state.page,
-          size: this.state.size
-        }
-      })
-        .then((res) => {
-          stateData = { ...this.state.data };
-          let responseDatas = res.data;
-          stateData.data.pop();
-          responseDatas.results.forEach((data) => {
-            let merchantCateg = ""
-            data.merchant_categories.forEach((merchCat, indCat) => {
-              if (merchCat) {
-                if (indCat === data.merchant_categories.length - 1) {
-                  merchantCateg += `${merchCat.toLocaleLowerCase()}`
-                } else {
-                  merchantCateg += `${merchCat.toLocaleLowerCase()}, `
-                }
-              }
-            })
-
-            stateData.data.push({
-              address: data.merchant_address,
-              rating: data.merchant_rating,
-              logo: data.merchant_logo,
-              distance: data.merchant_distance,
-              storeId: data.mid,
-              storeName: data.merchant_name,
-              storeDesc: "",
-              storeImage: data.merchant_pict,
-              storeCateg: merchantCateg
-            })
-          })
-
-          this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
-          document.addEventListener('scroll', this.loadMoreMerchant)
-          if (res.data.results.length < 6) {
-            document.removeEventListener('scroll', this.loadMoreMerchant)
+      let res = {
+        data: getMerchantList
+      }
+      stateData = { ...this.state.data };
+      let responseDatas = res.data;
+      stateData.data.pop();
+      responseDatas.results.forEach((data) => {
+        let merchantCateg = ""
+        data.merchant_categories.forEach((merchCat, indCat) => {
+          if (merchCat) {
+            if (indCat === data.merchant_categories.length - 1) {
+              merchantCateg += `${merchCat.toLocaleLowerCase()}`
+            } else {
+              merchantCateg += `${merchCat.toLocaleLowerCase()}, `
+            }
           }
         })
-        .catch((err) => {
-          throw new Error(err)
-        });
+
+        stateData.data.push({
+          address: data.merchant_address,
+          rating: data.merchant_rating,
+          logo: data.merchant_logo,
+          distance: data.merchant_distance,
+          storeId: data.mid,
+          storeName: data.merchant_name,
+          storeDesc: "",
+          storeImage: data.merchant_pict,
+          storeCateg: merchantCateg
+        })
+      })
+
+      this.setState({ data: stateData, loadView: false, totalPage: responseDatas.total_pages, allMerchantAPI: res.data.results });
+      document.addEventListener('scroll', this.loadMoreMerchant)
+      if (res.data.results.length < 6) {
+        document.removeEventListener('scroll', this.loadMoreMerchant)
+      }
     }
 
   }
@@ -427,19 +409,19 @@ class StoreView extends React.Component {
     return (el.getBoundingClientRect().top + 50) <= window.innerHeight
   }
 
-  loadMoreMerchant = () => {
-    const wrappedElement = document.getElementById("idCol")
-    if (wrappedElement !== null) {
-      if (this.state.idCol <= this.state.page) {
-        if (this.isBottom(wrappedElement)) {
-          this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
-          document.removeEventListener('scroll', this.loadMoreMerchant)
-        }
-      } else {
-        document.removeEventListener('scroll', this.loadMoreMerchant)
-      }
-    }
-  }
+  // loadMoreMerchant = () => {
+  //   const wrappedElement = document.getElementById("idCol")
+  //   if (wrappedElement !== null) {
+  //     if (this.state.idCol <= this.state.page) {
+  //       if (this.isBottom(wrappedElement)) {
+  //         this.setState({ idCol: this.state.idCol + 1, page: this.state.page + 1, boolpage: true })
+  //         document.removeEventListener('scroll', this.loadMoreMerchant)
+  //       }
+  //     } else {
+  //       document.removeEventListener('scroll', this.loadMoreMerchant)
+  //     }
+  //   }
+  // }
 
   componentWillUnmount() {
     document.removeEventListener('scroll', this.loadMoreMerchant)

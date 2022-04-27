@@ -22,6 +22,9 @@ import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { DataDetail } from "../../Redux/Actions";
 
+//json data
+import statusHistory from './StatusHistory.json'
+
 let interval = createRef();
 
 export class StatusView extends React.Component {
@@ -57,38 +60,17 @@ export class StatusView extends React.Component {
     ],
     staticCountDown: false,
     updateStatus: false,
-    // continueDetail : false,
   };
 
   componentDidMount() {
     this._isMounted = true;
-    firebaseAnalytics.logEvent("orderlist_visited");
-    this.sendTracking();
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
     } else {
       this.setState({ isMobile: false });
     }
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"));
-    //   this.setState({ isLogin: auth.isLogged });
-    // }
-    // if (auth.isLogged === false) {
-    //   var lastLink = { value: window.location.href };
-    //   Cookies.set("lastLink", lastLink, { expires: 1 });
-    //   this.setRegisterDialog(true);
-    // } else {
-    //   this.getTransactionHistory();
-    // }
     this.getTransactionHistory();
-    this.updateLikeWebsocket();
+    // this.updateLikeWebsocket();
   }
 
   updateLikeWebsocket = () => {
@@ -98,20 +80,6 @@ export class StatusView extends React.Component {
   }
 
   componentDidUpdate() {
-    // if (this.state.isLogin === false) {
-    //   var auth = {
-    //     isLogged: false,
-    //     token: "",
-    //     new_event: true,
-    //     recommendation_status: false,
-    //     email: "",
-    //   };
-    //   if (Cookies.get("auth") !== undefined) {
-    //     auth = JSON.parse(Cookies.get("auth"));
-    //     this.setState({ isLogin: auth.isLogged });
-    //   }
-    // }
-
     if (this.state.updateStatus) {
       window.location.reload();
     }
@@ -123,72 +91,31 @@ export class StatusView extends React.Component {
   }
 
   getTransactionHistory() {
-    // var auth = {
-    //   isLogged: false,
-    //   token: "",
-    //   new_event: true,
-    //   recommendation_status: false,
-    //   email: "",
-    // };
-    // if (Cookies.get("auth") !== undefined) {
-    //   auth = JSON.parse(Cookies.get("auth"));
-    // }
-
-    let currentTable = ''
-    if (localStorage.getItem('table')) {
-      currentTable = (localStorage.getItem('table'))
-    } else {
-      currentTable = 0
+    let res = {
+      data: statusHistory
     }
-    currentTable.toString()
-
-    let currentCartMerchant
-    if (Cookies.get("currentMerchant")) {
-      currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-    } else {
-      currentCartMerchant = { mid: 'M0' }
-    }
-
-    let uuid = uuidV4();
-    uuid = uuid.replace(/-/g, "");
-    const date = new Date().toISOString();
-    let historyTransAPI = `${address}txn/v2/txn-history/${currentTable}/${currentCartMerchant.mid}/`
-    Axios(historyTransAPI, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-request-id": uuid,
-        "x-request-timestamp": date,
-        "x-client-id": clientId,
-      },
-      method: "GET",
-    })
-      .then((res) => {
-        var results = res.data.results;
-        var stateData = { ...this.state };
-        stateData.data.pop();
-        results.forEach((result) => {
-          stateData.data.push({
-            title: result.merchant_name,
-            distance: "",
-            quantity: result.total_product,
-            status: result.status,
-            biz_type: result.biz_type,
-            payment: result.payment_with,
-            transactionId: result.transaction_id,
-            transactionTime: result.transaction_time,
-            transactionCountDown: result.expiry_date,
-            totalPrice: result.total_price,
-            timerMinutes: 0,
-            timerSeconds: 0,
-            stopInterval: true,
-          });
-        });
-        // console.log(stateData.data);
-        this.setState({ data: stateData.data, staticCountDown: true });
-      })
-      .catch((err) => {
-        console.log(err);
+    var results = res.data.results;
+    var stateData = { ...this.state };
+    stateData.data.pop();
+    results.forEach((result) => {
+      stateData.data.push({
+        title: result.merchant_name,
+        distance: "",
+        quantity: result.total_product,
+        status: result.status,
+        biz_type: result.biz_type,
+        payment: result.payment_with,
+        transactionId: result.transaction_id,
+        transactionTime: result.transaction_time,
+        transactionCountDown: result.expiry_date,
+        totalPrice: result.total_price,
+        timerMinutes: 0,
+        timerSeconds: 0,
+        stopInterval: true,
       });
+    });
+    // console.log(stateData.data);
+    this.setState({ data: stateData.data, staticCountDown: true });
   }
 
   setRegisterDialog(isShow) {
@@ -363,25 +290,6 @@ export class StatusView extends React.Component {
               var bodyFormData = new FormData();
               bodyFormData.append("transaction_id", valTime.transactionId);
               bodyFormData.append("status", "FAILED");
-
-              var options = {
-                method: "post",
-                url: address + "txn/v2/txn-update/",
-                headers: {
-                  "x-client-id": clientId,
-                  "x-request-id": uuid,
-                  "x-request-timestamp": date,
-                },
-                data: bodyFormData,
-              };
-
-              Axios(options)
-                .then(() => {
-                  this.setState({ data: changeData, updateStatus: true });
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
             }
           } else {
             if (valTime.payment === "WALLET_OVO" || valTime.payment === "WALLET_DANA" || valTime.payment === "WALLET_SHOPEEPAY") {
@@ -754,39 +662,6 @@ export class StatusView extends React.Component {
       clearInterval(interval.current);
       this._isMounted = false;
     }
-  }
-
-  // goUrl = () => {
-  //   let currentLocation = Cookies.get("lastProduct")
-  //   window.location.href = currentLocation
-  // }
-
-  sendTracking() {
-    let uuid = uuidV4();
-    const date = new Date().toISOString();
-    uuid = uuid.replace(/-/g, "");
-
-    Axios(address + "home/v1/event/add", {
-        headers: {
-            "Content-Type": "application/json",
-            "x-request-id": uuid,
-            "x-request-timestamp": date,
-            "x-client-id": clientId,
-            "token" : "PUBLIC"
-        },
-        method: "POST",  
-        data: { 
-            merchant_id: "-",
-            event_type: "VIEW_DETAIL",
-            page_name: window.location.pathname
-        }
-    })
-    .then((res) => {
-        console.log(res.data.results);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
   }
 
   render() {

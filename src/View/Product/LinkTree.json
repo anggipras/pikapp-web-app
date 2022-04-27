@@ -1,0 +1,16 @@
+{
+    "err_code": "EC0000",
+    "err_message": "APPROVED/OK",
+    "results": [
+        {
+            "url": "https://www.tokopedia.com/bayininja",
+            "title": "TOKOPEDIA",
+            "image": "https://production-merchant.s3.ap-southeast-1.amazonaws.com/tokopedia-icon.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220427T070514Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20220427%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=86f9511ff4e338d79dc304813a0addc0b3c7fd526fe46fa10581719d102e8cc8"
+        },
+        {
+            "url": "https://www.tokopedia.com/bayininja",
+            "title": "TRAVELOKA",
+            "image": "https://production-merchant.s3.ap-southeast-1.amazonaws.com/travelokaeats-icon.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220427T070514Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20220427%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=c544db46c2811b34c8108f528b9ea5b30e5bb7997df5773a7667b47469db8638"
+        }
+    ]
+}

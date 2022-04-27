@@ -10,6 +10,9 @@ import { address, clientId } from "../../Asset/Constant/APIConstant";
 import { v4 as uuidV4 } from "uuid";
 import Loader from 'react-loader-spinner'
 
+//json data
+import menuAdvance from './MenuAdvance.json'
+
 const MenuSelection = (props) => {
     const dispatch = useDispatch()
     const AllRedu = useSelector(state => state.AllRedu)
@@ -39,150 +42,137 @@ const MenuSelection = (props) => {
     useEffect(() => {
         Autosize(document.getElementById('note'))
 
-        //hit API in order to get response of product detail v2
-        let uuid = uuidV4()
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        Axios(`${address}/home/v2/detail/product/`, {
-            headers: {
-                "Content-Type": "application/json",
-                "x-request-id": uuid,
-                "x-request-timestamp": date,
-                "x-client-id": clientId,
-                "token": "PUBLIC",
-                "pid": props.datas.productId,
-            },
-            method: 'GET'
-        }).then(productRes => {
-            let productDet = productRes.data.results.extra_menus.extra_menu
-            let radioResponse = []
-            let checkboxResponse = []
-            productDet.forEach(valProduct => {
-                if (valProduct.menu_type === 'RADIO') {
-                    radioResponse.push(valProduct)
-                } else {
-                    checkboxResponse.push(valProduct)
-                }
-            })
-
-            let radioData = []
-            let radioValData = []
-            radioResponse.forEach(valRadRes => {
-                let listadditionradio = []
-                valRadRes.menu_extra_item.forEach(valList => {
-                    listadditionradio.push({
-                        name: valList.item_name,
-                        price: valList.extra_fee,
-                        isChecked: false
-                    })
-                })
-                radioData.push({
-                    additionname: valRadRes.menu_name,
-                    isMandat: valRadRes.is_mandatory,
-                    listaddition: listadditionradio
-                })
-                radioValData.push([])
-            })
-
-            let checkboxData = []
-            let checkValData = []
-            checkboxResponse.forEach(valCheckRes => {
-                let listadditioncheckbox = []
-                valCheckRes.menu_extra_item.forEach(valList => {
-                    listadditioncheckbox.push({
-                        name: valList.item_name,
-                        price: valList.extra_fee,
-                        isChecked: false
-                    })
-                })
-                checkboxData.push({
-                    additionname: valCheckRes.menu_name,
-                    maxchoice: valCheckRes.max_choice,
-                    isMandat: valCheckRes.is_mandatory,
-                    listaddition: listadditioncheckbox
-                })
-                checkValData.push([])
-            })
-
-            //set mandatory for checkboxes
-            let mandatCheckAvailability = checkboxData.length
-            let mandatCheckLength = checkboxData.length
-            let checkboxMandat = []
-            let totalMandatforCheck = 0
-            checkboxData.forEach(valCheck => {
-                if (valCheck.isMandat) {
-                    checkboxMandat.push(false)
-                    totalMandatforCheck++
-                    mandatCheckAvailability = mandatCheckAvailability - 1
-                } else {
-                    checkboxMandat.push(false)
-                }
-            })
-            if (mandatCheckLength === mandatCheckAvailability) {
-                dispatch({ type: 'MANDATCHECKCOND', payload: false })
+        let productRes = {
+            data: menuAdvance
+        }
+        let productDet = productRes.data.results.extra_menus.extra_menu
+        let radioResponse = []
+        let checkboxResponse = []
+        productDet.forEach(valProduct => {
+            if (valProduct.menu_type === 'RADIO') {
+                radioResponse.push(valProduct)
             } else {
-                dispatch({ type: 'MANDATCHECKCOND', payload: true })
+                checkboxResponse.push(valProduct)
             }
-            setcheckboxMatch(checkboxMandat)
-            settotalCheckMandat(totalMandatforCheck)
+        })
 
-            //set mandatory for radio
-            let mandatRadioAvailability = radioData.length
-            let mandatRadioLength = radioData.length
-            let radioMandat = []
-            let totalMandatforRadio = 0
-            radioData.forEach(valCheck => {
-                if (valCheck.isMandat) {
-                    radioMandat.push(false)
-                    totalMandatforRadio++
-                    mandatRadioAvailability = mandatRadioAvailability - 1
-                } else {
-                    radioMandat.push(false)
-                }
+        let radioData = []
+        let radioValData = []
+        radioResponse.forEach(valRadRes => {
+            let listadditionradio = []
+            valRadRes.menu_extra_item.forEach(valList => {
+                listadditionradio.push({
+                    name: valList.item_name,
+                    price: valList.extra_fee,
+                    isChecked: false
+                })
             })
-            if (mandatRadioLength === mandatRadioAvailability) {
-                dispatch({ type: 'MANDATRADIOCOND', payload: false })
-            } else {
-                dispatch({ type: 'MANDATRADIOCOND', payload: true })
-            }
-            setradioMatch(radioMandat)
-            settotalRadioMandat(totalMandatforRadio)
+            radioData.push({
+                additionname: valRadRes.menu_name,
+                isMandat: valRadRes.is_mandatory,
+                listaddition: listadditionradio
+            })
+            radioValData.push([])
+        })
 
-            if (!AllRedu.openMenuCart) {
-                var datas = props.datas
-                var list = []
-                if (datas.foodExt !== undefined) {
-                    datas.foodExt.map((data) => {
-                        return list.push({
-                            name: data.name,
-                            amount: data.amount + 1,
-                        });
+        let checkboxData = []
+        let checkValData = []
+        checkboxResponse.forEach(valCheckRes => {
+            let listadditioncheckbox = []
+            valCheckRes.menu_extra_item.forEach(valList => {
+                listadditioncheckbox.push({
+                    name: valList.item_name,
+                    price: valList.extra_fee,
+                    isChecked: false
+                })
+            })
+            checkboxData.push({
+                additionname: valCheckRes.menu_name,
+                maxchoice: valCheckRes.max_choice,
+                isMandat: valCheckRes.is_mandatory,
+                listaddition: listadditioncheckbox
+            })
+            checkValData.push([])
+        })
+
+        //set mandatory for checkboxes
+        let mandatCheckAvailability = checkboxData.length
+        let mandatCheckLength = checkboxData.length
+        let checkboxMandat = []
+        let totalMandatforCheck = 0
+        checkboxData.forEach(valCheck => {
+            if (valCheck.isMandat) {
+                checkboxMandat.push(false)
+                totalMandatforCheck++
+                mandatCheckAvailability = mandatCheckAvailability - 1
+            } else {
+                checkboxMandat.push(false)
+            }
+        })
+        if (mandatCheckLength === mandatCheckAvailability) {
+            dispatch({ type: 'MANDATCHECKCOND', payload: false })
+        } else {
+            dispatch({ type: 'MANDATCHECKCOND', payload: true })
+        }
+        setcheckboxMatch(checkboxMandat)
+        settotalCheckMandat(totalMandatforCheck)
+
+        //set mandatory for radio
+        let mandatRadioAvailability = radioData.length
+        let mandatRadioLength = radioData.length
+        let radioMandat = []
+        let totalMandatforRadio = 0
+        radioData.forEach(valCheck => {
+            if (valCheck.isMandat) {
+                radioMandat.push(false)
+                totalMandatforRadio++
+                mandatRadioAvailability = mandatRadioAvailability - 1
+            } else {
+                radioMandat.push(false)
+            }
+        })
+        if (mandatRadioLength === mandatRadioAvailability) {
+            dispatch({ type: 'MANDATRADIOCOND', payload: false })
+        } else {
+            dispatch({ type: 'MANDATRADIOCOND', payload: true })
+        }
+        setradioMatch(radioMandat)
+        settotalRadioMandat(totalMandatforRadio)
+
+        if (!AllRedu.openMenuCart) {
+            var datas = props.datas
+            var list = []
+            if (datas.foodExt !== undefined) {
+                datas.foodExt.map((data) => {
+                    return list.push({
+                        name: data.name,
+                        amount: data.amount + 1,
                     });
-                    props.ValidQty(1)
-                    setdetailCategory(list);
-                    setradioData(radioData)
-                    setcheckboxData(checkboxData)
-                    setradioVal(radioValData)
-                    setcheckboxVal(checkValData)
-                }
-            } else {
-                let amountofProd = props.datas.foodExt
-                amountofProd.forEach((val) => {
-                    props.ValidQty(val.amount)
-                })
-                setdetailCategory(props.datas.foodExt)
-                setnote(props.datas.foodNote)
+                });
+                props.ValidQty(1)
+                setdetailCategory(list);
                 setradioData(radioData)
                 setcheckboxData(checkboxData)
-                dispatch({ type: 'CHECKBOXES', payload: props.datas.foodListCheckbox })
-                dispatch({ type: 'RADIOBUTTON', payload: props.datas.foodListRadio })
-                setupdateDataEdit(true)
-                setradioVal(props.datas.foodListRadio)
-                setcheckboxVal(props.datas.foodListCheckbox)
+                setradioVal(radioValData)
+                setcheckboxVal(checkValData)
             }
-            dispatch({ type: 'DONELOAD' })
-            props.loadingButton()
-        }).catch(err => console.log(err))
+        } else {
+            let amountofProd = props.datas.foodExt
+            amountofProd.forEach((val) => {
+                props.ValidQty(val.amount)
+            })
+            setdetailCategory(props.datas.foodExt)
+            setnote(props.datas.foodNote)
+            setradioData(radioData)
+            setcheckboxData(checkboxData)
+            dispatch({ type: 'CHECKBOXES', payload: props.datas.foodListCheckbox })
+            dispatch({ type: 'RADIOBUTTON', payload: props.datas.foodListRadio })
+            setupdateDataEdit(true)
+            setradioVal(props.datas.foodListRadio)
+            setcheckboxVal(props.datas.foodListCheckbox)
+        }
+        dispatch({ type: 'DONELOAD' })
+        props.loadingButton()
 
     }, [])
 

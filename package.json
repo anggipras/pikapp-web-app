@@ -87,6 +87,7 @@
   "devDependencies": {
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
+    "json-loader": "^0.5.7",
     "react-test-renderer": "^17.0.1"
   }
 }

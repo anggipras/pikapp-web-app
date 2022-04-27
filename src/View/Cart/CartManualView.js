@@ -36,6 +36,9 @@ import AnalyticsService from "../../Services/analytics.service";
 import TransactionService from "../../Services/transaction.service";
 import MerchantService from "../../Services/merchant.service";
 
+//json data
+import checkShopStatus from './CartCheckShopStatus.json'
+
 var currentExt = {
   detailCategory: [
     {
@@ -202,8 +205,6 @@ class CartManualView extends React.Component {
     };
 
     componentDidMount() {
-      firebaseAnalytics.logEvent("cartmanual_visited");
-      this.sendTracking();
       if(window.innerWidth < 700) {
         this.state.steptour.splice(2,1);
       } else {
@@ -491,32 +492,24 @@ class CartManualView extends React.Component {
     }
 
     handleCheckingShopStatus = () => {
-      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-      var reqHeader = {
-        token : "PUBLIC",
-        mid : selectedMerchant[0].mid
+      let res = {
+        data: checkShopStatus // cartcheckshopstatus json data
       }
-      MerchantService.checkShopStatus(reqHeader)
-      .then((res) => {
-        if (res.data.results.minutes_remaining < "2") {
-          if (this.state.cartReduData.shippingDateType == 1) {
-            this.checkingPromoLimitCase()
-          } else {
-            this.setState({ cancelCartModal: true })
-          }
-        } else if(res.data.results.minutes_remaining < "31") {
-          if (this.state.cartReduData.shippingDateType == 1) {
-            this.checkingPromoLimitCase()
-          } else {
-            this.setState({ cancelCartModal: true })
-          }
-        } else {
+      if (res.data.results.minutes_remaining < "2") {
+        if (this.state.cartReduData.shippingDateType == 1) {
           this.checkingPromoLimitCase()
+        } else {
+          this.setState({ cancelCartModal: true })
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      } else if(res.data.results.minutes_remaining < "31") {
+        if (this.state.cartReduData.shippingDateType == 1) {
+          this.checkingPromoLimitCase()
+        } else {
+          this.setState({ cancelCartModal: true })
+        }
+      } else {
+        this.checkingPromoLimitCase()
+      }
     }
 
     checkingPromoLimitCase = () => {
@@ -532,21 +525,14 @@ class CartManualView extends React.Component {
     }
 
     handleCheckingPromoLimit = () => {
-      var reqParam = {
-        campaign_id : this.props.selectedPromo.promo_campaign_id,
+      let res = {
+        status: 200
       }
-      TransactionService.getPromoLimitStatus(reqParam)
-      .then((res) => {
-        if (res.status == 200) {
-          this.handlePayment()
-        } else {
-          this.setState({ showModalPromoLimit: true })
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+      if (res.status == 200) {
+        this.handlePayment()
+      } else {
         this.setState({ showModalPromoLimit: true })
-      })
+      }
     }
 
     handlePayment = () => {
@@ -692,82 +678,71 @@ class CartManualView extends React.Component {
         campaign_id: this.props.selectedPromo ? !this.state.notMatchPromo ? this.props.selectedPromo.promo_campaign_id : 0 : 0,
       }
 
-      TransactionService.addTransactionPos(requestData)
-        .then((res) => {
-          if(this.state.paymentType === 'WALLET_OVO') {
-            this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
-            setTimeout(() => {
-              let filterOtherCart = storageData.filter(valFilter => {
-                return valFilter.mid !== currentCartMerchant.mid
-              })
-              var dataOrder = {
-                transactionId : res.data.results[0].transaction_id,
-                totalPayment : requestData.total_payment,
-                paymentType : this.state.paymentType,
-                transactionTime : newDate
-              };
-              this.props.DataOrder(dataOrder);
-              localStorage.setItem("payment", JSON.stringify(dataOrder));
-              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-              localStorage.removeItem("lastTable")
-              localStorage.removeItem("fctable")
-              localStorage.removeItem("counterPayment");
-              this.removeStorage()
-              this.setState({ loadButton: true })
-              this.props.DoneLoad()
-            }, 1000);
-          }
-          else if(this.state.paymentType === 'WALLET_DANA') {
-            this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
-            setTimeout(() => {
-              let filterOtherCart = storageData.filter(valFilter => {
-                return valFilter.mid !== currentCartMerchant.mid
-              })
-              var dataOrder = {
-                transactionId : res.data.results[0].transaction_id,
-                totalPayment : requestData.total_payment,
-                paymentType : this.state.paymentType,
-                transactionTime : newDate
-              };
-              this.props.DataOrder(dataOrder);
-              localStorage.setItem("payment", JSON.stringify(dataOrder));
-              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-              localStorage.removeItem("lastTable")
-              localStorage.removeItem("fctable")
-              localStorage.removeItem("counterPayment");
-              this.removeStorage()
-              window.location.href = res.data.results[0].checkout_url_mobile;
-            }, 1000);
-          }
-          else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
-            this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
-            setTimeout(() => {
-              let filterOtherCart = storageData.filter(valFilter => {
-                return valFilter.mid !== currentCartMerchant.mid
-              })
-              var dataOrder = {
-                transactionId : res.data.results[0].transaction_id,
-                totalPayment : requestData.total_payment,
-                paymentType : this.state.paymentType,
-                transactionTime : newDate
-              };
-              this.props.DataOrder(dataOrder);
-              localStorage.setItem("payment", JSON.stringify(dataOrder));
-              localStorage.setItem("cart", JSON.stringify(filterOtherCart))
-              localStorage.removeItem("lastTable")
-              localStorage.removeItem("fctable")
-              localStorage.removeItem("counterPayment");
-              this.removeStorage()
-              window.location.assign(res.data.results[0].checkout_url_deeplink);
-            }, 1000);
-          }
-        })
-        .catch((err) => {
-          if (err.response.data !== undefined) {
-            alert(err.response.data.err_message)
-            this.props.DoneLoad()
-          }
-        });
+      if(this.state.paymentType === 'WALLET_OVO') {
+        this.setState({ successMessage: 'Silahkan Bayar melalui OVO' })
+        setTimeout(() => {
+          let filterOtherCart = storageData.filter(valFilter => {
+            return valFilter.mid !== currentCartMerchant.mid
+          })
+          var dataOrder = {
+            transactionId : "1a2b3c4d5e6f7g",
+            totalPayment : requestData.total_payment,
+            paymentType : this.state.paymentType,
+            transactionTime : newDate
+          };
+          this.props.DataOrder(dataOrder);
+          localStorage.setItem("payment", JSON.stringify(dataOrder));
+          localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+          localStorage.removeItem("lastTable")
+          localStorage.removeItem("fctable")
+          localStorage.removeItem("counterPayment");
+          this.removeStorage()
+          this.setState({ loadButton: true })
+          this.props.DoneLoad()
+        }, 1000);
+      }
+      else if(this.state.paymentType === 'WALLET_DANA') {
+        this.setState({ successMessage: 'Silahkan Bayar melalui DANA' })
+        setTimeout(() => {
+          let filterOtherCart = storageData.filter(valFilter => {
+            return valFilter.mid !== currentCartMerchant.mid
+          })
+          var dataOrder = {
+            transactionId : "1a2b3c4d5e6f7g",
+            totalPayment : requestData.total_payment,
+            paymentType : this.state.paymentType,
+            transactionTime : newDate
+          };
+          this.props.DataOrder(dataOrder);
+          localStorage.setItem("payment", JSON.stringify(dataOrder));
+          localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+          localStorage.removeItem("lastTable")
+          localStorage.removeItem("fctable")
+          localStorage.removeItem("counterPayment");
+          this.removeStorage()
+        }, 1000);
+      }
+      else if(this.state.paymentType === 'WALLET_SHOPEEPAY') {
+        this.setState({ successMessage: 'Silahkan Bayar melalui ShopeePay' })
+        setTimeout(() => {
+          let filterOtherCart = storageData.filter(valFilter => {
+            return valFilter.mid !== currentCartMerchant.mid
+          })
+          var dataOrder = {
+            transactionId : "1a2b3c4d5e6f7g",
+            totalPayment : requestData.total_payment,
+            paymentType : this.state.paymentType,
+            transactionTime : newDate
+          };
+          this.props.DataOrder(dataOrder);
+          localStorage.setItem("payment", JSON.stringify(dataOrder));
+          localStorage.setItem("cart", JSON.stringify(filterOtherCart))
+          localStorage.removeItem("lastTable")
+          localStorage.removeItem("fctable")
+          localStorage.removeItem("counterPayment");
+          this.removeStorage()
+        }, 1000);
+      }
     }
 
     removeStorage = () => {
@@ -952,17 +927,11 @@ class CartManualView extends React.Component {
         notes: newNotes,
         qty: currentExt.detailCategory[0].amount,
       }
-      TransactionService.addProductCart(reqHeader, reqBody)
-      .then(() => {
-        console.log('savetocart succeed');
-        this.setState({ insurancePrice: 0});
-        this.setState({ insuranceCheckbox: false });
-        this.props.InsurancePrice(0);
-        this.props.InsuranceCheckbox(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+      this.setState({ insurancePrice: 0});
+      this.setState({ insuranceCheckbox: false });
+      this.props.InsurancePrice(0);
+      this.props.InsuranceCheckbox(false);
     }
 
     tourPage = () => {
@@ -1020,28 +989,6 @@ class CartManualView extends React.Component {
       this.setState({ isShowItem: status });
     }
 
-    sendTracking() {
-      const currentCartMerchant = JSON.parse(Cookies.get("currentMerchant"))
-
-      var reqHeader = {
-        token : "PUBLIC"
-      }
-  
-      var reqBody = {
-        merchant_id: currentCartMerchant.mid,
-        event_type: "ORDER_DETAIL",
-        page_name: window.location.pathname
-      }
-  
-      AnalyticsService.sendTrackingPage(reqHeader, reqBody)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-
     handleInsurancePrice = (e) => {
       if (e.target.checked) {
         let totalPayment = finalProduct[0].totalPrice
@@ -1096,30 +1043,20 @@ class CartManualView extends React.Component {
     }
 
     getShopStatus() {
-      let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-
-      var reqHeader = {
-        token : "PUBLIC",
-        mid : selectedMerchant[0].mid
+      let res = {
+        data: checkShopStatus // cartcheckshopstatus json data
       }
-  
-      MerchantService.checkShopStatus(reqHeader)
-      .then((res) => {
-        this.setState({ 
-          merchantHourStatus: res.data.results.merchant_status, 
-          merchantHourOpenTime: res.data.results.open_time, 
-          merchantHourGracePeriod: res.data.results.minutes_remaining,
-          merchantHourNextOpenDay: res.data.results.next_open_day,
-          merchantHourNextOpenTime: res.data.results.next_open_time,
-          merchantHourAutoOnOff: res.data.results.auto_on_off
-         })
-        if (!res.data.results.auto_on_off) {
-          this.setState({ disabledSubmitButton: true })
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      this.setState({ 
+        merchantHourStatus: res.data.results.merchant_status, 
+        merchantHourOpenTime: res.data.results.open_time, 
+        merchantHourGracePeriod: res.data.results.minutes_remaining,
+        merchantHourNextOpenDay: res.data.results.next_open_day,
+        merchantHourNextOpenTime: res.data.results.next_open_time,
+        merchantHourAutoOnOff: res.data.results.auto_on_off
+       })
+      if (!res.data.results.auto_on_off) {
+        this.setState({ disabledSubmitButton: true })
+      }
     }
 
     merchantHourStatusWarning = () => {

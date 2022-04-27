@@ -1,0 +1,60 @@
+{
+    "err_code": "EC0000",
+    "err_message": "APPROVED/OK",
+    "results": {
+        "extra_menus": {
+            "extra_menu": [
+                {
+                    "menu_template_id": 40,
+                    "max_choice": 2,
+                    "menu_type": "CHECKBOX",
+                    "menu_extra_item": [
+                        {
+                            "item_name": "kay 3",
+                            "extra_fee": 3000
+                        },
+                        {
+                            "item_name": "kay two",
+                            "extra_fee": 1000
+                        },
+                        {
+                            "item_name": "kay one",
+                            "extra_fee": 1000
+                        }
+                    ],
+                    "menu_name": "Kay leveru",
+                    "is_mandatory": false
+                },
+                {
+                    "menu_template_id": 22,
+                    "max_choice": 1,
+                    "menu_type": "RADIO",
+                    "menu_extra_item": [
+                        {
+                            "item_name": "Koy 1",
+                            "extra_fee": 1000
+                        }
+                    ],
+                    "menu_name": "Level Koy",
+                    "is_mandatory": false
+                }
+            ]
+        },
+        "product_id": "P00000325",
+        "product_name": "Udon Koy",
+        "product_price": 20000,
+        "product_picture": [
+            "https://production-merchant.s3.ap-southeast-1.amazonaws.com/27-09-2021_10%3A52%3A06sushilogo.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220427T082026Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20220427%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=7e79dee94c033f4f4119f0190fbb71a8754c1ec5eada2e2d929f19a70eace1f3",
+            "https://production-merchant.s3.ap-southeast-1.amazonaws.com/27-09-2021_10%3A52%3A06sushilogo.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220427T082026Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43199&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20220427%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=d3d2aa65d33adf28b34c91ce2ec141bac8ea21a33f2c7f5ed0eb644e59e02fb0",
+            "https://production-merchant.s3.ap-southeast-1.amazonaws.com/27-09-2021_10%3A52%3A06sushilogo.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220427T082026Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20220427%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=7e79dee94c033f4f4119f0190fbb71a8754c1ec5eada2e2d929f19a70eace1f3"
+        ],
+        "product_desc": "Ini udon koy",
+        "total_sold": "0",
+        "rating": "0.0",
+        "total_rate": "0.0",
+        "distance": null,
+        "merchant_name": "Sushi to Ramen",
+        "merchant_logo": "https://production-merchant.s3.ap-southeast-1.amazonaws.com/048837600_1587095459-shutterstock_201774374.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220427T082026Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=AKIAYBXTVRKM5MEIYZEG%2F20220427%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=468e9eee86d69144f94cc35ae1f88ef506945d7a9fe66a56bfc44d27b7bb5e9d",
+        "mid": "M00000150"
+    }
+}

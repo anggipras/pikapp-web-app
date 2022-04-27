@@ -75,7 +75,7 @@ const PickupSelectionView = () => {
     const shipperArea = () => {
         return (
             <div className="deliverySelection-layout">
-                <div className="deliverySelection-input" onClick={goToAddress}>
+                <div className="deliverySelection-input">
                     <div className="deliverySelection-input-leftSide">
                         <span className="deliverySelection-locationIcon">
                             <img className="address-location-icon" src={LocationIcon} />

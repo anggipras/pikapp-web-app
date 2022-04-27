@@ -27,7 +27,6 @@ class ProfileView extends React.Component {
   };
 
   componentDidMount() {
-    // firebaseAnalytics.logEvent("profile_visited")
     var auth = {
       isLogged: false,
       token: "",

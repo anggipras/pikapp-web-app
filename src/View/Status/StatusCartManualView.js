@@ -75,25 +75,15 @@ export class StatusCartManualView extends React.Component {
     updateStatus: false,
     transactionId : "",
     transactionNotFound : false,
-    // continueDetail : false,
   };
 
   componentDidMount() {
     this._isMounted = true;
-    firebaseAnalytics.logEvent("orderlist_visited");
-    this.sendTracking();
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });
     } else {
       this.setState({ isMobile: false });
     }
-    // this.updateLikeWebsocket();
-  }
-
-  updateLikeWebsocket = () => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 120000);
   }
 
   componentDidUpdate() {
@@ -570,26 +560,6 @@ export class StatusCartManualView extends React.Component {
 
   handleTransactionId = (e) =>{
     this.setState({ transactionId: e.target.value});
-  }
-
-  sendTracking() {
-    var reqHeader = {
-      token : "PUBLIC"
-    }
-
-    var reqBody = {
-      merchant_id: "-",
-      event_type: "VIEW_DETAIL",
-      page_name: window.location.pathname
-    }
-    
-    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
   }
 
   render() {

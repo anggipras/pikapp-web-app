@@ -48,7 +48,6 @@ class OrderConfirmationView extends React.Component {
     }
 
     componentDidMount() {
-        firebaseAnalytics.logEvent("orderconfirmation_visited");
         this.sendTracking();
         if (window.innerWidth < 700) {
             this.setState({ isMobile: true });
@@ -92,9 +91,9 @@ class OrderConfirmationView extends React.Component {
             this.setState({ dataOrder: this.props.AllRedu.dataOrder },
             () => {
                 if(this.props.AllRedu.isManualTxn) {
-                    this.getStatusPaymentDelivery();
+                    // this.getStatusPaymentDelivery();
                 } else {
-                    this.getStatusPaymentDineIn();
+                    // this.getStatusPaymentDineIn();
                 }
             });
         } else if (localStorage.getItem("payment")) {
@@ -122,9 +121,9 @@ class OrderConfirmationView extends React.Component {
             this.setState({ dataOrder: dataPayment },
             () => {
                 if(this.props.AllRedu.isManualTxn) {
-                    this.getStatusPaymentDelivery();
+                    // this.getStatusPaymentDelivery();
                 } else {
-                    this.getStatusPaymentDineIn();
+                    // this.getStatusPaymentDineIn();
                 }
             });
         }
@@ -132,9 +131,9 @@ class OrderConfirmationView extends React.Component {
         setInterval(async () => {
             if (this.state.currentModal.status === "OPEN" || this.state.currentModal.status === "UNPAID") {
                 if(this.props.AllRedu.isManualTxn) {
-                    this.showResponsePaymentDelivery();
+                    // this.showResponsePaymentDelivery();
                 } else {
-                    this.showResponsePaymentDineIn();
+                    // this.showResponsePaymentDineIn();
                 }
             }
         }, 30000);
@@ -198,24 +197,6 @@ class OrderConfirmationView extends React.Component {
     }
 
     showResponsePaymentDineIn = () => {
-        // onMessageListener().then(payload => {
-        //     console.log("payload ::: " + payload);
-        //     if(payload.data.payment_status === "PAID") {
-        //         this.setState({ isSubmit : true });
-        //         this.setState({ showResponsePayment : true });
-        //     } else if (payload.data.payment_status === "FAILED" || payload.data.payment_status === "ERROR") {
-        //         this.setState({ isSubmit : true });
-        //         this.setState({ showResponsePayment : false });
-        //     }
-
-        // }).catch(err => console.log('failed: ', err));
-
-        // let res = {
-        //     isSubmit : this.state.isSubmit,
-        //     showResponsePayment : this.state.showResponsePayment
-        // }
-        // localStorage.setItem("responsePayment", JSON.stringify(res));
-
         var reqParam = {
             transactionId : this.state.dataOrder.transactionId
         }
@@ -290,7 +271,6 @@ class OrderConfirmationView extends React.Component {
             page_name: window.location.pathname
         }
     
-        AnalyticsService.sendTrackingPage(reqHeader, reqBody)
         .then((res) => {
             console.log(res);
         })
@@ -540,7 +520,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/dc9636f4441f46b698873b0ea8aa867620220422101947"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -567,7 +547,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/dc9636f4441f46b698873b0ea8aa867620220422101947"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -711,7 +691,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/dc9636f4441f46b698873b0ea8aa867620220422101947"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN
@@ -737,7 +717,7 @@ class OrderConfirmationView extends React.Component {
                                                     <p className="linkWords-order" onClick={() => this.backToHome()}>KEMBALI KE HOME</p>
                                                     {
                                                         this.props.AllRedu.isManualTxn ?
-                                                        <Link to={"/transaction/" + this.state.currentModal.transactionId} style={{ textDecoration: "none" }} className="submitButton-order">
+                                                        <Link to={"/transaction/dc9636f4441f46b698873b0ea8aa867620220422101947"} style={{ textDecoration: "none" }} className="submitButton-order">
                                                             <div>
                                                                 <div className="wordsButton-order">
                                                                     LIHAT PESANAN

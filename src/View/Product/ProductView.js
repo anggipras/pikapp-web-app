@@ -27,6 +27,11 @@ import MerchantService from "../../Services/merchant.service";
 import TransactionService from "../../Services/transaction.service";
 import AnalyticsService from "../../Services/analytics.service";
 
+//json data
+import getMerchantDetail from './GetDetailMerchant.json'
+import checkShopStatus from './CheckShopStatus.json'
+import linkTree from './LinkTree.json'
+
 var currentExt = {
   detailCategory: [
     {
@@ -153,7 +158,6 @@ class ProductView extends React.Component {
   timeout = null
 
   componentDidMount() {
-    firebaseAnalytics.logEvent("merchant_detail_visited")
     this.props.ValidQty(0)
     this.setState({ hiddenBanner : false });
     document.body.style.backgroundColor = 'white'
@@ -187,7 +191,6 @@ class ProductView extends React.Component {
 
     this.getAllProducts(mid, notab, username);
     this.getLinkTree(username);
-    this.sendTracking(mid);
   }
 
   getAllProducts(mid, notab, username) {
@@ -205,151 +208,90 @@ class ProductView extends React.Component {
       longitude : longitude
     }
 
-    ProductService.getDetailMerchant(reqHeader)
-      .then((res) => {
-        res.data.results.username = username;
-        var currentMerchant = {
-          mid: "",
-          username: "",
-          storeName: "",
-          storeDesc: "",
-          distance: "",
-          storeImage: "",
-          storeAdress: "",
-          storeRating: "",
-          storeLogo: "",
-          storePhone: "",
-          storeCateg: []
-        };
-        currentMerchant.mid = res.data.results.mid;
-        currentMerchant.username = username;
-        currentMerchant.storeName = res.data.results.merchant_name;
-        currentMerchant.storeDesc = "Desc";
-        currentMerchant.distance = res.data.results.merchant_distance;
-        currentMerchant.storeImage = res.data.results.merchant_pict;
-        currentMerchant.storeAdress = res.data.results.merchant_address;
-        currentMerchant.storeRating = res.data.results.merchant_rating;
-        currentMerchant.storeLogo = res.data.results.merchant_logo;
-        currentMerchant.storePhone = res.data.results.merchant_phone;
-        currentMerchant.storeCateg = res.data.results.merchant_categories === null ? [] : res.data.results.merchant_categories
+    let res = { // merchant detail json
+      data: getMerchantDetail
+    }
+    res.data.results.username = username;
+    var currentMerchant = {
+      mid: "",
+      username: "",
+      storeName: "",
+      storeDesc: "",
+      distance: "",
+      storeImage: "",
+      storeAdress: "",
+      storeRating: "",
+      storeLogo: "",
+      storePhone: "",
+      storeCateg: []
+    };
+    currentMerchant.mid = res.data.results.mid;
+    currentMerchant.username = username;
+    currentMerchant.storeName = res.data.results.merchant_name;
+    currentMerchant.storeDesc = "Desc";
+    currentMerchant.distance = res.data.results.merchant_distance;
+    currentMerchant.storeImage = res.data.results.merchant_pict;
+    currentMerchant.storeAdress = res.data.results.merchant_address;
+    currentMerchant.storeRating = res.data.results.merchant_rating;
+    currentMerchant.storeLogo = res.data.results.merchant_logo;
+    currentMerchant.storePhone = res.data.results.merchant_phone;
+    currentMerchant.storeCateg = res.data.results.merchant_categories === null ? [] : res.data.results.merchant_categories
 
-        let selectedStore = []
-        selectedStore.push(res.data.results)
-        localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
-        Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
+    let selectedStore = []
+    selectedStore.push(res.data.results)
+    localStorage.setItem('selectedMerchant', JSON.stringify(selectedStore))
+    Cookies.set("currentMerchant", currentMerchant, { expires: 1 })
 
-        let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
-        let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+    let selectedMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
+    let filtersizeMerchant = JSON.parse(localStorage.getItem('selectedMerchant'))
 
-        let stateData = { ...this.state.data };
-        stateData.mid = currentMerchant.mid;
-        stateData.username = currentMerchant.username;
-        stateData.title = currentMerchant.storeName;
-        stateData.image = currentMerchant.storeImage;
-        stateData.logo = currentMerchant.storeLogo;
-        stateData.desc = currentMerchant.storeDistance;
-        stateData.address = currentMerchant.storeAdress;
-        stateData.rating = currentMerchant.storeRating;
-        stateData.phone = currentMerchant.storePhone;
-        //refactor merchant categories
-        let merchantCateg = ""
-        currentMerchant.storeCateg.forEach((merchCat, indCat) => {
-          if (merchCat) {
-            if (indCat === currentMerchant.storeCateg.length - 1) {
-              merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}`
-            } else {
-              merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}, `
-            }
-          }
-        })
-        stateData.category = merchantCateg
-        stateData.notable = notab
-        var productCateg = []
-        var idCateg = []
-        var productPage = []
-        productCateg = selectedMerchant[0].categories.map((categ) => {
-          idCateg.push(0)
-          productPage.push(this.state.size)
-          return categ
-        })
+    let stateData = { ...this.state.data };
+    stateData.mid = currentMerchant.mid;
+    stateData.username = currentMerchant.username;
+    stateData.title = currentMerchant.storeName;
+    stateData.image = currentMerchant.storeImage;
+    stateData.logo = currentMerchant.storeLogo;
+    stateData.desc = currentMerchant.storeDistance;
+    stateData.address = currentMerchant.storeAdress;
+    stateData.rating = currentMerchant.storeRating;
+    stateData.phone = currentMerchant.storePhone;
+    //refactor merchant categories
+    let merchantCateg = ""
+    currentMerchant.storeCateg.forEach((merchCat, indCat) => {
+      if (merchCat) {
+        if (indCat === currentMerchant.storeCateg.length - 1) {
+          merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}`
+        } else {
+          merchantCateg += `${merchCat[0].toUpperCase() + merchCat.slice(1).toLocaleLowerCase()}, `
+        }
+      }
+    })
+    stateData.category = merchantCateg
+    stateData.notable = notab
+    var productCateg = []
+    var idCateg = []
+    var productPage = []
+    productCateg = selectedMerchant[0].categories.map((categ) => {
+      idCateg.push(0)
+      productPage.push(this.state.size)
+      return categ
+    })
 
-        productCateg.forEach((val) => {
-          val.category_products = []
-        })
+    productCateg.forEach((val) => {
+      val.category_products = []
+    })
 
-        productCateg.forEach((categProd) => {
-          selectedMerchant[0].products.forEach((allproducts) => {
-            if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-              categProd.category_products.push({
-                productId: allproducts.product_id,
-                category: allproducts.product_category,
-                foodName: allproducts.product_name,
-                foodDesc: allproducts.product_desc,
-                foodPrice: allproducts.product_price,
-                foodRating: allproducts.rating,
-                foodImage: allproducts.product_picture1,
-                foodExt: [
-                  {
-                    name: "",
-                    amount: 0,
-                  },
-                ],
-              })
-            }
-          })
-        })
-
-        let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
-          return categ
-        })
-
-        productPerSize.forEach((val) => {
-          val.category_products = []
-        })
-
-        productPerSize.forEach((categProd) => {
-          filtersizeMerchant[0].products.forEach((allproducts) => {
-            if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
-              categProd.category_products.push({
-                productId: allproducts.product_id,
-                category: allproducts.product_category,
-                foodName: allproducts.product_name,
-                foodDesc: allproducts.product_desc,
-                foodPrice: allproducts.product_price,
-                foodRating: allproducts.rating,
-                foodImage: allproducts.product_picture1,
-                foodExt: [
-                  {
-                    name: "",
-                    amount: 0,
-                  },
-                ],
-              })
-            }
-          })
-        })
-
-        let firstShownProduct = []
-        productPerSize.forEach((categProd, indexcategProd) => {
-          firstShownProduct.push(categProd)
-          let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
-            return indexvalProd < this.state.size
-          })
-          categProd.category_products = newFilter
-          firstShownProduct[indexcategProd].category_products = []
-          firstShownProduct[indexcategProd].category_products = newFilter
-        })
-
-        var allProduct = []
-        res.data.results.products.forEach((product) => {
-          allProduct.push({
-            productId: product.product_id,
-            category: product.product_category,
-            foodName: product.product_name,
-            foodDesc: product.product_desc,
-            foodPrice: product.product_price,
-            foodRating: product.rating,
-            foodImage: product.product_picture1,
+    productCateg.forEach((categProd) => {
+      selectedMerchant[0].products.forEach((allproducts) => {
+        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+          categProd.category_products.push({
+            productId: allproducts.product_id,
+            category: allproducts.product_category,
+            foodName: allproducts.product_name,
+            foodDesc: allproducts.product_desc,
+            foodPrice: allproducts.product_price,
+            foodRating: allproducts.rating,
+            foodImage: allproducts.product_picture1,
             foodExt: [
               {
                 name: "",
@@ -357,110 +299,117 @@ class ProductView extends React.Component {
               },
             ],
           })
-        })
-
-        this.setState({ productAllPage : allProduct });
-
-        this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-        this.setState({ productCategpersizeOri : this.state.productCategpersize });
-        document.addEventListener('scroll', this.loadMoreMerchant)
-        document.addEventListener('scroll', this.onScrollCart)
-
-        if (localStorage.getItem("productTour") == 1) {
-          if (this.props.AuthRedu.isMerchantQR === false) {
-            this.state.steptour.shift();
-          }
-          this.setState({ startTour: true });
         }
-        else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
-          this.setState({ startTour: true });
-        }
-
-        if(mid) {
-          this.setState({ isManualTxn : false });
-          Cookies.set("isManualTxn", 0)
-          this.props.IsManualTxn(false);
-          localStorage.setItem("isManualTxn", false);
-        } else {
-          this.setState({ isManualTxn : true });
-          Cookies.set("isManualTxn", 1)
-          this.props.IsManualTxn(true);
-          localStorage.setItem("isManualTxn", true);
-        }
-
-        this.setState({ totalProduct : res.data.results.products.length });
-
-        // get synchronous function
-        this.getPromoList(0, 20, 0);
-        this.getShopStatus(res.data.results.mid);
-
-        // let newImage = Storeimg
-        // Axios.get(currentMerchant.storeImage)
-        //   .then(() => {
-        //     newImage = currentMerchant.storeImage
-        //     prominent(newImage, { amount: 3 }).then((color) => {
-        //       // return RGB color for example [241, 221, 63]
-        //       if (color.length < 3) {
-        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        //         var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
-        //       } else {
-        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        //         var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-        //       }
-        //       this.brightenColor(merchantColor, 70, productColor, 60)
-        //       this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-        //       this.setState({ productCategpersizeOri : this.state.productCategpersize });
-        //       document.addEventListener('scroll', this.loadMoreMerchant)
-        //       document.addEventListener('scroll', this.onScrollCart)
-        //     });
-        //   }).catch(err => {
-        //     console.log(err)
-        //     newImage = Storeimg
-        //     prominent(newImage, { amount: 3 }).then((color) => {
-        //       // return RGB color for example [241, 221, 63]
-        //       // var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        //       // var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-        //       if (color.length < 3) {
-        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        //         var productColor = rgbHex(color[1][0], color[1][1], color[1][2])
-        //       } else {
-        //         var merchantColor = rgbHex(color[0][0], color[0][1], color[0][2])
-        //         var productColor = rgbHex(color[2][0], color[2][1], color[2][2])
-        //       }
-        //       this.brightenColor(merchantColor, 70, productColor, 60)
-        //       this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
-        //       this.setState({ productCategpersizeOri : this.state.productCategpersize });
-        //       document.addEventListener('scroll', this.loadMoreMerchant)
-        //     });
-        //   })
       })
-      .catch((err) => {
-        console.log(err);
-        if(err.toJSON().message === 'Network Error'){
-          this.setState({ showFailed: true })
+    })
+
+    let productPerSize = filtersizeMerchant[0].categories.map((categ) => {
+      return categ
+    })
+
+    productPerSize.forEach((val) => {
+      val.category_products = []
+    })
+
+    productPerSize.forEach((categProd) => {
+      filtersizeMerchant[0].products.forEach((allproducts) => {
+        if (categProd.category_id == allproducts.product_category) { //category categProd strings, allproducts number !NOTE
+          categProd.category_products.push({
+            productId: allproducts.product_id,
+            category: allproducts.product_category,
+            foodName: allproducts.product_name,
+            foodDesc: allproducts.product_desc,
+            foodPrice: allproducts.product_price,
+            foodRating: allproducts.rating,
+            foodImage: allproducts.product_picture1,
+            foodExt: [
+              {
+                name: "",
+                amount: 0,
+              },
+            ],
+          })
         }
-      });
+      })
+    })
+
+    let firstShownProduct = []
+    productPerSize.forEach((categProd, indexcategProd) => {
+      firstShownProduct.push(categProd)
+      let newFilter = categProd.category_products.filter((valProd, indexvalProd) => {
+        return indexvalProd < this.state.size
+      })
+      categProd.category_products = newFilter
+      firstShownProduct[indexcategProd].category_products = []
+      firstShownProduct[indexcategProd].category_products = newFilter
+    })
+
+    var allProduct = []
+    res.data.results.products.forEach((product) => {
+      allProduct.push({
+        productId: product.product_id,
+        category: product.product_category,
+        foodName: product.product_name,
+        foodDesc: product.product_desc,
+        foodPrice: product.product_price,
+        foodRating: product.rating,
+        foodImage: product.product_picture1,
+        foodExt: [
+          {
+            name: "",
+            amount: 0,
+          },
+        ],
+      })
+    })
+
+    this.setState({ productAllPage : allProduct });
+
+    this.setState({ data: stateData, allProductsandCategories: productCateg, productCategpersize: productPerSize, idCateg, productPage });
+    this.setState({ productCategpersizeOri : this.state.productCategpersize });
+    document.addEventListener('scroll', this.loadMoreMerchant)
+    document.addEventListener('scroll', this.onScrollCart)
+
+    if (localStorage.getItem("productTour") == 1) {
+      if (this.props.AuthRedu.isMerchantQR === false) {
+        this.state.steptour.shift();
+      }
+      this.setState({ startTour: true });
+    }
+    else if ((localStorage.getItem('merchantFlow') == 1) && (this.props.AuthRedu.isMerchantQR === true)) {
+      this.setState({ startTour: true });
+    }
+
+    if(mid) {
+      this.setState({ isManualTxn : false });
+      Cookies.set("isManualTxn", 0)
+      this.props.IsManualTxn(false);
+      localStorage.setItem("isManualTxn", false);
+    } else {
+      this.setState({ isManualTxn : true });
+      Cookies.set("isManualTxn", 1)
+      this.props.IsManualTxn(true);
+      localStorage.setItem("isManualTxn", true);
+    }
+
+    this.setState({ totalProduct : res.data.results.products.length });
+
+    // get synchronous function
+    this.getPromoList(0, 20, 0);
+    this.getShopStatus(res.data.results.mid);
   }
 
   getShopStatus(mid) {
-    var reqHeader = {
-      token : "PUBLIC",
-      mid : mid
+    let res = {
+      data: checkShopStatus // checkshopstatus json data
     }
-
-    MerchantService.checkShopStatus(reqHeader)
-    .then((res) => {
-      this.setState({ 
-        merchantHourStatus: res.data.results.merchant_status, 
-        merchantHourOpenTime: res.data.results.open_time, 
-        merchantHourGracePeriod: res.data.results.minutes_remaining,
-        merchantHourNextOpenDay: res.data.results.next_open_day,
-        merchantHourNextOpenTime: res.data.results.next_open_time,
-        merchantHourAutoOnOff: res.data.results.auto_on_off
-      })
-    })
-    .catch((err) => {
-      console.log(err);
+    this.setState({ 
+      merchantHourStatus: res.data.results.merchant_status, 
+      merchantHourOpenTime: res.data.results.open_time, 
+      merchantHourGracePeriod: res.data.results.minutes_remaining,
+      merchantHourNextOpenDay: res.data.results.next_open_day,
+      merchantHourNextOpenTime: res.data.results.next_open_time,
+      merchantHourAutoOnOff: res.data.results.auto_on_off
     })
   }
 
@@ -893,13 +842,6 @@ class ProductView extends React.Component {
       notes: newNotes,
       qty: currentExt.detailCategory[0].amount,
     }
-    TransactionService.addProductCart(reqHeader, reqBody)
-      .then(() => {
-        console.log('addtocart succeed');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   changeMenu = () => {
@@ -1192,28 +1134,20 @@ class ProductView extends React.Component {
   }
 
   getLinkTree = (username) => {
-    var reqHeader = {
-      token : "PUBLIC",
-      username : username
+    let res = {
+      data: linkTree
     }
+    var linkData = [];
 
-    ProductService.getLinkTreeByDomain(reqHeader)
-    .then((res) => {
-      var linkData = [];
-
-      res.data.results.forEach((data, index) => {
-        linkData.push({
-          url : data.url,
-          title : data.title,
-          image : data.image
-        });
-      })
-
-      this.setState({ linkTreeData : linkData });
+    res.data.results.forEach((data, index) => {
+      linkData.push({
+        url : data.url,
+        title : data.title,
+        image : data.image
+      });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+
+    this.setState({ linkTreeData : linkData });
   }
 
   linktreeView = () => {
@@ -1247,14 +1181,6 @@ class ProductView extends React.Component {
       event_type: "LINK_TREE_DETAIL",
       page_name: window.location.pathname
     }
-
-    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
   }
 
   searchTable = (e) =>{
@@ -1292,26 +1218,6 @@ class ProductView extends React.Component {
     } else {
         this.setState({ productCategpersize : this.state.productCategpersizeOri });
     }
-  }
-
-  sendTracking(mid) {
-    var reqHeader = {
-      token : "PUBLIC"
-    }
-
-    var reqBody = {
-      merchant_id: mid,
-      event_type: "VIEW_DETAIL",
-      page_name: window.location.pathname
-    }
-
-    AnalyticsService.sendTrackingPage(reqHeader, reqBody)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
   }
 
   merchantHourStatusWarning = () => {

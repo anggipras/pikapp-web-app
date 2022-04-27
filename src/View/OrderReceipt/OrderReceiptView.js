@@ -98,7 +98,6 @@ export class OrderReceiptView extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    firebaseAnalytics.logEvent("orderlist_visited");
     this.sendTracking();
     if (window.innerWidth < 700) {
       this.setState({ isMobile: true });

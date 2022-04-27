@@ -68,7 +68,6 @@ class OrderDetailView extends React.Component {
     }
 
     componentDidMount() {
-        firebaseAnalytics.logEvent("orderdetail_visited");
         moment.updateLocale('id', idLocale);
         this.sendTracking();
         if (window.innerWidth < 700) {

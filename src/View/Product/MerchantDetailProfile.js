@@ -27,6 +27,9 @@ import ReactStars from "react-rating-stars-component";
 import ProgressBar from "@ramonak/react-progress-bar";
 import moment from "moment";
 
+//json data
+import shopManagement from './ShopManagementHour.json'
+
 const MerchantDetailProfile = () => {
     const location = useLocation()
     const [merchantLogo, setMerchantLogo] = useState(location.state.merchantLogo);
@@ -114,29 +117,11 @@ const MerchantDetailProfile = () => {
     ]);
 
     useEffect(() => {
-
-        let uuid = uuidV4();
-        uuid = uuid.replace(/-/g, "");
-        const date = new Date().toISOString();
-        let selectedMerchant = JSON.parse(localStorage.getItem("selectedMerchant"));
-        Axios(address + "merchant/v1/shop/management/list/", {
-            headers: {
-              "Content-Type": "application/json",
-              "x-request-id": uuid,
-              "x-request-timestamp": date,
-              "x-client-id": clientId,
-              "token": "PUBLIC",
-              "mid": selectedMerchant[0].mid,
-            },
-            method: "GET"
-          }).then((res) => {
-              if (res.data.results != null) {
-                  let timeManagement = res.data.results.time_management
-                  setMerchantSchedule(timeManagement)
-              } else {
-                  
-              }
-          }).catch((err) => console.log(err))
+        let res = {
+            data: shopManagement
+        }
+        let timeManagement = res.data.results.time_management
+        setMerchantSchedule(timeManagement)
     }, [])
 
     const shopSchedule = () => {

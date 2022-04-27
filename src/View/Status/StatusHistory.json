@@ -1,0 +1,50 @@
+{
+    "err_code": "EC0000",
+    "err_message": "APPROVED/OK",
+    "results": [
+        {
+            "payment_with": "WALLET_OVO",
+            "status": "PAID",
+            "transaction_id": "5a7f7def98984fee96020ce32c44ad19-WALLET-OVO",
+            "transaction_time": "2022-03-28 18:10:48.0",
+            "merchant_name": "Sushi to Ramen",
+            "biz_type": "DINE_IN",
+            "total_price": 40000,
+            "total_product": 1,
+            "expiry_date": "2022-03-28 18:11:45.0"
+        },
+        {
+            "payment_with": "WALLET_OVO",
+            "status": "PAID",
+            "transaction_id": "69d48ceffe5e42f8b9b3496dcd7438f3-WALLET-OVO",
+            "transaction_time": "2022-03-28 16:03:07.0",
+            "merchant_name": "Sushi to Ramen",
+            "biz_type": "DINE_IN",
+            "total_price": 57600,
+            "total_product": 1,
+            "expiry_date": "2022-03-28 16:04:04.0"
+        },
+        {
+            "payment_with": "WALLET_OVO",
+            "status": "PAID",
+            "transaction_id": "a132d9b66e374c35b7e257a3cc29817b-WALLET-OVO",
+            "transaction_time": "2022-03-28 15:54:33.0",
+            "merchant_name": "Sushi to Ramen",
+            "biz_type": "DINE_IN",
+            "total_price": 54000,
+            "total_product": 1,
+            "expiry_date": "2022-03-28 15:55:29.0"
+        },
+        {
+            "payment_with": "PAY_BY_CASHIER",
+            "status": "DELIVER",
+            "transaction_id": "bbbc8a084903454080ee7a7241d890fa-PAY-BY-CASHIER",
+            "transaction_time": "2022-03-22 12:27:08.0",
+            "merchant_name": "Sushi to Ramen",
+            "biz_type": "DINE_IN",
+            "total_price": 44800,
+            "total_product": 1,
+            "expiry_date": "2022-03-22 12:57:08.0"
+        }
+    ]
+}
